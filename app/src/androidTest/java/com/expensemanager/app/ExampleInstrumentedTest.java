@@ -1,4 +1,4 @@
-package com.expensemanager.expensemanager;
+package com.expensemanager.app;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

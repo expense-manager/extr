@@ -1,4 +1,4 @@
-package com.expensemanager.expensemanager;
+package com.expensemanager.app;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

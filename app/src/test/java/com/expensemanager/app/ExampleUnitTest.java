@@ -1,4 +1,4 @@
-package com.expensemanager.expensemanager;
+package com.expensemanager.app;
 
 import org.junit.Test;
 
