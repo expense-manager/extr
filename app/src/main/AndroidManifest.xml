@@ -3,18 +3,23 @@
     package="com.expensemanager.app">
 
     <application
+        android:name=".main.EApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.expensemanager.app.MainActivity">
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".expense.ExpenseActivity" />
+        <activity android:name=".expense.NewExpenseActivity" />
+        <activity android:name=".category.CategoryActivity" />
+        <activity android:name=".expense.ExpenseDetailActivity"></activity>
     </application>
 
 </manifest>

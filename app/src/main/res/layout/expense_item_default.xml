@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <!-- Amount -->
+    <TextView
+        android:id="@+id/expense_item_default_amount_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_medium"
+
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_small"/>
+
+    <!-- Note -->
+    <TextView
+        android:id="@+id/expense_item_default_note_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_medium"
+
+        android:textSize="@dimen/text_small"/>
+
+</LinearLayout>
