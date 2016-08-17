@@ -1,15 +1,14 @@
 package com.expensemanager.app.category;
 
-import android.app.Activity;
+import com.expensemanager.app.R;
+import com.expensemanager.app.models.Category;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.expensemanager.app.R;
-import com.expensemanager.app.models.Category;
 
 import java.util.UUID;
 
@@ -21,14 +20,13 @@ public class NewCategoryActivity extends AppCompatActivity {
     private static final String TAG = NewCategoryActivity.class.getSimpleName();
 
     private Category category;
-    private int requestCode;
 
     @BindView(R.id.new_category_activity_name_text_view_id) TextView nameTextView;
     @BindView(R.id.new_category_activity_save_button_id) Button saveButton;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, NewCategoryActivity.class);
-        ((Activity) context).startActivityForResult(intent, CategoryActivity.NEW_CATEGORY);
+        context.startActivity(intent);
     }
 
     @Override

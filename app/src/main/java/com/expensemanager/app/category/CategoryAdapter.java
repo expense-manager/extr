@@ -1,9 +1,7 @@
 package com.expensemanager.app.category;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.expense.ExpenseDetailActivity;
 import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
