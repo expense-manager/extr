@@ -8,10 +8,20 @@
     <string name="enter_amount">Enter amount</string>
     <string name="enter_note">Enter note</string>
     <string name="enter_name">Enter name</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="reenter_password">Re-enter password</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
+    <string name="signup">Signup</string>
+    <string name="login">Login</string>
     <string name="category">Category</string>
     <string name="expense">Expense</string>
+    <string name="welcome">Welcome</string>
+    <string name="welcome_title">Welcome To Expense Manager</string>
     <string name="title_activity_category_detail">CategoryDetailActivity</string>
     <string name="title_activity_new_category">NewCategoryActivity</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

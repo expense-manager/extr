@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/category_activity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="com.expensemanager.app.welcome.LoginActivity">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/login_activity_title_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/space_ultra_large"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_ultra_large"
+
+        android:text="@string/welcome_title"
+        android:textSize="@dimen/text_really_large"/>
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/login_activity_email_edit_text_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_activity_title_text_view_id"
+        android:layout_marginTop="@dimen/space_ultra_large"
+        android:layout_marginLeft="@dimen/space_ultra_large"
+        android:layout_marginRight="@dimen/space_ultra_large"
+
+        android:hint="@string/enter_email"/>
+
+    <!-- Password -->
+    <EditText
+        android:id="@+id/login_activity_password_edit_text_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_activity_email_edit_text_id"
+        android:layout_marginTop="@dimen/space_small"
+        android:layout_marginLeft="@dimen/space_ultra_large"
+        android:layout_marginRight="@dimen/space_ultra_large"
+
+        android:hint="@string/enter_password"/>
+
+    <!-- Signup -->
+    <Button
+        android:id="@+id/login_activity_login_button_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_activity_password_edit_text_id"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/space_ultra_large"
+
+        android:text="@string/login"/>
+
+    <!-- Login -->
+    <TextView
+        android:id="@+id/login_activity_signup_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/space_ultra_large"
+
+        android:text="@string/signup"/>
+
+</RelativeLayout>

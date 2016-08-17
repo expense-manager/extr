@@ -33,6 +33,21 @@
             android:label="@string/title_activity_new_category"
             android:theme="@style/AppTheme">
         </activity>
+        <activity
+            android:name=".welcome.WelcomeActivity"
+            android:label="@string/title_activity_welcome"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".welcome.SignupActivity"
+            android:label="@string/title_activity_signup"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".welcome.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>
