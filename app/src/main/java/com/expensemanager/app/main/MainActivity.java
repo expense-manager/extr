@@ -12,6 +12,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
+import com.expensemanager.app.service.SyncExpense;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> {
             NewExpenseActivity.newInstance(this);
         });
+
+        SyncExpense.getExpenses();
     }
 
     @Override

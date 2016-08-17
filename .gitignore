@@ -11,3 +11,6 @@ build
 
 # Apple
 .DS_Store
+
+# Keys
+secrets.properties
