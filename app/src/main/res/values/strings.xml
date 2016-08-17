@@ -2,10 +2,16 @@
     <string name="app_name">Expense Manager</string>
     <string name="overview">Overview</string>
     <string name="new_expense">New expense</string>
+    <string name="new_category">New category</string>
     <string name="expense_detail">Expense detail</string>
+    <string name="category_detail">Category detail</string>
     <string name="enter_amount">Enter amount</string>
     <string name="enter_note">Enter note</string>
+    <string name="enter_name">Enter name</string>
     <string name="save">Save</string>
+    <string name="add">Add</string>
     <string name="category">Category</string>
     <string name="expense">Expense</string>
+    <string name="title_activity_category_detail">CategoryDetailActivity</string>
+    <string name="title_activity_new_category">NewCategoryActivity</string>
 </resources>
