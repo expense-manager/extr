@@ -24,7 +24,7 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 
 
 ## Open-source libraries used
-- [OkHttp](http://square.github.io/okhttp/)An HTTP & HTTP/2 client for Android and Java applications.
+- [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications.
 - [Bolts](http://boltsframework.github.io/Bolts-Android/) - Bolts is a collection of low-level libraries designed to make developing mobile apps easier.
 - [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling.
 - [Butter Knife](http://jakewharton.github.io/butterknife/) - Bind Android views and callbacks to fields and methods.

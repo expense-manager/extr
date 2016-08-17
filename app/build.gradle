@@ -12,6 +12,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        File secretsPropertiesFile = new File("secrets.properties")
+        if (secretsPropertiesFile.exists()) {
+            def secretsFile = rootProject.file("secrets.properties")
+            def secrets = new Properties()
+            secrets.load(new FileInputStream(secretsFile))
+
+            buildConfigField "String", "APP_ID", secrets.getProperty('APP_ID')
+            buildConfigField "String", "MASTER_KEY", secrets.getProperty('MASTER_KEY')
+        } else {
+            buildConfigField "String", "APP_ID", "\"PUT APP ID HERE\""
+            buildConfigField "String", "MASTER_KEY", "\"PUT MASTER KEY HERE\""
+        }
     }
     buildTypes {
         release {

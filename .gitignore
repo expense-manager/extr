@@ -9,5 +9,8 @@ build
 /captures
 .externalNativeBuild
 
+# Secrets
+secrets.properties
+
 # Apple
 .DS_Store
