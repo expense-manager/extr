@@ -10,10 +10,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.expensemanager.app.category.CategoryActivity">
 
-    <TextView
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/category_activity_recycler_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- New -->
+    <Button
+        android:id="@+id/category_activity_add_button_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@+id/category_activity_recycler_view_id"
+        android:layout_margin="@dimen/space_medium"
 
-        android:text="@string/category"/>
+        android:text="@string/add"/>
+
 </RelativeLayout>
