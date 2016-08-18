@@ -64,6 +64,8 @@ public class ExpenseDetailActivity extends AppCompatActivity {
         realm.copyToRealmOrUpdate(expense);
         realm.commitTransaction();
         realm.close();
+
+//        SyncExpense.update(expense);
     }
 
     private void updateNote() {

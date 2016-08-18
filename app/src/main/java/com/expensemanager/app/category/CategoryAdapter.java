@@ -1,14 +1,14 @@
 package com.expensemanager.app.category;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.models.Category;
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.models.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         viewHolder.name.setText(category.getName());
         viewHolder.itemView.setOnClickListener(v -> {
             CategoryDetailActivity.newInstance(context, categories.get(position).getId());
-            // todo: add animation
+            // todo: create animation
         });
     }
 

@@ -84,7 +84,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         viewHolder.noteTextView.setText(String.valueOf(expense.getNote()));
         viewHolder.itemView.setOnClickListener(v -> {
             ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
-            // todo: add animation
+            // todo: create animation
         });
     }
 

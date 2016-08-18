@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             NewExpenseActivity.newInstance(this);
         });
 
-        SyncExpense.getExpenses();
+        SyncExpense.getAllExpenses();
     }
 
     @Override

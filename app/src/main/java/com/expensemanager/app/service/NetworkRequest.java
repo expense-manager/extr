@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -42,24 +43,54 @@ public class NetworkRequest {
             public Void call() {
                 String url = requestTemplate.getUrl();
                 String method = requestTemplate.getMethod();
-                Map<String, String> parmsMap = requestTemplate.getParams();
+                Map<String, String> paramsMap = requestTemplate.getParams();
                 RequestBody requestBody = null;
 
                 // Add params to url
                 // Method - GET
                 if (method.equals(RequestTemplateCreator.GET)) {
                     StringBuilder stringBuilder = new StringBuilder(url);
-                    if (parmsMap != null) {
+
+                    if (paramsMap != null) {
                         stringBuilder.append("?");
-                        for (Map.Entry entry : parmsMap.entrySet()) {
+                        for (Map.Entry entry : paramsMap.entrySet()) {
                             stringBuilder.append(entry.getKey());
                             stringBuilder.append("=");
                             stringBuilder.append(entry.getValue());
                             stringBuilder.append(("&"));
                         }
                     }
+
+                    url = stringBuilder.toString();
                 } else {
-                    //todo: handle other method
+                    // POST, PUT, DELETE
+                    if (paramsMap != null) {
+                        // Convert parasMap to JSON string.
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("{");
+
+                        int size = paramsMap.size();
+                        int i = 0;
+
+                        for (Map.Entry entry : paramsMap.entrySet()) {
+
+                            String entryValue = entry.getValue().toString();
+                            if (entryValue.charAt(0) == '{') {
+                                sb.append("\"" + entry.getKey() + "\":\"" + entry.getValue() + "\"");
+                            } else {
+                                sb.append("\"" + entry.getKey() + "\":\"" + entry.getValue() + "\"");
+                            }
+
+                            if (i < size - 1) {
+                                sb.append(",");
+                            }
+
+                            i++;
+                        }
+
+                        sb.append('}');
+                        requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), sb.toString());
+                    }
                 }
 
                 // Add headers
@@ -71,8 +102,8 @@ public class NetworkRequest {
                     String responseString = response.body().string();
                     Log.d(TAG, "Response: \n" + responseString);
                     // If response is JSONArray, we convert to JSONObject
-                    if (responseString.charAt(0) == '[') {
-                        responseString = "{\"results\":" + responseString + "}";
+                    if (responseString.charAt(0) != '{') {
+                        responseString = "{\"results\":\"" + responseString + "\"}";
                     }
                     JSONObject result = new JSONObject(responseString);
 

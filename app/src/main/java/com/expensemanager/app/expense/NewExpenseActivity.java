@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.service.SyncExpense;
 
 import java.util.UUID;
 
@@ -51,6 +52,9 @@ public class NewExpenseActivity extends AppCompatActivity {
         realm.copyToRealmOrUpdate(expense);
         realm.commitTransaction();
         realm.close();
+
+        SyncExpense.create(expense);
+        // todo: Get objectId and update local id, change sync status
 
         close();
     }

@@ -19,6 +19,11 @@ import io.realm.annotations.RealmClass;
 public class Expense implements RealmModel {
     private static final String TAG = Expense.class.getSimpleName();
 
+    // JSON Key, columns' name in server
+    public static final String OBJECT_ID_JSON_KEY = "objectId";
+    public static final String AMOUNT_JSON_KEY = "amount";
+    public static final String NOTE_JSON_KEY = "note";
+
     // Property name key
     public static final String ID_KEY = "id";
     public static final String CREATED_AT_KEY = "createdAt";
@@ -30,6 +35,7 @@ public class Expense implements RealmModel {
     private String note;
     private double amount;
     private Date createdAt;
+    private boolean isSynced;
 
     public String getId() {
         return id;
