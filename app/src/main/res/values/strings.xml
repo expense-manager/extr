@@ -13,7 +13,7 @@
     <string name="reenter_password">Re-enter password</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
-    <string name="signup">Signup</string>
+    <string name="sign_up">Sign up</string>
     <string name="login">Login</string>
     <string name="category">Category</string>
     <string name="expense">Expense</string>
@@ -24,4 +24,6 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="amount">Amount</string>
+    <string name="note">Note</string>
 </resources>

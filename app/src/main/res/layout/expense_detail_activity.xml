@@ -23,26 +23,63 @@
         android:text="@string/expense_detail"
         android:textSize="@dimen/text_medium"/>
 
+    <!-- Amount label -->
+    <TextView
+        android:id="@+id/expense_detail_activity_amount_label_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/expense_detail_activity_expense_detail_title_text_view_id"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_really_small"
+
+        android:paddingLeft="@dimen/space_really_small"
+        android:paddingRight="@dimen/space_really_small"
+        android:text="@string/amount"
+        android:textSize="@dimen/text_small"/>
+
     <!-- Amount -->
     <TextView
         android:id="@+id/expense_detail_activity_amount_text_view_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/expense_detail_activity_expense_detail_title_text_view_id"
-        android:layout_margin="@dimen/space_medium"
+        android:layout_below="@+id/expense_detail_activity_amount_label_text_view_id"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
 
         android:padding="@dimen/space_really_small"
-        android:textSize="@dimen/text_medium_small"/>
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_small"
+        android:background="@drawable/background_round_corner_white"/>
+
+    <!-- Note label -->
+    <TextView
+        android:id="@+id/expense_detail_activity_note_label_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/expense_detail_activity_amount_text_view_id"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_really_small"
+
+        android:paddingLeft="@dimen/space_really_small"
+        android:paddingRight="@dimen/space_really_small"
+        android:text="@string/note"
+        android:textSize="@dimen/text_small"/>
 
     <!-- Note -->
     <TextView
         android:id="@+id/expense_detail_activity_note_text_view_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/expense_detail_activity_amount_text_view_id"
-        android:layout_margin="@dimen/space_medium"
+        android:layout_below="@+id/expense_detail_activity_note_label_text_view_id"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
 
         android:padding="@dimen/space_really_small"
-        android:textSize="@dimen/text_medium_small"/>
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_small"
+        android:background="@drawable/background_round_corner_white"/>
 
 </RelativeLayout>

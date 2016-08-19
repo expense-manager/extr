@@ -10,6 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/blue"
     tools:context="com.expensemanager.app.welcome.WelcomeActivity">
 
     <!-- Title -->
@@ -23,27 +24,34 @@
         android:layout_marginRight="@dimen/space_medium"
 
         android:text="@string/welcome_title"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_really_large"/>
 
     <!-- Signup -->
     <Button
         android:id="@+id/welcome_activity_signup_button_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/space_medium"
 
-        android:text="@string/signup"/>
+        android:text="@string/sign_up"
+        android:textColor="@color/blue"
+        android:textAllCaps="false"
+        android:background="@drawable/background_round_corner_white"/>
 
     <!-- Login -->
     <Button
         android:id="@+id/welcome_activity_login_button_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/welcome_activity_signup_button_id"
         android:layout_alignLeft="@+id/welcome_activity_signup_button_id"
+        android:layout_alignStart="@+id/welcome_activity_signup_button_id"
         android:layout_marginTop="@dimen/space_medium"
 
-        android:text="@string/login"/>
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:background="@drawable/background_round_corner_border_white"/>
 
 </RelativeLayout>

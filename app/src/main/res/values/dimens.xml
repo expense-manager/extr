@@ -26,5 +26,6 @@
     <dimen name="space_really_large">28dp</dimen>
     <dimen name="space_ultra_large">36dp</dimen>
 
+    <dimen name="corner_radius">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>

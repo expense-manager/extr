@@ -82,7 +82,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/space_medium"
 
-        android:text="@string/signup"/>
+        android:text="@string/sign_up"/>
 
     <!-- Login -->
     <TextView

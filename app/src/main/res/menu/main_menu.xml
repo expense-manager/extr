@@ -10,7 +10,7 @@
         android:title="@string/category"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/menu_item_welcome_activity_id"
+    <item android:id="@+id/menu_item_splash_activity_id"
           android:title="@string/welcome"
           app:showAsAction="never"/>
 

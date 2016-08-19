@@ -13,7 +13,7 @@ import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.service.SyncExpense;
-import com.expensemanager.app.welcome.WelcomeActivity;
+import com.expensemanager.app.welcome.SplashActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_item_category_activity_id:
                 CategoryActivity.newInstance(this);
                 return true;
-            case R.id.menu_item_welcome_activity_id:
-                WelcomeActivity.newInstance(this);
+            case R.id.menu_item_splash_activity_id:
+                SplashActivity.newInstance(this);
                 return true;
         }
 
