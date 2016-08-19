@@ -38,7 +38,7 @@
             android:label="@string/title_activity_welcome"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".welcome.SignupActivity"
+            android:name=".welcome.SignUpActivity"
             android:label="@string/title_activity_signup"
             android:theme="@style/AppTheme" />
         <activity

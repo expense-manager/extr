@@ -1,6 +1,7 @@
 package com.expensemanager.app.service;
 
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,26 @@ public class RequestTemplateCreator {
     public static final String POST = "POST";
     public static final String PUT = "PUT";
     public static final String DELETE = "DELETE";
+
+    public static RequestTemplate login(String username, String password) {
+        String url = BASE_URL + "login";
+        Map<String, String> params = new HashMap<>();
+
+        params.put(User.USERNAME_JSON_KEY, username);
+        params.put(User.PASSWORD_JSON_KEY, password);
+
+        return new RequestTemplate(GET, url, params);
+    }
+
+    public static RequestTemplate signUp(String username, String password) {
+        String url = BASE_URL + "users";
+        Map<String, String> params = new HashMap<>();
+
+        params.put(User.USERNAME_JSON_KEY, username);
+        params.put(User.PASSWORD_JSON_KEY, password);
+
+        return new RequestTemplate(POST, url, params);
+    }
 
     public static RequestTemplate getAllExpenses() {
         String url = BASE_URL + "classes/Expense";

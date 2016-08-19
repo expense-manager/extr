@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.expensemanager.app.welcome.SignupActivity">
+    tools:context="com.expensemanager.app.welcome.SignUpActivity">
 
     <!-- Title -->
     <TextView
@@ -27,7 +27,7 @@
 
     <!-- Email -->
     <EditText
-        android:id="@+id/signup_activity_email_edit_text_id"
+        android:id="@+id/sign_up_activity_email_edit_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/signup_activity_title_text_view_id"
@@ -39,34 +39,36 @@
 
     <!-- Password -->
     <EditText
-        android:id="@+id/signup_activity_password_edit_text_id"
+        android:id="@+id/sign_up_activity_password_edit_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signup_activity_email_edit_text_id"
+        android:layout_below="@+id/sign_up_activity_email_edit_text_id"
         android:layout_marginTop="@dimen/space_small"
         android:layout_marginLeft="@dimen/space_ultra_large"
         android:layout_marginRight="@dimen/space_ultra_large"
 
-        android:hint="@string/enter_password"/>
+        android:hint="@string/enter_password"
+        android:inputType="textPassword"/>
 
     <!-- Re Paassword -->
     <EditText
-        android:id="@+id/signup_activity_re_password_edit_text_id"
+        android:id="@+id/sign_up_activity_confirm_password_edit_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signup_activity_password_edit_text_id"
+        android:layout_below="@+id/sign_up_activity_password_edit_text_id"
         android:layout_marginTop="@dimen/space_small"
         android:layout_marginLeft="@dimen/space_ultra_large"
         android:layout_marginRight="@dimen/space_ultra_large"
 
-        android:hint="@string/reenter_password"/>
+        android:hint="@string/confirm_password"
+        android:inputType="textPassword"/>
 
     <!-- Name -->
     <EditText
-        android:id="@+id/signup_activity_name_edit_text_id"
+        android:id="@+id/sign_up_activity_name_edit_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signup_activity_re_password_edit_text_id"
+        android:layout_below="@+id/sign_up_activity_confirm_password_edit_text_id"
         android:layout_marginTop="@dimen/space_small"
         android:layout_marginLeft="@dimen/space_ultra_large"
         android:layout_marginRight="@dimen/space_ultra_large"
@@ -75,10 +77,10 @@
 
     <!-- Signup -->
     <Button
-        android:id="@+id/signup_activity_signup_button_id"
+        android:id="@+id/sign_up_activity_sign_up_button_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signup_activity_name_edit_text_id"
+        android:layout_below="@+id/sign_up_activity_name_edit_text_id"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/space_medium"
 
@@ -86,7 +88,7 @@
 
     <!-- Login -->
     <TextView
-        android:id="@+id/signup_activity_login_text_view_id"
+        android:id="@+id/sign_up_activity_login_text_view_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         signupTextView.setOnClickListener(v -> {
-            SignupActivity.newInstance(this);
+            SignUpActivity.newInstance(this);
         });
     }
 
