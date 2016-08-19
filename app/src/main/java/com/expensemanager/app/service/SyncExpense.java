@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.expensemanager.app.models.Expense;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import bolts.Continuation;
@@ -33,11 +35,18 @@ public class SyncExpense {
 
                 JSONObject expenses = task.getResult();
                 if (expenses == null) {
-                    //todo: throw exception
-                    Log.e(TAG, "Empty response.");
+                    throw new Exception("Empty response.");
                 }
 
                 Log.d(TAG, "Expenses: \n" + expenses);
+
+                try {
+                    JSONArray expenseArray = expenses.getJSONArray("results");
+                    Expense.mapFromJSONArray(expenseArray);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error in getting expense JSONArray.", e);
+                }
+
                 return null;
             }
         };
@@ -46,33 +55,32 @@ public class SyncExpense {
         return networkRequest.send().continueWith(saveExpense);
     }
 
-    public static Task<Void> create(Expense expense) {
+    public static Task<JSONObject> create(Expense expense) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.createExpense(expense);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Continuation<JSONObject, Void> onCreateExpenseFinished = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, JSONObject> onCreateExpenseFinished = new Continuation<JSONObject, JSONObject>() {
             @Override
-            public Void then(Task<JSONObject> task) throws Exception {
+            public JSONObject then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
                     Log.e(TAG, "Error in creating expense.", exception);
-                    throw  exception;
+                    throw exception;
                 }
 
                 JSONObject result = task.getResult();
                 if (result == null) {
-                    //todo: throw exception
-                    Log.e(TAG, "Empty response.");
+                    throw new Exception("Empty response.");
                 }
 
                 // Example response: {"objectId":"tUfEENoHSS","createdAt":"2016-08-18T22:34:59.262Z"}
                 Log.d(TAG, "Response: \n" + result);
-                return null;
+                return result;
             }
         };
 
-        Log.d(TAG, "Start uploading expense.");
+        Log.d(TAG, "Start creating expense.");
         return networkRequest.send().continueWith(onCreateExpenseFinished);
     }
 
@@ -87,13 +95,12 @@ public class SyncExpense {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
                     Log.e(TAG, "Error in updating expense.", exception);
-                    throw  exception;
+                    throw exception;
                 }
 
                 JSONObject result = task.getResult();
                 if (result == null) {
-                    //todo: throw exception
-                    Log.e(TAG, "Empty response.");
+                    throw new Exception("Empty response.");
                 }
 
                 // Example response: {"updatedAt":"2016-08-18T23:03:51.785Z"}
@@ -122,8 +129,7 @@ public class SyncExpense {
 
                 JSONObject result = task.getResult();
                 if (result == null) {
-                    //todo: throw exception
-                    Log.e(TAG, "Empty response.");
+                    throw new Exception("Empty response.");
                 }
 
                 // Example response: {}

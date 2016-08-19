@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 
@@ -38,7 +37,6 @@ public class Category implements RealmModel {
         this.id = id;
     }
 
-    // Query
 
     /**
      * @return all categories

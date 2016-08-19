@@ -3,17 +3,20 @@ package com.expensemanager.app.expense;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.service.SyncExpense;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class ExpenseActivity extends AppCompatActivity {
     private static final String TAG = ExpenseActivity.class.getSimpleName();
@@ -22,6 +25,7 @@ public class ExpenseActivity extends AppCompatActivity {
     private ExpenseAdapter expenseAdapter;
 
     @BindView(R.id.expense_activity_recycler_view_id) RecyclerView recyclerView;
+    @BindView(R.id.expense_activity_fab_id) FloatingActionButton fab;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, ExpenseActivity.class);
@@ -38,7 +42,13 @@ public class ExpenseActivity extends AppCompatActivity {
         expenseAdapter = new ExpenseAdapter(this, expenses);
         setupRecyclerView();
 
+        fab.setOnClickListener(v -> {
+            NewExpenseActivity.newInstance(this);
+            overridePendingTransition(R.anim.right_in, R.anim.stay);
+        });
+
         invalidateViews();
+        SyncExpense.getAllExpenses();
     }
 
     private void invalidateViews() {
@@ -54,6 +64,14 @@ public class ExpenseActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        invalidateViews();
+        Realm realm = Realm.getDefaultInstance();
+        realm.addChangeListener(v -> invalidateViews());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 }

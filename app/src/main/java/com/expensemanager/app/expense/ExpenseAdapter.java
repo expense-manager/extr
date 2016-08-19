@@ -1,5 +1,6 @@
 package com.expensemanager.app.expense;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 
 import java.util.ArrayList;
@@ -80,11 +82,12 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Expense expense = expenses.get(position);
 
-        viewHolder.amountTextView.setText(String.valueOf(expense.getAmount()));
-        viewHolder.noteTextView.setText(String.valueOf(expense.getNote()));
+        viewHolder.createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
+        viewHolder.amountTextView.setText("$" + expense.getAmount());
+        viewHolder.noteTextView.setText(String.valueOf(expense.getNote().toString()));
         viewHolder.itemView.setOnClickListener(v -> {
             ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
-            // todo: create animation
+            ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }
 
@@ -99,6 +102,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
+        @BindView(R.id.expense_item_default_created_at_text_view_id) TextView createdAtTextView;
         @BindView(R.id.expense_item_default_amount_text_view_id) TextView amountTextView;
         @BindView(R.id.expense_item_default_note_text_view_id) TextView noteTextView;
 
