@@ -1,15 +1,20 @@
 package com.expensemanager.app.expense;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,11 +35,20 @@ import io.realm.Realm;
 public class NewExpenseActivity extends AppCompatActivity {
     private static final String TAG = NewExpenseActivity.class.getSimpleName();
 
+    public static final String NEW_PHOTO = "Take a photo";
+    public static final String LIBRARY_PHOTO = "Choose from library";
+
+    private AlertDialog.Builder choosePhotoSource;
+
     private Expense expense;
 
+    @BindView(R.id.new_expense_activity_toolbar_id) Toolbar toolbar;
+    @BindView(R.id.new_expense_activity_toolbar_close_image_view_id) ImageView closeImageView;
+    @BindView(R.id.new_expense_activity_toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.new_expense_activity_toolbar_post_text_view_id) TextView postTextView;
     @BindView(R.id.new_expense_activity_amount_text_view_id) TextView amountTextView;
     @BindView(R.id.new_expense_activity_note_text_view_id) TextView noteTextView;
-    @BindView(R.id.new_expense_activity_save_button_id) Button saveButton;
+    @BindView(R.id.new_expense_activity_add_photo_image_view_id) ImageView addPhotoImageView;
     @BindView(R.id.new_expense_activity_progress_bar_id) ProgressBar progressBar;
 
     public static void newInstance(Context context) {
@@ -48,9 +62,53 @@ public class NewExpenseActivity extends AppCompatActivity {
         setContentView(R.layout.new_expense_activity);
         ButterKnife.bind(this);
 
+        setupToolbar();
         expense = new Expense();
-        saveButton.setOnClickListener(v -> save());
         progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_ATOP);
+        setPhotoSourcePicker();
+        addPhotoImageView.setOnClickListener(v -> {
+            choosePhotoSource.show();
+        });
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+
+        titleTextView.setText(getString(R.string.create_an_expense));
+        titleTextView.setOnClickListener(v -> close());
+        closeImageView.setOnClickListener(v -> close());
+        postTextView.setOnClickListener(v -> save());
+    }
+
+    private void setPhotoSourcePicker() {
+        choosePhotoSource = new AlertDialog.Builder(this);
+
+        final ArrayAdapter<String> photoSourceAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1);
+        photoSourceAdapter.add(NEW_PHOTO);
+        photoSourceAdapter.add(LIBRARY_PHOTO);
+
+        choosePhotoSource.setAdapter(photoSourceAdapter, (DialogInterface dialog, int which) -> {
+            String photoSource = photoSourceAdapter.getItem(which);
+            if (photoSource == null) {
+                //take a photo
+                return;
+            }
+
+            switch (photoSource) {
+                case NEW_PHOTO:
+                    Log.d(TAG, "Take a photo");
+                    break;
+                case LIBRARY_PHOTO:
+                    Log.d(TAG, "Choose photo from library");
+                    break;
+            }
+        });
     }
 
     private void save() {

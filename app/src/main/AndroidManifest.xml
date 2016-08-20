@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".main.EApplication"
@@ -20,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".expense.ExpenseActivity" />
-        <activity android:name=".expense.NewExpenseActivity" />
+        <activity android:name=".expense.NewExpenseActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".category.CategoryActivity" />
         <activity android:name=".expense.ExpenseDetailActivity" />
         <activity
@@ -31,7 +34,8 @@
             android:name=".category.NewCategoryActivity"
             android:label="@string/title_activity_new_category"
             android:theme="@style/AppTheme" />
-        <activity android:name=".welcome.SplashActivity"
+        <activity
+            android:name=".welcome.SplashActivity"
             android:theme="@style/SplashTheme" />
         <activity
             android:name=".welcome.WelcomeActivity"
@@ -46,7 +50,6 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
-
     </application>
 
 </manifest>
