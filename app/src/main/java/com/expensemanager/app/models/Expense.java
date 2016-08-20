@@ -34,6 +34,7 @@ public class Expense implements RealmModel {
     public static final String AMOUNT_JSON_KEY = "amount";
     public static final String NOTE_JSON_KEY = "note";
     public static final String CREATED_AT_JSON_KEY = "createdAt";
+    public static final String CATEGORY_JSON_KEY = "categoryId";
 
     // Property name key
     public static final String ID_KEY = "id";
@@ -47,6 +48,7 @@ public class Expense implements RealmModel {
     private double amount;
     private Date createdAt;
     private boolean isSynced;
+    private String categoryId;
 
     public String getId() {
         return id;
@@ -96,11 +98,20 @@ public class Expense implements RealmModel {
         isSynced = synced;
     }
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public void mapFromJSON(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
             this.amount = jsonObject.getDouble(AMOUNT_JSON_KEY);
             this.note = jsonObject.optString(NOTE_JSON_KEY);
+            this.categoryId = jsonObject.getJSONObject(CATEGORY_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
 
             // Parse createdAt and convert UTC time to local time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
