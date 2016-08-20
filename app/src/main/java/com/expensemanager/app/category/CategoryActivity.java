@@ -2,6 +2,7 @@ package com.expensemanager.app.category;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.service.SyncCategory;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class CategoryActivity extends AppCompatActivity {
     private static final String TAG = CategoryActivity.class.getSimpleName();
@@ -40,11 +42,13 @@ public class CategoryActivity extends AppCompatActivity {
         categoryAdapter = new CategoryAdapter(this, categories);
         setupRecyclerView();
 
-        invalidateViews();
-
         fab.setOnClickListener(v -> {
             NewCategoryActivity.newInstance(this);
+            overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
+
+        invalidateViews();
+        SyncCategory.getAllCategories();
     }
 
     private void invalidateViews() {
@@ -60,6 +64,14 @@ public class CategoryActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        invalidateViews();
+        Realm realm = Realm.getDefaultInstance();
+        realm.addChangeListener(v -> invalidateViews());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 }

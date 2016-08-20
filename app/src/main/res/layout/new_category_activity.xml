@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/new_expense_activity"
+    android:id="@+id/new_category_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -25,23 +25,34 @@
 
     <!-- Name -->
     <EditText
-        android:id="@+id/new_category_activity_name_text_view_id"
+        android:id="@+id/new_category_activity_name_edit_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/new_category_activity_new_category_text_view_id"
         android:layout_margin="@dimen/space_medium"
 
         android:padding="@dimen/space_really_small"
-        android:hint="@string/enter_name"/>
+        android:hint="@string/enter_name"
+        android:background="@drawable/background_round_corner_white"/>
 
     <!-- Save -->
     <Button
         android:id="@+id/new_category_activity_save_button_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/new_category_activity_name_text_view_id"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/new_category_activity_name_edit_text_id"
         android:layout_margin="@dimen/space_medium"
 
-        android:text="@string/save"/>
+        android:text="@string/save"
+        android:background="@drawable/background_round_corner_white"/>
+
+    <ProgressBar
+        android:id="@+id/new_category_activity_progress_bar_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleLarge"/>
 
 </RelativeLayout>

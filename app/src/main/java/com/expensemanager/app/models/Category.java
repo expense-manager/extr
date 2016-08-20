@@ -1,8 +1,14 @@
 package com.expensemanager.app.models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
@@ -11,6 +17,10 @@ import io.realm.annotations.RealmClass;
 @RealmClass
 public class Category implements RealmModel {
     private static final String TAG = Category.class.getSimpleName();
+
+    // Keys in JSON response
+    public static final String OBJECT_ID_JSON_KEY = "objectId";
+    public static final String NAME_JSON_KEY = "name";
 
     // Property name key
     public static final String ID_KEY = "id";
@@ -37,6 +47,36 @@ public class Category implements RealmModel {
         this.id = id;
     }
 
+    public void mapFromJSON(JSONObject jsonObject) {
+        try {
+            this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
+            this.name = jsonObject.getString(NAME_JSON_KEY);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error in parsing category.", e);
+        }
+    }
+
+    public static void mapFromJSONArray(JSONArray jsonArray) {
+        RealmList<Category> categories = new RealmList<>();
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject categoryJson = jsonArray.getJSONObject(i);
+                Category category = new Category();
+                category.mapFromJSON(categoryJson);
+                categories.add(category);
+            } catch (JSONException e) {
+                Log.e(TAG, "Error in parsing category.", e);
+            }
+        }
+
+        realm.copyToRealmOrUpdate(categories);
+        realm.commitTransaction();
+        realm.close();
+    }
 
     /**
      * @return all categories
@@ -59,5 +99,14 @@ public class Category implements RealmModel {
         realm.close();
 
         return category;
+    }
+
+    public static void delete(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<Category> categories = realm.where(Category.class).equalTo(ID_KEY, id).findAll();
+        categories.deleteFromRealm(0);
+        realm.commitTransaction();
+        realm.close();
     }
 }

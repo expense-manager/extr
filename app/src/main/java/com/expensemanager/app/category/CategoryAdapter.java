@@ -1,5 +1,6 @@
 package com.expensemanager.app.category;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -79,7 +80,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         viewHolder.name.setText(category.getName());
         viewHolder.itemView.setOnClickListener(v -> {
             CategoryDetailActivity.newInstance(context, categories.get(position).getId());
-            // todo: create animation
+            ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }
 

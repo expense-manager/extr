@@ -47,7 +47,8 @@
         android:layout_marginLeft="@dimen/space_ultra_large"
         android:layout_marginRight="@dimen/space_ultra_large"
 
-        android:hint="@string/enter_password"/>
+        android:hint="@string/enter_password"
+        android:inputType="textPassword"/>
 
     <!-- Signup -->
     <Button
@@ -58,11 +59,12 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/space_ultra_large"
 
-        android:text="@string/login"/>
+        android:text="@string/login"
+        android:textAllCaps="false"/>
 
     <!-- Login -->
     <TextView
-        android:id="@+id/login_activity_signup_text_view_id"
+        android:id="@+id/login_activity_sign_up_text_view_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

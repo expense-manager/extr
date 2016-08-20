@@ -52,6 +52,7 @@
 
         android:text="@string/login"
         android:textColor="@color/white"
+        android:textAllCaps="false"
         android:background="@drawable/background_round_corner_border_white"/>
 
 </RelativeLayout>

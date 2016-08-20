@@ -23,6 +23,7 @@
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="amount">Amount</string>
+    <string name="name">Name</string>
     <string name="note">Note</string>
     <string name="created_at">Created At</string>
     <string name="shared_preferences_session_key">Session</string>

@@ -1,5 +1,6 @@
 package com.expensemanager.app.service;
 
+import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.User;
 
@@ -70,6 +71,38 @@ public class RequestTemplateCreator {
 
     public static RequestTemplate deleteExpense(String expenseId) {
         String url = BASE_URL + "classes/Expense/" + expenseId;
+
+        return new RequestTemplate(DELETE, url, null);
+    }
+
+    public static RequestTemplate getAllCategories() {
+        String url = BASE_URL + "classes/Category";
+        Map<String, String> params = new HashMap<>();
+        //todo: getAllCategoriesByUserId
+
+        return new RequestTemplate(GET, url, params);
+    }
+
+    public static RequestTemplate createCategory(Category category) {
+        String url = BASE_URL + "classes/Category";
+        Map<String, String> params = new HashMap<>();
+
+        params.put(Category.NAME_JSON_KEY, category.getName());
+
+        return new RequestTemplate(POST, url, params);
+    }
+
+    public static RequestTemplate updateCategory(Category category) {
+        String url = BASE_URL + "classes/Category/" + category.getId();
+        Map<String, String> params = new HashMap<>();
+
+        params.put(Category.NAME_JSON_KEY, category.getName());
+
+        return new RequestTemplate(PUT, url, params);
+    }
+
+    public static RequestTemplate deleteCategory(String categoryId) {
+        String url = BASE_URL + "classes/Category/" + categoryId;
 
         return new RequestTemplate(DELETE, url, null);
     }
