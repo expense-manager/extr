@@ -29,8 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SignUpActivity extends AppCompatActivity {
-    private static final String TAG = SignUpActivity.class.getSimpleName();
+public class SignActivity extends AppCompatActivity {
+    private static final String TAG = SignActivity.class.getSimpleName();
 
     private String email;
     private String password;
@@ -53,7 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.sign_up_activity_title_text_view_id) TextView titleTextView;
 
     public static void newInstance(Context context) {
-        Intent intent = new Intent(context, SignUpActivity.class);
+        Intent intent = new Intent(context, SignActivity.class);
         context.startActivity(intent);
     }
 
@@ -162,7 +162,7 @@ public class SignUpActivity extends AppCompatActivity {
                 errorMessageTextView.setVisibility(View.VISIBLE);
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
             } else {
-                MainActivity.newInstance(SignUpActivity.this);
+                MainActivity.newInstance(SignActivity.this);
             }
 
             return null;

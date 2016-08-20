@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_sign_up_activity_id:
-                SignUpActivity.newInstance(this);
+                SignActivity.newInstance(this);
                 return true;
         }
 
