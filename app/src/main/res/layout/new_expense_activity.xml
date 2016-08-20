@@ -38,8 +38,8 @@
                 android:layout_toRightOf="@+id/new_expense_activity_toolbar_close_image_view_id"
                 android:layout_toEndOf="@+id/new_expense_activity_toolbar_close_image_view_id"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/space_really_large"
-                android:layout_marginStart="@dimen/space_really_large"
+                android:layout_marginLeft="@dimen/space_small"
+                android:layout_marginStart="@dimen/space_small"
 
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_medium_small"/>
@@ -55,7 +55,8 @@
                 android:layout_marginEnd="@dimen/space_medium_large"
 
                 android:text="@string/post"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium_small"/>
 
         </RelativeLayout>
 
@@ -65,12 +66,14 @@
     <EditText
         android:id="@+id/new_expense_activity_amount_text_view_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@+id/new_expense_activity_toolbar_id"
         android:layout_margin="@dimen/space_medium"
 
         android:padding="@dimen/space_really_small"
-        android:hint="@string/enter_amount"
+        android:hint="@string/amount"
+        android:textColorHint="@color/light_gray"
+        android:textSize="@dimen/text_small"
         android:background="@drawable/background_round_corner_white"/>
 
     <!-- Note -->
@@ -79,24 +82,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/new_expense_activity_amount_text_view_id"
-        android:layout_margin="@dimen/space_medium"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_medium"
 
         android:padding="@dimen/space_really_small"
-        android:hint="@string/enter_note"
+        android:minHeight="40dp"
+        android:maxLines="4"
+        android:hint="@string/note"
+        android:textColorHint="@color/light_gray"
+        android:textSize="@dimen/text_small"
         android:background="@drawable/background_round_corner_white"/>
 
-    <!-- Photo -->
-    <ImageView
-        android:id="@+id/new_expense_activity_add_photo_image_view_id"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@+id/new_expense_activity_note_text_view_id"
-        android:layout_margin="@dimen/space_medium"
+    <!-- Expense photo -->
+    <LinearLayout
+        android:id="@+id/add_grocery_linear_layout_grid_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/new_expense_activity_note_text_view_id"
+        android:layout_margin="@dimen/space_medium">
 
-        android:padding="@dimen/space_medium"
-        android:src="@drawable/ic_camera_alt_white_24dp"
-        android:tint="@color/gray"
-        android:background="@drawable/background_round_corner_border_gray"/>
+        <GridView
+            android:id="@+id/new_expense_activity_grid_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:columnWidth="84dp"
+            android:numColumns="auto_fit"
+            android:gravity="center" />
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/new_expense_activity_progress_bar_id"

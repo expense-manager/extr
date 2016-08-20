@@ -5,12 +5,10 @@
     <string name="new_category">New category</string>
     <string name="expense_detail">Expense detail</string>
     <string name="category_detail">Category detail</string>
-    <string name="enter_amount">Enter amount</string>
-    <string name="enter_note">Enter note</string>
-    <string name="enter_name">Enter name</string>
-    <string name="enter_email">Email</string>
-    <string name="enter_password">Password</string>
-    <string name="confirm_password">Re-enter Password</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
     <string name="sign_up">Sign up</string>
     <string name="login">Login</string>
     <string name="category">Category</string>
@@ -24,18 +22,21 @@
     <string name="forget_password">Forget password</string>
     <string name="sign_up_title_step_one">Sign up step 1/2</string>
     <string name="sign_up_title_step_two">Sign up step 2/2</string>
-    <string name="title_activity_category_detail">CategoryDetailActivity</string>
-    <string name="title_activity_new_category">NewCategoryActivity</string>
-    <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="title_activity_signup">SignupActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_category_detail">Category Detail</string>
+    <string name="title_activity_new_category">New Category</string>
+    <string name="title_activity_welcome">Welcome</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+    <string name="title_activity_login">Login</string>
     <string name="amount">Amount</string>
-    <string name="name">Name</string>
     <string name="note">Note</string>
     <string name="next">Next</string>
     <string name="created_at">Created At</string>
     <string name="shared_preferences_session_key">Session</string>
     <string name="create_an_expense">Create an expense</string>
+    <string name="photo_date_format_string">yyyyMMddHHmmss</string>
+    <string name="photo_select_source">Select source</string>
+    <string name="unsaved_changes">Unsaved Changes</string>
+    <string name="unsaved_changes_message">Are you sure you want to discard your unsaved changes? </string>
 
     <!-- Action -->
     <string name="add">Add</string>
@@ -44,4 +45,5 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="post">Post</string>
+    <string name="discard">Discard</string>
 </resources>

@@ -32,7 +32,7 @@
         android:layout_margin="@dimen/space_medium"
 
         android:padding="@dimen/space_really_small"
-        android:hint="@string/enter_name"
+        android:hint="@string/name"
         android:background="@drawable/background_round_corner_white"/>
 
     <!-- Save -->

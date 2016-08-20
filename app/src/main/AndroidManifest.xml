@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".expense.ExpenseActivity" />
         <activity android:name=".expense.NewExpenseActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/BaseTheme" />
         <activity android:name=".category.CategoryActivity" />
         <activity android:name=".expense.ExpenseDetailActivity" />
         <activity
@@ -43,7 +43,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".welcome.SignUpActivity"
-            android:label="@string/title_activity_signup"
+            android:label="@string/title_activity_sign_up"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".welcome.LoginActivity"

@@ -94,7 +94,7 @@
                 android:layout_marginBottom="@dimen/space_medium"
                 android:layout_toLeftOf="@+id/sign_up_activity_clear_password_image_view_id"
 
-                android:hint="@string/enter_password"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="@dimen/space_small"
                 android:background="@color/grey_light"/>
@@ -146,7 +146,7 @@
                 android:layout_toLeftOf="@+id/sign_up_activity_clear_name_image_view_id"
                 android:layout_marginBottom="@dimen/space_medium"
 
-                android:hint="@string/enter_name"
+                android:hint="@string/name"
                 android:padding="@dimen/space_small"
                 android:background="@color/grey_light"/>
 
@@ -162,6 +162,7 @@
                 android:padding="@dimen/space_small"
                 android:src="@drawable/ic_window_close"
                 android:background="@color/grey_light"/>
+
         </RelativeLayout>
 
     </RelativeLayout>
@@ -201,6 +202,7 @@
 
             android:src="@drawable/ic_alert_circle_outline"
             android:layout_marginRight="@dimen/space_small"/>
+
         <TextView
             android:id="@+id/sign_up_activity_error_text_view_id"
             android:layout_width="wrap_content"
@@ -211,5 +213,7 @@
             tools:text="Invalid username/password."
             android:textSize="@dimen/text_small"
             android:textColor="@color/red"/>
+
     </RelativeLayout>
+
 </RelativeLayout>
