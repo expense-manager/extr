@@ -1,13 +1,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
     </style>
+
+    <style name="MenuTextAppearance" parent="android:TextAppearance.Holo.Widget.ActionBar.Menu">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

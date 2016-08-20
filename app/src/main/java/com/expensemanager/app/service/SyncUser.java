@@ -22,14 +22,14 @@ import bolts.TaskCompletionSource;
 public class SyncUser {
     private static final String TAG = SyncUser.class.getSimpleName();
 
-    public static Task<Void> login(String username, String password) {
+    public static Task<JSONObject> login(String username, String password) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.login(username, password);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Continuation<JSONObject, Void> saveCredential = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, JSONObject> saveCredential = new Continuation<JSONObject, JSONObject>() {
             @Override
-            public Void then(Task<JSONObject> task) throws Exception {
+            public JSONObject then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
                     Log.e(TAG, "Error in login.", exception);
@@ -51,30 +51,23 @@ public class SyncUser {
                     editor.putString(User.SESSION_TOKEN, sessionToken);
                     editor.putString(User.OBJECT_ID_JSON_KEY, userId);
                     editor.apply();
-                } else {
-                    String error = result.optString(User.ERROR);
-                    if (!TextUtils.isEmpty(error)) {
-                        throw new Exception(error);
-                    } else {
-                        throw new Exception("Incorrect login response.");
-                    }
                 }
 
-                return null;
+                return result;
             }
         };
 
         return networkRequest.send().continueWith(saveCredential);
     }
 
-    public static Task<Void> signUp(String username, String password) {
+    public static Task<JSONObject> signUp(String username, String password) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.signUp(username, password);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Continuation<JSONObject, Void> saveCredential = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, JSONObject> saveCredential = new Continuation<JSONObject, JSONObject>() {
             @Override
-            public Void then(Task<JSONObject> task) throws Exception {
+            public JSONObject then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
                     Log.e(TAG, "Error in sign up.", exception);
@@ -94,16 +87,9 @@ public class SyncUser {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(User.SESSION_TOKEN, sessionToken);
                     editor.apply();
-                } else {
-                    String error = result.optString(User.ERROR);
-                    if (!TextUtils.isEmpty(error)) {
-                        throw new Exception(error);
-                    } else {
-                        throw new Exception("Incorrect login response.");
-                    }
                 }
 
-                return null;
+                return result;
             }
         };
 

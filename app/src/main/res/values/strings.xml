@@ -10,13 +10,20 @@
     <string name="enter_name">Enter name</string>
     <string name="enter_email">Email</string>
     <string name="enter_password">Password</string>
-    <string name="confirm_password">Confirm password</string>
+    <string name="confirm_password">Re-enter Password</string>
     <string name="sign_up">Sign up</string>
     <string name="login">Login</string>
     <string name="category">Category</string>
     <string name="expense">Expense</string>
     <string name="welcome">Welcome</string>
     <string name="welcome_title">Welcome To Expense Manager</string>
+    <string name="welcome_sub_title">An easy and fast way to manage your expense</string>
+    <string name="login_title">Log in to Expense Manager</string>
+    <string name="username_title">Phone, Email or Username</string>
+    <string name="password_title">Password</string>
+    <string name="forget_password">Forget password</string>
+    <string name="sign_up_title_step_one">Sign up step 1/2</string>
+    <string name="sign_up_title_step_two">Sign up step 2/2</string>
     <string name="title_activity_category_detail">CategoryDetailActivity</string>
     <string name="title_activity_new_category">NewCategoryActivity</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
@@ -25,6 +32,7 @@
     <string name="amount">Amount</string>
     <string name="name">Name</string>
     <string name="note">Note</string>
+    <string name="next">Next</string>
     <string name="created_at">Created At</string>
     <string name="shared_preferences_session_key">Session</string>
 

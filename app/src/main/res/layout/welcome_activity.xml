@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/space_ultra_large"
+        android:layout_marginTop="@dimen/space_crazy_large"
         android:layout_marginLeft="@dimen/space_medium"
         android:layout_marginRight="@dimen/space_medium"
 
@@ -27,31 +27,49 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_really_large"/>
 
+    <!-- Sub Title -->
+    <TextView
+        android:id="@+id/welcome_activity_sub_title_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcome_activity_title_text_view_id"
+        android:layout_marginTop="@dimen/space_really_large"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
+
+        android:text="@string/welcome_sub_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_medium_small"/>
+
     <!-- Signup -->
     <Button
         android:id="@+id/welcome_activity_signup_button_id"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
+        android:layout_width="160dp"
+        android:layout_height="@dimen/button_height"
         android:layout_centerInParent="true"
+        android:layout_above="@+id/welcome_activity_login_button_id"
         android:layout_margin="@dimen/space_medium"
 
         android:text="@string/sign_up"
         android:textColor="@color/blue"
+        android:textSize="@dimen/text_medium_small"
         android:textAllCaps="false"
         android:background="@drawable/background_round_corner_white"/>
 
     <!-- Login -->
     <Button
         android:id="@+id/welcome_activity_login_button_id"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/welcome_activity_signup_button_id"
+        android:layout_width="160dp"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/welcome_activity_signup_button_id"
         android:layout_alignStart="@+id/welcome_activity_signup_button_id"
-        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_medium_small"
+        android:layout_marginBottom="@dimen/space_crazy_large"
 
         android:text="@string/login"
         android:textColor="@color/white"
+        android:textSize="@dimen/text_medium_small"
         android:textAllCaps="false"
         android:background="@drawable/background_round_corner_border_white"/>
 

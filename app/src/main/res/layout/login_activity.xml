@@ -5,6 +5,8 @@
     android:id="@+id/category_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="@color/white"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -17,60 +19,134 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/space_ultra_large"
-        android:layout_marginLeft="@dimen/space_medium"
-        android:layout_marginRight="@dimen/space_medium"
-        android:layout_marginBottom="@dimen/space_ultra_large"
+        android:layout_marginBottom="@dimen/space_medium_large"
 
-        android:text="@string/welcome_title"
-        android:textSize="@dimen/text_really_large"/>
+        android:text="@string/login_title"
+        android:textSize="@dimen/text_medium"
+        android:textColor="@color/black"/>
+
+    <!-- Username Title -->
+    <TextView
+        android:id="@+id/login_activity_username_title_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_activity_title_text_view_id"
+
+        android:text="@string/username_title"
+        android:textSize="@dimen/text_small"/>
 
     <!-- Email -->
     <EditText
         android:id="@+id/login_activity_email_edit_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/login_activity_title_text_view_id"
-        android:layout_marginTop="@dimen/space_ultra_large"
-        android:layout_marginLeft="@dimen/space_ultra_large"
-        android:layout_marginRight="@dimen/space_ultra_large"
+        android:layout_below="@+id/login_activity_username_title_text_view_id"
+        android:layout_toLeftOf="@+id/login_activity_clear_email_image_view_id"
 
-        android:hint="@string/enter_email"/>
+        android:textSize="@dimen/text_small"/>
+
+    <!-- Clear Email -->
+    <ImageView
+        android:id="@+id/login_activity_clear_email_image_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_below="@+id/login_activity_username_title_text_view_id"
+        android:layout_alignParentRight="true"
+
+        android:visibility="gone"
+        android:padding="@dimen/space_small"
+        android:src="@drawable/ic_window_close"/>
+
+    <!-- Password Title -->
+    <TextView
+        android:id="@+id/login_activity_password_title_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_activity_email_edit_text_id"
+        android:layout_marginTop="@dimen/space_medium_small"
+
+        android:text="@string/password_title"
+        android:textSize="@dimen/text_small"/>
 
     <!-- Password -->
     <EditText
         android:id="@+id/login_activity_password_edit_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/login_activity_email_edit_text_id"
-        android:layout_marginTop="@dimen/space_small"
+        android:layout_below="@+id/login_activity_password_title_text_view_id"
+        android:layout_toLeftOf="@+id/login_activity_clear_password_image_view_id"
+
+        android:inputType="textPassword"/>
+
+    <!-- Clear Password -->
+    <ImageView
+        android:id="@+id/login_activity_clear_password_image_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_below="@+id/login_activity_password_title_text_view_id"
+        android:layout_alignParentRight="true"
+
+        android:visibility="gone"
+        android:padding="@dimen/space_small"
+        android:src="@drawable/ic_window_close"/>
+
+    <!-- Forget Password -->
+    <TextView
+        android:id="@+id/login_activity_forget_password_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/login_activity_password_edit_text_id"
+        android:layout_marginTop="@dimen/space_medium_large"
+        android:layout_marginBottom="@dimen/space_medium_small"
+
+        android:text="@string/forget_password"
+        android:textSize="@dimen/text_small"/>
+
+    <!-- Error Message -->
+    <RelativeLayout
+        android:id="@+id/login_activity_error_relative_layout_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_large"
         android:layout_marginLeft="@dimen/space_ultra_large"
         android:layout_marginRight="@dimen/space_ultra_large"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/login_activity_forget_password_text_view_id"
 
-        android:hint="@string/enter_password"
-        android:inputType="textPassword"/>
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/login_activity_error_image_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/ic_alert_circle_outline"
+            android:layout_marginRight="@dimen/space_small"/>
+        <TextView
+            android:id="@+id/login_activity_error_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/login_activity_error_image_view_id"
+
+            android:visibility="visible"
+            tools:text="Error Message MMMMMMMMMMMMM"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/red"/>
+    </RelativeLayout>
 
     <!-- Signup -->
     <Button
         android:id="@+id/login_activity_login_button_id"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_activity_password_edit_text_id"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/space_ultra_large"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
 
         android:text="@string/login"
-        android:textAllCaps="false"/>
-
-    <!-- Login -->
-    <TextView
-        android:id="@+id/login_activity_sign_up_text_view_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/space_ultra_large"
-
-        android:text="@string/sign_up"/>
+        android:textColor="@color/blue"
+        android:textSize="@dimen/text_medium_small"
+        android:textAllCaps="false"
+        android:background="@drawable/button_background"/>
 
 </RelativeLayout>

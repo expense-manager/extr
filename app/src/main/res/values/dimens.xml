@@ -16,7 +16,7 @@
     <dimen name="text_ultra_large">42sp</dimen>
 
     <!-- Space sizes -->
-    <dimen name="space_ultra_small">2dp</dimen>
+    <dimen name="space_ultra_small">4dp</dimen>
     <dimen name="space_really_small">4dp</dimen>
     <dimen name="space_small">6dp</dimen>
     <dimen name="space_medium_small">8dp</dimen>
@@ -25,6 +25,10 @@
     <dimen name="space_large">20dp</dimen>
     <dimen name="space_really_large">28dp</dimen>
     <dimen name="space_ultra_large">36dp</dimen>
+    <dimen name="space_super_large">66dp</dimen>
+    <dimen name="space_crazy_large">106dp</dimen>
+
+    <dimen name="button_height">40dp</dimen>
 
     <dimen name="corner_radius">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
