@@ -29,7 +29,7 @@ public class WelcomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         signupButton.setOnClickListener(v -> {
-            SignActivity.newInstance(this);
+            SignUpActivity.newInstance(this);
         });
 
         loginButton.setOnClickListener(v -> {
