@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -21,6 +22,7 @@ public class Category implements RealmModel {
     // Keys in JSON response
     public static final String OBJECT_ID_JSON_KEY = "objectId";
     public static final String NAME_JSON_KEY = "name";
+    public static final String COLOR_JSON_KEY = "color";
 
     // Property name key
     public static final String ID_KEY = "id";
@@ -30,6 +32,7 @@ public class Category implements RealmModel {
     @PrimaryKey
     private String id;
     private String name;
+    private String color;
 
     public String getName() {
         return name;
@@ -47,10 +50,20 @@ public class Category implements RealmModel {
         this.id = id;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public void mapFromJSON(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
             this.name = jsonObject.getString(NAME_JSON_KEY);
+            // Hex String to Hex int
+            this.color = jsonObject.getString(COLOR_JSON_KEY);
         } catch (JSONException e) {
             Log.e(TAG, "Error in parsing category.", e);
         }

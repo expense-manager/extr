@@ -66,8 +66,7 @@
         android:layout_marginTop="@dimen/space_medium_small"
 
         android:text="@string/password_title"
-        android:textSize="@dimen/text_small"
-        android:hint="@string/email"/>
+        android:textSize="@dimen/text_small"/>
 
     <!-- Password -->
     <EditText

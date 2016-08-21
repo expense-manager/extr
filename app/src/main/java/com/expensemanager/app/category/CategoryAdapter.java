@@ -2,10 +2,12 @@ package com.expensemanager.app.category;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
@@ -77,7 +79,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Category category = categories.get(position);
 
-        viewHolder.name.setText(category.getName());
+        viewHolder.nameTextView.setText(category.getName());
+        viewHolder.colorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
         viewHolder.itemView.setOnClickListener(v -> {
             CategoryDetailActivity.newInstance(context, categories.get(position).getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
@@ -95,7 +98,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.category_item_default_name_text_view_id) TextView name;
+        @BindView(R.id.category_item_default_name_text_view_id) TextView nameTextView;
+        @BindView(R.id.category_item_default_color_image_view_id) ImageView colorImageView;
 
         private View itemView;
 

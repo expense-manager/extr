@@ -1,8 +1,10 @@
 package com.expensemanager.app.helpers;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.DisplayMetrics;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -154,5 +156,12 @@ public class Helpers {
         canvas.drawBitmap(input, paddingX, paddingY, null);
 
         return outputBitmap;
+    }
+
+    // dp to px
+    public static double dpToPx(Context context, double dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        double px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 }
