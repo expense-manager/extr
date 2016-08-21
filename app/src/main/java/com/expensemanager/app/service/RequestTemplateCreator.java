@@ -65,6 +65,7 @@ public class RequestTemplateCreator {
 
         params.put(Expense.AMOUNT_JSON_KEY, String.valueOf(expense.getAmount()));
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
+        // todo: able to post selected category category
 
         // todo: Build Category Pointer
 //        try {
@@ -87,6 +88,7 @@ public class RequestTemplateCreator {
 
         params.put(Expense.AMOUNT_JSON_KEY, String.valueOf(expense.getAmount()));
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
+        // todo: able to update with categoryId
 
         return new RequestTemplate(PUT, url, params);
     }

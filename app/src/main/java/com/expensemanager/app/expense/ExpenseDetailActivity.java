@@ -2,6 +2,7 @@ package com.expensemanager.app.expense;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,12 +11,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.service.SyncExpense;
 
@@ -28,12 +32,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class ExpenseDetailActivity extends AppCompatActivity {
+public class ExpenseDetailActivity extends AppCompatActivity
+    implements ExpenseCategoryPickerDialogFragment.ExpenseCategoryDialogListener {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
 
     private static final String EXPENSE_ID = "EXPENSE_ID";
 
     private Expense expense;
+    private Category category;
+    private double amount;
     private boolean isEditable = false;
 
     private ArrayList<String> photoNameList;
@@ -48,6 +55,10 @@ public class ExpenseDetailActivity extends AppCompatActivity {
     @BindView(R.id.expense_detail_activity_edit_button_id) Button editButton;
     @BindView(R.id.expense_detail_activity_save_button_id) Button saveButton;
     @BindView(R.id.expense_detail_activity_progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.expense_detail_activity_category_relative_layout_id) RelativeLayout categoryRelativeLayout;
+    @BindView(R.id.expense_detail_activity_category_color_image_view_id) ImageView categoryColorImageView;
+    @BindView(R.id.expense_detail_activity_category_name_text_view_id) TextView categoryNameTextView;
+    @BindView(R.id.expense_detail_activity_category_amount_text_view_id) TextView categoryAmountTextView;
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, ExpenseDetailActivity.class);
@@ -63,6 +74,8 @@ public class ExpenseDetailActivity extends AppCompatActivity {
 
         String expenseId = getIntent().getStringExtra(EXPENSE_ID);
         expense = Expense.getExpenseById(expenseId);
+        category = Category.getCategoryById(expense.getCategoryId());
+
         //todo: fix photo not found in realm
         Log.d(TAG, "onCreate expense photo:" + expense.getPhotos());
 
@@ -73,6 +86,7 @@ public class ExpenseDetailActivity extends AppCompatActivity {
 
     private void invalidateViews() {
         amountTextView.setText(String.valueOf(expense.getAmount()));
+        setupCategory();
         noteTextView.setText(String.valueOf(expense.getNote()));
         createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
 
@@ -108,6 +122,51 @@ public class ExpenseDetailActivity extends AppCompatActivity {
             Log.d(TAG, "Photo long clicked at position: " + position);
             return true;
         });
+    }
+
+    private void setupCategory() {
+        // Get category total amount
+        amount = getCategoryAmount();
+        // Load category info
+        loadCategory();
+        // Add click listener
+        categoryRelativeLayout.setOnClickListener(v -> {
+            selectCategory();
+        });
+    }
+
+    @Override
+    public void onFinishExpenseCategoryDialog(Category category, double amount) {
+        // Update category and amount
+        this.category = category;
+        this.amount = amount;
+        // Load category info
+        loadCategory();
+    }
+
+    private void selectCategory() {
+        if (isEditable) {
+            ExpenseCategoryPickerDialogFragment fg = ExpenseCategoryPickerDialogFragment
+                .newInstance(this);
+            fg.show(getSupportFragmentManager(), "expense_category_fragment");
+        }
+    }
+
+    private void loadCategory() {
+        categoryColorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+        categoryNameTextView.setText(category.getName());
+        categoryAmountTextView.setText("$" + amount);
+    }
+
+    private double getCategoryAmount() {
+        double total = 0;
+        for (Expense e : Expense.getAllExpenses()) {
+            if (e.getCategoryId().equals(expense.getCategoryId())) {
+                total += e.getAmount();
+            }
+        }
+
+        return total;
     }
 
     private void setupEditableViews(boolean isEditable) {
@@ -179,6 +238,7 @@ public class ExpenseDetailActivity extends AppCompatActivity {
         realm.beginTransaction();
         expense.setAmount(amount);
         expense.setNote(noteTextView.getText().toString());
+        expense.setCategoryId(category.getId());
         expense.setSynced(false);
         realm.copyToRealmOrUpdate(expense);
         realm.commitTransaction();

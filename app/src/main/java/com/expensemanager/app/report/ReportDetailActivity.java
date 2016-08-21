@@ -75,7 +75,7 @@ public class ReportDetailActivity extends AppCompatActivity {
 
     private void invalidateViews() {
         reportCategoryAdapter.clear();
-        reportCategoryAdapter.addAll(new ArrayList<>(Expense.getAllExpenses()));
+        reportCategoryAdapter.addAll(Expense.getAllExpenses());
 
         updateChart();
     }
@@ -133,6 +133,7 @@ public class ReportDetailActivity extends AppCompatActivity {
         dataSet.setColors(colors);
         // Create data
         PieData data = new PieData(dataSet);
+        // Set value color
         data.setValueTextColor(Color.WHITE);
         // Set legends
         Legend l = pieChart.getLegend();

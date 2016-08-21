@@ -52,12 +52,79 @@
         android:textSize="@dimen/text_medium_small"
         android:background="@drawable/background_round_corner_white"/>
 
+    <!-- Category label -->
+    <TextView
+        android:id="@+id/expense_detail_activity_category_label_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/expense_detail_activity_amount_text_view_id"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space_really_small"
+
+        android:paddingLeft="@dimen/space_really_small"
+        android:paddingRight="@dimen/space_really_small"
+        android:text="@string/category"
+        android:textSize="@dimen/text_small"/>
+
+    <!-- Category info -->
+    <RelativeLayout
+        android:id="@+id/expense_detail_activity_category_relative_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginRight="@dimen/space_medium"
+        android:layout_below="@+id/expense_detail_activity_category_label_text_view_id"
+
+        android:padding="@dimen/space_medium"
+        android:background="@drawable/background_round_corner_white">
+
+        <!-- Color -->
+        <ImageView
+            android:id="@+id/expense_detail_activity_category_color_image_view_id"
+            android:layout_width="@dimen/category_color_width_small"
+            android:layout_height="@dimen/category_color_width_small"
+            android:layout_marginRight="@dimen/space_medium"
+
+            tools:background="@color/black"/>
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/expense_detail_activity_category_name_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/expense_detail_activity_category_color_image_view_id"
+            android:layout_alignTop="@+id/expense_detail_activity_category_color_image_view_id"
+            android:layout_alignBottom="@+id/expense_detail_activity_category_color_image_view_id"
+
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium_small"
+            android:gravity="center_vertical"
+            tools:text="name"/>
+
+        <!-- Amount -->
+        <TextView
+            android:id="@+id/expense_detail_activity_category_amount_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/expense_detail_activity_category_name_text_view_id"
+            android:layout_alignBottom="@+id/expense_detail_activity_category_name_text_view_id"
+
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium_small"
+            android:gravity="center_vertical"
+            tools:text="1234"/>
+
+    </RelativeLayout>
+
     <!-- Note label -->
     <TextView
         android:id="@+id/expense_detail_activity_note_label_text_view_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/expense_detail_activity_amount_text_view_id"
+        android:layout_below="@+id/expense_detail_activity_category_relative_layout_id"
         android:layout_marginLeft="@dimen/space_medium"
         android:layout_marginRight="@dimen/space_medium"
         android:layout_marginTop="@dimen/space_medium"

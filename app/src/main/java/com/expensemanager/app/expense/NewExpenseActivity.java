@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -33,10 +34,12 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.service.SyncExpense;
 
@@ -58,7 +61,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class NewExpenseActivity extends AppCompatActivity {
+public class NewExpenseActivity extends AppCompatActivity
+    implements ExpenseCategoryPickerDialogFragment.ExpenseCategoryDialogListener {
     private static final String TAG = NewExpenseActivity.class.getSimpleName();
 
     public static final String NEW_PHOTO = "Take a photo";
@@ -70,6 +74,7 @@ public class NewExpenseActivity extends AppCompatActivity {
     private Uri outputFileUri;
     private AlertDialog.Builder choosePhotoSource;
     private Expense expense;
+    private Category category;
 
     @BindView(R.id.new_expense_activity_toolbar_id) Toolbar toolbar;
     @BindView(R.id.new_expense_activity_toolbar_close_image_view_id) ImageView closeImageView;
@@ -79,6 +84,11 @@ public class NewExpenseActivity extends AppCompatActivity {
     @BindView(R.id.new_expense_activity_note_text_view_id) TextView noteTextView;
     @BindView(R.id.new_expense_activity_grid_view_id) GridView photoGridView;
     @BindView(R.id.new_expense_activity_progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.new_expense_activity_category_hint_text_view_id) TextView categoryHintTextView;
+    @BindView(R.id.new_expense_activity_category_relative_layout_id) RelativeLayout categoryRelativeLayout;
+    @BindView(R.id.new_expense_activity_category_color_image_view_id) ImageView categoryColorImageView;
+    @BindView(R.id.new_expense_activity_category_name_text_view_id) TextView categoryNameTextView;
+    @BindView(R.id.new_expense_activity_category_amount_text_view_id) TextView categoryAmountTextView;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, NewExpenseActivity.class);
@@ -94,7 +104,34 @@ public class NewExpenseActivity extends AppCompatActivity {
         setupToolbar();
         expense = new Expense();
         progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_ATOP);
+        setupCategory();
         setupPhotoSourcePicker();
+    }
+
+    private void setupCategory() {
+        categoryHintTextView.setOnClickListener(v -> {
+            selectCategory();
+        });
+        categoryRelativeLayout.setOnClickListener(v -> {
+            selectCategory();
+        });
+    }
+
+    private void selectCategory() {
+        ExpenseCategoryPickerDialogFragment fg = ExpenseCategoryPickerDialogFragment.newInstance(this);
+        fg.show(getSupportFragmentManager(), "expense_category_fragment");
+    }
+
+    @Override
+    public void onFinishExpenseCategoryDialog(Category category, double amount) {
+        // Hide category hint
+        categoryHintTextView.setVisibility(View.INVISIBLE);
+        // Load category info
+        categoryColorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+        categoryNameTextView.setText(category.getName());
+        categoryAmountTextView.setText("$" + amount);
+        // Update category
+        this.category = category;
     }
 
     private void setupToolbar() {
@@ -258,6 +295,7 @@ public class NewExpenseActivity extends AppCompatActivity {
         expense.setId(uuid);
         expense.setAmount(Double.valueOf(amountTextView.getText().toString()));
         expense.setNote(noteTextView.getText().toString());
+        expense.setCategoryId(category.getId());
 
         ExpenseBuilder expenseBuilder = new ExpenseBuilder();
         expenseBuilder.setExpense(expense);

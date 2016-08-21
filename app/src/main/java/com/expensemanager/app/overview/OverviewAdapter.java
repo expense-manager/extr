@@ -83,7 +83,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         viewHolder.amountTextView.setText("$" + expense.getAmount());
         viewHolder.noteTextView.setText(String.valueOf(expense.getNote().toString()));
         viewHolder.itemView.setOnClickListener(v -> {
-            ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
+            ExpenseDetailActivity.newInstance(context, expense.getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }
