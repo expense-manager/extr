@@ -7,10 +7,13 @@
     android:layout_height="match_parent"
     tools:context="com.expensemanager.app.expense.ExpenseActivity">
 
+    <include layout="@layout/toolbar" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/expense_activity_recycler_view_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_id"
 
         android:paddingTop="@dimen/space_really_small"
         android:paddingBottom="@dimen/space_really_small"/>
@@ -20,7 +23,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
 

@@ -14,17 +14,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.MainActivity">
+        <activity android:name=".main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".expense.ExpenseActivity" />
+        <activity android:name=".expense.ExpenseActivity"
+            android:theme="@style/BaseTheme"/>
         <activity android:name=".expense.NewExpenseActivity"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".category.CategoryActivity" />
+        <activity android:name=".category.CategoryActivity"
+            android:theme="@style/BaseTheme"/>
         <activity android:name=".expense.ExpenseDetailActivity" />
         <activity
             android:name=".category.CategoryDetailActivity"
@@ -52,7 +55,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".report.ReportDetailActivity"
-            android:label="@string/title_activity_report"
+            android:label="@string/title_activity_report_detail"
             android:theme="@style/AppTheme">
         </activity>
     </application>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Make sure to add group id -->
+    <group android:id="@+id/nav_group_main_id"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_expense"
+            android:icon="@drawable/ic_payment_white_24dp"
+            android:title="@string/nav_expense" />
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_timeline_white_24dp"
+            android:title="@string/nav_report" />
+        <item
+            android:id="@+id/nav_category"
+            android:icon="@drawable/ic_group_work_white_24dp"
+            android:title="@string/nav_category" />
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_notifications_white_24dp"
+            android:title="@string/nav_notifications" />
+
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_white_24dp"
+            android:title="@string/nav_help" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_white_24dp"
+            android:title="@string/nav_settings" />
+
+    </group>
+
+    <group android:id="@+id/nav_group_other_id"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/nav_about" />
+
+    </group>
+</menu>
