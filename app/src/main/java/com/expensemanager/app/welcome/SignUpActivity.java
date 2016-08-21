@@ -197,6 +197,7 @@ public class SignUpActivity extends AppCompatActivity {
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             setButton();
             clearPasswordImageView.setVisibility(password != null && password.length() != 0 ? View.VISIBLE : View.GONE);
+            setMismatchSign();
         }
 
         @Override
