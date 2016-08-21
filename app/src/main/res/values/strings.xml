@@ -14,6 +14,7 @@
     <string name="category">Category</string>
     <string name="expense">Expense</string>
     <string name="welcome">Welcome</string>
+    <string name="report">Report</string>
     <string name="welcome_title">Welcome To Expense Manager</string>
     <string name="welcome_sub_title">An easy and fast way to manage your expense</string>
     <string name="login_title">Log in to Expense Manager</string>
@@ -46,4 +47,5 @@
     <string name="cancel">Cancel</string>
     <string name="post">Post</string>
     <string name="discard">Discard</string>
+    <string name="title_activity_report">ReportActivity</string>
 </resources>

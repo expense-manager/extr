@@ -12,6 +12,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
+import com.expensemanager.app.report.ReportDetailActivity;
 import com.expensemanager.app.welcome.SplashActivity;
 
 import butterknife.BindView;
@@ -56,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_item_splash_activity_id:
                 SplashActivity.newInstance(this);
+                return true;
+            case R.id.menu_item_report_activity_id:
+                ReportDetailActivity.newInstance(this);
                 return true;
         }
 

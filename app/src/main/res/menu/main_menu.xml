@@ -14,4 +14,8 @@
           android:title="@string/welcome"
           app:showAsAction="never"/>
 
+    <item android:id="@+id/menu_item_report_activity_id"
+          android:title="@string/report"
+          app:showAsAction="never"/>
+
 </menu>

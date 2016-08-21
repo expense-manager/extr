@@ -71,4 +71,7 @@ dependencies {
 
     // Retrolambda, make sure to apply this line last.
     apply plugin: 'me.tatarka.retrolambda'
+
+    // MPAndroidChartMPAndroidChart
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
 }

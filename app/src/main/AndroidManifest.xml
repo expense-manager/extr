@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.expensemanager.app">
+          package="com.expensemanager.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,9 +16,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".main.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".expense.ExpenseActivity" />
@@ -29,18 +29,18 @@
         <activity
             android:name=".category.CategoryDetailActivity"
             android:label="@string/title_activity_category_detail"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".category.NewCategoryActivity"
             android:label="@string/title_activity_new_category"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".welcome.SplashActivity"
-            android:theme="@style/SplashTheme" />
+            android:theme="@style/SplashTheme"/>
         <activity
             android:name=".welcome.WelcomeActivity"
             android:label="@string/title_activity_welcome"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".welcome.SignUpActivity"
             android:label="@string/title_activity_sign_up"
@@ -50,6 +50,11 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".report.ReportDetailActivity"
+            android:label="@string/title_activity_report"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>
