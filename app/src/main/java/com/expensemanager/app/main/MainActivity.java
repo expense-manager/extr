@@ -18,6 +18,7 @@ import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.notifications.NotificationsActivity;
+import com.expensemanager.app.overview.OverviewActivity;
 import com.expensemanager.app.report.ReportActivity;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.SplashActivity;
@@ -75,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {
+            case R.id.nav_overview:
+                OverviewActivity.newInstance(this);
+                break;
             case R.id.nav_expense:
                 ExpenseActivity.newInstance(this);
                 break;

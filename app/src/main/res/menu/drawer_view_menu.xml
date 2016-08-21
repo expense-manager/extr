@@ -6,6 +6,10 @@
     <group android:id="@+id/nav_group_main_id"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_overview"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_overview" />
+        <item
             android:id="@+id/nav_expense"
             android:icon="@drawable/ic_payment_white_24dp"
             android:title="@string/nav_expense" />
