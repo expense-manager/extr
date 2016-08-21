@@ -1,19 +1,19 @@
 package com.expensemanager.app.category;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.service.SyncCategory;
 
@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class CategoryActivity extends AppCompatActivity {
+public class CategoryActivity extends BaseActivity {
     private static final String TAG = CategoryActivity.class.getSimpleName();
 
     private ArrayList<Category> categories;
@@ -38,6 +38,7 @@ public class CategoryActivity extends AppCompatActivity {
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, CategoryActivity.class);
         context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -84,17 +85,6 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                close();
-                break;
-        }
-
-        return true;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
@@ -106,15 +96,5 @@ public class CategoryActivity extends AppCompatActivity {
         super.onPause();
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
-    }
-
-    private void close() {
-        finish();
-        overridePendingTransition(R.anim.left_in, R.anim.right_out);
-    }
-
-    @Override
-    public void onBackPressed() {
-        close();
     }
 }

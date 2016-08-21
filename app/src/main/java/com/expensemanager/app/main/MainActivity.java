@@ -17,7 +17,9 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
-import com.expensemanager.app.report.ReportDetailActivity;
+import com.expensemanager.app.notifications.NotificationsActivity;
+import com.expensemanager.app.report.ReportActivity;
+import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.SplashActivity;
 
 import butterknife.BindView;
@@ -75,19 +77,20 @@ public class MainActivity extends AppCompatActivity {
         switch(menuItem.getItemId()) {
             case R.id.nav_expense:
                 ExpenseActivity.newInstance(this);
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 break;
             case R.id.nav_report:
+                ReportActivity.newInstance(this);
                 break;
             case R.id.nav_category:
                 CategoryActivity.newInstance(this);
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 break;
             case R.id.nav_notifications:
+                NotificationsActivity.newInstance(this);
                 break;
             case R.id.nav_help:
                 break;
             case R.id.nav_settings:
+                SettingsActivity.newInstance(this);
                 break;
             case R.id.nav_about:
                 break;
@@ -122,9 +125,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_item_splash_activity_id:
                 SplashActivity.newInstance(this);
-                return true;
-            case R.id.menu_item_report_activity_id:
-                ReportDetailActivity.newInstance(this);
                 return true;
         }
 
