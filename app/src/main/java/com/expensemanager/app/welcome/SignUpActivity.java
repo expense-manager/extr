@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -109,6 +110,7 @@ public class SignUpActivity extends AppCompatActivity {
         //todo: add progress bar
 
         if (stepOneRelativeLayout.getVisibility() == View.VISIBLE) {
+            closeSoftKeyboard();
             setStepTwo();
         } else {
             SyncUser.signUp(email, password).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
@@ -291,9 +293,19 @@ public class SignUpActivity extends AppCompatActivity {
         fullname = nameEditText.getText().toString();
     }
 
+    public void closeSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        View view = this.getCurrentFocus();
+        if (inputMethodManager != null && view != null){
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (stepTwoRelativeLayout.getVisibility() == View.VISIBLE) {
+            closeSoftKeyboard();
             setStepOne();
         } else {
             finish();
