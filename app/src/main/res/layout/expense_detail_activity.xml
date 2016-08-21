@@ -112,10 +112,30 @@
         android:textSize="@dimen/text_medium_small"
         android:background="@drawable/background_round_corner_white"/>
 
+    <!-- Expense photo -->
+    <LinearLayout
+        android:id="@+id/expense_detail_activity_linear_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/expense_detail_activity_created_at_text_view_id"
+        android:layout_margin="@dimen/space_medium">
+
+        <GridView
+            android:id="@+id/expense_detail_activity_grid_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:columnWidth="84dp"
+            android:numColumns="auto_fit"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Action -->
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/expense_detail_activity_created_at_text_view_id"
+        android:layout_below="@+id/expense_detail_activity_linear_layout_id"
         android:layout_marginTop="@dimen/space_medium"
         android:layout_marginLeft="@dimen/space_medium"
         android:layout_marginStart="@dimen/space_medium">

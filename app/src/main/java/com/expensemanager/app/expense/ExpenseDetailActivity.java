@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +18,9 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.service.SyncExpense;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -31,9 +36,13 @@ public class ExpenseDetailActivity extends AppCompatActivity {
     private Expense expense;
     private boolean isEditable = false;
 
+    private ArrayList<String> photoNameList;
+    private ExpensePhotoAdapter expensePhotoAdapter;
+
     @BindView(R.id.expense_detail_activity_amount_text_view_id) EditText amountTextView;
     @BindView(R.id.expense_detail_activity_note_text_view_id) EditText noteTextView;
     @BindView(R.id.expense_detail_activity_created_at_text_view_id) TextView createdAtTextView;
+    @BindView(R.id.expense_detail_activity_grid_view_id) GridView photoGridView;
     @BindView(R.id.expense_detail_activity_cancel_button_id) Button cancelButton;
     @BindView(R.id.expense_detail_activity_delete_button_id) Button deleteButton;
     @BindView(R.id.expense_detail_activity_edit_button_id) Button editButton;
@@ -54,8 +63,12 @@ public class ExpenseDetailActivity extends AppCompatActivity {
 
         String expenseId = getIntent().getStringExtra(EXPENSE_ID);
         expense = Expense.getExpenseById(expenseId);
+        //todo: fix photo not found in realm
+        Log.d(TAG, "onCreate expense photo:" + expense.getPhotos());
 
         invalidateViews();
+
+        SyncExpense.getExpensePhotoByExpenseId(expenseId).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
     }
 
     private void invalidateViews() {
@@ -73,7 +86,28 @@ public class ExpenseDetailActivity extends AppCompatActivity {
         deleteButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
         saveButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
 
+        setupExpensePhoto();
         setupEditableViews(isEditable);
+    }
+
+    private void setupExpensePhoto() {
+        String photos = expense.getPhotos();
+        Log.d(TAG, "setupExpensePhoto: " + photos);
+        if (photos == null || photos.isEmpty()) {
+            return;
+        }
+        photoNameList = new ArrayList<>();
+        photoNameList.addAll(Arrays.asList(photos.split(",")));
+        expensePhotoAdapter = new ExpensePhotoAdapter(this, null, photoNameList);
+        photoGridView.setAdapter(expensePhotoAdapter);
+        photoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
+            Log.d(TAG, "Photo clicked at position: " + position);
+        });
+
+        photoGridView.setOnItemLongClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
+            Log.d(TAG, "Photo long clicked at position: " + position);
+            return true;
+        });
     }
 
     private void setupEditableViews(boolean isEditable) {
@@ -95,6 +129,20 @@ public class ExpenseDetailActivity extends AppCompatActivity {
         this.isEditable = isEditable;
         invalidateViews();
     }
+
+    private Continuation<Void, Void> onGetExpensePhotoSuccess = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            progressBar.setVisibility(View.GONE);
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error in getting expense photo.", task.getError());
+            }
+
+            Log.d(TAG, "onGetExpensePhotoSuccess Expense photos: " + expense.getPhotos());
+            invalidateViews();
+            return null;
+        }
+    };
 
     private Continuation<Void, Void> onUpdateSuccess = new Continuation<Void, Void>() {
         @Override

@@ -43,7 +43,7 @@ public class Expense implements RealmModel {
     // Property
     @PrimaryKey
     private String id;
-    private String imageUrl;
+    private String photos;
     private String note;
     private double amount;
     private Date createdAt;
@@ -58,12 +58,12 @@ public class Expense implements RealmModel {
         this.id = id;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getPhotos() {
+        return photos;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPhotos(String photos) {
+        this.photos = photos;
     }
 
     public String getNote() {
@@ -111,8 +111,9 @@ public class Expense implements RealmModel {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
             this.amount = jsonObject.getDouble(AMOUNT_JSON_KEY);
             this.note = jsonObject.optString(NOTE_JSON_KEY);
-            this.categoryId = jsonObject.getJSONObject(CATEGORY_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
-
+            if (jsonObject.has(CATEGORY_JSON_KEY)) {
+                this.categoryId = jsonObject.getJSONObject(CATEGORY_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+            }
             // Parse createdAt and convert UTC time to local time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -142,6 +143,37 @@ public class Expense implements RealmModel {
         }
 
         realm.copyToRealmOrUpdate(expenses);
+        realm.commitTransaction();
+        realm.close();
+    }
+
+    public static void mapPhotoFromJSONArray(JSONArray jsonArray, String expenseId) {
+        String photos = "";
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject photoObject = jsonArray.getJSONObject(i).getJSONObject("photo");
+                String fileName = photoObject.getString("name");
+                if (fileName == null || fileName.isEmpty()) {
+                    return;
+                }
+
+                if (photos.isEmpty()) {
+                    photos = fileName;
+                } else {
+                    photos += "," + fileName;
+                }
+
+            } catch (JSONException e) {
+                Log.e(TAG, "Error in parsing photo object.", e);
+            }
+        }
+
+        Realm realm = Realm.getDefaultInstance();
+        Expense expense = realm.where(Expense.class).equalTo(ID_KEY, expenseId).findFirst();
+        realm.beginTransaction();
+        expense.setPhotos(photos);
+        realm.copyToRealmOrUpdate(expense);
         realm.commitTransaction();
         realm.close();
     }

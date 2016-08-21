@@ -1,8 +1,15 @@
 package com.expensemanager.app.service;
 
+import android.util.Log;
+
+import com.expensemanager.app.expense.ExpenseBuilder;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +27,7 @@ public class RequestTemplateCreator {
     public static final String POST = "POST";
     public static final String PUT = "PUT";
     public static final String DELETE = "DELETE";
+    public static final String CONTENT = "CONTENT";
 
     public static RequestTemplate login(String username, String password) {
         String url = BASE_URL + "login";
@@ -49,13 +57,27 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
-    public static RequestTemplate createExpense(Expense expense) {
+    public static RequestTemplate createExpense(ExpenseBuilder expenseBuilder) {
         String url = BASE_URL + "classes/Expense";
         Map<String, String> params = new HashMap<>();
+
+        Expense expense = expenseBuilder.getExpense();
 
         params.put(Expense.AMOUNT_JSON_KEY, String.valueOf(expense.getAmount()));
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
 
+        // todo: Build Category Pointer
+//        try {
+//            JSONObject categoryIdObj=new JSONObject();
+//            categoryIdObj.put("__type", "Pointer");
+//            categoryIdObj.put("className", "Category");
+//            categoryIdObj.put("objectId", expenseBuilder.getCategoryId());
+//            params.put("categoryId", categoryIdObj.toString());
+//        } catch (JSONException e) {
+//            Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
+//        }
+
+        // todo: build User Pointer
         return new RequestTemplate(POST, url, params);
     }
 
@@ -105,5 +127,74 @@ public class RequestTemplateCreator {
         String url = BASE_URL + "classes/Category/" + categoryId;
 
         return new RequestTemplate(DELETE, url, null);
+    }
+
+    /**
+     * Upload photo to File table
+     * @param photoName
+     * @param content
+     * @return
+     */
+    public static RequestTemplate uploadPhoto(String photoName, byte[] content) {
+        String url = BASE_URL + "files/" + photoName;
+        Map<String, byte[]> params = new HashMap<>();
+        params.put(CONTENT, content);
+
+        return new RequestTemplate(POST, url, null, params);
+    }
+
+    public static RequestTemplate getExpensePhotoByPhotoId(String photoId) {
+        String url = BASE_URL + "classes/Photo/" + photoId;
+        return new RequestTemplate(GET, url, null);
+    }
+
+    public static RequestTemplate getExpensePhotoByExpenseId(String expenseId) {
+        String url = BASE_URL + "classes/Photo";
+        Map<String, String> params = new HashMap<>();
+
+        JSONObject expensePointerObj = new JSONObject();
+        JSONObject expenseIdObj=new JSONObject();
+        try {
+            expensePointerObj.put("__type", "Pointer");
+            expensePointerObj.put("className", "Expense");
+            expensePointerObj.put("objectId", expenseId);
+            expenseIdObj.put("expenseId", expensePointerObj);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating expense id pointer object for where in getExpensePhotoByExpenseId", e);
+        }
+
+        params.put("where", Helpers.encodeURIComponent(expenseIdObj.toString()));
+        return new RequestTemplate(GET, url, params);
+    }
+
+    public static RequestTemplate addExpensePhoto(String expenseId, String fileName) {
+        String url = BASE_URL + "classes/Photo";
+        Map<String, String> params = new HashMap<>();
+        JSONObject expensePointerObject = new JSONObject();
+        JSONObject photoObject = new JSONObject();
+
+        try {
+            // Build Expense pointer
+            expensePointerObject.put("__type", "Pointer");
+            expensePointerObject.put("className", "Expense");
+            expensePointerObject.put("objectId", expenseId);
+
+            Log.d(TAG, "expense pointer:" + expensePointerObject.toString());
+            params.put("expenseId", expensePointerObject.toString());
+
+            // Build File pointer
+            photoObject.put("__type", "File");
+            photoObject.put("name", fileName);
+
+            Log.d(TAG, "photoObject:" + photoObject.toString());
+            params.put("photo", photoObject.toString());
+
+            return new RequestTemplate(POST, url, params);
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating expense pointer or photo pointer for where clause in addExpensePhoto()", e);
+        }
+
+        return null;
     }
 }

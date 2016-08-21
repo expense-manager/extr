@@ -96,7 +96,7 @@
 
     <!-- Expense photo -->
     <LinearLayout
-        android:id="@+id/add_grocery_linear_layout_grid_view_id"
+        android:id="@+id/new_expense_activity_linear_layout_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/new_expense_activity_note_text_view_id"

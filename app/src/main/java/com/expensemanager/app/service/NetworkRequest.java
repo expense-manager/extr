@@ -44,6 +44,8 @@ public class NetworkRequest {
                 String url = requestTemplate.getUrl();
                 String method = requestTemplate.getMethod();
                 Map<String, String> paramsMap = requestTemplate.getParams();
+                Map<String, byte[]> parmasMapByte = requestTemplate.getParamsByte();
+
                 RequestBody requestBody = null;
 
                 // Add params to url
@@ -62,39 +64,50 @@ public class NetworkRequest {
                     }
 
                     url = stringBuilder.toString();
+                } else if (parmasMapByte != null) {
+                    requestBody = RequestBody.create(MediaType.parse("image/jpeg"),
+                            parmasMapByte.get(RequestTemplateCreator.CONTENT));
                 } else {
                     // POST, PUT, DELETE
                     if (paramsMap != null) {
                         // Convert parasMap to JSON string.
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("{");
+                        StringBuilder jsonBuilder = new StringBuilder();
+                        jsonBuilder.append("{");
 
                         int size = paramsMap.size();
                         int i = 0;
 
                         for (Map.Entry entry : paramsMap.entrySet()) {
-
                             String entryValue = entry.getValue().toString();
-                            if (entryValue.charAt(0) == '{') {
-                                sb.append("\"" + entry.getKey() + "\":\"" + entry.getValue() + "\"");
+                            if(entryValue.charAt(0) == '{') {
+                                jsonBuilder.append("\"");
+                                jsonBuilder.append(entry.getKey());
+                                jsonBuilder.append("\":");
+                                jsonBuilder.append(entry.getValue());
                             } else {
-                                sb.append("\"" + entry.getKey() + "\":\"" + entry.getValue() + "\"");
+                                jsonBuilder.append("\"");
+                                jsonBuilder.append(entry.getKey());
+                                jsonBuilder.append("\":\"");
+                                jsonBuilder.append(entry.getValue());
+                                jsonBuilder.append("\"");
                             }
 
                             if (i < size - 1) {
-                                sb.append(",");
+                                jsonBuilder.append(",");
                             }
-
                             i++;
                         }
 
-                        sb.append('}');
-                        requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), sb.toString());
+                        jsonBuilder.append('}');
+                        requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBuilder.toString());
                     }
                 }
 
                 // Add headers
                 Request.Builder builder = getBasicBuilder(url, method, requestBody);
+                if (parmasMapByte != null) {
+                    builder.addHeader("Content-Type", "image/jpeg");
+                }
 
                 // Send request
                 try {

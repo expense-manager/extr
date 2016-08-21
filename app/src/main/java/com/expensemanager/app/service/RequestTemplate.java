@@ -12,11 +12,19 @@ public class RequestTemplate {
     private String method;
     private String url;
     private Map<String, String> params;
+    private Map<String, byte[]> paramsByte;
 
     public RequestTemplate(String method, String url, Map<String, String> params) {
         this.method = method;
         this.url = url;
         this.params = params;
+    }
+
+    public RequestTemplate(String method, String url, Map<String, String> params, Map<String, byte[]> paramsByte) {
+        this.method = method;
+        this.url = url;
+        this.params = params;
+        this.paramsByte = paramsByte;
     }
 
     public String getMethod() {
@@ -29,5 +37,9 @@ public class RequestTemplate {
 
     public Map<String, String> getParams() {
         return params;
+    }
+
+    public Map<String, byte[]> getParamsByte() {
+        return paramsByte;
     }
 }

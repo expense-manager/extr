@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
+import com.expensemanager.app.service.Constant;
 
 import java.util.ArrayList;
 
@@ -25,14 +27,16 @@ public class ExpensePhotoAdapter extends BaseAdapter {
 
     private Context context;
     public ArrayList<byte[]> photoList;
+    public ArrayList<String> photoNameList;
 
-    public ExpensePhotoAdapter(Context context, ArrayList<byte[]> photoList) {
+    public ExpensePhotoAdapter(Context context, ArrayList<byte[]> photoList, ArrayList<String> photoNameList) {
         this.context = context;
         this.photoList = photoList;
+        this.photoNameList = photoNameList;
     }
 
     public int getCount() {
-        return photoList.size();
+        return photoList != null ? photoList.size() : photoNameList.size();
     }
 
     public Object getItem(int position) {
@@ -52,9 +56,14 @@ public class ExpensePhotoAdapter extends BaseAdapter {
 
         PhotoViewHolder photoViewHolder = new PhotoViewHolder(view);
 
-        byte[] photoBytes = photoList.get(position);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
-        photoViewHolder.photoImageView.setImageBitmap(bitmap);
+        if (photoList != null && photoList.size() >= 1) {
+            byte[] photoBytes = photoList.get(position);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
+            photoViewHolder.photoImageView.setImageBitmap(bitmap);
+        } else {
+            String photoUrl = Constant.BASE_FILE_URL + photoNameList.get(position);
+            Glide.with(context).load(photoUrl).fitCenter().into(photoViewHolder.photoImageView);
+        }
 
         return view;
     }

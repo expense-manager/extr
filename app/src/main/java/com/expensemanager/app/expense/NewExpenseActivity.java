@@ -119,7 +119,7 @@ public class NewExpenseActivity extends AppCompatActivity {
         cameraIconBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] sampledInputData = stream.toByteArray();
         photoList.add(sampledInputData);
-        expensePhotoAdapter = new ExpensePhotoAdapter(this, photoList);
+        expensePhotoAdapter = new ExpensePhotoAdapter(this, photoList, null);
         photoGridView.setAdapter(expensePhotoAdapter);
         photoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             if (position == photoList.size() - 1) {
@@ -259,8 +259,13 @@ public class NewExpenseActivity extends AppCompatActivity {
         expense.setAmount(Double.valueOf(amountTextView.getText().toString()));
         expense.setNote(noteTextView.getText().toString());
 
+        ExpenseBuilder expenseBuilder = new ExpenseBuilder();
+        expenseBuilder.setExpense(expense);
+        photoList.remove(photoList.size() - 1);
+        expenseBuilder.setPhotoList(photoList);
+
         progressBar.setVisibility(View.VISIBLE);
-        SyncExpense.create(expense).continueWith(onCreateSuccess, Task.UI_THREAD_EXECUTOR);
+        SyncExpense.create(expenseBuilder).continueWith(onCreateSuccess, Task.UI_THREAD_EXECUTOR);
         closeSoftKeyboard();
     }
 
