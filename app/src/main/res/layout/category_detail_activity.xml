@@ -52,10 +52,32 @@
         android:textSize="@dimen/text_medium_small"
         android:background="@drawable/background_round_corner_white"/>
 
-    <RelativeLayout
+    <!-- Color notice-->
+    <TextView
+        android:id="@+id/category_detail_activity_color_text_view_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/category_detail_activity_name_edit_text_id"
+        android:layout_margin="@dimen/space_medium"
+
+        android:text="@string/select_color"
+        android:textSize="@dimen/text_small"/>
+
+    <!-- Color -->
+    <ImageView
+        android:id="@+id/category_detail_activity_color_image_view_id"
+        android:layout_width="@dimen/category_color_width"
+        android:layout_height="@dimen/category_color_width"
+        android:layout_below="@+id/category_detail_activity_name_edit_text_id"
+        android:layout_toRightOf="@+id/category_detail_activity_color_text_view_id"
+        android:layout_margin="@dimen/space_medium"
+
+        tools:background="@color/black"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/category_detail_activity_color_image_view_id"
         android:layout_marginTop="@dimen/space_medium"
         android:layout_marginLeft="@dimen/space_medium"
         android:layout_marginStart="@dimen/space_medium">

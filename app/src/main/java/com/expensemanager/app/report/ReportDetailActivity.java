@@ -104,15 +104,18 @@ public class ReportDetailActivity extends AppCompatActivity {
     }
 
     private void updateChart() {
-        // todo: specific colors for categories
+        // Get colors from categories
         List<Integer> colors = new ArrayList<>();
-        for (int c : ColorTemplate.JOYFUL_COLORS) {
-            colors.add(c);
+        for (Category c : categories) {
+            colors.add(Color.parseColor(c.getColor()));
         }
+
+        // Calculate total expense
         float totalAmount = 0;
         for (int i = 0; i < categories.size(); i++) {
             totalAmount += amounts.get(i);
         }
+
         // Update entries
         List<PieEntry> entries = new ArrayList<>();
         for (int i = 0; i < categories.size(); i++) {
@@ -130,8 +133,7 @@ public class ReportDetailActivity extends AppCompatActivity {
         dataSet.setColors(colors);
         // Create data
         PieData data = new PieData(dataSet);
-        // Set value color
-        data.setValueTextColor(Color.BLACK);
+        data.setValueTextColor(Color.WHITE);
         // Set legends
         Legend l = pieChart.getLegend();
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);

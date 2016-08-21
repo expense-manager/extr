@@ -110,6 +110,7 @@ public class RequestTemplateCreator {
         Map<String, String> params = new HashMap<>();
 
         params.put(Category.NAME_JSON_KEY, category.getName());
+        params.put(Category.COLOR_JSON_KEY, category.getColor());
 
         return new RequestTemplate(POST, url, params);
     }
@@ -119,6 +120,7 @@ public class RequestTemplateCreator {
         Map<String, String> params = new HashMap<>();
 
         params.put(Category.NAME_JSON_KEY, category.getName());
+        params.put(Category.COLOR_JSON_KEY, category.getColor());
 
         return new RequestTemplate(PUT, url, params);
     }

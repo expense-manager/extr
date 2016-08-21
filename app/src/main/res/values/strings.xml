@@ -11,6 +11,7 @@
     <string name="confirm_password">Confirm password</string>
     <string name="sign_up">Sign up</string>
     <string name="login">Login</string>
+    <string name="select_color">Select color</string>
     <string name="category">Category</string>
     <string name="expense">Expense</string>
     <string name="welcome">Welcome</string>

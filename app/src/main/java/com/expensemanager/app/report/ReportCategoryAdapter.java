@@ -5,10 +5,12 @@ import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -84,6 +86,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         Category category = categories.get(position);
         double amount = amounts.get(position);
 
+        viewHolder.colorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
         viewHolder.nameTextView.setText(category.getName());
         viewHolder.amountTextView.setText("$" + amount);
         viewHolder.itemView.setOnClickListener(v -> {
@@ -130,6 +133,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
+        @BindView(R.id.category_item_report_color_image_view_id) ImageView colorImageView;
         @BindView(R.id.category_item_report_name_text_view_id) TextView nameTextView;
         @BindView(R.id.category_item_report_amount_text_view_id) TextView amountTextView;
 

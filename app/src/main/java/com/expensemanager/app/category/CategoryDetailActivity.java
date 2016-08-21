@@ -1,20 +1,23 @@
 package com.expensemanager.app.category;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.service.SyncCategory;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.service.SyncCategory;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -22,18 +25,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class CategoryDetailActivity extends AppCompatActivity {
+public class CategoryDetailActivity extends AppCompatActivity
+    implements CategoryColorPickerDialogFragment.CategoryColorDialogListener {
     private static final String TAG = CategoryDetailActivity.class.getSimpleName();
 
     private static final String CATEGORY_ID = "CATEGORY_ID";
 
     private Category category;
     private boolean isEditable = false;
+    private HashSet<String> usedColors;
+    private String currentColor;
 
     @BindView(R.id.category_detail_activity_name_edit_text_id) EditText nameEditText;
     @BindView(R.id.category_detail_activity_cancel_button_id) Button cancelButton;
     @BindView(R.id.category_detail_activity_delete_button_id) Button deleteButton;
     @BindView(R.id.category_detail_activity_edit_button_id) Button editButton;
+    @BindView(R.id.category_detail_activity_color_image_view_id) ImageView colorImageView;
     @BindView(R.id.category_detail_activity_save_button_id) Button saveButton;
     @BindView(R.id.category_detail_activity_progress_bar_id) ProgressBar progressBar;
 
@@ -52,12 +59,24 @@ public class CategoryDetailActivity extends AppCompatActivity {
         String categoryId = getIntent().getStringExtra(CATEGORY_ID);
         category = Category.getCategoryById(categoryId);
 
+        usedColors = new HashSet<>();
+        ArrayList<Category> categories = new ArrayList<>();
+
+        categories = new ArrayList<>(Category.getAllCategories());
+
+        for (Category c : categories) {
+            usedColors.add(c.getColor());
+        }
+
         invalidateViews();
     }
 
     private void invalidateViews() {
         nameEditText.setText(category.getName());
+        currentColor = category.getColor();
+        colorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
 
+        colorImageView.setOnClickListener(v -> selectColor());
         editButton.setOnClickListener(v -> setEditMode(true));
         cancelButton.setOnClickListener(v -> setEditMode(false));
         deleteButton.setOnClickListener(v -> delete());
@@ -69,6 +88,21 @@ public class CategoryDetailActivity extends AppCompatActivity {
         saveButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
 
         setupEditableViews(isEditable);
+    }
+
+    private void selectColor() {
+        if (isEditable) {
+            CategoryColorPickerDialogFragment fg = CategoryColorPickerDialogFragment
+                .newInstance(this, currentColor, usedColors);
+            fg.show(getSupportFragmentManager(), "category_color_fragment");
+        }
+    }
+
+    @Override
+    public void onFinishCategoryColorDialog(String color) {
+        usedColors.remove(currentColor);
+        currentColor = color;
+        colorImageView.setBackgroundColor(Color.parseColor(color));
     }
 
     private void setupEditableViews(boolean isEditable) {
@@ -111,6 +145,7 @@ public class CategoryDetailActivity extends AppCompatActivity {
         String name;
         name = nameEditText.getText().toString();
 
+
         if (name.length() == 0) {
             return;
         }
@@ -118,6 +153,7 @@ public class CategoryDetailActivity extends AppCompatActivity {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         category.setName(name);
+        category.setColor(currentColor);
         realm.copyToRealmOrUpdate(category);
         realm.commitTransaction();
         realm.close();
