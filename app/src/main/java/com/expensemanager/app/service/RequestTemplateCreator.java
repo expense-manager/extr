@@ -67,16 +67,15 @@ public class RequestTemplateCreator {
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
         // todo: able to post selected category category
 
-        // todo: Build Category Pointer
-//        try {
-//            JSONObject categoryIdObj=new JSONObject();
-//            categoryIdObj.put("__type", "Pointer");
-//            categoryIdObj.put("className", "Category");
-//            categoryIdObj.put("objectId", expenseBuilder.getCategoryId());
-//            params.put("categoryId", categoryIdObj.toString());
-//        } catch (JSONException e) {
-//            Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
-//        }
+        try {
+            JSONObject categoryIdObj=new JSONObject();
+            categoryIdObj.put("__type", "Pointer");
+            categoryIdObj.put("className", "Category");
+            categoryIdObj.put("objectId", expense.getCategoryId());
+            params.put("categoryId", categoryIdObj.toString());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
+        }
 
         // todo: build User Pointer
         return new RequestTemplate(POST, url, params);
@@ -89,6 +88,15 @@ public class RequestTemplateCreator {
         params.put(Expense.AMOUNT_JSON_KEY, String.valueOf(expense.getAmount()));
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
         // todo: able to update with categoryId
+        try {
+            JSONObject categoryIdObj=new JSONObject();
+            categoryIdObj.put("__type", "Pointer");
+            categoryIdObj.put("className", "Category");
+            categoryIdObj.put("objectId", expense.getCategoryId());
+            params.put("categoryId", categoryIdObj.toString());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
+        }
 
         return new RequestTemplate(PUT, url, params);
     }
