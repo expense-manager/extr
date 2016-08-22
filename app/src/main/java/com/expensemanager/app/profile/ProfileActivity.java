@@ -13,10 +13,14 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.SyncUser;
 
+import bolts.Continuation;
+import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,11 +32,14 @@ public class ProfileActivity extends BaseActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
 
     private static final String USER_ID = "userId";
+
     private User currentUser;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.profile_activity_profile_photo_image_view_id) ImageView profilePhotoImageView;
+    @BindView(R.id.profile_activity_fullname_text_view_id) TextView fullnameTextView;
 
     public static void newInstance(Context context, String userId) {
         Intent intent = new Intent(context, ProfileActivity.class);
@@ -51,20 +58,34 @@ public class ProfileActivity extends BaseActivity {
         String loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
         String userId = getIntent().getStringExtra(USER_ID);
+
         if (userId == null || userId.isEmpty()) {
             userId = loginUserId;
         }
+
         currentUser = User.getUserById(userId);
 
-        Log.d(TAG, "current userId: " + userId);
+        if (currentUser != null) {
+            Log.d(TAG, "current user name: " + currentUser.getFullname());
+        }
 
         setupToolbar();
 
         invalidateViews();
+
+        SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
     }
 
     private void invalidateViews() {
+        if (currentUser == null) {
+            return;
+        }
 
+        Glide.with(this)
+                .load(currentUser.getPhotoUrl())
+                .fitCenter()
+                .into(profilePhotoImageView);
+        fullnameTextView.setText(currentUser.getFullname());
     }
 
     private void setupToolbar() {
@@ -97,4 +118,17 @@ public class ProfileActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private Continuation<Void, Void> onResponseReturned = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, task.getError().toString());
+                return null;
+            }
+
+            invalidateViews();
+            return null;
+        }
+    };
 }

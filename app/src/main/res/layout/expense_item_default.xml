@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tweet_item_normal_card_view_id"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginLeft="@dimen/space_medium_small"

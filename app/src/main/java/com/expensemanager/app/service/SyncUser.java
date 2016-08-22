@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import io.realm.Realm;
 
 /**
  * Created by Zhaolong Zhong on 8/19/16.
@@ -89,6 +90,14 @@ public class SyncUser {
                     editor.apply();
                 }
 
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                User user = new User();
+                user.mapFromJSON(result);
+                realm.copyToRealmOrUpdate(user);
+                realm.commitTransaction();
+                realm.close();
+
                 return result;
             }
         };
@@ -121,5 +130,42 @@ public class SyncUser {
         };
 
         return networkRequest.send().continueWith(onLogout);
+    }
+
+    public static Task<Void> getLoginUser() {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getLoginUser();
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> onResponseReturned = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in getLoginUser", exception);
+                    throw exception;
+                }
+
+                JSONObject result = task.getResult();
+
+                String error = result.optString("error");
+                if (error != null && !error.isEmpty()) {
+                    Log.e(TAG, "Error: " + error);
+                    return null;
+                }
+
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                User user = new User();
+                user.mapFromJSON(result);
+                realm.copyToRealmOrUpdate(user);
+                realm.commitTransaction();
+                realm.close();
+
+                return null;
+            }
+        };
+
+        return networkRequest.send().continueWith(onResponseReturned);
     }
 }

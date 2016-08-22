@@ -158,7 +158,7 @@ public class RequestTemplateCreator {
         Map<String, byte[]> params = new HashMap<>();
         params.put(CONTENT, content);
 
-        return new RequestTemplate(POST, url, null, params);
+        return new RequestTemplate(POST, url, null, params, false);
     }
 
     public static RequestTemplate getExpensePhotoByPhotoId(String photoId) {
@@ -214,5 +214,10 @@ public class RequestTemplateCreator {
         }
 
         return null;
+    }
+
+    public static RequestTemplate getLoginUser() {
+        String url = BASE_URL + "users/me";
+        return new RequestTemplate(GET, url, null, true);
     }
 }

@@ -1,8 +1,13 @@
 package com.expensemanager.app.service;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.expensemanager.app.BuildConfig;
+import com.expensemanager.app.R;
+import com.expensemanager.app.main.EApplication;
+import com.expensemanager.app.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,6 +111,19 @@ public class NetworkRequest {
                 Request.Builder builder = getBasicBuilder(url, method, requestBody);
                 if (parmasMapByte != null) {
                     builder.addHeader("Content-Type", "image/jpeg");
+                }
+
+                if(requestTemplate.isUseToken()) {
+                    Context context = EApplication.getInstance();
+                    SharedPreferences sharedPreferences = context.getSharedPreferences(
+                            context.getString(R.string.shared_preferences_session_key), 0);
+                    String sessionToken = sharedPreferences.getString(User.SESSION_TOKEN, null);
+
+                    if (sessionToken == null) {
+                        Log.e(TAG, "Error getting session token.");
+                        return null;
+                    }
+                    builder.addHeader("X-Parse-Session-Token", sessionToken);
                 }
 
                 // Send request

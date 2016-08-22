@@ -27,7 +27,6 @@ import com.expensemanager.app.overview.OverviewActivity;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.report.ReportActivity;
 import com.expensemanager.app.settings.SettingsActivity;
-import com.expensemanager.app.welcome.SplashActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,15 +81,25 @@ public class MainActivity extends AppCompatActivity {
         View headView = navigationView.getHeaderView(0);
         CircleImageView navHeaderCircleImageView =  (CircleImageView) headView.findViewById(R.id.nav_header_avatar_circle_image_view_id);
         TextView navHeaderTitleTextView = (TextView) headView.findViewById(R.id.nav_header_title_text_view_id);
+
+        User currentUser = User.getUserById(loginUserId);
+
         Glide.with(MainActivity.this)
-                .load(R.drawable.profile_example)
+                .load(currentUser.getPhotoUrl())
                 .into(navHeaderCircleImageView);
-        // todo: replace with live data
+
         navHeaderCircleImageView.setOnClickListener(v -> {
-            ProfileActivity.newInstance(this, loginUserId);
+            ProfileActivity.newInstance(this, null);
             drawerLayout.closeDrawers();
         });
-        navHeaderTitleTextView.setText("Zhaolong Zhong");
+
+        String fullname = currentUser.getFullname();
+
+        if (fullname != null && !fullname.isEmpty()) {
+            navHeaderTitleTextView.setText(fullname);
+        } else {
+            navHeaderTitleTextView.setText(getString(R.string.app_name));
+        }
 
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
             selectDrawerItem(menuItem);
@@ -150,17 +159,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_splash_activity_id:
-                SplashActivity.newInstance(this);
-                return true;
-            case R.id.menu_item_profile_activity_id:
-                if (loginUserId != null && !loginUserId.isEmpty()) {
-                    ProfileActivity.newInstance(this, loginUserId);
-                }
-                return true;
-        }
-
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
