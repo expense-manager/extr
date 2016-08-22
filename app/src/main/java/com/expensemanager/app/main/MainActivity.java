@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +27,11 @@ import com.expensemanager.app.notifications.NotificationsActivity;
 import com.expensemanager.app.overview.OverviewActivity;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.report.ReportActivity;
+import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.settings.SettingsActivity;
 
+import bolts.Continuation;
+import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -84,21 +88,31 @@ public class MainActivity extends AppCompatActivity {
 
         User currentUser = User.getUserById(loginUserId);
 
-        Glide.with(MainActivity.this)
-                .load(currentUser.getPhotoUrl())
-                .into(navHeaderCircleImageView);
+        if (currentUser != null) {
+            Glide.with(MainActivity.this)
+                    .load(currentUser.getPhotoUrl())
+                    .placeholder(R.drawable.profile_place_holder_image)
+                    .dontAnimate()
+                    .into(navHeaderCircleImageView);
 
-        navHeaderCircleImageView.setOnClickListener(v -> {
-            ProfileActivity.newInstance(this, null);
-            drawerLayout.closeDrawers();
-        });
+            navHeaderCircleImageView.setOnClickListener(v -> {
+                ProfileActivity.newInstance(this, null);
+                drawerLayout.closeDrawers();
+            });
 
-        String fullname = currentUser.getFullname();
+            String fullname = currentUser.getFullname();
 
-        if (fullname != null && !fullname.isEmpty()) {
-            navHeaderTitleTextView.setText(fullname);
+            if (fullname != null && !fullname.isEmpty()) {
+                navHeaderTitleTextView.setText(fullname);
+            } else {
+                navHeaderTitleTextView.setText(getString(R.string.app_name));
+            }
         } else {
-            navHeaderTitleTextView.setText(getString(R.string.app_name));
+            Glide.with(MainActivity.this)
+                    .load(R.drawable.profile_place_holder_image)
+                    .placeholder(R.drawable.profile_place_holder_image)
+                    .into(navHeaderCircleImageView);
+            SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
         }
 
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
@@ -106,6 +120,22 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
     }
+
+    private Continuation<Void, Void> onGetLoginUserFinished = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error:", task.getError());
+            }
+
+            User currentUser = User.getUserById(loginUserId);
+            if (currentUser != null) {
+                setupDrawerContent(navigationView);
+            }
+
+            return null;
+        }
+    };
 
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {

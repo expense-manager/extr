@@ -54,6 +54,14 @@ public class SyncUser {
                     editor.apply();
                 }
 
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                User user = new User();
+                user.mapFromJSON(result);
+                realm.copyToRealmOrUpdate(user);
+                realm.commitTransaction();
+                realm.close();
+
                 return result;
             }
         };
@@ -61,9 +69,9 @@ public class SyncUser {
         return networkRequest.send().continueWith(saveCredential);
     }
 
-    public static Task<JSONObject> signUp(String username, String password) {
+    public static Task<JSONObject> signUp(String username, String password, String fullname) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
-        RequestTemplate requestTemplate = RequestTemplateCreator.signUp(username, password);
+        RequestTemplate requestTemplate = RequestTemplateCreator.signUp(username, password, fullname);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
         Continuation<JSONObject, JSONObject> saveCredential = new Continuation<JSONObject, JSONObject>() {

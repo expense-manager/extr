@@ -39,12 +39,13 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
-    public static RequestTemplate signUp(String username, String password) {
+    public static RequestTemplate signUp(String username, String password, String fullname) {
         String url = BASE_URL + "users";
         Map<String, String> params = new HashMap<>();
 
         params.put(User.USERNAME_JSON_KEY, username);
         params.put(User.PASSWORD_JSON_KEY, password);
+        params.put(User.FULLNAME_JSON_KEY, fullname);
 
         return new RequestTemplate(POST, url, params);
     }

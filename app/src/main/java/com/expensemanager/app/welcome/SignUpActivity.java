@@ -105,7 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
             setStepTwo();
         } else {
             progressBar.setVisibility(View.VISIBLE);
-            SyncUser.signUp(email, password).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
+            SyncUser.signUp(email, password, fullname).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
         }
     }
 

@@ -88,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
             } else {
                 MainActivity.newInstance(LoginActivity.this);
+                finish();
             }
             return null;
         }
