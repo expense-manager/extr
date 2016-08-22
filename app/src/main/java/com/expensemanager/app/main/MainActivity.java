@@ -2,6 +2,7 @@ package com.expensemanager.app.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,24 +13,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.NotificationsActivity;
 import com.expensemanager.app.overview.OverviewActivity;
+import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.report.ReportActivity;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.SplashActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ActionBarDrawerToggle drawerToggle;
+    private String loginUserId;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_navigation_view_id) NavigationView navigationView;
@@ -46,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
@@ -68,6 +79,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
+        View headView = navigationView.getHeaderView(0);
+        CircleImageView navHeaderCircleImageView =  (CircleImageView) headView.findViewById(R.id.nav_header_avatar_circle_image_view_id);
+        TextView navHeaderTitleTextView = (TextView) headView.findViewById(R.id.nav_header_title_text_view_id);
+        Glide.with(MainActivity.this)
+                .load(R.drawable.profile_example)
+                .into(navHeaderCircleImageView);
+        // todo: replace with live data
+        navHeaderCircleImageView.setOnClickListener(v -> {
+            ProfileActivity.newInstance(this, loginUserId);
+            drawerLayout.closeDrawers();
+        });
+        navHeaderTitleTextView.setText("Zhaolong Zhong");
+
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
             selectDrawerItem(menuItem);
             return true;
@@ -129,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_item_splash_activity_id:
                 SplashActivity.newInstance(this);
+                return true;
+            case R.id.menu_item_profile_activity_id:
+                if (loginUserId != null && !loginUserId.isEmpty()) {
+                    ProfileActivity.newInstance(this, loginUserId);
+                }
                 return true;
         }
 

@@ -69,11 +69,10 @@ public class NetworkRequest {
                             parmasMapByte.get(RequestTemplateCreator.CONTENT));
                 } else {
                     // POST, PUT, DELETE
+                    StringBuilder jsonBuilder = new StringBuilder();
+                    jsonBuilder.append("{");
                     if (paramsMap != null) {
                         // Convert parasMap to JSON string.
-                        StringBuilder jsonBuilder = new StringBuilder();
-                        jsonBuilder.append("{");
-
                         int size = paramsMap.size();
                         int i = 0;
 
@@ -97,10 +96,10 @@ public class NetworkRequest {
                             }
                             i++;
                         }
-
-                        jsonBuilder.append('}');
-                        requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBuilder.toString());
                     }
+
+                    jsonBuilder.append('}');
+                    requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBuilder.toString());
                 }
 
                 // Add headers

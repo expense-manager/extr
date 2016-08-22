@@ -49,7 +49,7 @@ public class SyncUser {
                     SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.shared_preferences_session_key), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(User.SESSION_TOKEN, sessionToken);
-                    editor.putString(User.OBJECT_ID_JSON_KEY, userId);
+                    editor.putString(User.USER_ID, userId);
                     editor.apply();
                 }
 
@@ -94,5 +94,32 @@ public class SyncUser {
         };
 
         return networkRequest.send().continueWith(saveCredential);
+    }
+
+    public static Task<Void> logout() {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.logout();
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> onLogout = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in logout", exception);
+                    throw exception;
+                }
+
+                JSONObject logoutJsonObj = task.getResult();
+
+                if (logoutJsonObj != null && logoutJsonObj.toString().equals("{}")) {
+                    return null;
+                } else {
+                    throw new Exception("Incorrect logout response");
+                }
+            }
+        };
+
+        return networkRequest.send().continueWith(onLogout);
     }
 }

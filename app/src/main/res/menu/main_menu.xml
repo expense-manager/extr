@@ -5,4 +5,8 @@
     <item android:id="@+id/menu_item_splash_activity_id"
           android:title="@string/welcome"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/menu_item_profile_activity_id"
+        android:title="@string/profile"
+        app:showAsAction="never"/>
 </menu>

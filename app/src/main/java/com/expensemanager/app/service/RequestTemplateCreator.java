@@ -49,6 +49,12 @@ public class RequestTemplateCreator {
         return new RequestTemplate(POST, url, params);
     }
 
+    public static RequestTemplate logout() {
+        String url = BASE_URL + "logout";
+
+        return new RequestTemplate(POST, url, null);
+    }
+
     public static RequestTemplate getAllExpenses() {
         String url = BASE_URL + "classes/Expense";
         Map<String, String> params = new HashMap<>();

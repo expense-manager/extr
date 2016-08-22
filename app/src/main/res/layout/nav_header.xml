@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
+    android:layout_height="100dp"
     android:background="?attr/colorPrimaryDark"
 
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
@@ -17,29 +17,34 @@
 
         android:visibility="gone"/>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="192dp"
+        android:layout_height="75dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
 
-        android:padding="16dp"
-        android:gravity="bottom">
+        android:padding="16dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/nav_header_avatar_circle_image_view_id"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="@dimen/space_large"
-            android:layout_gravity="start"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
 
         <TextView
-            android:id="@+id/nav_header_name_text_view_id"
+            android:id="@+id/nav_header_title_text_view_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/nav_header_avatar_circle_image_view_id"
+            android:layout_marginStart="@dimen/space_medium"
+            android:layout_centerVertical="true"
+
             android:text="@string/app_name"
+            android:textSize="@dimen/text_small"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

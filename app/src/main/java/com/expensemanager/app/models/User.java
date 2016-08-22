@@ -1,7 +1,10 @@
 package com.expensemanager.app.models;
 
+import android.support.annotation.Nullable;
+
 import java.util.Date;
 
+import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
@@ -21,6 +24,7 @@ public class User implements RealmModel{
     public static final String PASSWORD_JSON_KEY = "password";
     public static final String RESULTS = "results";
     public static final String SESSION_TOKEN = "sessionToken";
+    public static final String USER_ID = "userId";
     public static final String ERROR = "error";
 
     // Property name key
@@ -73,5 +77,17 @@ public class User implements RealmModel{
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    /**
+     * @param id
+     * @return User object if exist, otherwise return null.
+     */
+    public static @Nullable User getUserById(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        User user = realm.where(User.class).equalTo(ID_KEY, id).findFirst();
+        realm.close();
+
+        return user;
     }
 }
