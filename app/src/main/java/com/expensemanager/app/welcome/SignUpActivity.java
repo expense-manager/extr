@@ -8,13 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,7 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String fullname;
 
     @BindView(R.id.sign_up_activity_sign_up_button_id) Button signUpButton;
-    @BindView(R.id.sign_up_activity_email_edit_text_id) EditText emailEditText;
+    @BindView(R.id.sign_up_activity_email_or_phone_number_edit_text_id) EditText emailEditText;
     @BindView(R.id.sign_up_activity_password_edit_text_id) EditText passwordEditText;
     @BindView(R.id.sign_up_activity_confirm_password_edit_text_id) EditText confirmPasswordEditText;
     @BindView(R.id.sign_up_activity_name_edit_text_id) EditText nameEditText;
@@ -52,6 +52,8 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.sign_up_activity_step_one_relative_layout_id) RelativeLayout stepOneRelativeLayout;
     @BindView(R.id.sign_up_activity_step_two_relative_layout_id) RelativeLayout stepTwoRelativeLayout;
     @BindView(R.id.sign_up_activity_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.sign_up_activity_login_linear_layout_id) LinearLayout loginLinearLayout;
+    @BindView(R.id.progress_bar_id) ProgressBar progressBar;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, SignUpActivity.class);
@@ -64,6 +66,10 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.sign_up_activity);
         ButterKnife.bind(this);
 
+        invalidateViews();
+    }
+
+    private void invalidateViews() {
         signUpButton.setEnabled(false);
         signUpButton.setOnClickListener(this::signUp);
 
@@ -71,23 +77,10 @@ public class SignUpActivity extends AppCompatActivity {
         passwordEditText.addTextChangedListener(passwordTextWatcher);
         confirmPasswordEditText.addTextChangedListener(confirmPasswordTextWatcher);
         nameEditText.addTextChangedListener(nameTextWatcher);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sign_up_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_login_activity_id:
-                LoginActivity.newInstance(this);
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        loginLinearLayout.setOnClickListener(v -> {
+            LoginActivity.newInstance(this);
+            finish();
+        });
     }
 
     @OnClick({R.id.sign_up_activity_clear_email_image_view_id, R.id.sign_up_activity_clear_password_image_view_id,
@@ -107,12 +100,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void signUp(View v) {
-        //todo: add progress bar
-
         if (stepOneRelativeLayout.getVisibility() == View.VISIBLE) {
             closeSoftKeyboard();
             setStepTwo();
         } else {
+            progressBar.setVisibility(View.VISIBLE);
             SyncUser.signUp(email, password).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
         }
     }
@@ -121,6 +113,8 @@ public class SignUpActivity extends AppCompatActivity {
         titleTextView.setText(R.string.sign_up_title_step_two);
         stepOneRelativeLayout.setVisibility(View.GONE);
         stepTwoRelativeLayout.setVisibility(View.VISIBLE);
+        signUpButton.setEnabled(false);
+        signUpButton.setTextColor(ContextCompat.getColor(this, R.color.blue));
         signUpButton.setText(R.string.sign_up);
     }
 
@@ -136,13 +130,13 @@ public class SignUpActivity extends AppCompatActivity {
         public Void then(Task<JSONObject> task) throws Exception {
             if (task.isFaulted()) {
                 Log.e(TAG, "Error in sign up.", task.getError());
-                // todo: dismiss progress bar
-                // display info message
+                progressBar.setVisibility(View.GONE);
             }
 
             if (task.getResult().has("error")) {
                 errorMessageTextView.setText(task.getResult().getString("error"));
                 errorMessageTextView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
             } else {
                 SyncUser.login(email, password).onSuccess(onLoginSuccess, Task.UI_THREAD_EXECUTOR);
             }
@@ -153,10 +147,10 @@ public class SignUpActivity extends AppCompatActivity {
     private Continuation<JSONObject, Void> onLoginSuccess = new Continuation<JSONObject, Void>() {
         @Override
         public Void then(Task<JSONObject> task) throws Exception {
-            // todo: dismiss progress bar
+            progressBar.setVisibility(View.GONE);
+
             if (task.isFaulted()) {
                 Log.e(TAG, "Error in login. ", task.getError());
-                // display info message
             }
 
             if (task.getResult().has("error")) {

@@ -180,13 +180,6 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/new_expense_activity_progress_bar_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-
-        android:visibility="gone"
-        style="?android:attr/progressBarStyleLarge"/>
+    <include layout="@layout/progress_bar" />
 
 </RelativeLayout>

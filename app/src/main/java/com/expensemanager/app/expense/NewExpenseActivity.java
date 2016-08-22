@@ -83,7 +83,7 @@ public class NewExpenseActivity extends AppCompatActivity
     @BindView(R.id.new_expense_activity_amount_text_view_id) TextView amountTextView;
     @BindView(R.id.new_expense_activity_note_text_view_id) TextView noteTextView;
     @BindView(R.id.new_expense_activity_grid_view_id) GridView photoGridView;
-    @BindView(R.id.new_expense_activity_progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.progress_bar_id) ProgressBar progressBar;
     @BindView(R.id.new_expense_activity_category_hint_text_view_id) TextView categoryHintTextView;
     @BindView(R.id.new_expense_activity_category_relative_layout_id) RelativeLayout categoryRelativeLayout;
     @BindView(R.id.new_expense_activity_category_color_image_view_id) ImageView categoryColorImageView;

@@ -7,10 +7,6 @@
     android:layout_height="match_parent"
 
     android:background="@color/white"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.expensemanager.app.welcome.SignUpActivity">
 
     <!-- Title -->
@@ -19,11 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/space_medium_large"
+        android:layout_margin="@dimen/space_medium_large"
 
         android:text="@string/sign_up_title_step_one"
         android:textSize="@dimen/text_medium"
-        android:textColor="@color/black"/>
+        android:textColor="@color/light_gray"/>
 
     <RelativeLayout
         android:id="@+id/sign_up_activity_relative_layout_id"
@@ -48,34 +44,41 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space_really_large"
 
-                android:text="@string/username_title"
+                android:text="@string/email_or_phone_number"
                 android:textSize="@dimen/text_small"
                 android:gravity="center"/>
 
-            <!-- Email -->
-            <EditText
-                android:id="@+id/sign_up_activity_email_edit_text_id"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
+            <!-- Email or phone number -->
+            <RelativeLayout
+                android:layout_width="@dimen/login_sign_up_widget_width"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/login_activity_username_title_text_view_id"
-                android:layout_toLeftOf="@+id/sign_up_activity_clear_email_image_view_id"
-                android:layout_marginBottom="@dimen/space_really_large"
+                android:layout_centerHorizontal="true">
 
-                android:background="@color/grey_light"
-                android:padding="@dimen/space_small"/>
+                <EditText
+                    android:id="@+id/sign_up_activity_email_or_phone_number_edit_text_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_toStartOf="@+id/sign_up_activity_clear_email_image_view_id"
+                    android:layout_marginBottom="@dimen/space_really_large"
 
-            <!-- Clear Email -->
-            <ImageView
-                android:id="@+id/sign_up_activity_clear_email_image_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
-                android:layout_below="@+id/login_activity_username_title_text_view_id"
-                android:layout_alignParentRight="true"
+                    android:padding="@dimen/space_medium"
+                    android:textSize="@dimen/text_really_small"
+                    android:background="@color/gray_really_light" />
 
-                android:visibility="gone"
-                android:padding="@dimen/space_small"
-                android:src="@drawable/ic_window_close"
-                android:background="@color/grey_light"/>
+                <!-- Clear -->
+                <ImageView
+                    android:id="@+id/sign_up_activity_clear_email_image_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_alignParentEnd="true"
+
+                    android:visibility="gone"
+                    android:padding="@dimen/space_small"
+                    android:src="@drawable/ic_window_close"
+                    android:background="@color/gray_really_light"/>
+            </RelativeLayout>
+
 
         </RelativeLayout>
 
@@ -86,95 +89,128 @@
 
             android:visibility="gone">
 
-            <!-- Password -->
-            <EditText
-                android:id="@+id/sign_up_activity_password_edit_text_id"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
+            <RelativeLayout
+                android:id="@+id/sign_up_activity_password_relative_layout_id"
+                android:layout_width="@dimen/login_sign_up_widget_width"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/space_medium"
-                android:layout_toLeftOf="@+id/sign_up_activity_clear_password_image_view_id"
+                android:background="@color/gray_really_light">
 
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:padding="@dimen/space_small"
-                android:background="@color/grey_light"/>
+                <!-- Password -->
+                <EditText
+                    android:id="@+id/sign_up_activity_password_edit_text_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/sign_up_activity_clear_password_image_view_id"
 
-            <!-- Clear Password -->
-            <ImageView
-                android:id="@+id/sign_up_activity_clear_password_image_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
-                android:layout_alignParentRight="true"
+                    android:padding="@dimen/space_medium"
+                    android:textSize="@dimen/text_really_small"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:background="@color/gray_really_light"/>
 
-                android:visibility="gone"
-                android:padding="@dimen/space_small"
-                android:src="@drawable/ic_window_close"
-                android:background="@color/grey_light"/>
+                <!-- Clear -->
+                <ImageView
+                    android:id="@+id/sign_up_activity_clear_password_image_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
 
-            <!-- Re Paassword -->
-            <EditText
-                android:id="@+id/sign_up_activity_confirm_password_edit_text_id"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_below="@+id/sign_up_activity_password_edit_text_id"
-                android:layout_toLeftOf="@+id/sign_up_activity_mismatch_image_view_id"
+                    android:padding="@dimen/space_small"
+                    android:src="@drawable/ic_window_close"
+                    android:background="@color/gray_really_light"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sign_up_activity_confirm_password_relative_layout_id"
+                android:layout_width="@dimen/login_sign_up_widget_width"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/sign_up_activity_password_relative_layout_id"
                 android:layout_marginBottom="@dimen/space_medium"
+                android:background="@color/gray_really_light">
 
-                android:hint="@string/confirm_password"
-                android:inputType="textPassword"
-                android:padding="@dimen/space_small"
-                android:background="@color/grey_light"/>
+                <!-- Confirm Password -->
+                <EditText
+                    android:id="@+id/sign_up_activity_confirm_password_edit_text_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/sign_up_activity_mismatch_image_view_id"
+                    android:layout_centerHorizontal="true"
 
-            <!-- Mismatch Sign -->
-            <ImageView
-                android:id="@+id/sign_up_activity_mismatch_image_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
-                android:layout_below="@+id/sign_up_activity_password_edit_text_id"
-                android:layout_alignParentRight="true"
+                    android:padding="@dimen/space_medium"
+                    android:textSize="@dimen/text_really_small"
+                    android:hint="@string/confirm_password"
+                    android:inputType="textPassword"
+                    android:background="@color/gray_really_light"/>
 
-                android:visibility="gone"
-                android:padding="@dimen/space_small"
-                android:src="@drawable/ic_alert_circle_outline"/>
+                <!-- Mismatch Sign -->
+                <ImageView
+                    android:id="@+id/sign_up_activity_mismatch_image_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
 
-            <!-- Name -->
-            <EditText
-                android:id="@+id/sign_up_activity_name_edit_text_id"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_below="@+id/sign_up_activity_confirm_password_edit_text_id"
-                android:layout_toLeftOf="@+id/sign_up_activity_clear_name_image_view_id"
+                    android:padding="@dimen/space_small"
+                    android:src="@drawable/ic_alert_circle_outline"
+                    android:background="@color/gray_really_light"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sign_up_activity_full_name_relative_layout_id"
+                android:layout_width="@dimen/login_sign_up_widget_width"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/sign_up_activity_confirm_password_relative_layout_id"
                 android:layout_marginBottom="@dimen/space_medium"
+                android:background="@color/gray_really_light">
 
-                android:hint="@string/name"
-                android:padding="@dimen/space_small"
-                android:background="@color/grey_light"/>
+                 <!-- Full name -->
+                <EditText
+                    android:id="@+id/sign_up_activity_name_edit_text_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/sign_up_activity_clear_name_image_view_id"
 
-            <!-- Clear Email -->
-            <ImageView
-                android:id="@+id/sign_up_activity_clear_name_image_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
-                android:layout_below="@+id/sign_up_activity_confirm_password_edit_text_id"
-                android:layout_alignParentRight="true"
+                    android:padding="@dimen/space_medium"
+                    android:textSize="@dimen/text_really_small"
+                    android:hint="@string/full_name"
+                    android:background="@color/gray_really_light"/>
 
-                android:visibility="gone"
-                android:padding="@dimen/space_small"
-                android:src="@drawable/ic_window_close"
-                android:background="@color/grey_light"/>
+                <!-- Clear -->
+                <ImageView
+                    android:id="@+id/sign_up_activity_clear_name_image_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+
+                    android:padding="@dimen/space_small"
+                    android:src="@drawable/ic_window_close"
+                    android:background="@color/gray_really_light"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
     </RelativeLayout>
 
-    <!-- Signup -->
+    <!-- Sign up -->
     <Button
         android:id="@+id/sign_up_activity_sign_up_button_id"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/login_sign_up_widget_width"
         android:layout_height="@dimen/button_height"
         android:layout_below="@+id/sign_up_activity_relative_layout_id"
-        android:layout_marginLeft="@dimen/space_medium"
-        android:layout_marginRight="@dimen/space_medium"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/space_medium"
 
         android:text="@string/next"
         android:textColor="@color/blue"
@@ -215,5 +251,51 @@
             android:textColor="@color/red"/>
 
     </RelativeLayout>
+
+    <!-- Login -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+
+        android:background="@color/transparent_gray">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            android:alpha="0.4"
+            android:background="@color/gray"/>
+
+        <LinearLayout
+            android:id="@+id/sign_up_activity_login_linear_layout_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/sign_up_activity_already_have_an_account_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/already_have_an_account"
+                android:textSize="@dimen/text_ultra_small"/>
+
+            <TextView
+                android:id="@+id/sign_up_activity_login_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_medium_small"
+
+                android:text="@string/log_in"
+                android:textSize="@dimen/text_ultra_small"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <include layout="@layout/progress_bar" />
 
 </RelativeLayout>

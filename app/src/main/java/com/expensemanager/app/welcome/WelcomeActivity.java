@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
 
-    @BindView(R.id.welcome_activity_signup_button_id) Button signupButton;
+    @BindView(R.id.welcome_activity_sign_up_button_id) Button signupButton;
     @BindView(R.id.welcome_activity_login_button_id) Button loginButton;
 
     public static void newInstance(Context context) {

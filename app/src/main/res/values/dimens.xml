@@ -28,6 +28,7 @@
     <dimen name="space_super_large">66dp</dimen>
     <dimen name="space_crazy_large">106dp</dimen>
 
+    <dimen name="login_sign_up_widget_width">300dp</dimen>
     <dimen name="button_height">40dp</dimen>
     <dimen name="category_color_width">60dp</dimen>
     <dimen name="category_color_width_small">30dp</dimen>
