@@ -1,9 +1,5 @@
 package com.expensemanager.app.expense;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -13,8 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.ItemClickSupport;
+import com.expensemanager.app.models.Category;
+
 import java.util.ArrayList;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,36 +22,28 @@ import butterknife.Unbinder;
 public class CategoryPickerFragment extends DialogFragment {
     private static final String TAG= CategoryPickerFragment.class.getSimpleName();
 
-    Unbinder unbinder;
-    private ExpenseCategoryPickerListener listener;
+    private Unbinder unbinder;
+    private CategoryPickerListener categoryPickerListener;
     private ArrayList<Category> categories;
-    private ArrayList<Double> amounts;
-    private ExpenseCategoryAdapter adapter;
-    private Set<String> usedColors;
-    private String currentColor;
+    private CategoryPickerAdapter adapter;
 
     @BindView(R.id.expense_category_fragment_recycler_view_id) RecyclerView categoryRecyclerView;
 
     public CategoryPickerFragment() {}
 
     public static CategoryPickerFragment newInstance() {
-        // pass setting to fragment
-        CategoryPickerFragment
-            categoryPickerFragment = new CategoryPickerFragment();
-
-        return categoryPickerFragment;
+        return new CategoryPickerFragment();
     }
 
-    public void setListener(ExpenseCategoryPickerListener listener) {
-        this.listener = listener;
+    public void setListener(CategoryPickerListener categoryPickerListener) {
+        this.categoryPickerListener = categoryPickerListener;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.expense_category_picker_fragment, container);
-        // bind fragment with ButterKnife
         unbinder = ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -61,8 +52,7 @@ public class CategoryPickerFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         categories = new ArrayList<>();
-        amounts = new ArrayList<>();
-        adapter = new ExpenseCategoryAdapter(getActivity(), listener, this, categories, amounts);
+        adapter = new CategoryPickerAdapter(getActivity(), categories);
 
         setupRecyclerView();
         invalidateViews();
@@ -70,23 +60,28 @@ public class CategoryPickerFragment extends DialogFragment {
 
     private void invalidateViews() {
         adapter.clear();
-        adapter.addAll(new ArrayList<>(Expense.getAllExpenses()));
+        adapter.addAll(new ArrayList<>(Category.getAllCategories()));
     }
 
     private void setupRecyclerView() {
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryRecyclerView.setAdapter(adapter);
+        ItemClickSupport.addTo(categoryRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                categoryPickerListener.onFinishExpenseCategoryDialog(categories.get(position));
+                getDialog().dismiss();
+            }
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // unbind fragment and ButterKnife
         unbinder.unbind();
     }
 
-    // define listener to pass setting to activity
-    public interface ExpenseCategoryPickerListener {
-        void onFinishExpenseCategoryDialog(Category category, double amount);
+    public interface CategoryPickerListener {
+        void onFinishExpenseCategoryDialog(Category category);
     }
 }

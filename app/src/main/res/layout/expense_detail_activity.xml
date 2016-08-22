@@ -81,20 +81,18 @@
         android:background="@drawable/background_round_corner_white">
 
         <!-- Color -->
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/expense_detail_activity_category_color_image_view_id"
             android:layout_width="@dimen/category_color_width_small"
             android:layout_height="@dimen/category_color_width_small"
-            android:layout_marginRight="@dimen/space_medium"
-
-            tools:background="@color/black"/>
+            android:layout_marginEnd="@dimen/space_medium"/>
 
         <!-- Name -->
         <TextView
             android:id="@+id/expense_detail_activity_category_name_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/expense_detail_activity_category_color_image_view_id"
+            android:layout_toEndOf="@+id/expense_detail_activity_category_color_image_view_id"
             android:layout_alignTop="@+id/expense_detail_activity_category_color_image_view_id"
             android:layout_alignBottom="@+id/expense_detail_activity_category_color_image_view_id"
 
@@ -108,12 +106,12 @@
             android:id="@+id/expense_detail_activity_category_amount_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/expense_detail_activity_category_name_text_view_id"
             android:layout_alignBottom="@+id/expense_detail_activity_category_name_text_view_id"
 
             android:textColor="@color/black"
-            android:textSize="@dimen/text_medium_small"
+            android:textSize="@dimen/text_really_small"
             android:gravity="center_vertical"
             tools:text="1234"/>
 

@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -53,16 +54,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NewExpenseActivity extends AppCompatActivity
-    implements CategoryPickerFragment.ExpenseCategoryPickerListener {
+public class NewExpenseActivity extends AppCompatActivity {
     private static final String TAG = NewExpenseActivity.class.getSimpleName();
 
     public static final String NEW_PHOTO = "Take a photo";
@@ -86,7 +85,7 @@ public class NewExpenseActivity extends AppCompatActivity
     @BindView(R.id.progress_bar_id) ProgressBar progressBar;
     @BindView(R.id.new_expense_activity_category_hint_text_view_id) TextView categoryHintTextView;
     @BindView(R.id.new_expense_activity_category_relative_layout_id) RelativeLayout categoryRelativeLayout;
-    @BindView(R.id.new_expense_activity_category_color_image_view_id) ImageView categoryColorImageView;
+    @BindView(R.id.new_expense_activity_category_color_image_view_id) CircleImageView categoryColorImageView;
     @BindView(R.id.new_expense_activity_category_name_text_view_id) TextView categoryNameTextView;
     @BindView(R.id.new_expense_activity_category_amount_text_view_id) TextView categoryAmountTextView;
 
@@ -119,21 +118,21 @@ public class NewExpenseActivity extends AppCompatActivity
 
     private void selectCategory() {
         CategoryPickerFragment categoryPickerFragment = CategoryPickerFragment.newInstance();
-        categoryPickerFragment.setListener(this);
+        categoryPickerFragment.setListener(categoryPickerListener);
         categoryPickerFragment.show(getSupportFragmentManager(), CategoryPickerFragment.class.getSimpleName());
     }
 
-    @Override
-    public void onFinishExpenseCategoryDialog(Category category, double amount) {
-        // Hide category hint
-        categoryHintTextView.setVisibility(View.INVISIBLE);
-        // Load category info
-        categoryColorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
-        categoryNameTextView.setText(category.getName());
-        categoryAmountTextView.setText("$" + amount);
-        // Update category
-        this.category = category;
-    }
+    private CategoryPickerFragment.CategoryPickerListener categoryPickerListener = new CategoryPickerFragment.CategoryPickerListener() {
+        @Override
+        public void onFinishExpenseCategoryDialog(Category category) {
+            // Hide category hint
+            categoryHintTextView.setVisibility(View.INVISIBLE);
+            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+            categoryColorImageView.setImageDrawable(colorDrawable);
+            categoryNameTextView.setText(category.getName());
+            NewExpenseActivity.this.category = category;
+        }
+    };
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
@@ -292,8 +291,6 @@ public class NewExpenseActivity extends AppCompatActivity
     }
 
     private void save() {
-        String uuid = UUID.randomUUID().toString();
-        expense.setId(uuid);
         expense.setAmount(Double.valueOf(amountTextView.getText().toString()));
         expense.setNote(noteTextView.getText().toString());
         expense.setCategoryId(category.getId());
@@ -315,16 +312,6 @@ public class NewExpenseActivity extends AppCompatActivity
             if (task.isFaulted()) {
                 Log.e(TAG, "Error in creating new expense.", task.getError());
             }
-
-            JSONObject result = task.getResult();
-            String expenseId = result.optString(Expense.OBJECT_ID_JSON_KEY);
-
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            expense.setId(expenseId);
-            realm.copyToRealmOrUpdate(expense);
-            realm.commitTransaction();
-            realm.close();
 
             close();
 

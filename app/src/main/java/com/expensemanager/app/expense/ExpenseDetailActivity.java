@@ -3,6 +3,7 @@ package com.expensemanager.app.expense;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,10 +30,10 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
-public class ExpenseDetailActivity extends AppCompatActivity
-    implements CategoryPickerFragment.ExpenseCategoryPickerListener {
+public class ExpenseDetailActivity extends AppCompatActivity {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
 
     private static final String EXPENSE_ID = "EXPENSE_ID";
@@ -56,7 +56,7 @@ public class ExpenseDetailActivity extends AppCompatActivity
     @BindView(R.id.expense_detail_activity_save_button_id) Button saveButton;
     @BindView(R.id.expense_detail_activity_progress_bar_id) ProgressBar progressBar;
     @BindView(R.id.expense_detail_activity_category_relative_layout_id) RelativeLayout categoryRelativeLayout;
-    @BindView(R.id.expense_detail_activity_category_color_image_view_id) ImageView categoryColorImageView;
+    @BindView(R.id.expense_detail_activity_category_color_image_view_id) CircleImageView categoryColorImageView;
     @BindView(R.id.expense_detail_activity_category_name_text_view_id) TextView categoryNameTextView;
     @BindView(R.id.expense_detail_activity_category_amount_text_view_id) TextView categoryAmountTextView;
 
@@ -125,38 +125,32 @@ public class ExpenseDetailActivity extends AppCompatActivity
     }
 
     private void setupCategory() {
-        // Get category total amount
         amount = getCategoryAmount();
-        // Load category info
         loadCategory();
-        // Add click listener
-        categoryRelativeLayout.setOnClickListener(v -> {
-            selectCategory();
-        });
-    }
-
-    @Override
-    public void onFinishExpenseCategoryDialog(Category category, double amount) {
-        // Update category and amount
-        this.category = category;
-        this.amount = amount;
-        // Load category info
-        loadCategory();
+        categoryRelativeLayout.setOnClickListener(v -> selectCategory());
     }
 
     private void selectCategory() {
         if (isEditable) {
             CategoryPickerFragment categoryPickerFragment = CategoryPickerFragment
                 .newInstance();
-            categoryPickerFragment.setListener(this);
+            categoryPickerFragment.setListener(categoryPickerListener);
             categoryPickerFragment.show(getSupportFragmentManager(), CategoryPickerFragment.class.getSimpleName());
         }
     }
 
+    private CategoryPickerFragment.CategoryPickerListener categoryPickerListener = new CategoryPickerFragment.CategoryPickerListener() {
+        @Override
+        public void onFinishExpenseCategoryDialog(Category category) {
+            ExpenseDetailActivity.this.category = category;
+            loadCategory();
+        }
+    };
+
     private void loadCategory() {
-        categoryColorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+        categoryColorImageView.setImageDrawable(colorDrawable);
         categoryNameTextView.setText(category.getName());
-        categoryAmountTextView.setText("$" + amount);
     }
 
     private double getCategoryAmount() {

@@ -106,13 +106,11 @@
         android:background="@drawable/background_round_corner_white">
 
         <!-- Color -->
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/new_expense_activity_category_color_image_view_id"
             android:layout_width="@dimen/category_color_width_small"
             android:layout_height="@dimen/category_color_width_small"
-            android:layout_marginRight="@dimen/space_medium"
-
-            tools:background="@color/black"/>
+            android:layout_marginEnd="@dimen/space_medium"/>
 
         <!-- Name -->
         <TextView
@@ -140,7 +138,8 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium_small"
             android:gravity="center_vertical"
-            tools:text="1234"/>
+            tools:text="1234"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

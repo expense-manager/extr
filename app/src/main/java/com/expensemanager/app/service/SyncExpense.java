@@ -18,6 +18,7 @@ import java.util.Date;
 import bolts.Continuation;
 import bolts.Task;
 import bolts.TaskCompletionSource;
+import io.realm.Realm;
 
 /**
  * Created by Zhaolong Zhong on 8/17/16.
@@ -62,6 +63,43 @@ public class SyncExpense {
         return networkRequest.send().continueWith(saveExpense);
     }
 
+    public static Task<Void> getExpenseById(String expenseId) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getExpenseById(expenseId);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> saveExpense = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in downloading expense.", exception);
+                    throw  exception;
+                }
+
+                JSONObject result = task.getResult();
+                if (result == null) {
+                    throw new Exception("Empty response.");
+                }
+
+                Log.d(TAG, "Expense: \n" + result);
+
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                Expense expense = new Expense();
+                expense.mapFromJSON(result);
+                realm.copyToRealmOrUpdate(expense);
+                realm.commitTransaction();
+                realm.close();
+
+                return null;
+            }
+        };
+
+        Log.d(TAG, "Start downloading Expenses");
+        return networkRequest.send().continueWith(saveExpense);
+    }
+
     public static Task<JSONObject> create(ExpenseBuilder expenseBuilder) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.createExpense(expenseBuilder);
@@ -88,6 +126,10 @@ public class SyncExpense {
                 // Add photo
                 try {
                     String expenseId = result.getString(Expense.OBJECT_ID_JSON_KEY);
+
+                    // Sync new added expense.
+                    getExpenseById(expenseId);
+
                     for (int i = 0; i < expenseBuilder.getPhotoList().size(); i++) {
                         Log.d(TAG, "start upload photo at index: " + i);
                         addExpensePhoto(expenseId, expenseBuilder.getPhotoList().get(i));

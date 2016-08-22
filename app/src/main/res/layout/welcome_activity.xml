@@ -64,7 +64,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/welcome_activity_sign_up_button_id"
         android:layout_marginTop="@dimen/space_medium_small"
-        android:layout_marginBottom="@dimen/space_ultra_large"
+        android:layout_marginBottom="@dimen/space_crazy_large"
 
         android:text="@string/login"
         android:textColor="@color/white"

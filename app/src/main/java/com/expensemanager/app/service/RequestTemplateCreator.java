@@ -64,6 +64,12 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
+    public static RequestTemplate getExpenseById(String id) {
+        String url = BASE_URL + "classes/Expense" + "/" + id;
+
+        return new RequestTemplate(GET, url, null);
+    }
+
     public static RequestTemplate createExpense(ExpenseBuilder expenseBuilder) {
         String url = BASE_URL + "classes/Expense";
         Map<String, String> params = new HashMap<>();

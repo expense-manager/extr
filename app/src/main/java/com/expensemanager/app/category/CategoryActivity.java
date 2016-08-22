@@ -89,6 +89,7 @@ public class CategoryActivity extends BaseActivity {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
+        invalidateViews();
     }
 
     @Override
