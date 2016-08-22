@@ -1,6 +1,7 @@
 package com.expensemanager.app.category;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.service.SyncCategory;
 
@@ -18,6 +19,7 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -26,14 +28,14 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 
 public class CategoryDetailActivity extends AppCompatActivity
-    implements CategoryColorPickerDialogFragment.CategoryColorDialogListener {
+    implements ColorPickerFragment.ColorPickerListener {
     private static final String TAG = CategoryDetailActivity.class.getSimpleName();
 
     private static final String CATEGORY_ID = "CATEGORY_ID";
 
     private Category category;
     private boolean isEditable = false;
-    private HashSet<String> usedColors;
+    private Set<String> usedColors;
     private String currentColor;
 
     @BindView(R.id.category_detail_activity_name_edit_text_id) EditText nameEditText;
@@ -59,14 +61,7 @@ public class CategoryDetailActivity extends AppCompatActivity
         String categoryId = getIntent().getStringExtra(CATEGORY_ID);
         category = Category.getCategoryById(categoryId);
 
-        usedColors = new HashSet<>();
-        ArrayList<Category> categories = new ArrayList<>();
-
-        categories = new ArrayList<>(Category.getAllCategories());
-
-        for (Category c : categories) {
-            usedColors.add(c.getColor());
-        }
+        usedColors = Helpers.getUsedColorSet();
 
         invalidateViews();
     }
@@ -92,15 +87,18 @@ public class CategoryDetailActivity extends AppCompatActivity
 
     private void selectColor() {
         if (isEditable) {
-            CategoryColorPickerDialogFragment fg = CategoryColorPickerDialogFragment
-                .newInstance(this, currentColor, usedColors);
-            fg.show(getSupportFragmentManager(), "category_color_fragment");
+            ColorPickerFragment colorPickerFragment = ColorPickerFragment
+                .newInstance(currentColor);
+            // Pass listener
+            colorPickerFragment.setListener(this);
+            colorPickerFragment.show(getSupportFragmentManager(), ColorPickerFragment.class.getSimpleName());
         }
     }
 
     @Override
     public void onFinishCategoryColorDialog(String color) {
         usedColors.remove(currentColor);
+        usedColors.add(color);
         currentColor = color;
         colorImageView.setBackgroundColor(Color.parseColor(color));
     }
@@ -142,9 +140,7 @@ public class CategoryDetailActivity extends AppCompatActivity
     };
 
     private void save() {
-        String name;
-        name = nameEditText.getText().toString();
-
+        String name = nameEditText.getText().toString();
 
         if (name.length() == 0) {
             return;

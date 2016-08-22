@@ -1,5 +1,7 @@
 package com.expensemanager.app.helpers;
 
+import com.expensemanager.app.models.Category;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +16,9 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by Zhaolong Zhong on 8/19/16.
@@ -163,5 +167,18 @@ public class Helpers {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         double px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         return px;
+    }
+
+    // Get used color set
+    public static Set<String> getUsedColorSet() {
+        Set<String> newUsedColors = new HashSet<>();
+
+        for (Category c : Category.getAllCategories()) {
+            if (c != null) {
+                newUsedColors.add(c.getColor());
+            }
+        }
+
+        return newUsedColors;
     }
 }

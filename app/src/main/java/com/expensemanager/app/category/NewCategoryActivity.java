@@ -1,6 +1,7 @@
 package com.expensemanager.app.category;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.service.SyncCategory;
 
@@ -21,9 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import bolts.Continuation;
@@ -33,12 +33,12 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 
 public class NewCategoryActivity extends AppCompatActivity
-    implements CategoryColorPickerDialogFragment.CategoryColorDialogListener {
+    implements ColorPickerFragment.ColorPickerListener {
     private static final String TAG = NewCategoryActivity.class.getSimpleName();
 
     private Category category;
 
-    private HashSet<String> usedColors;
+    private Set<String> usedColors;
     private String currentColor;
 
     @BindView(R.id.new_category_activity_name_edit_text_id) EditText nameEditText;
@@ -58,16 +58,10 @@ public class NewCategoryActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         category = new Category();
-        usedColors = new HashSet<>();
-        ArrayList<Category> categories = new ArrayList<>();
-
-        categories = new ArrayList<>(Category.getAllCategories());
-
-        for (Category c : categories) {
-            usedColors.add(c.getColor());
-        }
-
-        currentColor = randomColor();
+        // Get used color set
+        usedColors = Helpers.getUsedColorSet();
+        // Get a random unused color
+        currentColor = ColorPickerFragment.getRandomColor(usedColors);
         colorImageView.setBackgroundColor(Color.parseColor(currentColor));
 
         saveButton.setOnClickListener(v -> save());
@@ -75,27 +69,18 @@ public class NewCategoryActivity extends AppCompatActivity
         progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_ATOP);
     }
 
-    private String randomColor() {
-        Random ran = new Random();
-        int pos = ran.nextInt(CategoryColorPickerDialogFragment.COLORS.size());
-        String color = CategoryColorPickerDialogFragment.COLORS.get(pos);
-        while (usedColors.contains(color)) {
-            pos = ran.nextInt(CategoryColorPickerDialogFragment.COLORS.size());
-            color = CategoryColorPickerDialogFragment.COLORS.get(pos);
-        }
-        return color;
-    }
-
     private void selectColor() {
-        CategoryColorPickerDialogFragment fg = CategoryColorPickerDialogFragment.newInstance(this, currentColor, usedColors);
-        fg.show(getSupportFragmentManager(), "category_color_fragment");
+        ColorPickerFragment colorPickerFragment = ColorPickerFragment.newInstance(currentColor);
+        // Pass listener
+        colorPickerFragment.setListener(this);
+        colorPickerFragment.show(getSupportFragmentManager(), ColorPickerFragment.class.getSimpleName());
     }
 
     @Override
     public void onFinishCategoryColorDialog(String color) {
         usedColors.remove(currentColor);
+        usedColors.add(color);
         currentColor = color;
-        Log.i(TAG, "selected color: " + color);
         colorImageView.setBackgroundColor(Color.parseColor(color));
     }
 

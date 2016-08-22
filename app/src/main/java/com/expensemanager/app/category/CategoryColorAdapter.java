@@ -27,11 +27,11 @@ public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Set<String> usedColors;
     private String currentColor;
     private Context context;
-    private static CategoryColorPickerDialogFragment.CategoryColorDialogListener listener;
-    private CategoryColorPickerDialogFragment fragment;
+    private ColorPickerFragment.ColorPickerListener listener;
+    private ColorPickerFragment fragment;
 
-    public CategoryColorAdapter(Context context, CategoryColorPickerDialogFragment.CategoryColorDialogListener listener,
-            CategoryColorPickerDialogFragment fragment, String currentColor, List<String> colors, Set<String> usedColors) {
+    public CategoryColorAdapter(Context context, ColorPickerFragment.ColorPickerListener listener,
+            ColorPickerFragment fragment, String currentColor, List<String> colors, Set<String> usedColors) {
         this.context = context;
         this.listener = listener;
         this.fragment = fragment;

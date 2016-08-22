@@ -25,16 +25,17 @@ public class ExpenseCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final String TAG= ExpenseCategoryAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_DEFAULT = 0;
+
     private ArrayList<Category> categories;
     private ArrayList<Double> amounts;
     private Map<String, Integer> map;
-    private ExpenseCategoryPickerDialogFragment.ExpenseCategoryDialogListener listener;
-    private ExpenseCategoryPickerDialogFragment fragment;
+    private CategoryPickerFragment.ExpenseCategoryPickerListener listener;
+    private CategoryPickerFragment fragment;
     private Context context;
 
     public ExpenseCategoryAdapter(Context context,
-        ExpenseCategoryPickerDialogFragment.ExpenseCategoryDialogListener listener,
-        ExpenseCategoryPickerDialogFragment fragment, ArrayList<Category> categories, ArrayList<Double> amounts) {
+        CategoryPickerFragment.ExpenseCategoryPickerListener listener,
+        CategoryPickerFragment fragment, ArrayList<Category> categories, ArrayList<Double> amounts) {
 
         this.context = context;
         this.listener = listener;

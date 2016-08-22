@@ -62,7 +62,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 
 public class NewExpenseActivity extends AppCompatActivity
-    implements ExpenseCategoryPickerDialogFragment.ExpenseCategoryDialogListener {
+    implements CategoryPickerFragment.ExpenseCategoryPickerListener {
     private static final String TAG = NewExpenseActivity.class.getSimpleName();
 
     public static final String NEW_PHOTO = "Take a photo";
@@ -118,8 +118,9 @@ public class NewExpenseActivity extends AppCompatActivity
     }
 
     private void selectCategory() {
-        ExpenseCategoryPickerDialogFragment fg = ExpenseCategoryPickerDialogFragment.newInstance(this);
-        fg.show(getSupportFragmentManager(), "expense_category_fragment");
+        CategoryPickerFragment categoryPickerFragment = CategoryPickerFragment.newInstance();
+        categoryPickerFragment.setListener(this);
+        categoryPickerFragment.show(getSupportFragmentManager(), CategoryPickerFragment.class.getSimpleName());
     }
 
     @Override

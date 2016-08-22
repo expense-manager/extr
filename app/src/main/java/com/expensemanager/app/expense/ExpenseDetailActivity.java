@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 
 public class ExpenseDetailActivity extends AppCompatActivity
-    implements ExpenseCategoryPickerDialogFragment.ExpenseCategoryDialogListener {
+    implements CategoryPickerFragment.ExpenseCategoryPickerListener {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
 
     private static final String EXPENSE_ID = "EXPENSE_ID";
@@ -146,9 +146,10 @@ public class ExpenseDetailActivity extends AppCompatActivity
 
     private void selectCategory() {
         if (isEditable) {
-            ExpenseCategoryPickerDialogFragment fg = ExpenseCategoryPickerDialogFragment
-                .newInstance(this);
-            fg.show(getSupportFragmentManager(), "expense_category_fragment");
+            CategoryPickerFragment categoryPickerFragment = CategoryPickerFragment
+                .newInstance();
+            categoryPickerFragment.setListener(this);
+            categoryPickerFragment.show(getSupportFragmentManager(), CategoryPickerFragment.class.getSimpleName());
         }
     }
 
