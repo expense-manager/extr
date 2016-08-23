@@ -19,7 +19,7 @@
 
         android:text="@string/sign_up_title_step_one"
         android:textSize="@dimen/text_medium"
-        android:textColor="@color/light_gray"/>
+        android:textColor="@color/gray_light"/>
 
     <RelativeLayout
         android:id="@+id/sign_up_activity_relative_layout_id"

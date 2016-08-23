@@ -2,8 +2,4 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <item android:id="@+id/menu_item_update_photo"
-        android:title="@string/update_photo"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
 </menu>

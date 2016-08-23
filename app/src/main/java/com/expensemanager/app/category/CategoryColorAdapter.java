@@ -4,19 +4,19 @@ import com.expensemanager.app.R;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= CategoryColorAdapter.class.getSimpleName();
@@ -87,22 +87,35 @@ public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         String color = colors.get(position);
-        viewHolder.colorImageView.setImageResource(0);
 
-        // Check if is selected
+        int background = ContextCompat.getColor(context, R.color.white);
+        ColorDrawable colorDrawable = new ColorDrawable(background);
+        viewHolder.paddingColorImageView.setImageDrawable(colorDrawable);
+
+        // Regular color
+        viewHolder.outerColorImageView.setVisibility(View.INVISIBLE);
+        viewHolder.paddingColorImageView.setVisibility(View.INVISIBLE);
+
         if (color.equals(currentColor)) {
-            int background = ContextCompat.getColor(context, R.color.white_transparent);
-            viewHolder.colorRelativeLayout.setBackgroundColor(background);
-            viewHolder.colorImageView.setImageResource(R.drawable.ic_check_white_24dp);
-        } else {
-            viewHolder.colorRelativeLayout.setBackgroundColor(Color.parseColor(color));
-            // Show availability
-            if (usedColors.contains(color)) {
-                viewHolder.colorImageView.setImageResource(R.drawable.ic_close_white_24dp);
-            }
+            // Regular color
+            viewHolder.outerColorImageView.setVisibility(View.VISIBLE);
+            viewHolder.paddingColorImageView.setVisibility(View.VISIBLE);
+            // Currently selected
+            colorDrawable = new ColorDrawable(Color.parseColor(color));
+            viewHolder.outerColorImageView.setImageDrawable(colorDrawable);
+        } else if (usedColors.contains(color)){
+            // Regular color
+            viewHolder.outerColorImageView.setVisibility(View.VISIBLE);
+            viewHolder.paddingColorImageView.setVisibility(View.VISIBLE);
+            // Selected by other categories
+            background = ContextCompat.getColor(context, R.color.gray_light);
+            colorDrawable = new ColorDrawable(background);
+            viewHolder.outerColorImageView.setImageDrawable(colorDrawable);
         }
+
         // Show color
-        viewHolder.colorImageView.setBackgroundColor(Color.parseColor(color));
+        colorDrawable = new ColorDrawable(Color.parseColor(color));
+        viewHolder.innerColorImageView.setImageDrawable(colorDrawable);
 
         viewHolder.itemView.setOnClickListener(v -> {
             selectColor(position);
@@ -115,7 +128,7 @@ public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.View
         // Available colors
         if (color.equals(currentColor)) {
             fragment.dismiss();
-        } else if (!usedColors.contains(color)) {
+        } else {
             listener.onFinishCategoryColorDialog(color);
             fragment.dismiss();
         }
@@ -132,8 +145,9 @@ public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.category_item_color_relative_layout_id) RelativeLayout colorRelativeLayout;
-        @BindView(R.id.category_item_color_image_view_id) ImageView colorImageView;
+        @BindView(R.id.category_item_outer_color_image_view_id) CircleImageView outerColorImageView;
+        @BindView(R.id.category_item_padding_color_image_view_id) CircleImageView paddingColorImageView;
+        @BindView(R.id.category_item_inner_color_image_view_id) CircleImageView innerColorImageView;
 
         private View itemView;
 

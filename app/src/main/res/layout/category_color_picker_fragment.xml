@@ -2,15 +2,15 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
-    android:paddingTop="@dimen/space_really_small"
-    android:paddingLeft="@dimen/space_really_small"
-    android:paddingBottom="@dimen/space_really_small">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/category_color_fragment_recycler_view_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+
+        android:paddingLeft="@dimen/space_medium"
+        android:paddingTop="@dimen/space_medium"
+        android:paddingBottom="@dimen/space_medium"/>
 
 </RelativeLayout>

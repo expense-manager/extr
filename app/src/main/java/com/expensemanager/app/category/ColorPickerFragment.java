@@ -28,7 +28,7 @@ import butterknife.Unbinder;
 public class ColorPickerFragment extends DialogFragment {
     private static final String TAG= ColorPickerFragment.class.getSimpleName();
     private static final String CURRENT_COLOR = "current_color";
-    private final int COLUMNS = 3;
+    private final int COLUMNS = 4;
     public static final List<String> COLORS = Arrays.asList("#F44336","#3F51B5","#4CAF50","#FF9800","#E91E63","#2196F3","#8BC34A",
         "#FF5722","#03A9F4","#CDDC39","#795548","#9C27B0","#00BCD4","#FFEB3B","#9E9E9E","#673AB7","#757575",
         "#009688","#FFC107","#607D8B","#D32F2F","#303F9F","#388E3C","#F57C00","#C2185B","#1976D2","#689F38",
@@ -92,13 +92,8 @@ public class ColorPickerFragment extends DialogFragment {
 
     private void setupRecyclerView() {
         categoryColorRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), COLUMNS,
-            LinearLayoutManager.VERTICAL, false));
+            GridLayoutManager.VERTICAL, false));
         categoryColorRecyclerView.setAdapter(adapter);
-
-        // set RecycleView item divider width
-        int spacing = (int) Helpers.dpToPx(getActivity(), 4);
-        SpacesItemDecoration decoration = new SpacesItemDecoration(spacing);
-        categoryColorRecyclerView.addItemDecoration(decoration);
     }
 
     @Override

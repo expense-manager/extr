@@ -30,7 +30,7 @@
 
     <dimen name="login_sign_up_widget_width">300dp</dimen>
     <dimen name="button_height">40dp</dimen>
-    <dimen name="category_color_width">60dp</dimen>
+    <dimen name="category_color_width">56dp</dimen>
     <dimen name="category_color_width_small">30dp</dimen>
 
     <dimen name="chart_height">220dp</dimen>
