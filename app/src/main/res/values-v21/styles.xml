@@ -9,4 +9,21 @@
     <style name="SplashTheme" parent="NoActionBarBaseTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
+
+    <!-- Category dialog style -->
+    <style name="CategoryColorDialogStyle" parent="PopUpDialogStyle">
+        <item name="android:background">#99FFFFFF</item>
+    </style>
+
+    <!-- Dialog popup style -->
+    <style name="PopUpDialogStyle" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleStyle">@null</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
 </resources>
