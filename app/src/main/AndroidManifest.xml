@@ -78,6 +78,15 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".profile.ProfileActivity"
             android:theme="@style/BaseTheme" />
+
+        <receiver android:name=".notifications.AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
