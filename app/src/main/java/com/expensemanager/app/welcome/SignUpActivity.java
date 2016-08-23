@@ -101,7 +101,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void signUp(View v) {
         if (stepOneRelativeLayout.getVisibility() == View.VISIBLE) {
-            closeSoftKeyboard();
             setStepTwo();
         } else {
             progressBar.setVisibility(View.VISIBLE);
@@ -110,19 +109,28 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setStepTwo() {
+        closeSoftKeyboard();
         titleTextView.setText(R.string.sign_up_title_step_two);
         stepOneRelativeLayout.setVisibility(View.GONE);
         stepTwoRelativeLayout.setVisibility(View.VISIBLE);
-        signUpButton.setEnabled(false);
-        signUpButton.setTextColor(ContextCompat.getColor(this, R.color.blue));
         signUpButton.setText(R.string.sign_up);
+        resetStepTwo();
+    }
+
+    private void resetStepTwo() {
+        passwordEditText.setText("");
+        confirmPasswordEditText.setText("");
+        nameEditText.setText("");
+        setButton();
     }
 
     private void setStepOne() {
+        closeSoftKeyboard();
         titleTextView.setText(R.string.sign_up_title_step_one);
         stepTwoRelativeLayout.setVisibility(View.GONE);
         stepOneRelativeLayout.setVisibility(View.VISIBLE);
         signUpButton.setText(R.string.next);
+        setButton();
     }
 
     private Continuation<JSONObject, Void> onSignUpSuccess = new Continuation<JSONObject, Void>() {
@@ -134,8 +142,12 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             if (task.getResult().has("error")) {
+                // Clear password
+                passwordEditText.setText("");
+                confirmPasswordEditText.setText("");
+                // Show error messasge
                 errorMessageTextView.setText(task.getResult().getString("error"));
-                errorMessageTextView.setVisibility(View.VISIBLE);
+                errorMessageRelativeLayout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             } else {
                 SyncUser.login(email, password).onSuccess(onLoginSuccess, Task.UI_THREAD_EXECUTOR);
@@ -154,8 +166,11 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             if (task.getResult().has("error")) {
+                // Clear password
+                passwordEditText.setText("");
+                confirmPasswordEditText.setText("");
+                // Show error messasge
                 errorMessageTextView.setText(task.getResult().getString("error"));
-                errorMessageTextView.setVisibility(View.VISIBLE);
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
             } else {
                 MainActivity.newInstance(SignUpActivity.this);
@@ -299,7 +314,9 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (stepTwoRelativeLayout.getVisibility() == View.VISIBLE) {
-            closeSoftKeyboard();
+            // Clear error message if exists
+            errorMessageRelativeLayout.setVisibility(View.INVISIBLE);
+            // Back to step one
             setStepOne();
         } else {
             finish();

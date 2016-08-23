@@ -41,6 +41,10 @@ public class SyncUser {
                 if (result == null) {
                     throw new Exception("Empty response.");
                 }
+                // If is error response, return immediately
+                if (result.has("error")) {
+                    return result;
+                }
 
                 String sessionToken = result.optString(User.SESSION_TOKEN);
                 String userId = result.optString(User.OBJECT_ID_JSON_KEY);
@@ -86,6 +90,10 @@ public class SyncUser {
                 JSONObject result = task.getResult();
                 if (result == null) {
                     throw new Exception("Empty response.");
+                }
+                // If is error response, return immediately
+                if (result.has("error")) {
+                    return result;
                 }
 
                 String sessionToken = result.optString(User.SESSION_TOKEN);

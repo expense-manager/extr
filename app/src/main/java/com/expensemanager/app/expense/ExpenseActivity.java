@@ -58,7 +58,6 @@ public class ExpenseActivity extends BaseActivity {
             NewExpenseActivity.newInstance(this);
             overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
-
         invalidateViews();
         SyncExpense.getAllExpenses();
     }

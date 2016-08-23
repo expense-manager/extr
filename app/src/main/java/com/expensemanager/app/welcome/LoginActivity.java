@@ -84,6 +84,9 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             if (task.getResult().has("error")) {
+                // Clear password
+                passwordEditText.setText("");
+                // Show error messasge
                 errorMessageTextView.setText(task.getResult().getString("error"));
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
             } else {
