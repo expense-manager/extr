@@ -43,7 +43,8 @@
         <activity
             android:name=".category.CategoryActivity"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".expense.ExpenseDetailActivity" />
+        <activity android:name=".expense.ExpenseDetailActivity"
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".category.CategoryDetailActivity"
             android:label="@string/title_activity_category_detail"

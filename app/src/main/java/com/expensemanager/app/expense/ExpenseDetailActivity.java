@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.service.SyncExpense;
@@ -33,7 +36,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
-public class ExpenseDetailActivity extends AppCompatActivity {
+public class ExpenseDetailActivity extends BaseActivity {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
 
     private static final String EXPENSE_ID = "EXPENSE_ID";
@@ -46,6 +49,9 @@ public class ExpenseDetailActivity extends AppCompatActivity {
     private ArrayList<String> photoNameList;
     private ExpensePhotoAdapter expensePhotoAdapter;
 
+    @BindView(R.id.toolbar_id) Toolbar toolbar;
+    @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
+    @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.expense_detail_activity_amount_text_view_id) EditText amountTextView;
     @BindView(R.id.expense_detail_activity_note_text_view_id) EditText noteTextView;
     @BindView(R.id.expense_detail_activity_created_at_text_view_id) TextView createdAtTextView;
@@ -79,6 +85,7 @@ public class ExpenseDetailActivity extends AppCompatActivity {
         //todo: fix photo not found in realm
         Log.d(TAG, "onCreate expense photo:" + expense.getPhotos());
 
+        setupToolbar();
         invalidateViews();
 
         SyncExpense.getExpensePhotoByExpenseId(expenseId).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
@@ -102,6 +109,18 @@ public class ExpenseDetailActivity extends AppCompatActivity {
 
         setupExpensePhoto();
         setupEditableViews(isEditable);
+    }
+
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        titleTextView.setText(getString(R.string.expense_detail));
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
     }
 
     private void setupExpensePhoto() {
@@ -266,7 +285,8 @@ public class ExpenseDetailActivity extends AppCompatActivity {
         SyncExpense.delete(expense.getId()).continueWith(onDeleteSuccess, Task.UI_THREAD_EXECUTOR);
     }
 
-    private void close() {
+    @Override
+    public void close() {
         finish();
         overridePendingTransition(0, R.anim.right_out);
     }
