@@ -21,10 +21,18 @@ android {
 
             buildConfigField "String", "APP_ID", secrets.getProperty('APP_ID')
             buildConfigField "String", "MASTER_KEY", secrets.getProperty('MASTER_KEY')
+
+            manifestPlaceholders = [manifestApplicationId: "${applicationId}",
+                                    onesignal_app_id: secrets.getProperty('ONESIGNAL_APP_ID'),
+                                    onesignal_google_project_number: secrets.getProperty('ONESIGNAL_GOOGLE_PROJECT_NUMBER')]
         } else {
             buildConfigField "String", "APP_ID", "\"PUT APP ID HERE\""
             buildConfigField "String", "MASTER_KEY", "\"PUT MASTER KEY HERE\""
         }
+
+        manifestPlaceholders = [manifestApplicationId: "${applicationId}",
+                                onesignal_app_id: "",
+                                onesignal_google_project_number: ""]
     }
     buildTypes {
         release {
@@ -72,9 +80,18 @@ dependencies {
     // Circle image
     compile 'de.hdodenhof:circleimageview:1.3.0'
 
-    // Retrolambda, make sure to apply this line last.
-    apply plugin: 'me.tatarka.retrolambda'
-
     // MPAndroidChartMPAndroidChart
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
+
+    //OneSignal
+    compile 'com.onesignal:OneSignal:3.+@aar'
+    // Required for OneSignal, even if you have added FCM.
+    compile 'com.google.android.gms:play-services-gcm:+'
+    // Required for geotagging
+    compile "com.google.android.gms:play-services-location:+"
+
+
+
+    // Retrolambda, make sure to apply this line last.
+    apply plugin: 'me.tatarka.retrolambda'
 }

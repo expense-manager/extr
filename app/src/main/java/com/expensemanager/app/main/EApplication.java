@@ -2,6 +2,8 @@ package com.expensemanager.app.main;
 
 import android.app.Application;
 
+import com.onesignal.OneSignal;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -23,6 +25,9 @@ public class EApplication extends Application {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(realmConfiguration);
         Realm.getDefaultInstance();
+
+        // Push notification
+        OneSignal.startInit(this).init();
     }
 
     public static EApplication getInstance() {
