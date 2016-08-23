@@ -2,36 +2,39 @@ package com.expensemanager.app.expense;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/**
- * Created by Zhaolong Zhong on 8/16/16.
- */
 
 public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= ExpenseAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Expense> expenses;
+    private Map<String, Category> categoriesMap;
     private Context context;
 
     public ExpenseAdapter(Context context, ArrayList<Expense> expenses) {
         this.context = context;
         this.expenses = expenses;
+        // Get map of all category
+        categoriesMap = Category.getAllCategoriesMap();
     }
 
     private Context getContext() {
@@ -81,10 +84,21 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Expense expense = expenses.get(position);
+        Category category = categoriesMap.get(expense.getCategoryId());
 
         viewHolder.createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
         viewHolder.amountTextView.setText("$" + expense.getAmount());
-        viewHolder.noteTextView.setText(String.valueOf(expense.getNote().toString()));
+
+        // Load category data or hide
+        if (category != null) {
+            viewHolder.categoryColorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+            viewHolder.categoryNameTextView.setText(category.getName());
+        } else {
+            viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
+            viewHolder.categoryNameTextView.setVisibility(View.INVISIBLE);
+        }
+
+        // Set item click listener
         viewHolder.itemView.setOnClickListener(v -> {
             ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
@@ -104,7 +118,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
         @BindView(R.id.expense_item_default_created_at_text_view_id) TextView createdAtTextView;
         @BindView(R.id.expense_item_default_amount_text_view_id) TextView amountTextView;
-        @BindView(R.id.expense_item_default_note_text_view_id) TextView noteTextView;
+        @BindView(R.id.expense_item_default_category_color_image_view_id) ImageView categoryColorImageView;
+        @BindView(R.id.expense_item_default_category_name_text_view_id) TextView categoryNameTextView;
 
         private View itemView;
 

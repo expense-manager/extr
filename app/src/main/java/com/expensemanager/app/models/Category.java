@@ -8,6 +8,9 @@ import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmModel;
@@ -89,6 +92,19 @@ public class Category implements RealmModel {
         realm.copyToRealmOrUpdate(categories);
         realm.commitTransaction();
         realm.close();
+    }
+
+    /**
+     * @return map of all categories
+     */
+    public static Map<String, Category> getAllCategoriesMap() {
+        Map<String, Category> map = new HashMap<>();
+
+        for (Category c : getAllCategories()) {
+            map.put(c.getId(), c);
+        }
+
+        return map;
     }
 
     /**
