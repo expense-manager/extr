@@ -122,6 +122,7 @@ public class User implements RealmModel{
             JSONObject photoJsonObj = jsonObject.optJSONObject(PHOTO_JSON_KEY);
             if (photoJsonObj != null) {
                 this.photoUrl = photoJsonObj.getString(URL_JSON_KEY);
+                Log.i(TAG, "photo url: " + this.photoUrl);
             }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);

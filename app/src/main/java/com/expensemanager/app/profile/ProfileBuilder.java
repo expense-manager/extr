@@ -4,6 +4,7 @@ import com.expensemanager.app.models.User;
 
 public class ProfileBuilder {
     private User user;
+    private String userId;
     private byte[] profileImage;
 
     public ProfileBuilder() {
@@ -16,6 +17,7 @@ public class ProfileBuilder {
 
     public ProfileBuilder setUser(User user) {
         this.user = user;
+        this.userId = user.getId();
         return this;
     }
 
@@ -26,5 +28,9 @@ public class ProfileBuilder {
     public ProfileBuilder setProfileImage(byte[] profileImage) {
         this.profileImage = profileImage;
         return this;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

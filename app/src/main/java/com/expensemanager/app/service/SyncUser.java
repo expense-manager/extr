@@ -11,6 +11,7 @@ import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileBuilder;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -187,5 +188,75 @@ public class SyncUser {
         };
 
         return networkRequest.send().continueWith(onResponseReturned);
+    }
+
+    public static Task<JSONObject> update(ProfileBuilder profileBuilder) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.updateUser(profileBuilder.getUser());
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, JSONObject> onCreateExpenseFinished = new Continuation<JSONObject, JSONObject>() {
+            @Override
+            public JSONObject then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in creating expense.", exception);
+                    throw exception;
+                }
+
+                JSONObject result = task.getResult();
+                if (result == null) {
+                    throw new Exception("Empty response.");
+                }
+
+                // Example response: {"objectId":"tUfEENoHSS","createdAt":"2016-08-18T22:34:59.262Z"}
+                Log.d(TAG, "Response: \n" + result);
+
+                // Add photo
+                addUserPhoto(profileBuilder.getUserId(), profileBuilder.getProfileImage());
+
+                return result;
+            }
+        };
+
+        Log.d(TAG, "Start updating user info.");
+        return networkRequest.send().continueWith(onCreateExpenseFinished);
+    }
+    /**
+     * Add expense photo to Photo table in server
+     * @param userId
+     * @param data
+     * @return
+     */
+    public static Task<JSONObject> addUserPhoto(final String userId, byte[] data) {
+        Continuation<JSONObject, Task<JSONObject>> addUserPhoto = new Continuation<JSONObject, Task<JSONObject>>() {
+            @Override
+            public Task<JSONObject> then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in addUserPhoto", exception);
+                    throw exception;
+                }
+
+                String fileName = task.getResult().optString("name");
+                if (TextUtils.isEmpty(fileName)) {
+                    throw new Exception("Empty input for addUserPhoto");
+                }
+
+                Log.d(TAG, "addUserPhoto - photoName:" + fileName);
+                // After we have file name, we add file name and expense id to Photo table.
+                TaskCompletionSource<JSONObject> tcs = new TaskCompletionSource<>();
+                RequestTemplate template = RequestTemplateCreator.addUserPhoto(userId, fileName);
+
+                return new NetworkRequest(template, tcs).send();
+            }
+        };
+
+        String photoName = Helpers.dateToString(new Date(), EApplication.getInstance()
+            .getString(R.string.photo_date_format_string)) + ".jpg";
+
+        return SyncPhoto.uploadPhoto(photoName, data) // add photo to File table, return file name
+            .continueWithTask(addUserPhoto); // return objectId(user photo id)
+
     }
 }

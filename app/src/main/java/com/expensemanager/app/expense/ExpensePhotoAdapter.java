@@ -13,6 +13,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,7 @@ public class ExpensePhotoAdapter extends BaseAdapter {
         if (photoList != null && photoList.size() >= 1) {
             byte[] photoBytes = photoList.get(position);
             Bitmap bitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
+            Log.i(TAG, bitmap.toString());
             photoViewHolder.photoImageView.setImageBitmap(bitmap);
         } else {
 //                Bitmap cameraIconBitmap = getCameraIconBitmap();

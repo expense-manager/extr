@@ -239,4 +239,36 @@ public class RequestTemplateCreator {
 
         return new RequestTemplate(DELETE, url, null);
     }
+
+    public static RequestTemplate updateUser(User user) {
+        String url = BASE_URL + "users/" + user.getId();
+        Map<String, String> params = new HashMap<>();
+
+        params.put(User.FULLNAME_JSON_KEY, user.getFullname());
+        // todo: save more info
+
+        return new RequestTemplate(PUT, url, params);
+    }
+
+    public static RequestTemplate addUserPhoto(String userId, String fileName) {
+        String url = BASE_URL + "users/" + userId;
+        Map<String, String> params = new HashMap<>();
+        JSONObject photoObject = new JSONObject();
+
+        try {
+            // Build File pointer
+            photoObject.put("__type", "File");
+            photoObject.put("name", fileName);
+
+            Log.d(TAG, "photoObject:" + photoObject.toString());
+            params.put("photo", photoObject.toString());
+
+            return new RequestTemplate(PUT, url, params);
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating photo pointer for where clause in addExpensePhoto()", e);
+        }
+
+        return null;
+    }
 }
