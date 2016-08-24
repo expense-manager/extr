@@ -1,12 +1,13 @@
 package com.expensemanager.app.helpers;
 
-import com.expensemanager.app.models.Category;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
+import android.util.Log;
+
+import com.expensemanager.app.models.Category;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -73,6 +74,28 @@ public class Helpers {
         readableDate.append(timeFormat.format(createdAt));
 
         return readableDate.toString();
+    }
+
+    public static String getMonthFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        return String.valueOf(calendar.getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.US));
+    }
+
+    public static String getWeekStartEnd(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        Calendar start = (Calendar) calendar.clone();
+        start.add(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek() - start.get(Calendar.DAY_OF_WEEK));
+
+        Calendar end = (Calendar) start.clone();
+        end.add(Calendar.DAY_OF_YEAR, 6);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        return simpleDateFormat.format(start.getTime()) + " - " + simpleDateFormat.format(end.getTime());
     }
 
     public static String encodeURIComponent(String s) {
@@ -180,5 +203,20 @@ public class Helpers {
         }
 
         return newUsedColors;
+    }
+
+    public static boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException e)          {
+            Log.e(TAG, "Error checking internet.", e);
+        } catch (InterruptedException e) {
+            Log.e(TAG, "Error checking internet.", e);
+        }
+        return false;
     }
 }

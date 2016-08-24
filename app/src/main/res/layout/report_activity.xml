@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/report_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,13 +9,21 @@
 
     <include layout="@layout/toolbar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/report_activity_recycler_view_id"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/report_activity_tab_layout_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar_id"
 
-        android:paddingTop="@dimen/space_really_small"
-        android:paddingBottom="@dimen/space_really_small"/>
+        app:tabMaxWidth="0dp"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        android:background="@color/white"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/report_activity_view_pager_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/report_activity_tab_layout_id"/>
 
 </RelativeLayout>

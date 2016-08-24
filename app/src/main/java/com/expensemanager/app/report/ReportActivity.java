@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +29,8 @@ public class ReportActivity extends BaseActivity {
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
-    @BindView(R.id.report_activity_recycler_view_id) RecyclerView recyclerView;
+    @BindView(R.id.report_activity_tab_layout_id) TabLayout tabLayout;
+    @BindView(R.id.report_activity_view_pager_id) ViewPager viewPager;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, ReportActivity.class);
@@ -43,6 +45,7 @@ public class ReportActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setupToolbar();
+        setupViewPager(viewPager);
     }
 
     private void setupToolbar() {
@@ -55,6 +58,16 @@ public class ReportActivity extends BaseActivity {
         titleTextView.setText(getString(R.string.report));
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ReportFragmentAdapter adapter = new ReportFragmentAdapter(getSupportFragmentManager());
+
+        adapter.addFragment(ReportFragment.newInstance(false), "Monthly");
+        adapter.addFragment(ReportFragment.newInstance(true), "Weekly");
+        viewPager.setAdapter(adapter);
+
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
