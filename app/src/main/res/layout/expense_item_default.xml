@@ -45,7 +45,7 @@
             android:layout_width="@dimen/category_color_width_small"
             android:layout_height="@dimen/category_color_width_small"
             android:layout_below="@+id/expense_item_default_created_at_text_view_id"
-            android:layout_marginLeft="@dimen/space_medium"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/space_medium"
             android:layout_marginBottom="@dimen/space_medium"
 
@@ -56,9 +56,10 @@
             android:id="@+id/expense_item_default_category_name_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/expense_item_default_category_color_image_view_id"
+            android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/expense_item_default_category_color_image_view_id"
             android:layout_alignBottom="@+id/expense_item_default_category_color_image_view_id"
+            android:layout_marginLeft="@dimen/space_medium"
 
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium_small"
