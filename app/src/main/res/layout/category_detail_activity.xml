@@ -64,7 +64,7 @@
         android:textSize="@dimen/text_small"/>
 
     <!-- Color -->
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/category_detail_activity_color_image_view_id"
         android:layout_width="@dimen/category_color_width"
         android:layout_height="@dimen/category_color_width"

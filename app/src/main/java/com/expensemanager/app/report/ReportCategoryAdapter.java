@@ -2,6 +2,7 @@ package com.expensemanager.app.report;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= ReportCategoryAdapter.class.getSimpleName();
@@ -86,7 +88,8 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         Category category = categories.get(position);
         double amount = amounts.get(position);
 
-        viewHolder.colorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+        viewHolder.colorImageView.setImageDrawable(colorDrawable);
         viewHolder.nameTextView.setText(category.getName());
         viewHolder.amountTextView.setText("$" + amount);
         viewHolder.itemView.setOnClickListener(v -> {
@@ -133,7 +136,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.category_item_report_color_image_view_id) ImageView colorImageView;
+        @BindView(R.id.category_item_report_color_image_view_id) CircleImageView colorImageView;
         @BindView(R.id.category_item_report_name_text_view_id) TextView nameTextView;
         @BindView(R.id.category_item_report_amount_text_view_id) TextView amountTextView;
 

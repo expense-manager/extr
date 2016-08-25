@@ -51,6 +51,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -166,7 +167,7 @@ public class ReportDetailActivity extends AppCompatActivity {
 
     private void setUpPieChart() {
         // Animate chart
-        pieChart.animateY(2000, Easing.EasingOption.EaseInOutCirc);
+        pieChart.animateY(2000, Easing.EasingOption.EaseInCirc);
         // Show description on bottom right corner
         pieChart.setDescription("");
         // Disable label on pie chart
@@ -195,7 +196,7 @@ public class ReportDetailActivity extends AppCompatActivity {
 
     private void setUpBarChart() {
         // Animate chart
-        barChart.animateY(2000, Easing.EasingOption.EaseInCubic);
+        barChart.animateY(1300, Easing.EasingOption.EaseInCubic);
         // Show description on bottom right corner
         barChart.setDescription("");
         // Set min value for x axis
@@ -249,7 +250,8 @@ public class ReportDetailActivity extends AppCompatActivity {
         // todo: fetcch bar chart data from expense date
         for (Expense e : expenses) {
             int dateNum = Helpers.getDayOfWeek(e.getCreatedAt());
-            amountsTime[dateNum + 1] += e.getAmount();
+
+            amountsTime[dateNum] += e.getAmount();
         }
     }
 
@@ -297,7 +299,6 @@ public class ReportDetailActivity extends AppCompatActivity {
     }
 
     private void updateBarChart() {
-        // todo: update bar chart
         barChart.getXAxis().setValueFormatter(new AxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -342,6 +343,13 @@ public class ReportDetailActivity extends AppCompatActivity {
         // Default x axis width is 1, bar width is 0.9, spacing is 0.1
         data.setBarWidth(0.8f);
         data.setValueTextSize(10f);
+        data.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex,
+                ViewPortHandler viewPortHandler) {
+                return value != 0 ? "$" + value : "";
+            }
+        });
 
         barChart.setData(data);
         // Disable scalable
@@ -388,7 +396,6 @@ public class ReportDetailActivity extends AppCompatActivity {
         List<Expense> newExpenses = Expense.getRangeExpenses(startDate, endDate);
         // Fetch data
         fetchCategoriesAndAmounts(newExpenses);
-        // todo: recognize time range
         fetchTimeAndAmounts(newExpenses);
 
         // Create new Adapter
@@ -412,21 +419,21 @@ public class ReportDetailActivity extends AppCompatActivity {
             if (fragment instanceof ReportPieChartFragment) {
                 // Hide bar chart
                 barChart.setVisibility(View.INVISIBLE);
-                // Show pie chart
-                pieChart.setVisibility(View.VISIBLE);
                 // Update data
                 pieChart.invalidate();
                 // Animate chart
-                pieChart.animateY(2000, Easing.EasingOption.EaseInOutCirc);
+                pieChart.animateY(1000, Easing.EasingOption.EaseInCirc);
+                // Show pie chart
+                pieChart.setVisibility(View.VISIBLE);
             } else if (fragment instanceof ReportBarChartFragment) {
                 // Hide pie chart
                 pieChart.setVisibility(View.INVISIBLE);
-                // Show bar chart
-                barChart.setVisibility(View.VISIBLE);
                 // Update data
                 barChart.invalidate();
                 // Animate chart
                 barChart.animateY(1000, Easing.EasingOption.EaseInCubic);
+                // Show bar chart
+                barChart.setVisibility(View.VISIBLE);
             }
 
             currentPosition = newPosition;

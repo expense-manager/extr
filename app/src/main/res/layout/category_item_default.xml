@@ -17,7 +17,7 @@
         android:layout_margin="@dimen/space_medium">
 
         <!-- Color -->
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/category_item_default_color_image_view_id"
             android:layout_width="@dimen/category_color_width_small"
             android:layout_height="@dimen/category_color_width_small"

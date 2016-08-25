@@ -50,7 +50,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return this.timeSlots.length - 2;
+        return this.amounts.length;
     }
 
     @Override
@@ -102,7 +102,6 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void clear() {
-        amounts = new double[timeSlots.length - 2];
         notifyDataSetChanged();
     }
 
@@ -117,12 +116,14 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         timeSlots = WEEK;
-        amounts = new double[timeSlots.length - 2];
+        // Show list items up to today
+        int day = Helpers.getCurrentDayOfWeek();
+        amounts = new double[day];
 
         for (Expense e : expenses) {
             // todo: use expense time instead of created time
-            int day = Helpers.getDayOfWeek(e.getCreatedAt());
-            amounts[day] += e.getAmount();
+            day = Helpers.getDayOfWeek(e.getCreatedAt());
+            amounts[day - 1] += e.getAmount();
         }
     }
 

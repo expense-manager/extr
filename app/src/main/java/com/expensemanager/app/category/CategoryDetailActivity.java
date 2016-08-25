@@ -8,6 +8,7 @@ import com.expensemanager.app.service.SyncCategory;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,6 +26,7 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 public class CategoryDetailActivity extends AppCompatActivity
@@ -42,7 +44,7 @@ public class CategoryDetailActivity extends AppCompatActivity
     @BindView(R.id.category_detail_activity_cancel_button_id) Button cancelButton;
     @BindView(R.id.category_detail_activity_delete_button_id) Button deleteButton;
     @BindView(R.id.category_detail_activity_edit_button_id) Button editButton;
-    @BindView(R.id.category_detail_activity_color_image_view_id) ImageView colorImageView;
+    @BindView(R.id.category_detail_activity_color_image_view_id) CircleImageView colorImageView;
     @BindView(R.id.category_detail_activity_save_button_id) Button saveButton;
     @BindView(R.id.category_detail_activity_progress_bar_id) ProgressBar progressBar;
 
@@ -69,7 +71,8 @@ public class CategoryDetailActivity extends AppCompatActivity
     private void invalidateViews() {
         nameEditText.setText(category.getName());
         currentColor = category.getColor();
-        colorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+        colorImageView.setImageDrawable(colorDrawable);
 
         colorImageView.setOnClickListener(v -> selectColor());
         editButton.setOnClickListener(v -> setEditMode(true));

@@ -3,6 +3,7 @@ package com.expensemanager.app.category;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= CategoryAdapter.class.getSimpleName();
@@ -80,7 +82,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Category category = categories.get(position);
 
         viewHolder.nameTextView.setText(category.getName());
-        viewHolder.colorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+        viewHolder.colorImageView.setImageDrawable(colorDrawable);
         viewHolder.itemView.setOnClickListener(v -> {
             CategoryDetailActivity.newInstance(context, categories.get(position).getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
@@ -99,7 +102,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
         @BindView(R.id.category_item_default_name_text_view_id) TextView nameTextView;
-        @BindView(R.id.category_item_default_color_image_view_id) ImageView colorImageView;
+        @BindView(R.id.category_item_default_color_image_view_id) CircleImageView colorImageView;
 
         private View itemView;
 

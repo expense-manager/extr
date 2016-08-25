@@ -9,6 +9,7 @@ import com.expensemanager.app.models.Expense;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= OverviewAdapter.class.getSimpleName();
@@ -92,7 +94,8 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         // Load category data or hide
         if (category != null) {
-            viewHolder.categoryColorImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+            viewHolder.categoryColorImageView.setImageDrawable(colorDrawable);
             viewHolder.categoryNameTextView.setText(category.getName());
         } else {
             viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
@@ -119,7 +122,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
         @BindView(R.id.expense_item_default_created_at_text_view_id) TextView createdAtTextView;
         @BindView(R.id.expense_item_default_amount_text_view_id) TextView amountTextView;
-        @BindView(R.id.expense_item_default_category_color_image_view_id) ImageView categoryColorImageView;
+        @BindView(R.id.expense_item_default_category_color_image_view_id) CircleImageView categoryColorImageView;
         @BindView(R.id.expense_item_default_category_name_text_view_id) TextView categoryNameTextView;
 
         private View itemView;
