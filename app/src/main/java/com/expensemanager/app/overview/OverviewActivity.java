@@ -1,11 +1,5 @@
 package com.expensemanager.app.overview;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.expense.NewExpenseActivity;
-import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.report.ReportDetailActivity;
-import com.expensemanager.app.service.SyncExpense;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.expense.NewExpenseActivity;
+import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.service.SyncExpense;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -57,7 +56,7 @@ public class OverviewActivity extends AppCompatActivity {
         setupRecyclerView();
 
         totalAmountTextView.setOnClickListener(v -> {
-            ReportDetailActivity.newInstance(this);
+//            ReportDetailActivity.newInstance(this);
         });
 
         fab.setOnClickListener(v -> {

@@ -209,4 +209,15 @@ public class Expense implements RealmModel {
         realm.commitTransaction();
         realm.close();
     }
+
+    public static RealmResults<Expense> getExpensesByRange(Date[] startEnd) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = realm.where(Expense.class)
+                .greaterThan(CREATED_AT_KEY, startEnd[0])
+                .lessThan(CREATED_AT_KEY, startEnd[1])
+                .findAllSorted(CREATED_AT_KEY, Sort.DESCENDING);
+        realm.close();
+
+        return expenses;
+    }
 }

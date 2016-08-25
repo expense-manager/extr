@@ -26,11 +26,11 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String TAG= ReportAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_DEFAULT = 0;
-    private ArrayList<Date> dates;
+    private ArrayList<Date[]> dates;
     private Context context;
     private boolean isWeekly;
 
-    public ReportAdapter(Context context, ArrayList<Date> dates, boolean isWeekly) {
+    public ReportAdapter(Context context, ArrayList<Date[]> dates, boolean isWeekly) {
         this.context = context;
         this.dates = dates;
         this.isWeekly = isWeekly;
@@ -82,15 +82,15 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
-        Date date = dates.get(position);
+        Date[] startEnd = dates.get(position);
 
         // todo: check isWeekly
-        String name = isWeekly ? Helpers.getWeekStartEnd(date) : Helpers.getMonthFromDate(date);
+        String name = isWeekly ? Helpers.getWeekStartEndString(startEnd[0]) : Helpers.getMonthFromDate(startEnd[0]);
         viewHolder.nameTextView.setText(name);
 
         viewHolder.itemView.setOnClickListener(v -> {
             // todo: pass dates
-            ReportDetailActivity.newInstance(context);
+            ReportDetailActivity.newInstance(context, startEnd);
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }
@@ -100,7 +100,7 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Date> dates) {
+    public void addAll(List<Date[]> dates) {
         this.dates.addAll(dates);
         notifyDataSetChanged();
     }

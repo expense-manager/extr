@@ -83,19 +83,58 @@ public class Helpers {
         return String.valueOf(calendar.getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.US));
     }
 
-    public static String getWeekStartEnd(Date date) {
+    public static String getWeekStartEndString(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
-        Calendar start = (Calendar) calendar.clone();
-        start.add(Calendar.DAY_OF_WEEK, start.getFirstDayOfWeek() - start.get(Calendar.DAY_OF_WEEK));
+        Calendar weekStart = (Calendar) calendar.clone();
+        weekStart.add(Calendar.DAY_OF_WEEK, weekStart.getFirstDayOfWeek() - weekStart.get(Calendar.DAY_OF_WEEK));
 
-        Calendar end = (Calendar) start.clone();
-        end.add(Calendar.DAY_OF_YEAR, 6);
+        Calendar weekEnd = (Calendar) weekStart.clone();
+        weekEnd.add(Calendar.DAY_OF_YEAR, 6);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
-        return simpleDateFormat.format(start.getTime()) + " - " + simpleDateFormat.format(end.getTime());
+        return simpleDateFormat.format(weekStart.getTime()) + " - " + simpleDateFormat.format(weekEnd.getTime());
+    }
+
+    public static Date[] getWeekStartEndDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        Calendar weekStart = (Calendar) calendar.clone();
+        weekStart.add(Calendar.DAY_OF_WEEK, weekStart.getFirstDayOfWeek() - weekStart.get(Calendar.DAY_OF_WEEK));
+
+        Calendar weekEnd = (Calendar) weekStart.clone();
+        weekEnd.add(Calendar.DAY_OF_YEAR, 6);
+
+        Calendar monthCalendar = Calendar.getInstance();
+        monthCalendar.set(weekStart.get(Calendar.YEAR), weekStart.get(Calendar.MONTH), weekStart.get(Calendar.DAY_OF_MONTH), 0, 0);
+        Date startDate = monthCalendar.getTime();
+
+        monthCalendar.set(weekEnd.get(Calendar.YEAR), weekEnd.get(Calendar.MONTH), weekEnd.get(Calendar.DAY_OF_MONTH), 23, 59);
+        Date endDate = monthCalendar.getTime();
+
+        return new Date[]{startDate, endDate};
+    }
+
+    public static Date[] getMonthStartEndDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+
+        Calendar monthCalendar = Calendar.getInstance();
+        monthCalendar.set(year, month, 1, 0, 0);
+
+        int numOfDaysInMonth = monthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        Date startDate = monthCalendar.getTime();
+
+        monthCalendar.set(year, month, numOfDaysInMonth, 23, 59);
+        Date endDate = monthCalendar.getTime();
+
+        return new Date[]{startDate, endDate};
     }
 
     public static String encodeURIComponent(String s) {

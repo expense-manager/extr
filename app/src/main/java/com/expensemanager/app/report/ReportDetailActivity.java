@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.NewExpenseActivity;
@@ -25,22 +26,26 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class ReportDetailActivity extends AppCompatActivity {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
 
+    public static final String START_END_DATE = "startEnd";
+
     private ArrayList<Category> categories;
     private ArrayList<Double> amounts;
     private ReportCategoryAdapter reportCategoryAdapter;
+    private Date[] startEnd;
 
     @BindView(R.id.report_activity_recycler_view_id) RecyclerView recyclerView;
     @BindView(R.id.report_activity_fab_id) FloatingActionButton fab;
@@ -51,11 +56,32 @@ public class ReportDetailActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    public static void newInstance(Context context, Date[] startEnd) {
+        Intent intent = new Intent(context, ReportDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(START_END_DATE, startEnd);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_detail_activity);
         ButterKnife.bind(this);
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            startEnd = (Date[]) bundle.getSerializable(START_END_DATE);
+        }
+
+        if (startEnd != null) {
+            Log.d(TAG, "Start: " + startEnd[0].getTime());
+            Log.d(TAG, "End: " + startEnd[1].getTime());
+            RealmResults<Expense> expenses = Expense.getExpensesByRange(startEnd);
+            Log.d(TAG, "Expense size: " + expenses.size());
+        }
 
         categories = new ArrayList<>();
         amounts = new ArrayList<>();

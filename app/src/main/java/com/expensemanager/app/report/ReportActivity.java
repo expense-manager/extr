@@ -82,9 +82,6 @@ public class ReportActivity extends BaseActivity {
             case android.R.id.home:
                 close();
                 break;
-            case R.id.menu_item_report_activity_id:
-                ReportDetailActivity.newInstance(this);
-                return true;
         }
 
         return true;

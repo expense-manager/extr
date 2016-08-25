@@ -32,7 +32,7 @@ public class ReportFragment extends Fragment {
     public static final String IS_WEEKLY_KEY = "isWeekly";
 
     public ReportAdapter reportAdapter;
-    public ArrayList<Date> dates;
+    public ArrayList<Date[]> dates;
     public boolean isWeekly = true;
 
     public static Fragment newInstance(boolean isWeekly) {
@@ -86,8 +86,9 @@ public class ReportFragment extends Fragment {
         recyclerView.setAdapter(reportAdapter);
     }
 
-    public ArrayList<Date> getAllMonths() {
-        ArrayList<Date> months = new ArrayList<>();
+    public ArrayList<Date[]> getAllMonths() {
+        // todo: pass the first expense date as start date
+        ArrayList<Date[]> months = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_YEAR, 1);
@@ -101,15 +102,17 @@ public class ReportFragment extends Fragment {
         gcal.setTime(startDate);
 
         while (gcal.getTime().compareTo(currentMonth) <= 0) {
-            months.add(gcal.getTime());
+            Date[] startEndDate = Helpers.getMonthStartEndDate(gcal.getTime());
+            months.add(startEndDate);
             gcal.add(Calendar.MONTH, 1);
         }
 
         return months;
     }
 
-    public ArrayList<Date> getAllWeeks() {
-        ArrayList<Date> weeks = new ArrayList<>();
+    public ArrayList<Date[]> getAllWeeks() {
+        // todo: pass the first expense date as start date
+        ArrayList<Date[]> weeks = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_YEAR, 1);
@@ -122,7 +125,8 @@ public class ReportFragment extends Fragment {
         gcal.setTime(startDate);
 
         while (gcal.getTime().compareTo(currentMonth) <= 0) {
-            weeks.add(gcal.getTime());
+            Date[] startEnd = Helpers.getWeekStartEndDate(gcal.getTime());
+            weeks.add(startEnd);
             gcal.add(Calendar.WEEK_OF_YEAR, 1);
         }
 
