@@ -16,14 +16,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".welcome.SplashActivity"
-            android:theme="@style/SplashTheme" >
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -43,8 +42,9 @@
         <activity
             android:name=".category.CategoryActivity"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".expense.ExpenseDetailActivity"
-            android:theme="@style/BaseTheme"/>
+        <activity
+            android:name=".expense.ExpenseDetailActivity"
+            android:theme="@style/BaseTheme" />
         <activity
             android:name=".category.CategoryDetailActivity"
             android:label="@string/title_activity_category_detail"
@@ -76,7 +76,8 @@
             android:name=".overview.OverviewActivity"
             android:label="@string/title_activity_overview"
             android:theme="@style/AppTheme" />
-        <activity android:name=".profile.ProfileActivity"
+        <activity
+            android:name=".profile.ProfileActivity"
             android:theme="@style/BaseTheme" />
 
         <receiver android:name=".notifications.AlarmReceiver">
@@ -87,6 +88,7 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".group.GroupActivity"></activity>
     </application>
 
 </manifest>

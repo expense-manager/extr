@@ -22,15 +22,17 @@
             android:icon="@drawable/ic_group_work_white_24dp"
             android:title="@string/nav_category" />
         <item
+            android:id="@+id/nav_group"
+            android:icon="@drawable/ic_group_white_24dp"
+            android:title="@string/nav_group"/>
+        <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications_white_24dp"
             android:title="@string/nav_notifications" />
-
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help_white_24dp"
             android:title="@string/nav_help" />
-
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_white_24dp"
