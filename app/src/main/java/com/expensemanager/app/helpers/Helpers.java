@@ -224,13 +224,6 @@ public class Helpers {
         return outputBitmap;
     }
 
-    // dp to px
-    public static double dpToPx(Context context, double dp) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        double px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        return px;
-    }
-
     // Get used color set
     public static Set<String> getUsedColorSet() {
         Set<String> newUsedColors = new HashSet<>();
@@ -244,6 +237,7 @@ public class Helpers {
         return newUsedColors;
     }
 
+<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
 
@@ -257,5 +251,32 @@ public class Helpers {
             Log.e(TAG, "Error checking internet.", e);
         }
         return false;
+=======
+    public static int getDayOfWeek(Date time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public static int getDayOfMonth(Date time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getCurrentDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public static int getCurrentDayOfMonth() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getCurrentMonthOfYear() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MONTH);
+>>>>>>> Add view pager, bar chart, date range query in database
     }
 }

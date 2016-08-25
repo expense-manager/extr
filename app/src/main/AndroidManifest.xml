@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.expensemanager.app">
+          package="com.expensemanager.app">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".main.EApplication"
@@ -18,77 +18,94 @@
             android:name=".welcome.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".expense.ExpenseActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".expense.NewExpenseActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".report.ReportDetailActivity"
             android:label="@string/title_activity_report_detail"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".report.ReportActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".category.CategoryActivity"
+<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
             android:theme="@style/BaseTheme" />
         <activity
             android:name=".expense.ExpenseDetailActivity"
             android:theme="@style/BaseTheme" />
+=======
+            android:theme="@style/BaseTheme"/>
+        <activity
+            android:name=".expense.ExpenseDetailActivity"
+            android:theme="@style/BaseTheme"/>
+>>>>>>> Add view pager, bar chart, date range query in database
         <activity
             android:name=".category.CategoryDetailActivity"
             android:label="@string/title_activity_category_detail"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".category.NewCategoryActivity"
             android:label="@string/title_activity_new_category"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".notifications.NotificationsActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".welcome.WelcomeActivity"
             android:label="@string/title_activity_welcome"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".welcome.SignUpActivity"
             android:label="@string/title_activity_sign_up"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".welcome.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".settings.SettingsActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".overview.OverviewActivity"
             android:label="@string/title_activity_overview"
+<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
             android:theme="@style/AppTheme" />
         <activity
             android:name=".profile.ProfileActivity"
             android:theme="@style/BaseTheme" />
+=======
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:theme="@style/BaseTheme"/>
+>>>>>>> Add view pager, bar chart, date range query in database
 
         <receiver android:name=".notifications.AlarmReceiver">
             <intent-filter>
-                <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
+                <action android:name="android.media.action.DISPLAY_NOTIFICATION"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
+<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
 
         <activity android:name=".group.GroupActivity"></activity>
+=======
+>>>>>>> Add view pager, bar chart, date range query in database
     </application>
 
 </manifest>

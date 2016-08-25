@@ -82,6 +82,12 @@ public class ReportActivity extends BaseActivity {
             case android.R.id.home:
                 close();
                 break;
+<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
+=======
+            case R.id.menu_item_report_activity_id:
+                ReportDetailActivity.newInstance(this, ReportDetailActivity.WEEKLY);
+                return true;
+>>>>>>> Add view pager, bar chart, date range query in database
         }
 
         return true;

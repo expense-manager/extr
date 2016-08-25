@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/report_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,33 +10,45 @@
     android:background="@color/white"
     tools:context=".report.ReportDetailActivity">
 
-    <ScrollView
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/report_activity_tabs_id"
+        app:pstsShouldExpand="true"
+        app:pstsTextAllCaps="true"
+        android:textColor="@color/blue"
+        android:background="@color/white"
+        app:pstsDividerColor="@color/white"
+        app:pstsIndicatorColor="@color/blue"
+        app:pstsUnderlineColor="@color/gray_really_light"
+        app:pstsUnderlineHeight="1dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?attr/actionBarSize" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/report_activity_pie_chart_id"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chart_height"
+        android:layout_margin="@dimen/space_medium_small"
+        android:layout_below="@+id/report_activity_tabs_id"
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/report_activity_pie_chart_id"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/chart_height"
-                android:layout_margin="@dimen/space_medium_small"
+        android:padding="@dimen/space_really_small"/>
 
-                android:padding="@dimen/space_really_small"/>
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/report_activity_bar_chart_id"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chart_height"
+        android:layout_margin="@dimen/space_medium_small"
+        android:layout_below="@+id/report_activity_tabs_id"
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/report_activity_recycler_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/report_activity_pie_chart_id"
+        android:padding="@dimen/space_really_small"
+        android:visibility="invisible"/>
 
-                android:paddingTop="@dimen/space_really_small"
-                android:paddingBottom="@dimen/space_really_small"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/report_activity_viewpager_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/report_activity_pie_chart_id"
+        android:background="@android:color/white" />
 
-        </RelativeLayout>
-    </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/report_activity_fab_id"

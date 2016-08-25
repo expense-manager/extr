@@ -90,7 +90,8 @@ dependencies {
     // Required for geotagging
     compile "com.google.android.gms:play-services-location:+"
 
-
+    // PagerSlidingTabStrip
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
     // Retrolambda, make sure to apply this line last.
     apply plugin: 'me.tatarka.retrolambda'

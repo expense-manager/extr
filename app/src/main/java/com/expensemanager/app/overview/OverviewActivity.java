@@ -56,7 +56,11 @@ public class OverviewActivity extends AppCompatActivity {
         setupRecyclerView();
 
         totalAmountTextView.setOnClickListener(v -> {
+<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
 //            ReportDetailActivity.newInstance(this);
+=======
+            ReportDetailActivity.newInstance(this, ReportDetailActivity.MONTHLY);
+>>>>>>> Add view pager, bar chart, date range query in database
         });
 
         fab.setOnClickListener(v -> {
