@@ -24,10 +24,12 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.ExpensePhoto;
 import com.expensemanager.app.service.SyncExpense;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -35,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class ExpenseDetailActivity extends BaseActivity {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
@@ -46,7 +49,7 @@ public class ExpenseDetailActivity extends BaseActivity {
     private double amount;
     private boolean isEditable = false;
 
-    private ArrayList<String> photoNameList;
+    private ArrayList<ExpensePhoto> expensePhotos;
     private ExpensePhotoAdapter expensePhotoAdapter;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
@@ -88,7 +91,7 @@ public class ExpenseDetailActivity extends BaseActivity {
         setupToolbar();
         invalidateViews();
 
-        SyncExpense.getExpensePhotoByExpenseId(expenseId).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
+        SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
     }
 
     private void invalidateViews() {
@@ -124,14 +127,14 @@ public class ExpenseDetailActivity extends BaseActivity {
     }
 
     private void setupExpensePhoto() {
-        String photos = expense.getPhotos();
-        Log.d(TAG, "setupExpensePhoto: " + photos);
-        if (photos == null || photos.isEmpty()) {
+        RealmResults<ExpensePhoto> photos = ExpensePhoto.getExpensePhotoByExpenseId(expense.getId());
+        Log.d(TAG, "setupExpensePhoto: " + photos.size());
+        if (photos.isEmpty()) {
             return;
         }
-        photoNameList = new ArrayList<>();
-        photoNameList.addAll(Arrays.asList(photos.split(",")));
-        expensePhotoAdapter = new ExpensePhotoAdapter(this, null, photoNameList);
+        expensePhotos = new ArrayList<>();
+        expensePhotos.addAll(photos);
+        expensePhotoAdapter = new ExpensePhotoAdapter(this, null, expensePhotos);
         photoGridView.setAdapter(expensePhotoAdapter);
         photoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             Log.d(TAG, "Photo clicked at position: " + position);
@@ -144,7 +147,6 @@ public class ExpenseDetailActivity extends BaseActivity {
     }
 
     private void setupCategory() {
-        amount = getCategoryAmount();
         loadCategory();
         categoryRelativeLayout.setOnClickListener(v -> selectCategory());
     }
@@ -167,20 +169,13 @@ public class ExpenseDetailActivity extends BaseActivity {
     };
 
     private void loadCategory() {
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
-        categoryColorImageView.setImageDrawable(colorDrawable);
-        categoryNameTextView.setText(category.getName());
-    }
-
-    private double getCategoryAmount() {
-        double total = 0;
-        for (Expense e : Expense.getAllExpenses()) {
-            if (e.getCategoryId().equals(expense.getCategoryId())) {
-                total += e.getAmount();
-            }
+        if (category != null) {
+            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+            categoryColorImageView.setImageDrawable(colorDrawable);
+            categoryNameTextView.setText(category.getName());
+        } else {
+            categoryNameTextView.setText(getString(R.string.choose_a_category));
         }
-
-        return total;
     }
 
     private void setupEditableViews(boolean isEditable) {
@@ -203,9 +198,9 @@ public class ExpenseDetailActivity extends BaseActivity {
         invalidateViews();
     }
 
-    private Continuation<Void, Void> onGetExpensePhotoSuccess = new Continuation<Void, Void>() {
+    private Continuation<JSONObject, Void> onGetExpensePhotoSuccess = new Continuation<JSONObject, Void>() {
         @Override
-        public Void then(Task<Void> task) throws Exception {
+        public Void then(Task<JSONObject> task) throws Exception {
             progressBar.setVisibility(View.GONE);
             if (task.isFaulted()) {
                 Log.e(TAG, "Error in getting expense photo.", task.getError());
@@ -213,6 +208,7 @@ public class ExpenseDetailActivity extends BaseActivity {
 
             Log.d(TAG, "onGetExpensePhotoSuccess Expense photos: " + expense.getPhotos());
             invalidateViews();
+
             return null;
         }
     };

@@ -131,10 +131,13 @@ public class NetworkRequest {
                     Response response = new OkHttpClient().newCall(builder.build()).execute();
                     String responseString = response.body().string();
                     Log.d(TAG, "Response: \n" + responseString);
-                    // If response is JSONArray, we convert to JSONObject
-                    if (responseString.charAt(0) != '{') {
+                    // If response is empty or JSONArray, we convert to JSONObject
+                    if (responseString.isEmpty()) {
+                        responseString = "{}";
+                    } else if (responseString.charAt(0) != '{') {
                         responseString = "{\"results\":\"" + responseString + "\"}";
                     }
+
                     JSONObject result = new JSONObject(responseString);
 
                     // Set task result

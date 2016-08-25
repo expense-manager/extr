@@ -8,6 +8,7 @@ import com.expensemanager.app.expense.ExpenseBuilder;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.ExpensePhoto;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -179,6 +180,51 @@ public class SyncExpense {
         RequestTemplate requestTemplate = RequestTemplateCreator.deleteExpense(expenseId);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
+        Continuation<JSONObject, Void> onGetExpensePhotos = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in downloading expense photo by id.", exception);
+                    throw  exception;
+                }
+
+                JSONObject photos = task.getResult();
+                if (photos == null) {
+                    throw new Exception("Empty response.");
+                }
+
+                Log.d(TAG, "Photos: \n" + photos);
+
+                try {
+                    JSONArray photosJSONArray = photos.getJSONArray("results");
+
+                    for (int i = 0; i < photosJSONArray.length(); i++) {
+                        try {
+                            JSONObject photoObject = photosJSONArray.getJSONObject(i).getJSONObject("photo");
+                            String expensePhotoId = photoObject.getString("objectId");
+                            String fileName = photoObject.getString("name");
+
+                            if (fileName == null || fileName.isEmpty()) {
+                                continue;
+                            }
+
+                            // Delete expense photo entry
+                            SyncPhoto.deleteExpensePhoto(expensePhotoId, fileName);
+
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Error in parsing photo object.", e);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error in getting photo JSONArray.", e);
+                }
+
+                return null;
+            }
+        };
+
         Continuation<JSONObject, Void> onUpdateExpenseFinished = new Continuation<JSONObject, Void>() {
             @Override
             public Void then(Task<JSONObject> task) throws Exception {
@@ -200,6 +246,9 @@ public class SyncExpense {
         };
 
         Log.d(TAG, "Start updating expense.");
+
+        // Delete expense photo entry
+        getExpensePhotoByExpenseId(expenseId, false).continueWith(onGetExpensePhotos);
         return networkRequest.send().continueWith(onUpdateExpenseFinished);
     }
 
@@ -290,14 +339,14 @@ public class SyncExpense {
         return null;
     }
 
-    public static Task<Void> getExpensePhotoByExpenseId(final String expenseId) {
+    public static Task<JSONObject> getExpensePhotoByExpenseId(final String expenseId, boolean saveToRealm) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.getExpensePhotoByExpenseId(expenseId);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Continuation<JSONObject, Void> saveExpensePhotoName = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, JSONObject> saveExpensePhotoName = new Continuation<JSONObject, JSONObject>() {
             @Override
-            public Void then(Task<JSONObject> task) throws Exception {
+            public JSONObject then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
                     Log.e(TAG, "Error in downloading expense photo by id.", exception);
@@ -313,16 +362,20 @@ public class SyncExpense {
 
                 try {
                     JSONArray photosJSONArray = photos.getJSONArray("results");
-                    Expense.mapPhotoFromJSONArray(photosJSONArray, expenseId);
+                    ExpensePhoto.mapPhotoFromJSONArray(photosJSONArray);
                 } catch (JSONException e) {
                     Log.e(TAG, "Error in getting photo JSONArray.", e);
                 }
 
-                return null;
+                return photos;
             }
         };
 
         Log.d(TAG, "Start downloading Expense photo");
-        return networkRequest.send().continueWith(saveExpensePhotoName);
+        if (saveToRealm) {
+            return networkRequest.send().continueWith(saveExpensePhotoName);
+        } else {
+            return networkRequest.send();
+        }
     }
 }

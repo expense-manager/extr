@@ -227,4 +227,16 @@ public class RequestTemplateCreator {
         String url = BASE_URL + "users/me";
         return new RequestTemplate(GET, url, null, true);
     }
+
+    public static RequestTemplate deleteFileByName(String fileName) {
+        String url = BASE_URL + "files/" + fileName;
+
+        return new RequestTemplate(DELETE, url, null);
+    }
+
+    public static RequestTemplate deleteExpensePhoto(String expensePhotoId) {
+        String url = BASE_URL + "classes/Photo/" + expensePhotoId;
+
+        return new RequestTemplate(DELETE, url, null);
+    }
 }

@@ -2,6 +2,8 @@ package com.expensemanager.app.service;
 
 import android.util.Log;
 
+import com.expensemanager.app.models.ExpensePhoto;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,5 +51,93 @@ public class SyncPhoto {
         };
 
         return networkRequest.send().onSuccess(uploadingPhoto);
+    }
+
+    public static Task<JSONObject> deleteFile(String fileName) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate template = RequestTemplateCreator.deleteFileByName(fileName);
+        NetworkRequest networkRequest = new NetworkRequest(template, taskCompletionSource);
+
+        Continuation<JSONObject, JSONObject> onFileDelete = new Continuation<JSONObject, JSONObject>() {
+            @Override
+            public JSONObject then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in deleteFile", exception);
+                    throw exception;
+                }
+
+                // Error response example: {"code":153,"error":"Could not delete file."}
+                // File may not exist
+                Log.d(TAG, "delete file result: " + task.getResult().toString());
+                if (task.getResult().toString().equals("{}")) {
+                    Log.d(TAG, "File delete success.");
+                } else {
+                    Log.e(TAG, "Error in deleting file: " + fileName);
+                    // force to delete entry in Photo table
+                }
+
+                return task.getResult();
+            }
+        };
+
+        return networkRequest.send().continueWith(onFileDelete);
+    }
+
+    public static void deleteExpensePhoto(String expensePhotoId, String fileName) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate template = RequestTemplateCreator.deleteExpensePhoto(expensePhotoId);
+        NetworkRequest networkRequest = new NetworkRequest(template, taskCompletionSource);
+
+        Continuation<JSONObject, Void> onPhotoDelete = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in deleteExpensePhoto", exception);
+                    throw exception;
+                }
+
+                // Error response example: {"code":153,"error":"Could not delete file."}
+                // File may not exist
+                if (task.getResult().toString().equals("{}")) {
+                    Log.d(TAG, "Expense photo entry delete success.");
+                } else {
+                    Log.e(TAG, "Error in deleting photo entry with id: " + expensePhotoId);
+                    // force to delete entry in Photo table
+                }
+
+                ExpensePhoto.delete(expensePhotoId, fileName);
+
+                return null;
+            }
+        };
+
+        Continuation<JSONObject, Void> onFileDelete = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in deleteFile", exception);
+                    throw exception;
+                }
+
+                // Error response example: {"code":153,"error":"Could not delete file."}
+                // File may not exist
+
+                if (task.getResult().toString().equals("{}")) {
+                    Log.d(TAG, "File delete success.");
+                } else {
+                    Log.e(TAG, "Error in deleting file: " + fileName);
+                    // force to delete entry in Photo table
+                }
+
+                networkRequest.send().continueWith(onPhotoDelete);
+
+                return null;
+            }
+        };
+
+        deleteFile(fileName).continueWith(onFileDelete);
     }
 }

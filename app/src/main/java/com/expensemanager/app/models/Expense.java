@@ -147,37 +147,6 @@ public class Expense implements RealmModel {
         realm.close();
     }
 
-    public static void mapPhotoFromJSONArray(JSONArray jsonArray, String expenseId) {
-        String photos = "";
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                JSONObject photoObject = jsonArray.getJSONObject(i).getJSONObject("photo");
-                String fileName = photoObject.getString("name");
-                if (fileName == null || fileName.isEmpty()) {
-                    return;
-                }
-
-                if (photos.isEmpty()) {
-                    photos = fileName;
-                } else {
-                    photos += "," + fileName;
-                }
-
-            } catch (JSONException e) {
-                Log.e(TAG, "Error in parsing photo object.", e);
-            }
-        }
-
-        Realm realm = Realm.getDefaultInstance();
-        Expense expense = realm.where(Expense.class).equalTo(ID_KEY, expenseId).findFirst();
-        realm.beginTransaction();
-        expense.setPhotos(photos);
-        realm.copyToRealmOrUpdate(expense);
-        realm.commitTransaction();
-        realm.close();
-    }
-
     /**
      * @return all expenses
      */
