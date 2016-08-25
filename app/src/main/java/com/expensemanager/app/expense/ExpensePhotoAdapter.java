@@ -26,7 +26,6 @@ import com.expensemanager.app.models.ExpensePhoto;
 import com.expensemanager.app.service.Constant;
 import com.expensemanager.app.service.SyncPhoto;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -50,7 +49,7 @@ public class ExpensePhotoAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return photoList != null ? photoList.size() : expensePhotos.size() + 1;
+        return photoList != null ? photoList.size() : expensePhotos.size();
     }
 
     public Object getItem(int position) {
@@ -75,16 +74,15 @@ public class ExpensePhotoAdapter extends BaseAdapter {
             Bitmap bitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
             photoViewHolder.photoImageView.setImageBitmap(bitmap);
         } else {
-            if (position == getCount() -1) {
-                Bitmap cameraIconBitmap = getCameraIconBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                cameraIconBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] sampledInputData = stream.toByteArray();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(sampledInputData, 0, sampledInputData.length);
-                photoViewHolder.photoImageView.setImageBitmap(bitmap);
-                photoViewHolder.photoImageView.setVisibility(View.GONE);
-                //todo: add photo in edit mode
-            } else {
+//                Bitmap cameraIconBitmap = getCameraIconBitmap();
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                cameraIconBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                byte[] sampledInputData = stream.toByteArray();
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(sampledInputData, 0, sampledInputData.length);
+//                photoViewHolder.photoImageView.setImageBitmap(bitmap);
+//                photoViewHolder.photoImageView.setVisibility(View.GONE);
+//                //todo: add photo in edit mode
+
                 ExpensePhoto expensePhoto = expensePhotos.get(position);
                 String photoUrl = Constant.BASE_FILE_URL + expensePhoto.getFileName();
                 Glide.with(context).load(photoUrl).fitCenter().into(photoViewHolder.photoImageView);
@@ -106,7 +104,6 @@ public class ExpensePhotoAdapter extends BaseAdapter {
                         return false;
                     });
                 }
-            }
         }
 
         return view;

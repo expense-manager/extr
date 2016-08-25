@@ -138,6 +138,10 @@ public class ExpenseDetailActivity extends BaseActivity {
         photoGridView.setAdapter(expensePhotoAdapter);
         photoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             Log.d(TAG, "Photo clicked at position: " + position);
+
+            ExpensePhotoFragment expensePhotoFragment = ExpensePhotoFragment
+                    .newInstance(expense.getId(), position);
+            expensePhotoFragment.show(getSupportFragmentManager(), ExpensePhotoFragment.class.getSimpleName());
         });
 
         photoGridView.setOnItemLongClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {

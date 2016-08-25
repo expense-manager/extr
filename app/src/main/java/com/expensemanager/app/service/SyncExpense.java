@@ -201,8 +201,8 @@ public class SyncExpense {
 
                     for (int i = 0; i < photosJSONArray.length(); i++) {
                         try {
+                            String expensePhotoId = photosJSONArray.getJSONObject(i).getString("objectId");
                             JSONObject photoObject = photosJSONArray.getJSONObject(i).getJSONObject("photo");
-                            String expensePhotoId = photoObject.getString("objectId");
                             String fileName = photoObject.getString("name");
 
                             if (fileName == null || fileName.isEmpty()) {
