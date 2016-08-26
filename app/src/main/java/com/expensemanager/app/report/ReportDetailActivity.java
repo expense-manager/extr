@@ -341,6 +341,7 @@ public class ReportDetailActivity extends AppCompatActivity {
         // Disable highlight during drag
         barChart.setHighlightPerDragEnabled(false);
 
+        boolean isCurrentFrame = new Date().compareTo(startEnd[1]) <= 0;
         switch(requestCode) {
             case WEEKLY:
                 // Limit view port to smaller data set
@@ -349,14 +350,23 @@ public class ReportDetailActivity extends AppCompatActivity {
             case MONTHLY:
                 // Limit view port to smaller data set
                 barChart.setVisibleXRangeMaximum(7);
-                latestPosition = Helpers.getCurrentDayOfMonth();
+                if (isCurrentFrame) {
+                    latestPosition = Helpers.getCurrentDayOfMonth();
+                } else {
+                    latestPosition = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+                }
                 barChart.moveViewToX(latestPosition - 6);
                 break;
             case YEARLY:
                 // Limit view port to smaller data set
+                // todo: test year data display
                 barChart.setVisibleXRangeMaximum(9);
-                latestPosition = Helpers.getCurrentMonthOfYear();
-                barChart.moveViewToX(latestPosition - 8);
+                if (isCurrentFrame) {
+                    latestPosition = Helpers.getCurrentMonthOfYear();
+                } else {
+                    latestPosition = ReportExpenseAdapter.LEN_OF_YEAR;
+                }
+                barChart.moveViewToX(Math.max(latestPosition - 8, 0));
         }
     }
 
