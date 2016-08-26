@@ -199,13 +199,13 @@ public class ReportDetailActivity extends AppCompatActivity {
         // todo: fetcch bar chart data from expense date
         for (Expense e : expenses) {
             if (requestCode == WEEKLY) {
-                int dateNum = Helpers.getDayOfWeek(e.getSpentAt());
+                int dateNum = Helpers.getDayOfWeek(e.getExpenseDate());
                 amountsTime[dateNum] += e.getAmount();
             } else if (requestCode == MONTHLY) {
-                int dateNum = Helpers.getDayOfMonth(e.getSpentAt());
+                int dateNum = Helpers.getDayOfMonth(e.getExpenseDate());
                 amountsTime[dateNum] += e.getAmount();
             } else {
-                int monthNum = Helpers.getMonthOfYear(e.getSpentAt());
+                int monthNum = Helpers.getMonthOfYear(e.getExpenseDate());
                 amountsTime[monthNum] += e.getAmount();
             }
         }

@@ -123,12 +123,70 @@
 
             </RelativeLayout>
 
+            <!-- Expense date and time label -->
+            <TextView
+                android:id="@+id/expense_detail_activity_date_time_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/expense_detail_activity_category_relative_layout_id"
+                android:layout_marginLeft="@dimen/space_medium"
+                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginTop="@dimen/space_medium"
+                android:layout_marginBottom="@dimen/space_really_small"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/expense_date"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Expense date and time -->
+            <LinearLayout
+                android:id="@+id/expense_detail_activity_date_time_linear_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/space_medium"
+                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginBottom="@dimen/space_medium"
+                android:layout_below="@+id/expense_detail_activity_date_time_label_text_view_id"
+
+                android:weightSum="2"
+                android:orientation="horizontal">
+
+                <!-- Date -->
+                <TextView
+                    android:id="@+id/expense_detail_activity_expense_date_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/space_really_small"
+                    android:textSize="@dimen/text_small"
+                    android:background="@drawable/background_round_corner_white"
+                    tools:text="Date"/>
+
+                <!-- Time -->
+                <TextView
+                    android:id="@+id/expense_detail_activity_expense_time_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/space_medium"
+
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/space_really_small"
+                    android:textSize="@dimen/text_small"
+                    android:background="@drawable/background_round_corner_white"
+                    tools:text="Time"/>
+
+            </LinearLayout>
+
             <!-- Note label -->
             <TextView
                 android:id="@+id/expense_detail_activity_note_label_text_view_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/expense_detail_activity_category_relative_layout_id"
+                android:layout_below="@+id/expense_detail_activity_date_time_linear_layout_id"
                 android:layout_marginLeft="@dimen/space_medium"
                 android:layout_marginRight="@dimen/space_medium"
                 android:layout_marginTop="@dimen/space_medium"

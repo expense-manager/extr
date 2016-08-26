@@ -1,5 +1,7 @@
 package com.expensemanager.app.expense;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,12 +13,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
@@ -29,7 +33,10 @@ import com.expensemanager.app.service.SyncExpense;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -39,14 +46,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class ExpenseDetailActivity extends BaseActivity {
+public class ExpenseDetailActivity extends BaseActivity
+    implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
 
+    public static final String DATE_PICKER = "date_picker";
+    public static final String TIME_PICKER = "time_picker";
     private static final String EXPENSE_ID = "EXPENSE_ID";
 
     private Expense expense;
     private Category category;
-    private double amount;
+    private Calendar calendar;
     private boolean isEditable = false;
 
     private ArrayList<ExpensePhoto> expensePhotos;
@@ -68,6 +78,8 @@ public class ExpenseDetailActivity extends BaseActivity {
     @BindView(R.id.expense_detail_activity_category_color_image_view_id) CircleImageView categoryColorImageView;
     @BindView(R.id.expense_detail_activity_category_name_text_view_id) TextView categoryNameTextView;
     @BindView(R.id.expense_detail_activity_category_amount_text_view_id) TextView categoryAmountTextView;
+    @BindView(R.id.expense_detail_activity_expense_date_text_view_id) TextView expenseDateTextView;
+    @BindView(R.id.expense_detail_activity_expense_time_text_view_id) TextView expenseTimeTextView;
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, ExpenseDetailActivity.class);
@@ -90,8 +102,58 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         setupToolbar();
         invalidateViews();
+        setupDateAndTime();
 
         SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
+    }
+
+    private void setupDateAndTime() {
+        calendar = Calendar.getInstance();
+        calendar.setTime(expense.getExpenseDate());
+        formatDateAndTime(calendar.getTime());
+        expenseDateTextView.setOnClickListener(v -> {
+            if (isEditable) {
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                DatePickerFragment datePickerFragment = DatePickerFragment
+                    .newInstance(year, month, day);
+                datePickerFragment.show(getSupportFragmentManager(), DATE_PICKER);
+            }
+        });
+
+        expenseTimeTextView.setOnClickListener(v -> {
+            if (isEditable) {
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                TimePickerFragment timePickerFragment = TimePickerFragment
+                    .newInstance(hour, minute);
+                timePickerFragment.show(getSupportFragmentManager(), TIME_PICKER);
+            }
+        });
+    }
+
+    private void formatDateAndTime(Date date) {
+        // Create format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+        // Parse date and set text
+        expenseDateTextView.setText(dateFormat.format(date));
+        expenseTimeTextView.setText(timeFormat.format(date));
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        calendar.set(year, monthOfYear, dayOfMonth);
+        formatDateAndTime(calendar.getTime());
+    }
+
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        formatDateAndTime(calendar.getTime());
     }
 
     private void invalidateViews() {
@@ -253,6 +315,7 @@ public class ExpenseDetailActivity extends BaseActivity {
         expense.setAmount(amount);
         expense.setNote(noteTextView.getText().toString());
         expense.setCategoryId(category.getId());
+        expense.setExpenseDate(calendar.getTime());
         expense.setSynced(false);
         realm.copyToRealmOrUpdate(expense);
         realm.commitTransaction();

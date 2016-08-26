@@ -89,7 +89,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Expense expense = expenses.get(position);
         Category category = categoriesMap.get(expense.getCategoryId());
 
-        viewHolder.spentAtTextView.setText(Helpers.formatCreateAt(expense.getSpentAt()));
+        viewHolder.spentAtTextView.setText(Helpers.formatCreateAt(expense.getExpenseDate()));
         viewHolder.amountTextView.setText("$" + expense.getAmount());
 
         // Load category data or hide

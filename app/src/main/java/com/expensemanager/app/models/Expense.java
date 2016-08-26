@@ -36,13 +36,14 @@ public class Expense implements RealmModel {
     public static final String AMOUNT_JSON_KEY = "amount";
     public static final String NOTE_JSON_KEY = "note";
     public static final String CREATED_AT_JSON_KEY = "createdAt";
-    public static final String SPENT_AT_JSON_KEY = "spentAt";
-    public static final String ISO_SPENT_AT_JSON_KEY = "iso";
+    public static final String EXPENSE_DATE_JSON_KEY = "spentAt";
+    public static final String ISO_EXPENSE_DATE_JSON_KEY = "iso";
     public static final String CATEGORY_JSON_KEY = "categoryId";
 
     // Property name key
     public static final String ID_KEY = "id";
     public static final String CREATED_AT_KEY = "createdAt";
+    public static final String EXPENSE_DATE_KEY = "expenseDate";
 
     // Property
     @PrimaryKey
@@ -51,7 +52,7 @@ public class Expense implements RealmModel {
     private String note;
     private double amount;
     private Date createdAt;
-    private Date spentAt;
+    private Date expenseDate;
     private boolean isSynced;
     private String categoryId;
 
@@ -95,12 +96,12 @@ public class Expense implements RealmModel {
         this.createdAt = createdAt;
     }
 
-    public Date getSpentAt() {
-        return spentAt;
+    public Date getExpenseDate() {
+        return expenseDate;
     }
 
-    public void setSpentAt(Date spentAt) {
-        this.spentAt = spentAt;
+    public void setExpenseDate(Date expenseDate) {
+        this.expenseDate = expenseDate;
     }
 
     public boolean isSynced() {
@@ -132,9 +133,9 @@ public class Expense implements RealmModel {
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             this.createdAt = simpleDateFormat.parse(jsonObject.getString(CREATED_AT_JSON_KEY));
             // "spentAt" -> "{"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}"
-            JSONObject spentJSONObject = jsonObject.getJSONObject(SPENT_AT_JSON_KEY);
+            JSONObject spentJSONObject = jsonObject.getJSONObject(EXPENSE_DATE_JSON_KEY);
             if (spentJSONObject != null) {
-                this.spentAt = simpleDateFormat.parse(spentJSONObject.getString(ISO_SPENT_AT_JSON_KEY));
+                this.expenseDate = simpleDateFormat.parse(spentJSONObject.getString(ISO_EXPENSE_DATE_JSON_KEY));
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error in parsing expense.", e);
@@ -170,7 +171,7 @@ public class Expense implements RealmModel {
      */
     public static RealmResults<Expense> getAllExpenses() {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Expense> expenses = realm.where(Expense.class).findAllSorted(SPENT_AT_JSON_KEY, Sort.DESCENDING);
+        RealmResults<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
         return expenses;
@@ -200,9 +201,9 @@ public class Expense implements RealmModel {
     public static RealmResults<Expense> getExpensesByRange(Date[] startEnd) {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Expense> expenses = realm.where(Expense.class)
-                .greaterThan(SPENT_AT_JSON_KEY, startEnd[0])
-                .lessThan(SPENT_AT_JSON_KEY, startEnd[1])
-                .findAllSorted(SPENT_AT_JSON_KEY, Sort.DESCENDING);
+                .greaterThan(EXPENSE_DATE_KEY, startEnd[0])
+                .lessThan(EXPENSE_DATE_KEY, startEnd[1])
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
         return expenses;

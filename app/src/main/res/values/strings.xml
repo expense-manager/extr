@@ -30,6 +30,7 @@
 
     <string name="select_color">Select color</string>
     <string name="category">Category</string>
+    <string name="expense_date">Expense Date</string>
     <string name="expense">Expense</string>
     <string name="name">Name</string>
     <string name="report">Report</string>

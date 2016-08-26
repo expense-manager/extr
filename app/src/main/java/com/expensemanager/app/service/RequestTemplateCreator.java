@@ -11,8 +11,10 @@ import com.expensemanager.app.models.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by Zhaolong Zhong on 8/17/16.
@@ -81,11 +83,23 @@ public class RequestTemplateCreator {
         // todo: able to post selected category category
 
         try {
+            // Category pointer
             JSONObject categoryIdObj=new JSONObject();
             categoryIdObj.put("__type", "Pointer");
             categoryIdObj.put("className", "Category");
             categoryIdObj.put("objectId", expense.getCategoryId());
             params.put("categoryId", categoryIdObj.toString());
+
+            // Date pointer
+            // "spentAt" -> "{"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}"
+            SimpleDateFormat timezoneFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'Z'");
+            timezoneFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String time = timezoneFormat.format(expense.getExpenseDate());
+
+            JSONObject dateObj=new JSONObject();
+            dateObj.put("__type", "Date");
+            dateObj.put(Expense.ISO_EXPENSE_DATE_JSON_KEY, time);
+            params.put(Expense.EXPENSE_DATE_JSON_KEY, dateObj.toString());
         } catch (JSONException e) {
             Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
         }
@@ -102,11 +116,23 @@ public class RequestTemplateCreator {
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
         // todo: able to update with categoryId
         try {
+            // Category pointer
             JSONObject categoryIdObj=new JSONObject();
             categoryIdObj.put("__type", "Pointer");
             categoryIdObj.put("className", "Category");
             categoryIdObj.put("objectId", expense.getCategoryId());
             params.put("categoryId", categoryIdObj.toString());
+
+            // Date pointer
+            // "spentAt" -> "{"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}"
+            SimpleDateFormat timezoneFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'Z'");
+            timezoneFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String time = timezoneFormat.format(expense.getExpenseDate());
+
+            JSONObject dateObj=new JSONObject();
+            dateObj.put("__type", "Date");
+            dateObj.put(Expense.ISO_EXPENSE_DATE_JSON_KEY, time);
+            params.put(Expense.EXPENSE_DATE_JSON_KEY, dateObj.toString());
         } catch (JSONException e) {
             Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
         }
