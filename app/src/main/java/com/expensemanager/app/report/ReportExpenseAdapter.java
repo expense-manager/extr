@@ -163,7 +163,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         for (Expense e : expenses) {
             // todo: use expense time instead of created time
-            int day = Helpers.getDayOfWeek(e.getCreatedAt());
+            int day = Helpers.getDayOfWeek(e.getSpentAt());
             String s = e.getCreatedAt().toString();
             amounts[day - 1] += e.getAmount();
         }
@@ -189,7 +189,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         for (Expense e : expenses) {
             // todo: use expense time instead of created time
-            int day = Helpers.getDayOfMonth(e.getCreatedAt());
+            int day = Helpers.getDayOfMonth(e.getSpentAt());
             String s = e.getCreatedAt().toString();
             amounts[day - 1] += e.getAmount();
         }
@@ -211,7 +211,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         for (Expense e : expenses) {
             // todo: use expense time instead of created time
-            int month = Helpers.getMonthOfYear(e.getCreatedAt());
+            int month = Helpers.getMonthOfYear(e.getSpentAt());
             amounts[month] += e.getAmount();
         }
     }

@@ -59,6 +59,7 @@ public class ReportDetailActivity extends AppCompatActivity {
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
 
+    public static final int ANIMATION_TIME_MILLISECOND = 1200;
     public static final int WEEKLY = 0;
     public static final int MONTHLY = 1;
     public static final int YEARLY = 2;
@@ -115,7 +116,7 @@ public class ReportDetailActivity extends AppCompatActivity {
 
     private void setUpPieChart() {
         // Animate chart
-        pieChart.animateY(1500, Easing.EasingOption.EaseInCirc);
+        pieChart.animateY(ANIMATION_TIME_MILLISECOND, Easing.EasingOption.EaseInCirc);
         // Show description on bottom right corner
         pieChart.setDescription("");
         // Disable label on pie chart
@@ -144,7 +145,7 @@ public class ReportDetailActivity extends AppCompatActivity {
 
     private void setUpBarChart() {
         // Animate chart
-        barChart.animateY(1500, Easing.EasingOption.EaseInCubic);
+        barChart.animateY(ANIMATION_TIME_MILLISECOND, Easing.EasingOption.EaseInCubic);
         // Show description on bottom right corner
         barChart.setDescription("");
         // Set min value for x axis
@@ -198,13 +199,13 @@ public class ReportDetailActivity extends AppCompatActivity {
         // todo: fetcch bar chart data from expense date
         for (Expense e : expenses) {
             if (requestCode == WEEKLY) {
-                int dateNum = Helpers.getDayOfWeek(e.getCreatedAt());
+                int dateNum = Helpers.getDayOfWeek(e.getSpentAt());
                 amountsTime[dateNum] += e.getAmount();
             } else if (requestCode == MONTHLY) {
-                int dateNum = Helpers.getDayOfMonth(e.getCreatedAt());
+                int dateNum = Helpers.getDayOfMonth(e.getSpentAt());
                 amountsTime[dateNum] += e.getAmount();
             } else {
-                int monthNum = Helpers.getMonthOfYear(e.getCreatedAt());
+                int monthNum = Helpers.getMonthOfYear(e.getSpentAt());
                 amountsTime[monthNum] += e.getAmount();
             }
         }
@@ -438,7 +439,7 @@ public class ReportDetailActivity extends AppCompatActivity {
                 // Update data
                 pieChart.invalidate();
                 // Animate chart
-                pieChart.animateY(1000, Easing.EasingOption.EaseInCirc);
+                pieChart.animateY(ANIMATION_TIME_MILLISECOND, Easing.EasingOption.EaseInCirc);
                 // Show pie chart
                 pieChart.setVisibility(View.VISIBLE);
             } else if (fragment instanceof ReportBarChartFragment) {
@@ -447,7 +448,7 @@ public class ReportDetailActivity extends AppCompatActivity {
                 // Update data
                 barChart.invalidate();
                 // Animate chart
-                barChart.animateY(1000, Easing.EasingOption.EaseInCubic);
+                barChart.animateY(ANIMATION_TIME_MILLISECOND, Easing.EasingOption.EaseInCubic);
                 // Show bar chart
                 barChart.setVisibility(View.VISIBLE);
             }

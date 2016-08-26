@@ -35,10 +35,14 @@ public class Helpers {
      * Monday at 06:07 PM
      * 8/16/16 at 10:35 AM
      *
-     * @param createdAt
+     * @param spentAt
      * @return
      */
-    public static String formatCreateAt(Date createdAt) {
+    public static String formatCreateAt(Date spentAt) {
+        if (spentAt == null) {
+            return "";
+        }
+
         StringBuilder readableDate = new StringBuilder();
 
         // Current calendar
@@ -49,7 +53,7 @@ public class Helpers {
 
         // Created At calendar
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(createdAt);
+        calendar.setTime(spentAt);
         int createdAtWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         int createdAtYear = calendar.get(Calendar.YEAR);
 
@@ -62,16 +66,16 @@ public class Helpers {
                 readableDate.append("Yesterday");
             } else {
                 SimpleDateFormat dayOfWeekFormat = new SimpleDateFormat("EEEE", Locale.US);
-                readableDate.append(dayOfWeekFormat.format(createdAt));
+                readableDate.append(dayOfWeekFormat.format(spentAt));
             }
         } else {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.US);
-            readableDate.append(dateFormat.format(createdAt));
+            readableDate.append(dateFormat.format(spentAt));
         }
 
         readableDate.append(" at ");
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
-        readableDate.append(timeFormat.format(createdAt));
+        readableDate.append(timeFormat.format(spentAt));
 
         return readableDate.toString();
     }
