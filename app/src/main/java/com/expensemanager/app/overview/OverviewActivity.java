@@ -12,13 +12,16 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.NewExpenseActivity;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.report.ReportDetailActivity;
 import com.expensemanager.app.service.SyncExpense;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -56,11 +59,11 @@ public class OverviewActivity extends AppCompatActivity {
         setupRecyclerView();
 
         totalAmountTextView.setOnClickListener(v -> {
-<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
-//            ReportDetailActivity.newInstance(this);
-=======
-            ReportDetailActivity.newInstance(this, ReportDetailActivity.MONTHLY);
->>>>>>> Add view pager, bar chart, date range query in database
+            Date[] startEnd = new Date[2];
+            Helpers.getStartEndDateOfMonth(startEnd, Calendar.getInstance());
+            if (startEnd[0] != null && startEnd[1] != null) {
+                ReportDetailActivity.newInstance(this, startEnd, ReportDetailActivity.MONTHLY);
+            }
         });
 
         fab.setOnClickListener(v -> {

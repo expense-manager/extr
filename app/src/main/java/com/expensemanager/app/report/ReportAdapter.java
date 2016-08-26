@@ -25,6 +25,10 @@ import butterknife.ButterKnife;
 public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= ReportAdapter.class.getSimpleName();
 
+    public static final int WEEKLY = 0;
+    public static final int MONTHLY = 1;
+    public static final int YEARLY = 2;
+
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Date[]> dates;
     private Context context;
@@ -90,7 +94,7 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         viewHolder.itemView.setOnClickListener(v -> {
             // todo: pass dates
-            ReportDetailActivity.newInstance(context, startEnd);
+            ReportDetailActivity.newInstance(context, startEnd, isWeekly ? WEEKLY : MONTHLY);
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }

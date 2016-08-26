@@ -1,6 +1,7 @@
 package com.expensemanager.app.report;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,18 +27,29 @@ import butterknife.Unbinder;
 public class ReportPieChartFragment extends Fragment {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
 
+    public static final String START_END_DATE = "startEnd";
+    public static final String REQUEST_CODE = "request_code";
+
+    public static final int WEEKLY = 0;
+    public static final int MONTHLY = 1;
+    public static final int YEARLY = 2;
+
+    private ReportCategoryAdapter reportCategoryAdapter;
+    private List<Expense> expenses;
     private ArrayList<Category> categories;
     private ArrayList<Double> amounts;
-    private ReportCategoryAdapter reportCategoryAdapter;
+    private Date[] startEnd;
+    private int requestCode;
     Unbinder unbinder;
 
     @BindView(R.id.report_chart_fragment_recycler_view_id) RecyclerView recyclerView;
 
     // Creates a new fragment given an int and title
-    // todo: add search range to fragment
-    public static ReportPieChartFragment newInstance() {
+    public static ReportPieChartFragment newInstance(Date[] startEnd, int requestCode) {
         ReportPieChartFragment reportPieChartFragment = new ReportPieChartFragment();
         Bundle args = new Bundle();
+        args.putInt(REQUEST_CODE, requestCode);
+        args.putSerializable(START_END_DATE, startEnd);
         reportPieChartFragment.setArguments(args);
         return reportPieChartFragment;
     }
@@ -67,29 +80,35 @@ public class ReportPieChartFragment extends Fragment {
         return v;
     }
 
-    public void invalidateViews() {
-        reportCategoryAdapter.clear();
-
-        // todo: query data from real date range
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        calendar.set(Calendar.HOUR, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        Date startDate =  calendar.getTime();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-        calendar.set(Calendar.HOUR, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        Date endDate =  calendar.getTime();
-        // Query data from date range
-        List<Expense> newExpenses = Expense.getRangeExpenses(startDate, endDate);
-        reportCategoryAdapter.addAll(newExpenses);
-    }
-
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(reportCategoryAdapter);
+    }
+
+    public void invalidateViews() {
+        reportCategoryAdapter.clear();
+
+        Bundle bundle = getArguments();
+
+        if (bundle != null) {
+            startEnd = (Date[]) bundle.getSerializable(START_END_DATE);
+            requestCode = bundle.getInt(REQUEST_CODE);
+        }
+
+        if (startEnd != null) {
+            Log.d(TAG, "Start: " + startEnd[0].getTime());
+            Log.d(TAG, "End: " + startEnd[1].getTime());
+            int[] startEndDay = Helpers.getStartEndDay(startEnd);
+            if (startEndDay == null) {
+                Log.i(TAG, "Invalid start end day.");
+                return;
+            }
+            // Query data from date range
+            expenses = Expense.getExpensesByRange(startEnd);
+        }
+        if (expenses != null) {
+            reportCategoryAdapter.addAll(expenses);
+        }
     }
 
     @Override

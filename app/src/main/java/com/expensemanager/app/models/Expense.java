@@ -172,26 +172,6 @@ public class Expense implements RealmModel {
         return expense;
     }
 
-    /**
-     * @return expenses with date range
-     */
-    public static List<Expense> getRangeExpenses(Date startDate, Date endDate) {
-        if (startDate.compareTo(endDate) > 0) {
-            return new ArrayList<>();
-        }
-
-        Realm realm = Realm.getDefaultInstance();
-
-        RealmResults<Expense> expenses = realm.where(Expense.class)
-            .greaterThanOrEqualTo(CREATED_AT_KEY, startDate)
-            .lessThanOrEqualTo(CREATED_AT_KEY, endDate)
-            .findAllSorted(CREATED_AT_KEY, Sort.DESCENDING);
-
-        realm.close();
-
-        return expenses;
-    }
-
     public static void delete(String id) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();

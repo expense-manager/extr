@@ -237,7 +237,6 @@ public class Helpers {
         return newUsedColors;
     }
 
-<<<<<<< 4b7d59d6ac00259a600cd46fd52ec00908ea58de
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
 
@@ -245,13 +244,14 @@ public class Helpers {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int exitValue = ipProcess.waitFor();
             return (exitValue == 0);
-        } catch (IOException e)          {
+        } catch (IOException e) {
             Log.e(TAG, "Error checking internet.", e);
         } catch (InterruptedException e) {
             Log.e(TAG, "Error checking internet.", e);
         }
         return false;
-=======
+    }
+
     public static int getDayOfWeek(Date time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
@@ -262,6 +262,12 @@ public class Helpers {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
         return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getMonthOfYear(Date time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        return calendar.get(Calendar.MONTH);
     }
 
     public static int getCurrentDayOfWeek() {
@@ -277,6 +283,24 @@ public class Helpers {
     public static int getCurrentMonthOfYear() {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.MONTH);
->>>>>>> Add view pager, bar chart, date range query in database
+    }
+
+    public static void getStartEndDateOfMonth(Date[] startend, Calendar calendar) {
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        startend[0] = calendar.getTime();
+        int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, maxDays);
+        startend[1] = calendar.getTime();
+    }
+
+    public static int[] getStartEndDay(Date[] startEnd) {
+        int[] startEndDay = new int[2];
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startEnd[0]);
+        startEndDay[0] = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar.setTime(startEnd[1]);
+        startEndDay[1] = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return startEndDay;
     }
 }
