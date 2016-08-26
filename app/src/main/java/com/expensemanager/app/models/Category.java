@@ -26,6 +26,7 @@ public class Category implements RealmModel {
     public static final String OBJECT_ID_JSON_KEY = "objectId";
     public static final String NAME_JSON_KEY = "name";
     public static final String COLOR_JSON_KEY = "color";
+    public static final String USER_JSON_KEY = "userId";
 
     // Property name key
     public static final String ID_KEY = "id";
@@ -36,6 +37,7 @@ public class Category implements RealmModel {
     private String id;
     private String name;
     private String color;
+    private String userId;
 
     public String getName() {
         return name;
@@ -61,12 +63,24 @@ public class Category implements RealmModel {
         this.color = color;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void mapFromJSON(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
             this.name = jsonObject.getString(NAME_JSON_KEY);
             // Hex String to Hex int
             this.color = jsonObject.getString(COLOR_JSON_KEY);
+            if (jsonObject.has(USER_JSON_KEY)) {
+                // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}
+                this.userId = jsonObject.getJSONObject(USER_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+            }
         } catch (JSONException e) {
             Log.e(TAG, "Error in parsing category.", e);
         }

@@ -3,14 +3,17 @@ package com.expensemanager.app.category;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +33,7 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 public class NewCategoryActivity extends AppCompatActivity
@@ -44,7 +48,7 @@ public class NewCategoryActivity extends AppCompatActivity
     @BindView(R.id.new_category_activity_name_edit_text_id) EditText nameEditText;
     @BindView(R.id.new_category_activity_save_button_id) Button saveButton;
     @BindView(R.id.new_category_activity_progress_bar_id) ProgressBar progressBar;
-    @BindView(R.id.new_category_activity_color_image_view_id) ImageView colorImageView;
+    @BindView(R.id.new_category_activity_color_image_view_id) CircleImageView colorImageView;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, NewCategoryActivity.class);
@@ -62,7 +66,8 @@ public class NewCategoryActivity extends AppCompatActivity
         usedColors = Helpers.getUsedColorSet();
         // Get a random unused color
         currentColor = ColorPickerFragment.getRandomColor(usedColors);
-        colorImageView.setBackgroundColor(Color.parseColor(currentColor));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(currentColor));
+        colorImageView.setImageDrawable(colorDrawable);
 
         saveButton.setOnClickListener(v -> save());
         colorImageView.setOnClickListener(v -> selectColor());
@@ -81,10 +86,18 @@ public class NewCategoryActivity extends AppCompatActivity
         usedColors.remove(currentColor);
         usedColors.add(color);
         currentColor = color;
-        colorImageView.setBackgroundColor(Color.parseColor(color));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(currentColor));
+        colorImageView.setImageDrawable(colorDrawable);
     }
 
     private void save() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        if (loginUserId == null) {
+            Log.i(TAG, "Error getting login user id.");
+            return;
+        }
+        category.setUserId(loginUserId);
         String uuid = UUID.randomUUID().toString();
         category.setId(uuid);
         category.setName(nameEditText.getText().toString());

@@ -36,13 +36,13 @@ public class Expense implements RealmModel {
     public static final String AMOUNT_JSON_KEY = "amount";
     public static final String NOTE_JSON_KEY = "note";
     public static final String CREATED_AT_JSON_KEY = "createdAt";
-    public static final String EXPENSE_DATE_JSON_KEY = "spentAt";
+    public static final String EXPENSE_DATE_JSON_KEY = "spentAt";   // Different from local
     public static final String ISO_EXPENSE_DATE_JSON_KEY = "iso";
     public static final String CATEGORY_JSON_KEY = "categoryId";
+    public static final String USER_JSON_KEY = "userId";
 
     // Property name key
     public static final String ID_KEY = "id";
-    public static final String CREATED_AT_KEY = "createdAt";
     public static final String EXPENSE_DATE_KEY = "expenseDate";
 
     // Property
@@ -54,6 +54,7 @@ public class Expense implements RealmModel {
     private Date createdAt;
     private Date expenseDate;
     private boolean isSynced;
+    private String userId;
     private String categoryId;
 
     public String getId() {
@@ -120,6 +121,14 @@ public class Expense implements RealmModel {
         this.categoryId = categoryId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void mapFromJSON(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
@@ -128,11 +137,15 @@ public class Expense implements RealmModel {
             if (jsonObject.has(CATEGORY_JSON_KEY)) {
                 this.categoryId = jsonObject.getJSONObject(CATEGORY_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
             }
+            if (jsonObject.has(USER_JSON_KEY)) {
+                // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}
+                this.userId = jsonObject.getJSONObject(USER_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+            }
             // Parse createdAt and convert UTC time to local time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             this.createdAt = simpleDateFormat.parse(jsonObject.getString(CREATED_AT_JSON_KEY));
-            // "spentAt" -> "{"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}"
+            // {"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}
             JSONObject spentJSONObject = jsonObject.getJSONObject(EXPENSE_DATE_JSON_KEY);
             if (spentJSONObject != null) {
                 this.expenseDate = simpleDateFormat.parse(spentJSONObject.getString(ISO_EXPENSE_DATE_JSON_KEY));

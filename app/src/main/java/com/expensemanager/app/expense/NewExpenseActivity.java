@@ -4,6 +4,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncExpense;
 
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -345,6 +347,13 @@ public class NewExpenseActivity extends AppCompatActivity
     }
 
     private void save() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        if (loginUserId == null) {
+            Log.i(TAG, "Error getting login user id.");
+            return;
+        }
+        expense.setUserId(loginUserId);
         expense.setAmount(Double.valueOf(amountTextView.getText().toString()));
         expense.setNote(noteTextView.getText().toString());
         expense.setCategoryId(category.getId());

@@ -83,6 +83,14 @@ public class RequestTemplateCreator {
         // todo: able to post selected category category
 
         try {
+            // User pointer
+            // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}
+            JSONObject userIdObj=new JSONObject();
+            userIdObj.put("__type", "Pointer");
+            userIdObj.put("className", "_User");
+            userIdObj.put("objectId", expense.getUserId());
+            params.put(Expense.USER_JSON_KEY, userIdObj.toString());
+
             // Category pointer
             JSONObject categoryIdObj=new JSONObject();
             categoryIdObj.put("__type", "Pointer");
@@ -101,7 +109,7 @@ public class RequestTemplateCreator {
             dateObj.put(Expense.ISO_EXPENSE_DATE_JSON_KEY, time);
             params.put(Expense.EXPENSE_DATE_JSON_KEY, dateObj.toString());
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
+            Log.e(TAG, "Error pointer object for 'where' in createExpense", e);
         }
 
         // todo: build User Pointer
@@ -116,6 +124,14 @@ public class RequestTemplateCreator {
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
         // todo: able to update with categoryId
         try {
+            // User pointer
+            // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}
+            JSONObject userIdObj=new JSONObject();
+            userIdObj.put("__type", "Pointer");
+            userIdObj.put("className", "_User");
+            userIdObj.put("objectId", expense.getUserId());
+            params.put(Expense.USER_JSON_KEY, userIdObj.toString());
+
             // Category pointer
             JSONObject categoryIdObj=new JSONObject();
             categoryIdObj.put("__type", "Pointer");
@@ -134,7 +150,7 @@ public class RequestTemplateCreator {
             dateObj.put(Expense.ISO_EXPENSE_DATE_JSON_KEY, time);
             params.put(Expense.EXPENSE_DATE_JSON_KEY, dateObj.toString());
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating category id pointer object for 'where' in createExpense", e);
+            Log.e(TAG, "Error pointer object for 'where' in createExpense", e);
         }
 
         return new RequestTemplate(PUT, url, params);
@@ -161,6 +177,18 @@ public class RequestTemplateCreator {
         params.put(Category.NAME_JSON_KEY, category.getName());
         params.put(Category.COLOR_JSON_KEY, category.getColor());
 
+        try {
+            // User pointer
+            // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}
+            JSONObject userIdObj=new JSONObject();
+            userIdObj.put("__type", "Pointer");
+            userIdObj.put("className", "_User");
+            userIdObj.put("objectId", category.getUserId());
+            params.put(Category.USER_JSON_KEY, userIdObj.toString());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error pointer object for 'where' in createExpense", e);
+        }
+
         return new RequestTemplate(POST, url, params);
     }
 
@@ -170,6 +198,18 @@ public class RequestTemplateCreator {
 
         params.put(Category.NAME_JSON_KEY, category.getName());
         params.put(Category.COLOR_JSON_KEY, category.getColor());
+
+        try {
+            // User pointer
+            // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}
+            JSONObject userIdObj=new JSONObject();
+            userIdObj.put("__type", "Pointer");
+            userIdObj.put("className", "_User");
+            userIdObj.put("objectId", category.getUserId());
+            params.put(Category.USER_JSON_KEY, userIdObj.toString());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error pointer object for 'where' in createExpense", e);
+        }
 
         return new RequestTemplate(PUT, url, params);
     }
