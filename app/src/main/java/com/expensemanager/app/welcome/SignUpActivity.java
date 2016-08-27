@@ -172,6 +172,7 @@ public class SignUpActivity extends AppCompatActivity {
                 // Show error messasge
                 errorMessageTextView.setText(task.getResult().getString("error"));
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
+                closeSoftKeyboard();
             } else {
                 MainActivity.newInstance(SignUpActivity.this);
             }
@@ -296,10 +297,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void getSignUpInfo() {
-        email = emailEditText.getText().toString();
-        password = passwordEditText.getText().toString();
-        confirmPassword = confirmPasswordEditText.getText().toString();
-        fullname = nameEditText.getText().toString();
+        email = emailEditText.getText().toString().trim();
+        password = passwordEditText.getText().toString().trim();
+        confirmPassword = confirmPasswordEditText.getText().toString().trim();
+        fullname = nameEditText.getText().toString().trim();
     }
 
     public void closeSoftKeyboard() {

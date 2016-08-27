@@ -61,6 +61,8 @@
     <string name="no_notifications">YOU HAVE NO NOTIFICATIONS</string>
     <string name="profile">Profile</string>
     <string name="choose_a_category">Choose a category</string>
+    <string name="sign_out_message">Are you sure you want to sign out?</string>
+
     <!-- Action -->
     <string name="add">Add</string>
     <string name="save">Save</string>

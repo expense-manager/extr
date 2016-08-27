@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -135,8 +136,8 @@ public class ExpenseDetailActivity extends BaseActivity
 
     private void formatDateAndTime(Date date) {
         // Create format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
         // Parse date and set text
         expenseDateTextView.setText(dateFormat.format(date));
         expenseTimeTextView.setText(timeFormat.format(date));

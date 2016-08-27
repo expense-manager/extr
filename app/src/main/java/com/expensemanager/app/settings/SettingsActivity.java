@@ -2,10 +2,12 @@ package com.expensemanager.app.settings;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -78,11 +80,19 @@ public class SettingsActivity extends BaseActivity {
                 ProfileActivity.newInstance(this, null);
                 return true;
             case R.id.menu_item_sign_out_id:
-                SyncUser.logout().continueWith(logoutOnSuccess);
+                signOut();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void signOut() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.sign_out_message)
+                .setPositiveButton(R.string.sign_out, (DialogInterface dialog, int which) -> SyncUser.logout().continueWith(logoutOnSuccess))
+                .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
+                .show();
     }
 
     private Continuation<Void, Void> logoutOnSuccess = new Continuation<Void, Void>() {

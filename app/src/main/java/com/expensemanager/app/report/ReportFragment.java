@@ -5,11 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
@@ -18,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.Callable;
 
+import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,6 +35,8 @@ public class ReportFragment extends Fragment {
     public ArrayList<Date[]> dates;
     public boolean isWeekly = true;
 
+    @BindView(R.id.report_fragment_recycler_view_id) RecyclerView recyclerView;
+
     public static Fragment newInstance(boolean isWeekly) {
         Fragment reportFragment = new ReportFragment();
 
@@ -44,8 +46,6 @@ public class ReportFragment extends Fragment {
 
         return reportFragment;
     }
-
-    @BindView(R.id.report_fragment_recycler_view_id) RecyclerView recyclerView;
 
     @Nullable
     @Override
@@ -59,31 +59,34 @@ public class ReportFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         isWeekly = getArguments().getBoolean(IS_WEEKLY_KEY);
-
-        Log.d(TAG, "isWeekly: " + isWeekly);
-
         dates = new ArrayList<>();
         reportAdapter = new ReportAdapter(getActivity(), dates, isWeekly);
 
         setupRecyclerView();
         invalidateViews();
-
-        if (isWeekly) {
-            dates.addAll(getAllWeeks());
-        } else {
-            dates.addAll(getAllMonths());
-        }
     }
 
     private void invalidateViews() {
-        if (!Helpers.isOnline()) {
-            Toast.makeText(getActivity(), "Cannot retrieve messages at this time. Please try again later.", Toast.LENGTH_SHORT).show();
-        }
+        getAllMonthsWeeksAsync();
     }
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(reportAdapter);
+    }
+
+    private void getAllMonthsWeeksAsync() {
+        Task.call(new Callable<Void>() {
+            public Void call() {
+                if (isWeekly) {
+                    dates.addAll(getAllWeeks());
+                } else {
+                    dates.addAll(getAllMonths());
+                }
+                reportAdapter.notifyDataSetChanged();
+                return null;
+            }
+        }, Task.UI_THREAD_EXECUTOR);
     }
 
     public ArrayList<Date[]> getAllMonths() {

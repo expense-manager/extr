@@ -35,7 +35,7 @@ public class ReportActivity extends BaseActivity {
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, ReportActivity.class);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
     }
 
     @Override
