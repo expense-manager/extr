@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Total expense -->
+    <RelativeLayout
+        android:id="@+id/overview_fragment_total_relative_layout_id"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/space_medium"
+
+        android:gravity="center"
+        android:background="@drawable/background_circle_border_blue">
+
+        <TextView
+            android:id="@+id/overview_fragment_total_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/space_small"
+
+            android:text="$98636"
+            android:textSize="@dimen/text_small"/>
+
+        <!-- Total label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/overview_fragment_total_text_view_id"
+            android:layout_centerHorizontal="true"
+
+            android:text="@string/total"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/overview_fragment_total_relative_layout_id"
+        android:layout_centerHorizontal="true">
+
+        <!-- Weekly expense -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/space_small">
+
+            <RelativeLayout
+                android:id="@+id/overview_fragment_weekly_total_relative_layout_id"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:background="@drawable/background_circle_border_blue">
+
+                <!-- Weekly label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+
+                    android:text="@string/weekly"
+                    android:gravity="center"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/overview_fragment_weekly_total_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:text="$126"/>
+
+        </LinearLayout>
+
+        <!-- Monthly expense -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/space_small">
+
+            <RelativeLayout
+                android:id="@+id/overview_fragment_monthly_total_relative_layout_id"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:background="@drawable/background_circle_border_blue">
+
+                <!-- Month label -->
+                <TextView
+                    android:id="@+id/overview_fragment_monthly_label_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+
+                    android:text="@string/monthly"
+                    android:gravity="center"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/overview_fragment_monthly_total_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:text="$427"/>
+
+        </LinearLayout>
+
+        <!-- Weekly average expense -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/space_small">
+
+            <RelativeLayout
+                android:id="@+id/overview_fragment_weekly_average_relative_layout_id"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:background="@drawable/background_circle_border_blue">
+
+                <!-- Weekly average label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingTop="@dimen/space_small"
+
+                    android:text="weekly ave"
+                    android:gravity="center"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/overview_fragment_weekly_average_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:text="$395"/>
+
+        </LinearLayout>
+
+        <!-- Monthly average expense -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/space_small">
+
+            <RelativeLayout
+                android:id="@+id/overview_fragment_monthly_average_relative_layout_id"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:background="@drawable/background_circle_border_blue">
+
+                <!-- Month average label -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingTop="@dimen/space_small"
+
+                    android:text="monthly ave"
+                    android:gravity="center"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/overview_fragment_monthly_average_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/space_really_small"
+
+                android:text="$1608"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

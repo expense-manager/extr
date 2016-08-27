@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -76,6 +77,15 @@ public class MainActivity extends AppCompatActivity {
             NewExpenseActivity.newInstance(this);
             overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
+
+        if (fragment == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
+                    .addToBackStack(OverviewFragment.class.getName())
+                    .commit();
+        }
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -169,8 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        menuItem.setChecked(true);
-        drawerLayout.closeDrawers();
+        drawerLayout.closeDrawer(navigationView);
     }
 
     @Override

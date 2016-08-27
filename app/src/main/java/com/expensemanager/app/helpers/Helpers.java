@@ -1,10 +1,8 @@
 package com.expensemanager.app.helpers;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.expensemanager.app.models.Category;
@@ -15,8 +13,10 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -306,5 +306,52 @@ public class Helpers {
         startEndDay[1] = calendar.get(Calendar.DAY_OF_MONTH);
 
         return startEndDay;
+    }
+
+    public static ArrayList<Date[]> getAllMonths() {
+        // todo: pass the first expense date as start date
+        ArrayList<Date[]> months = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        Date startDate = calendar.getTime();
+
+        // Current calendar
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentMonth = currentCalendar.getTime();
+
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.setTime(startDate);
+
+        while (gcal.getTime().compareTo(currentMonth) <= 0) {
+            Date[] startEndDate = Helpers.getMonthStartEndDate(gcal.getTime());
+            months.add(startEndDate);
+            gcal.add(Calendar.MONTH, 1);
+        }
+
+        return months;
+    }
+
+    public static ArrayList<Date[]> getAllWeeks() {
+        // todo: pass the first expense date as start date
+        ArrayList<Date[]> weeks = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        Date startDate = calendar.getTime();
+
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentMonth = currentCalendar.getTime();
+
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.setTime(startDate);
+
+        while (gcal.getTime().compareTo(currentMonth) <= 0) {
+            Date[] startEnd = Helpers.getWeekStartEndDate(gcal.getTime());
+            weeks.add(startEnd);
+            gcal.add(Calendar.WEEK_OF_YEAR, 1);
+        }
+
+        return weeks;
     }
 }
