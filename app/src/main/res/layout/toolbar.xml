@@ -37,6 +37,19 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_medium_small"/>
 
+        <!-- Right title -->
+        <TextView
+            android:id="@+id/toolbar_right_title_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/space_medium"
+
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_medium_small"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

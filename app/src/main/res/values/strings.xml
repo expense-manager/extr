@@ -66,6 +66,9 @@
     <string name="monthly">monthly</string>
     <string name="weekly">weekly</string>
     <string name="ave">ave</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="mobile">Mobile</string>
 
     <!-- Action -->
     <string name="add">Add</string>

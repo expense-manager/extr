@@ -32,12 +32,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
@@ -61,7 +59,7 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Zhaolong Zhong on 8/22/16.
@@ -75,7 +73,6 @@ public class ProfileActivity extends BaseActivity {
     public static final String LIBRARY_PHOTO = "Choose from library";
     public static final int SELECT_PICTURE_REQUEST_CODE = 1;
 
-    private boolean isDefault;
     private boolean isPlaceholder;
     private Uri outputFileUri;
     private Drawable cameraIconHolder;
@@ -88,11 +85,12 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
-    @BindView(R.id.profile_activity_profile_photo_image_view_id) ImageView profilePhotoImageView;
-    @BindView(R.id.profile_activity_fullname_edit_text_id) EditText fullnameEditText;
-    @BindView(R.id.profile_activity_cancel_button_id) Button cancelButton;
-    @BindView(R.id.profile_activity_edit_button_id) Button editButton;
-    @BindView(R.id.profile_activity_save_button_id) Button saveButton;
+    @BindView(R.id.toolbar_right_title_text_view_id) TextView editTextView;
+    @BindView(R.id.profile_activity_profile_photo_image_view_id) CircleImageView profilePhotoImageView;
+    @BindView(R.id.profile_activity_first_name_edit_text_id) EditText firstNameEditText;
+    @BindView(R.id.profile_activity_last_name_edit_text_id) EditText lastNameEditText;
+    @BindView(R.id.profile_activity_email_edit_text_id) EditText emailEditText;
+    @BindView(R.id.profile_activity_mobile_edit_text_id) EditText mobileEditText;
     @BindView(R.id.profile_activity_progress_bar_id) ProgressBar progressBar;
 
     public static void newInstance(Context context, String userId) {
@@ -137,17 +135,20 @@ public class ProfileActivity extends BaseActivity {
             return;
         }
 
-        editButton.setOnClickListener(v -> setEditMode(true));
-        cancelButton.setOnClickListener(v -> setEditMode(false));
-        saveButton.setOnClickListener(v -> save());
-
-        editButton.setVisibility(isEditable ? View.GONE : View.VISIBLE);
-        cancelButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
-        saveButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
+        if (isEditable) {
+            editTextView.setText(getString(R.string.save));
+            editTextView.setOnClickListener(v -> save());
+            titleTextView.setText(getString(R.string.cancel));
+            titleTextView.setOnClickListener(v -> setEditMode(false));
+        } else {
+            editTextView.setText(getString(R.string.edit));
+            editTextView.setOnClickListener(v -> setEditMode(true));
+            titleTextView.setText(getString(R.string.profile));
+            titleTextView.setOnClickListener(v -> close());
+        }
 
         String photoUrl = currentUser.getPhotoUrl();
         isPlaceholder = photoUrl != null && photoUrl.length() > 0 ? false : true;
-        isDefault = true;
 
         Log.i(TAG, "new invalidate: " + currentUser.getPhotoUrl());
         // todo: glide disallow putting bitmap into imageview
@@ -159,22 +160,27 @@ public class ProfileActivity extends BaseActivity {
                 .into(profilePhotoImageView);
         }
 
-        fullnameEditText.setText(currentUser.getFullname());
-
-        setupEditableViews(isEditable);
-
-        fullnameEditText.setOnClickListener(v -> {
-            isDefault = false;
-        });
-
         profilePhotoImageView.setOnClickListener(v -> {
             updateProfileImage();
         });
+
         profilePhotoImageView.setOnLongClickListener(v -> {
             // todo: allow to delete profile image
             //deleteProfileImage();
             return true;
         });
+
+        setupEditableViews(isEditable);
+
+        firstNameEditText.setText(currentUser.getFirstName());
+        lastNameEditText.setText(currentUser.getLastName());
+        emailEditText.setText(currentUser.getEmail());
+        mobileEditText.setText(currentUser.getPhone());
+
+        firstNameEditText.setOnClickListener(v -> requestFocus(v));
+        lastNameEditText.setOnClickListener(v -> requestFocus(v));
+        emailEditText.setOnClickListener(v -> requestFocus(v));
+        mobileEditText.setOnClickListener(v -> requestFocus(v));
     }
 
     @Override
@@ -241,20 +247,32 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void onDeleteProfileImage() {
-        isDefault = false;
         profilePhotoImageView.setImageDrawable(cameraIconHolder);
         isPlaceholder = true;
     }
 
     private void setupEditableViews(boolean isEditable) {
-        fullnameEditText.setFocusable(isEditable);
-        fullnameEditText.setFocusableInTouchMode(isEditable);
-        fullnameEditText.setClickable(isEditable);
+        firstNameEditText.setFocusable(isEditable);
+        firstNameEditText.setFocusableInTouchMode(isEditable);
+        firstNameEditText.setClickable(isEditable);
 
-        if (isEditable) {
-            fullnameEditText.requestFocus();
-            fullnameEditText.setSelection(fullnameEditText.length());
-        }
+        lastNameEditText.setFocusable(isEditable);
+        lastNameEditText.setFocusableInTouchMode(isEditable);
+        lastNameEditText.setClickable(isEditable);
+
+        emailEditText.setFocusable(isEditable);
+        emailEditText.setFocusableInTouchMode(isEditable);
+        emailEditText.setClickable(isEditable);
+
+        mobileEditText.setFocusable(isEditable);
+        mobileEditText.setFocusableInTouchMode(isEditable);
+        mobileEditText.setClickable(isEditable);
+    }
+
+    private void requestFocus(View v) {
+        EditText editText = (EditText)v;
+        editText.requestFocus();
+        editText.setSelection(editText.length());
     }
 
     private void setEditMode(boolean isEditable) {
@@ -272,6 +290,8 @@ public class ProfileActivity extends BaseActivity {
         }
 
         titleTextView.setText(getString(R.string.profile));
+        editTextView.setText(getString(R.string.edit));
+        editTextView.setVisibility(View.VISIBLE);
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
     }
@@ -338,16 +358,24 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void save() {
-        String name = fullnameEditText.getText().toString();
+//        String name = fullnameEditText.getText().toString();
+//
+//        // Check name input
+//        if (name == null || name.length() == 0) {
+//            Toast.makeText(this, "Invalid name.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-        // Check name input
-        if (name == null || name.length() == 0) {
-            Toast.makeText(this, "Invalid name.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        User updatedUser = new User();
+
+        updatedUser.setId(currentUser.getId());
+        updatedUser.setFirstName(firstNameEditText.getText().toString());
+        updatedUser.setLastName(lastNameEditText.getText().toString());
+        updatedUser.setEmail(emailEditText.getText().toString());
+        updatedUser.setPhone(mobileEditText.getText().toString());
 
         ProfileBuilder profileBuilder = new ProfileBuilder()
-            .setUser(currentUser)
+            .setUser(updatedUser)
             .setProfileImage(profileImage);
 
         SyncUser.update(profileBuilder).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
