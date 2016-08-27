@@ -121,6 +121,7 @@ public class RequestTemplateCreator {
         Map<String, String> params = new HashMap<>();
 
         params.put(Expense.AMOUNT_JSON_KEY, String.valueOf(expense.getAmount()));
+        Log.i(TAG, String.valueOf(expense.getNote().length()));
         params.put(Expense.NOTE_JSON_KEY, expense.getNote());
         // todo: able to update with categoryId
         try {

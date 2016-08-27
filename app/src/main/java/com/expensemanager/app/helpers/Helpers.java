@@ -354,4 +354,9 @@ public class Helpers {
 
         return weeks;
     }
+
+    public static float formatNumToFloat(double num) {
+        float newNum = (int) (num * 100);
+        return newNum / 100;
+    }
 }

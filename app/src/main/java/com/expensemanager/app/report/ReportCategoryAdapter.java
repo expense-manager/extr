@@ -26,6 +26,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= ReportCategoryAdapter.class.getSimpleName();
 
+    public static final String NO_CATEGORY_ID = "No Category";
+    public static final String NO_CATEGORY_COLOR = "#000000";
+
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Category> categories;
     private ArrayList<Double> amounts;
@@ -116,10 +119,21 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         for (Expense e : expenses) {
             String cId = e.getCategoryId();
+            if (cId == null) {
+                cId = NO_CATEGORY_ID;
+            }
             Integer pos = map.get(cId);
             if (pos == null) {
+                Category c = null;
                 // Get new category
-                Category c = Category.getCategoryById(cId);
+                if (cId.equals(NO_CATEGORY_ID)) {
+                    // Get temp category for no category
+                    c = new Category();
+                    c.setColor(NO_CATEGORY_COLOR);
+                    c.setName(NO_CATEGORY_ID);
+                } else {
+                    c = Category.getCategoryById(cId);
+                }
                 // Store pos of new category into map
                 map.put(cId, categories.size());
                 // Add new category to list

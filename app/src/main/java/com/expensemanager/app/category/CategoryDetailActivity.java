@@ -10,16 +10,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 import bolts.Continuation;
@@ -40,12 +42,14 @@ public class CategoryDetailActivity extends AppCompatActivity
     private Set<String> usedColors;
     private String currentColor;
 
+    @BindView(R.id.toolbar_id) Toolbar toolbar;
+    @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
+    @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.toolbar_edit_text_view_id) TextView editTextView;
+    @BindView(R.id.toolbar_save_text_view_id) TextView saveTextView;
     @BindView(R.id.category_detail_activity_name_edit_text_id) EditText nameEditText;
-    @BindView(R.id.category_detail_activity_cancel_button_id) Button cancelButton;
     @BindView(R.id.category_detail_activity_delete_button_id) Button deleteButton;
-    @BindView(R.id.category_detail_activity_edit_button_id) Button editButton;
     @BindView(R.id.category_detail_activity_color_image_view_id) CircleImageView colorImageView;
-    @BindView(R.id.category_detail_activity_save_button_id) Button saveButton;
     @BindView(R.id.category_detail_activity_progress_bar_id) ProgressBar progressBar;
 
     public static void newInstance(Context context, String id) {
@@ -59,6 +63,8 @@ public class CategoryDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.category_detail_activity);
         ButterKnife.bind(this);
+        // Setup toolbar
+        setupToolbar();
 
         String categoryId = getIntent().getStringExtra(CATEGORY_ID);
         category = Category.getCategoryById(categoryId);
@@ -68,6 +74,20 @@ public class CategoryDetailActivity extends AppCompatActivity
         invalidateViews();
     }
 
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        titleTextView.setText(getString(R.string.title_activity_category_detail));
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
+        editTextView.setOnClickListener(v -> setEditMode(true));
+        saveTextView.setOnClickListener(v -> save());
+    }
+
     private void invalidateViews() {
         nameEditText.setText(category.getName());
         currentColor = category.getColor();
@@ -75,15 +95,11 @@ public class CategoryDetailActivity extends AppCompatActivity
         colorImageView.setImageDrawable(colorDrawable);
 
         colorImageView.setOnClickListener(v -> selectColor());
-        editButton.setOnClickListener(v -> setEditMode(true));
-        cancelButton.setOnClickListener(v -> setEditMode(false));
         deleteButton.setOnClickListener(v -> delete());
-        saveButton.setOnClickListener(v -> save());
 
-        editButton.setVisibility(isEditable ? View.GONE : View.VISIBLE);
-        cancelButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
+        editTextView.setVisibility(isEditable ? View.GONE : View.VISIBLE);
+        saveTextView.setVisibility(isEditable ? View.VISIBLE : View.GONE);
         deleteButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
-        saveButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
 
         setupEditableViews(isEditable);
     }
@@ -160,7 +176,8 @@ public class CategoryDetailActivity extends AppCompatActivity
         SyncCategory.update(category).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
 
         progressBar.setVisibility(View.VISIBLE);
-        isEditable = !isEditable;
+        closeSoftKeyboard();
+        isEditable = false;
         invalidateViews();
     }
 
@@ -178,6 +195,15 @@ public class CategoryDetailActivity extends AppCompatActivity
             return null;
         }
     };
+
+    public void closeSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        View view = this.getCurrentFocus();
+        if (inputMethodManager != null && view != null){
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
     private void delete() {
         progressBar.setVisibility(View.VISIBLE);

@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -66,15 +67,15 @@ public class ExpenseDetailActivity extends BaseActivity
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.toolbar_edit_text_view_id) TextView editTextView;
+    @BindView(R.id.toolbar_save_text_view_id) TextView saveTextView;
     @BindView(R.id.expense_detail_activity_amount_text_view_id) EditText amountTextView;
     @BindView(R.id.expense_detail_activity_note_text_view_id) EditText noteTextView;
     @BindView(R.id.expense_detail_activity_created_at_text_view_id) TextView createdAtTextView;
     @BindView(R.id.expense_detail_activity_grid_view_id) GridView photoGridView;
-    @BindView(R.id.expense_detail_activity_cancel_button_id) Button cancelButton;
     @BindView(R.id.expense_detail_activity_delete_button_id) Button deleteButton;
-    @BindView(R.id.expense_detail_activity_edit_button_id) Button editButton;
-    @BindView(R.id.expense_detail_activity_save_button_id) Button saveButton;
     @BindView(R.id.expense_detail_activity_progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.expense_detail_activity_category_hint_text_view_id) TextView categoryHintTextView;
     @BindView(R.id.expense_detail_activity_category_relative_layout_id) RelativeLayout categoryRelativeLayout;
     @BindView(R.id.expense_detail_activity_category_color_image_view_id) CircleImageView categoryColorImageView;
     @BindView(R.id.expense_detail_activity_category_name_text_view_id) TextView categoryNameTextView;
@@ -93,6 +94,8 @@ public class ExpenseDetailActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expense_detail_activity);
         ButterKnife.bind(this);
+        // Setup toolbar
+        setupToolbar();
 
         String expenseId = getIntent().getStringExtra(EXPENSE_ID);
         expense = Expense.getExpenseById(expenseId);
@@ -101,7 +104,6 @@ public class ExpenseDetailActivity extends BaseActivity
         //todo: fix photo not found in realm
         Log.d(TAG, "onCreate expense photo:" + expense.getPhotos());
 
-        setupToolbar();
         invalidateViews();
         setupDateAndTime();
 
@@ -149,7 +151,6 @@ public class ExpenseDetailActivity extends BaseActivity
         formatDateAndTime(calendar.getTime());
     }
 
-
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -163,15 +164,11 @@ public class ExpenseDetailActivity extends BaseActivity
         noteTextView.setText(String.valueOf(expense.getNote()));
         createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
 
-        editButton.setOnClickListener(v -> setEditMode(true));
-        cancelButton.setOnClickListener(v -> setEditMode(false));
         deleteButton.setOnClickListener(v -> delete());
-        saveButton.setOnClickListener(v -> save());
 
-        editButton.setVisibility(isEditable ? View.GONE : View.VISIBLE);
-        cancelButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
+        editTextView.setVisibility(isEditable ? View.GONE : View.VISIBLE);
+        saveTextView.setVisibility(isEditable ? View.VISIBLE : View.GONE);
         deleteButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
-        saveButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
 
         setupExpensePhoto();
         setupEditableViews(isEditable);
@@ -184,9 +181,11 @@ public class ExpenseDetailActivity extends BaseActivity
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
-        titleTextView.setText(getString(R.string.expense_detail));
+        titleTextView.setText(getString(R.string.title_activity_expense_detail));
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
+        editTextView.setOnClickListener(v -> setEditMode(true));
+        saveTextView.setOnClickListener(v -> save());
     }
 
     private void setupExpensePhoto() {
@@ -214,8 +213,14 @@ public class ExpenseDetailActivity extends BaseActivity
     }
 
     private void setupCategory() {
-        loadCategory();
-        categoryRelativeLayout.setOnClickListener(v -> selectCategory());
+        loadCategory(category);
+
+        categoryHintTextView.setOnClickListener(v -> {
+            selectCategory();
+        });
+        categoryRelativeLayout.setOnClickListener(v -> {
+            selectCategory();
+        });
     }
 
     private void selectCategory() {
@@ -230,19 +235,26 @@ public class ExpenseDetailActivity extends BaseActivity
     private CategoryPickerFragment.CategoryPickerListener categoryPickerListener = new CategoryPickerFragment.CategoryPickerListener() {
         @Override
         public void onFinishExpenseCategoryDialog(Category category) {
-            ExpenseDetailActivity.this.category = category;
-            loadCategory();
+            loadCategory(category);
         }
     };
 
-    private void loadCategory() {
-        if (category != null) {
+    private void loadCategory(Category category) {
+        if (category == null) {
+            // Show category hint
+            categoryHintTextView.setVisibility(View.VISIBLE);
+            categoryRelativeLayout.setVisibility(View.INVISIBLE);
+        } else {
+            // Hide category hint
+            categoryHintTextView.setVisibility(View.INVISIBLE);
+            categoryRelativeLayout.setVisibility(View.VISIBLE);
+
             ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
             categoryColorImageView.setImageDrawable(colorDrawable);
             categoryNameTextView.setText(category.getName());
-        } else {
-            categoryNameTextView.setText(getString(R.string.choose_a_category));
         }
+        // Update category
+        this.category = category;
     }
 
     private void setupEditableViews(boolean isEditable) {
@@ -305,6 +317,11 @@ public class ExpenseDetailActivity extends BaseActivity
         double amount;
         try {
             amount = Double.valueOf(amountTextView.getText().toString());
+            amount = Helpers.formatNumToFloat(amount);
+            if (amount <= 0) {
+                Toast.makeText(this, "Amount cannot be zero.", Toast.LENGTH_SHORT).show();
+                return;
+            }
         } catch (Exception e) {
             Log.e(TAG, "Cannot convert amount to double.", e);
             Toast.makeText(this, "Incorrect amount format.", Toast.LENGTH_SHORT).show();
@@ -315,7 +332,7 @@ public class ExpenseDetailActivity extends BaseActivity
         realm.beginTransaction();
         expense.setAmount(amount);
         expense.setNote(noteTextView.getText().toString());
-        expense.setCategoryId(category.getId());
+        expense.setCategoryId(category != null ? category.getId() : null);
         expense.setExpenseDate(calendar.getTime());
         expense.setSynced(false);
         realm.copyToRealmOrUpdate(expense);
@@ -325,7 +342,8 @@ public class ExpenseDetailActivity extends BaseActivity
         SyncExpense.update(expense).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
 
         progressBar.setVisibility(View.VISIBLE);
-        isEditable = !isEditable;
+        closeSoftKeyboard();
+        isEditable = false;
         invalidateViews();
     }
 
@@ -343,6 +361,15 @@ public class ExpenseDetailActivity extends BaseActivity
             return null;
         }
     };
+
+    public void closeSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        View view = this.getCurrentFocus();
+        if (inputMethodManager != null && view != null){
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
     private void delete() {
         progressBar.setVisibility(View.VISIBLE);

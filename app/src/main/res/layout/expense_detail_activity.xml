@@ -5,9 +5,11 @@
     android:id="@+id/expense_detail_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="@color/white"
     tools:context="com.expensemanager.app.expense.ExpenseDetailActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar_light" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,26 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Title -->
-            <TextView
-                android:id="@+id/expense_detail_activity_expense_detail_title_text_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_margin="@dimen/space_medium"
-
-                android:text="@string/expense_detail"
-                android:textSize="@dimen/text_medium"/>
-
             <!-- Amount label -->
             <TextView
                 android:id="@+id/expense_detail_activity_amount_label_text_view_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/expense_detail_activity_expense_detail_title_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
-                android:layout_marginBottom="@dimen/space_really_small"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
 
                 android:paddingLeft="@dimen/space_really_small"
                 android:paddingRight="@dimen/space_really_small"
@@ -50,13 +41,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_detail_activity_amount_label_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
 
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
-                android:background="@drawable/background_round_corner_white"/>
+                android:background="@drawable/background_botton_line"/>
 
             <!-- Category label -->
             <TextView
@@ -64,10 +55,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_detail_activity_amount_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
-                android:layout_marginTop="@dimen/space_medium"
-                android:layout_marginBottom="@dimen/space_really_small"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
 
                 android:paddingLeft="@dimen/space_really_small"
                 android:paddingRight="@dimen/space_really_small"
@@ -79,12 +70,12 @@
                 android:id="@+id/expense_detail_activity_category_relative_layout_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
                 android:layout_below="@+id/expense_detail_activity_category_label_text_view_id"
 
                 android:padding="@dimen/space_medium"
-                android:background="@drawable/background_round_corner_white">
+                android:background="@drawable/background_round_corner_border_gray">
 
                 <!-- Color -->
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -123,16 +114,33 @@
 
             </RelativeLayout>
 
+            <!-- Category hint -->
+            <TextView
+                android:id="@+id/expense_detail_activity_category_hint_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_alignTop="@+id/expense_detail_activity_category_relative_layout_id"
+                android:layout_alignBottom="@+id/expense_detail_activity_category_relative_layout_id"
+
+                android:gravity="center"
+                android:padding="@dimen/space_really_small"
+                android:hint="@string/no_category"
+                android:textColorHint="@color/gray_light"
+                android:textSize="@dimen/text_small"
+                android:background="@drawable/background_round_corner_border_gray"/>
+
             <!-- Expense date and time label -->
             <TextView
                 android:id="@+id/expense_detail_activity_date_time_label_text_view_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_detail_activity_category_relative_layout_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
-                android:layout_marginTop="@dimen/space_medium"
-                android:layout_marginBottom="@dimen/space_really_small"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
 
                 android:paddingLeft="@dimen/space_really_small"
                 android:paddingRight="@dimen/space_really_small"
@@ -144,9 +152,8 @@
                 android:id="@+id/expense_detail_activity_date_time_linear_layout_id"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
-                android:layout_marginBottom="@dimen/space_medium"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
                 android:layout_below="@+id/expense_detail_activity_date_time_label_text_view_id"
 
                 android:weightSum="2"
@@ -157,12 +164,14 @@
                     android:id="@+id/expense_detail_activity_expense_date_text_view_id"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/space_small"
 
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="@dimen/space_really_small"
                     android:textSize="@dimen/text_small"
-                    android:background="@drawable/background_round_corner_white"
+                    android:textColor="@color/black"
+                    android:background="@drawable/background_round_corner_border_gray"
                     tools:text="Date"/>
 
                 <!-- Time -->
@@ -170,13 +179,14 @@
                     android:id="@+id/expense_detail_activity_expense_time_text_view_id"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/space_medium"
+                    android:layout_marginLeft="@dimen/space_small"
 
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="@dimen/space_really_small"
                     android:textSize="@dimen/text_small"
-                    android:background="@drawable/background_round_corner_white"
+                    android:textColor="@color/black"
+                    android:background="@drawable/background_round_corner_border_gray"
                     tools:text="Time"/>
 
             </LinearLayout>
@@ -187,10 +197,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_detail_activity_date_time_linear_layout_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
-                android:layout_marginTop="@dimen/space_medium"
-                android:layout_marginBottom="@dimen/space_really_small"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
 
                 android:paddingLeft="@dimen/space_really_small"
                 android:paddingRight="@dimen/space_really_small"
@@ -203,13 +213,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_detail_activity_note_label_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
 
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
-                android:background="@drawable/background_round_corner_white"/>
+                android:background="@drawable/background_botton_line"/>
 
             <!-- Created At label -->
             <TextView
@@ -217,10 +227,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_detail_activity_note_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
-                android:layout_marginTop="@dimen/space_medium"
-                android:layout_marginBottom="@dimen/space_really_small"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
 
                 android:paddingLeft="@dimen/space_really_small"
                 android:paddingRight="@dimen/space_really_small"
@@ -233,13 +243,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_detail_activity_created_at_label_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
 
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
-                android:background="@drawable/background_round_corner_white"/>
+                android:background="@drawable/background_botton_line"/>
 
             <!-- Expense photo -->
             <LinearLayout
@@ -247,7 +257,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/expense_detail_activity_created_at_text_view_id"
-                android:layout_margin="@dimen/space_medium">
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large">
 
                 <GridView
                     android:id="@+id/expense_detail_activity_grid_view_id"
@@ -260,88 +272,32 @@
 
             </LinearLayout>
 
-            <!-- Action -->
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <!-- Delete -->
+            <Button
+                android:id="@+id/expense_detail_activity_delete_button_id"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/space_medium_large"
                 android:layout_below="@+id/expense_detail_activity_linear_layout_id"
-                android:layout_marginTop="@dimen/space_medium"
-                android:layout_marginLeft="@dimen/space_medium"
-                android:layout_marginStart="@dimen/space_medium">
 
-                <RelativeLayout
-                    android:id="@+id/expense_detail_activity_edit_relative_layout_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true">
-
-                    <!-- Edit -->
-                    <Button
-                        android:id="@+id/expense_detail_activity_edit_button_id"
-                        android:layout_width="120dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="@dimen/space_medium"
-                        android:layout_marginBottom="@dimen/space_medium"
-
-                        android:text="@string/edit"
-                        android:background="@drawable/background_round_corner_white"/>
-
-                    <!-- Cancel -->
-                    <Button
-                        android:id="@+id/expense_detail_activity_cancel_button_id"
-                        android:layout_width="120dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="@dimen/space_medium"
-                        android:layout_marginBottom="@dimen/space_medium"
-
-                        android:text="@string/cancel"
-                        android:background="@drawable/background_round_corner_white"/>
-
-                </RelativeLayout>
-
-                <!-- Save -->
-                <Button
-                    android:id="@+id/expense_detail_activity_save_button_id"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:layout_toRightOf="@+id/expense_detail_activity_edit_relative_layout_id"
-                    android:layout_toEndOf="@+id/expense_detail_activity_edit_relative_layout_id"
-                    android:layout_alignParentTop="true"
-                    android:layout_margin="@dimen/space_medium"
-
-
-                    android:text="@string/save"
-                    android:background="@drawable/background_round_corner_white"/>
-
-                <!-- Delete -->
-                <Button
-                    android:id="@+id/expense_detail_activity_delete_button_id"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:layout_below="@+id/expense_detail_activity_save_button_id"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="@dimen/space_medium"
-                    android:layout_marginBottom="@dimen/space_medium"
-
-                    android:text="@string/delete"
-                    android:textColor="@color/red"
-                    android:background="@drawable/background_round_corner_white"/>
-
-            </RelativeLayout>
-
-            <ProgressBar
-                android:id="@+id/expense_detail_activity_progress_bar_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-
-                android:visibility="gone"
-                style="?android:attr/progressBarStyleLarge"/>
+                android:textSize="@dimen/text_small"
+                android:textColor="@color/black"
+                android:text="@string/delete"
+                android:textAllCaps="false"
+                android:stateListAnimator="@null"
+                android:background="@drawable/button_background_gray"/>
 
         </RelativeLayout>
-
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/expense_detail_activity_progress_bar_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleLarge"/>
 
 </RelativeLayout>
 

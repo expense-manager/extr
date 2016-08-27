@@ -41,6 +41,8 @@ public class Expense implements RealmModel {
     public static final String CATEGORY_JSON_KEY = "categoryId";
     public static final String USER_JSON_KEY = "userId";
 
+    public static final String NO_CATEGORY_JSON_VALUE = "undefined";
+
     // Property name key
     public static final String ID_KEY = "id";
     public static final String EXPENSE_DATE_KEY = "expenseDate";
@@ -135,7 +137,11 @@ public class Expense implements RealmModel {
             this.amount = jsonObject.getDouble(AMOUNT_JSON_KEY);
             this.note = jsonObject.optString(NOTE_JSON_KEY);
             if (jsonObject.has(CATEGORY_JSON_KEY)) {
-                this.categoryId = jsonObject.getJSONObject(CATEGORY_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+                // {"__type":"Pointer","className":"Category","objectId":"undefined"}
+                String categoryId = jsonObject.getJSONObject(CATEGORY_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+                if (!categoryId.equals(NO_CATEGORY_JSON_VALUE)) {
+                    this.categoryId = categoryId;
+                }
             }
             if (jsonObject.has(USER_JSON_KEY)) {
                 // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}

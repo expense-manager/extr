@@ -51,6 +51,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -87,10 +88,11 @@ public class NewExpenseActivity extends AppCompatActivity
     private Expense expense;
     private Category category;
 
-    @BindView(R.id.new_expense_activity_toolbar_id) Toolbar toolbar;
-    @BindView(R.id.new_expense_activity_toolbar_close_image_view_id) ImageView closeImageView;
-    @BindView(R.id.new_expense_activity_toolbar_title_text_view_id) TextView titleTextView;
-    @BindView(R.id.new_expense_activity_toolbar_post_text_view_id) TextView postTextView;
+    @BindView(R.id.toolbar_id) Toolbar toolbar;
+    @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
+    @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.toolbar_edit_text_view_id) TextView editTextView;
+    @BindView(R.id.toolbar_save_text_view_id) TextView saveTextView;
     @BindView(R.id.new_expense_activity_amount_text_view_id) TextView amountTextView;
     @BindView(R.id.new_expense_activity_note_text_view_id) TextView noteTextView;
     @BindView(R.id.new_expense_activity_grid_view_id) GridView photoGridView;
@@ -112,6 +114,8 @@ public class NewExpenseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_expense_activity);
         ButterKnife.bind(this);
+        // Setup toolbar
+        setupToolbar();
 
         setupToolbar();
         expense = new Expense();
@@ -164,6 +168,8 @@ public class NewExpenseActivity extends AppCompatActivity
     }
 
     private void setupCategory() {
+        loadCategory(category);
+
         categoryHintTextView.setOnClickListener(v -> {
             selectCategory();
         });
@@ -181,27 +187,43 @@ public class NewExpenseActivity extends AppCompatActivity
     private CategoryPickerFragment.CategoryPickerListener categoryPickerListener = new CategoryPickerFragment.CategoryPickerListener() {
         @Override
         public void onFinishExpenseCategoryDialog(Category category) {
-            // Hide category hint
-            categoryHintTextView.setVisibility(View.INVISIBLE);
-            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
-            categoryColorImageView.setImageDrawable(colorDrawable);
-            categoryNameTextView.setText(category.getName());
-            NewExpenseActivity.this.category = category;
+            loadCategory(category);
         }
     };
 
+    private void loadCategory(Category category) {
+        if (category == null) {
+            // Show category hint
+            categoryHintTextView.setVisibility(View.VISIBLE);
+            categoryRelativeLayout.setVisibility(View.INVISIBLE);
+        } else {
+            // Hide category hint
+            categoryHintTextView.setVisibility(View.INVISIBLE);
+            categoryRelativeLayout.setVisibility(View.VISIBLE);
+
+            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
+            categoryColorImageView.setImageDrawable(colorDrawable);
+            categoryNameTextView.setText(category.getName());
+        }
+        // Update category
+        this.category = category;
+    }
+
     private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+        titleTextView.setText(getString(R.string.title_activity_new_expense));
+        saveTextView.setVisibility(View.VISIBLE);
+        backImageView.setImageResource(R.drawable.ic_window_close);
+        saveTextView.setText(R.string.create);
 
-        titleTextView.setText(getString(R.string.create_an_expense));
-        titleTextView.setOnClickListener(v -> closeWithUnSavedChangesCheck());
-        closeImageView.setOnClickListener(v -> closeWithUnSavedChangesCheck());
-        postTextView.setOnClickListener(v -> save());
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
+        saveTextView.setOnClickListener(v -> save());
     }
 
     private void setupPhotoSourcePicker() {
@@ -354,9 +376,25 @@ public class NewExpenseActivity extends AppCompatActivity
             return;
         }
         expense.setUserId(loginUserId);
-        expense.setAmount(Double.valueOf(amountTextView.getText().toString()));
-        expense.setNote(noteTextView.getText().toString());
-        expense.setCategoryId(category.getId());
+
+        double amount;
+        try {
+            amount = Double.valueOf(amountTextView.getText().toString());
+            amount = Helpers.formatNumToFloat(amount);
+            if (amount <= 0) {
+                Toast.makeText(this, "Amount cannot be zero.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Cannot convert amount to double.", e);
+            Toast.makeText(this, "Incorrect amount format.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        expense.setAmount(amount);
+        if (noteTextView.getText().length() > 0) {
+            expense.setNote(noteTextView.getText().toString());
+        }
+        expense.setCategoryId(category != null ? category.getId() : null);
         expense.setExpenseDate(calendar.getTime());
 
         ExpenseBuilder expenseBuilder = new ExpenseBuilder();

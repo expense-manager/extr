@@ -46,7 +46,6 @@ public class ExpenseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expense_activity);
         ButterKnife.bind(this);
-        setTitle(R.string.expense);
 
         setupToolbar();
 

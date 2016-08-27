@@ -56,6 +56,8 @@ import io.realm.Realm;
 public class ReportDetailActivity extends AppCompatActivity {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
 
+    public static final String NO_CATEGORY_ID = "No Category";
+    public static final String NO_CATEGORY_COLOR = "#000000";
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
 
@@ -173,10 +175,21 @@ public class ReportDetailActivity extends AppCompatActivity {
 
         for (Expense e : expenses) {
             String cId = e.getCategoryId();
+            if (cId == null) {
+                cId = NO_CATEGORY_ID;
+            }
             Integer pos = map.get(cId);
             if (pos == null) {
+                Category c = null;
                 // Get new category
-                Category c = Category.getCategoryById(cId);
+                if (cId.equals(NO_CATEGORY_ID)) {
+                    // Get temp category for no category
+                    c = new Category();
+                    c.setColor(NO_CATEGORY_COLOR);
+                    c.setName(NO_CATEGORY_ID);
+                } else {
+                    c = Category.getCategoryById(cId);
+                }
                 // Store pos of new category into map
                 map.put(cId, categories.size());
                 // Add new category to list
