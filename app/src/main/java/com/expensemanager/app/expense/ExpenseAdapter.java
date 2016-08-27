@@ -93,6 +93,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // Load category data or hide
         if (category != null) {
+            viewHolder.categoryColorImageView.setVisibility(View.VISIBLE);
+            viewHolder.categoryNameTextView.setVisibility(View.VISIBLE);
+
             ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
             viewHolder.categoryColorImageView.setImageDrawable(colorDrawable);
             viewHolder.categoryNameTextView.setText(category.getName());

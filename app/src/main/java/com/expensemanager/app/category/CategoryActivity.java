@@ -13,8 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.expense.CategoryFilterFragment;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.service.SyncCategory;
 
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public class CategoryActivity extends BaseActivity {
     private static final String TAG = CategoryActivity.class.getSimpleName();
 
     private ArrayList<Category> categories;
+    private Category category;
+    private boolean isFiltered;
     private CategoryAdapter categoryAdapter;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
@@ -64,7 +68,7 @@ public class CategoryActivity extends BaseActivity {
 
     private void invalidateViews() {
         categoryAdapter.clear();
-        categoryAdapter.addAll(new ArrayList<>(Category.getAllCategories()));
+        categoryAdapter.addAll(Category.getAllCategories());
     }
 
     private void setupRecyclerView() {

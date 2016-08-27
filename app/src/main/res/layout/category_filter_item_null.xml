@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/category_color_width_very_large"
+    android:layout_height="@dimen/category_color_width_very_large"
+
+    android:background="@drawable/background_round_corner_white">
+
+    <!-- Outer Color -->
+    <ImageView
+        android:id="@+id/category_item_outer_color_image_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@color/gray_really_light"/>
+    <!-- Padding Color -->
+    <ImageView
+        android:id="@+id/category_item_padding_color_image_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3dp"
+
+        android:background="@color/white"/>
+    <!-- Inner Color -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/category_item_inner_color_image_view_id"
+        android:layout_width="@dimen/category_color_width_large"
+        android:layout_height="@dimen/category_color_width_large"
+        android:layout_marginTop="@dimen/space_medium_large"
+
+        android:layout_centerHorizontal="true"
+        tools:background="@color/black"/>
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/category_item_name_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_small"
+
+        android:textColor="@color/gray"
+        android:textSize="@dimen/text_small"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_centerInParent="true"
+        android:text="@string/no_category"/>
+
+</RelativeLayout>

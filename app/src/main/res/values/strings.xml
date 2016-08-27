@@ -34,6 +34,7 @@
     <string name="expense_date">Expense Date</string>
     <string name="expense">Expense</string>
     <string name="name">Name</string>
+    <string name="filter">Filter</string>
     <string name="report">Report</string>
     <string name="notifications">Notifications</string>
     <string name="settings">Settings</string>

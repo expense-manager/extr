@@ -46,6 +46,7 @@ public class Expense implements RealmModel {
     // Property name key
     public static final String ID_KEY = "id";
     public static final String EXPENSE_DATE_KEY = "expenseDate";
+    public static final String CATEGORY_ID_KEY = "categoryId";
 
     // Property
     @PrimaryKey
@@ -191,6 +192,18 @@ public class Expense implements RealmModel {
     public static RealmResults<Expense> getAllExpenses() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        realm.close();
+
+        return expenses;
+    }
+
+    /**
+     * @return all expenses
+     */
+    public static RealmResults<Expense> getAllExpensesByCategory(Category category) {
+        String categoryId = category != null ? category.getId() : null;
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = realm.where(Expense.class).equalTo(CATEGORY_ID_KEY, categoryId).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
         return expenses;
