@@ -27,7 +27,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final String TAG= ReportCategoryAdapter.class.getSimpleName();
 
     public static final String NO_CATEGORY_ID = "No Category";
-    public static final String NO_CATEGORY_COLOR = "#000000";
+    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
 
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Category> categories;

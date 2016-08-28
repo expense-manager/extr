@@ -359,4 +359,9 @@ public class Helpers {
         float newNum = (int) (num * 100);
         return newNum / 100;
     }
+
+    public static double formatNumToDouble(double num) {
+        double newNum = (int) (num * 100);
+        return newNum / 100;
+    }
 }

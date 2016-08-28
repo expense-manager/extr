@@ -380,7 +380,7 @@ public class NewExpenseActivity extends AppCompatActivity
         double amount;
         try {
             amount = Double.valueOf(amountTextView.getText().toString());
-            amount = Helpers.formatNumToFloat(amount);
+            amount = Helpers.formatNumToDouble(amount);
             if (amount <= 0) {
                 Toast.makeText(this, "Amount cannot be zero.", Toast.LENGTH_SHORT).show();
                 return;

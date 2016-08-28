@@ -24,10 +24,14 @@ public class CategoryFilterFragment extends DialogFragment {
     private static final String TAG= CategoryFilterFragment.class.getSimpleName();
 
     public static final int COLUMN = 3;
+    public static final String NO_CATEGORY_ID = "No Category";
+    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
 
     private Unbinder unbinder;
     private CategoryFilterListener categoryFilterListener;
     private ArrayList<Category> categories;
+    private Category category;
+    private boolean isFiltered;
     private CategoryFilterAdapter adapter;
 
     @BindView(R.id.expense_category_fragment_recycler_view_id) RecyclerView categoryRecyclerView;
@@ -61,7 +65,7 @@ public class CategoryFilterFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         categories = new ArrayList<>();
-        adapter = new CategoryFilterAdapter(getActivity(), categories);
+        adapter = new CategoryFilterAdapter(getActivity(), categories, isFiltered, category);
 
         setupRecyclerView();
         invalidateViews();
@@ -85,6 +89,11 @@ public class CategoryFilterFragment extends DialogFragment {
                 getDialog().dismiss();
             }
         });
+    }
+
+    public void setFilterParams(boolean isFiltered, Category category) {
+        this.isFiltered = isFiltered;
+        this.category = category;
     }
 
     @Override

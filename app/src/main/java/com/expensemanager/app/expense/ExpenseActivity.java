@@ -33,6 +33,7 @@ public class ExpenseActivity extends BaseActivity
 
     public static final String FILTER_FRAGMENT = "Filter_Fragment";
 
+    CategoryFilterFragment categoryFilterFragment;
     private ArrayList<Expense> expenses;
     private Category category;
     private boolean isFiltered;
@@ -127,8 +128,9 @@ public class ExpenseActivity extends BaseActivity
     }
 
     private void setupFilter() {
-        CategoryFilterFragment categoryFilterFragment = CategoryFilterFragment.newInstance();
+        categoryFilterFragment = CategoryFilterFragment.newInstance();
         categoryFilterFragment.setListener(this);
+        categoryFilterFragment.setFilterParams(isFiltered, category);
         categoryFilterFragment.show(getSupportFragmentManager(), FILTER_FRAGMENT);
     }
 

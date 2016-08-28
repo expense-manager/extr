@@ -12,6 +12,7 @@
 
         android:paddingTop="@dimen/space_medium_small"
         android:paddingBottom="@dimen/space_medium_small"
+        android:layout_centerVertical="true"
         android:background="@android:color/transparent"/>
 
 </RelativeLayout>

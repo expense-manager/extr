@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:background="@android:color/transparent">
 
     <android.support.v7.widget.RecyclerView
@@ -13,6 +14,7 @@
         android:paddingTop="@dimen/space_medium_small"
         android:paddingBottom="@dimen/space_medium_small"
         android:paddingLeft="@dimen/space_medium_small"
+        android:layout_centerVertical="true"
         android:background="@android:color/transparent"/>
 
 </RelativeLayout>

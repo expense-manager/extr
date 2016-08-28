@@ -6,7 +6,9 @@ import com.expensemanager.app.models.Category;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +25,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= CategoryFilterAdapter.class.getSimpleName();
 
+    public static final String NO_CATEGORY_ID = "No Category";
+    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
+
     private static final int VIEW_TYPE_DEFAULT = 0;
     private static final int VIEW_TYPE_NULL = 1;
 
     private ArrayList<Category> categories;
+    private Category category;
+    private boolean isFiltered;
     private Context context;
 
-    public CategoryFilterAdapter(Context context, ArrayList<Category> categories) {
+    public CategoryFilterAdapter(Context context, ArrayList<Category> categories, boolean isFiltered, Category category) {
         this.context = context;
         this.categories = categories;
+        this.isFiltered = isFiltered;
+        this.category = category;
     }
 
     private Context getContext() {
@@ -75,12 +84,26 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        // Reset image views
+        int background = ContextCompat.getColor(context, R.color.white);
+        ColorDrawable colorDrawable = new ColorDrawable(background);
+        ((ViewHolderDefault)viewHolder).paddingImageView.setImageDrawable(colorDrawable);
+        ((ViewHolderDefault)viewHolder).outerImageView.setVisibility(View.INVISIBLE);
+        ((ViewHolderDefault)viewHolder).paddingImageView.setVisibility(View.INVISIBLE);
+
         switch (viewHolder.getItemViewType()) {
             case VIEW_TYPE_DEFAULT:
                 ViewHolderDefault viewHolderDefault = (ViewHolderDefault) viewHolder;
                 configureViewHolderDefault(viewHolderDefault, position);
                 break;
             case VIEW_TYPE_NULL:
+                colorDrawable = new ColorDrawable(Color.parseColor(NO_CATEGORY_COLOR));
+                if (isFiltered && category == null) {
+                    ((ViewHolderDefault) viewHolder).outerImageView.setImageDrawable(colorDrawable);
+                    ((ViewHolderDefault) viewHolder).outerImageView.setVisibility(View.VISIBLE);
+                    ((ViewHolderDefault) viewHolder).paddingImageView.setVisibility(View.VISIBLE);
+                }
+                ((ViewHolderDefault) viewHolder).innerImageView.setImageDrawable(colorDrawable);
                 break;
             default:
                 break;
@@ -88,12 +111,19 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
-        Category category = categories.get(position);
+        Category c = categories.get(position);
 
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
-        viewHolder.outerImageView.setBackgroundColor(Color.parseColor(category.getColor()));
+        viewHolder.frameOuterImageView.setBackgroundColor(Color.parseColor(c.getColor()));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(c.getColor()));
+
+        if (isFiltered && category != null && category.getId().equals(c.getId())) {
+            viewHolder.outerImageView.setVisibility(View.VISIBLE);
+            viewHolder.paddingImageView.setVisibility(View.VISIBLE);
+            viewHolder.outerImageView.setImageDrawable(colorDrawable);
+        }
+
         viewHolder.innerImageView.setImageDrawable(colorDrawable);
-        viewHolder.nameTextView.setText(category.getName());
+        viewHolder.nameTextView.setText(c.getName());
     }
 
     public void clear() {
@@ -112,7 +142,9 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.category_item_outer_color_image_view_id) ImageView outerImageView;
+        @BindView(R.id.category_item_frame_outer_color_image_view_id) ImageView frameOuterImageView;
+        @BindView(R.id.category_item_outer_color_image_view_id) CircleImageView outerImageView;
+        @BindView(R.id.category_item_padding_color_image_view_id) CircleImageView paddingImageView;
         @BindView(R.id.category_item_inner_color_image_view_id) CircleImageView innerImageView;
         @BindView(R.id.category_item_name_text_view_id) TextView nameTextView;
 

@@ -57,7 +57,7 @@ public class ReportDetailActivity extends AppCompatActivity {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
 
     public static final String NO_CATEGORY_ID = "No Category";
-    public static final String NO_CATEGORY_COLOR = "#000000";
+    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
 
