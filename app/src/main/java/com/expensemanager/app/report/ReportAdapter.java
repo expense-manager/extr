@@ -32,12 +32,12 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Date[]> dates;
     private Context context;
-    private boolean isWeekly;
+    private int requestCode;
 
-    public ReportAdapter(Context context, ArrayList<Date[]> dates, boolean isWeekly) {
+    public ReportAdapter(Context context, ArrayList<Date[]> dates, int requestCode) {
         this.context = context;
         this.dates = dates;
-        this.isWeekly = isWeekly;
+        this.requestCode = requestCode;
     }
 
     private Context getContext() {
@@ -88,13 +88,27 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Date[] startEnd = dates.get(position);
 
-        // todo: check isWeekly
-        String name = isWeekly ? Helpers.getWeekStartEndString(startEnd[0]) : Helpers.getMonthFromDate(startEnd[0]);
+        String name = null;
+        switch(requestCode) {
+            case WEEKLY:
+                name = Helpers.getWeekStartEndString(startEnd[0]);
+                break;
+            case MONTHLY:
+                name = Helpers.getMonthStringFromDate(startEnd[0]);
+                break;
+            case YEARLY:
+                name = Helpers.getYearStringFromDate(startEnd[0]);
+                break;
+        }
+
+        if (name == null) {
+            return;
+        }
+
         viewHolder.nameTextView.setText(name);
 
         viewHolder.itemView.setOnClickListener(v -> {
-            // todo: pass dates
-            ReportDetailActivity.newInstance(context, startEnd, isWeekly ? WEEKLY : MONTHLY);
+            ReportDetailActivity.newInstance(context, startEnd, requestCode);
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }

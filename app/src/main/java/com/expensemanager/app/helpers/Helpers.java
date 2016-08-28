@@ -1,12 +1,12 @@
 package com.expensemanager.app.helpers;
 
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
-
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -81,7 +80,17 @@ public class Helpers {
         return readableDate.toString();
     }
 
-    public static String getMonthFromDate(Date date) {
+    public static String getYearStringFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        StringBuilder sb = new StringBuilder("Year ")
+            .append(calendar.get(Calendar.YEAR));
+
+        return sb.toString();
+    }
+
+    public static String getMonthStringFromDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
@@ -119,10 +128,10 @@ public class Helpers {
         weekEnd.add(Calendar.DAY_OF_YEAR, 6);
 
         Calendar monthCalendar = Calendar.getInstance();
-        monthCalendar.set(weekStart.get(Calendar.YEAR), weekStart.get(Calendar.MONTH), weekStart.get(Calendar.DAY_OF_MONTH), 0, 0);
+        monthCalendar.set(weekStart.get(Calendar.YEAR), weekStart.get(Calendar.MONTH), weekStart.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         Date startDate = monthCalendar.getTime();
 
-        monthCalendar.set(weekEnd.get(Calendar.YEAR), weekEnd.get(Calendar.MONTH), weekEnd.get(Calendar.DAY_OF_MONTH), 23, 59);
+        monthCalendar.set(weekEnd.get(Calendar.YEAR), weekEnd.get(Calendar.MONTH), weekEnd.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
         Date endDate = monthCalendar.getTime();
 
         return new Date[]{startDate, endDate};
@@ -136,13 +145,30 @@ public class Helpers {
         int month = calendar.get(Calendar.MONTH);
 
         Calendar monthCalendar = Calendar.getInstance();
-        monthCalendar.set(year, month, 1, 0, 0);
+        monthCalendar.set(year, month, 1, 0, 0, 0);
 
         int numOfDaysInMonth = monthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         Date startDate = monthCalendar.getTime();
 
-        monthCalendar.set(year, month, numOfDaysInMonth, 23, 59);
+        monthCalendar.set(year, month, numOfDaysInMonth, 23, 59, 59);
         Date endDate = monthCalendar.getTime();
+
+        return new Date[]{startDate, endDate};
+    }
+
+    public static Date[] getYearStartEndDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+
+        Calendar yearCalendar = Calendar.getInstance();
+        yearCalendar.set(year, 0, 1, 0, 0, 0);
+
+        Date startDate = yearCalendar.getTime();
+
+        yearCalendar.set(year, 11, 31, 23, 59, 59);
+        Date endDate = yearCalendar.getTime();
 
         return new Date[]{startDate, endDate};
     }
@@ -314,6 +340,27 @@ public class Helpers {
         return startEndDay;
     }
 
+    public static ArrayList<Date[]> getAllYears() {
+        ArrayList<Date[]> years = new ArrayList<>();
+
+        Date startDate = Calendar.getInstance().getTime();
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startDate);
+
+        Date endDate = Expense.getOldestExpense().getExpenseDate();
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endDate);
+        int endYear = endCalendar.get(Calendar.YEAR);
+
+        while (startCalendar.get(Calendar.YEAR) >= endYear) {
+            Date[] startEnd = Helpers.getYearStartEndDate(startCalendar.getTime());
+            years.add(startEnd);
+            startCalendar.add(Calendar.YEAR, -1);
+        }
+
+        return years;
+    }
+
     public static ArrayList<Date[]> getAllMonths() {
         ArrayList<Date[]> months = new ArrayList<>();
 
@@ -370,5 +417,32 @@ public class Helpers {
     public static double formatNumToDouble(double num) {
         double newNum = (int) (num * 100);
         return newNum / 100;
+    }
+
+    public static String getDayOfWeekString(int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, day);
+        SimpleDateFormat format = new SimpleDateFormat("EEE", Locale.US);
+        return format.format(calendar.getTime());
+    }
+
+    public static String getDayOfMonthString(int day) {
+        switch (day % 10) {
+            case 1:
+                return String.valueOf(day) + "st";
+            case 2:
+                return String.valueOf(day) + "nd";
+            case 3:
+                return String.valueOf(day) + "rd";
+            default:
+                return String.valueOf(day) + "th";
+        }
+    }
+
+    public static String getMonthOfYearString(int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month - 1);
+        SimpleDateFormat format = new SimpleDateFormat("MMM", Locale.US);
+        return format.format(calendar.getTime());
     }
 }

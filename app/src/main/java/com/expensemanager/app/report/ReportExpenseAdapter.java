@@ -2,25 +2,18 @@ package com.expensemanager.app.report;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,16 +21,16 @@ import butterknife.ButterKnife;
 public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= ReportExpenseAdapter.class.getSimpleName();
 
-    public static final String[] WEEK = {"", "Sun","Mon", "Tue", "Wed", "Thu", "Fri","Sat", ""};
-    public static final String[] YEAR = {"","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec",""};
     public static final int WEEKLY = 0;
     public static final int MONTHLY = 1;
     public static final int YEARLY = 2;
     public static final int LEN_OF_WEEK = 7;
     public static final int LEN_OF_YEAR = 12;
+    public static final int DAYS_OF_WEEK = 7;
+    public static final int MONTHS_OF_YEAR = 12;
 
     private static final int VIEW_TYPE_DEFAULT = 0;
-    private String[] timeSlots;
+    private int timeSlotsLength;
     private double[] amounts;
     private Date[] startEnd;
     private int requestCode;
@@ -46,7 +39,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
     public ReportExpenseAdapter(Context context, Date[] startEnd, int requestCode) {
         this.context = context;
         amounts = new double[0];
-        timeSlots = new String[0];
+        timeSlotsLength = 0;
         this.startEnd = startEnd;
         this.requestCode = requestCode;
     }
@@ -99,30 +92,26 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         // todo: reverse order base on current date
         double amount = amounts[getItemCount() - position - 1];
+        int pos = getItemCount() - position;
+        String slotName = null;
 
-        if (requestCode == MONTHLY) {
-            int pos = getItemCount() - position;
-            int lastDig = pos % 10;
-            String timeSlot = String.valueOf(pos);
-            switch(lastDig) {
-                case 1:
-                    timeSlot += "st";
-                    break;
-                case 2:
-                    timeSlot += "nd";
-                    break;
-                case 3:
-                    timeSlot += "rd";
-                    break;
-                default:
-                    timeSlot += "th";
-
-            }
-            viewHolder.timeSlotTextView.setText(timeSlot);
-        } else {
-            String timeSlot = timeSlots[getItemCount() - position];
-            viewHolder.timeSlotTextView.setText(timeSlot);
+        switch(requestCode) {
+            case WEEKLY:
+                slotName = Helpers.getDayOfWeekString(pos);
+                break;
+            case MONTHLY:
+                slotName = Helpers.getDayOfMonthString(pos);
+                break;
+            case YEARLY:
+                slotName = Helpers.getMonthOfYearString(pos);
+                break;
         }
+
+        if (slotName == null) {
+            return;
+        }
+
+        viewHolder.timeSlotTextView.setText(slotName);
         viewHolder.amountTextView.setText("$" + amount);
         viewHolder.itemView.setOnClickListener(v -> {
             // todo:jump to expense list to view expenses
@@ -152,7 +141,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        timeSlots = WEEK;
+        timeSlotsLength = DAYS_OF_WEEK + 2;
         if (new Date().compareTo(startEnd[1]) >= 0) {
             amounts = new double[LEN_OF_WEEK];
         } else {
@@ -176,7 +165,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         Calendar calendar = Calendar.getInstance();
         int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        timeSlots = new String[maxDays + 2];
+        timeSlotsLength = maxDays + 2;
 
         if (new Date().compareTo(startEnd[1]) >= 0) {
             int day = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -200,7 +189,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        timeSlots = YEAR;
+        timeSlotsLength = MONTHS_OF_YEAR;
         if (new Date().compareTo(startEnd[1]) >= 0) {
             amounts = new double[LEN_OF_YEAR];
         } else {

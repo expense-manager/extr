@@ -60,6 +60,8 @@ public class ReportDetailActivity extends AppCompatActivity {
     public static final String NO_CATEGORY_COLOR = "#F3F3F3";
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
+    public static final int DAYS_OF_WEEK = 7;
+    public static final int MONTHS_OF_YEAR = 12;
 
     public static final int ANIMATION_TIME_MILLISECOND = 1200;
     public static final int WEEKLY = 0;
@@ -72,7 +74,7 @@ public class ReportDetailActivity extends AppCompatActivity {
     private ArrayList<Category> categories;
     private ArrayList<Double> amountsCategory;
     private List<Expense> expenses;
-    private String[] timeSlots;
+    private int timeSlotsLength;
     private double[] amountsTime;
     private int latestPosition;
     private int requestCode;
@@ -153,7 +155,7 @@ public class ReportDetailActivity extends AppCompatActivity {
         // Set min value for x axis
         barChart.getXAxis().setAxisMinValue(0);
         // Set max value for x axis
-        barChart.getXAxis().setAxisMaxValue(timeSlots.length - 1);
+        barChart.getXAxis().setAxisMaxValue(timeSlotsLength - 1);
         // Hide grid line of x axis
         barChart.getXAxis().setDrawGridLines(false);
         // Place x axis to bottom
@@ -209,7 +211,6 @@ public class ReportDetailActivity extends AppCompatActivity {
         if (expenses == null) {
             return;
         }
-        // todo: fetcch bar chart data from expense date
         for (Expense e : expenses) {
             if (requestCode == WEEKLY) {
                 int dateNum = Helpers.getDayOfWeek(e.getExpenseDate());
@@ -219,7 +220,7 @@ public class ReportDetailActivity extends AppCompatActivity {
                 amountsTime[dateNum] += e.getAmount();
             } else {
                 int monthNum = Helpers.getMonthOfYear(e.getExpenseDate());
-                amountsTime[monthNum] += e.getAmount();
+                amountsTime[monthNum + 1] += e.getAmount();
             }
         }
     }
@@ -271,28 +272,18 @@ public class ReportDetailActivity extends AppCompatActivity {
         barChart.getXAxis().setValueFormatter(new AxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if (value == 0 || value % 1 != 0 || value > timeSlots.length - 2) {
+                if (value == 0 || value % 1 != 0 || value > timeSlotsLength - 2) {
                     return "";
                 }
                 int pos = (int) value;
+
                 switch(requestCode) {
                     case WEEKLY:
-                        return ReportExpenseAdapter.WEEK[pos];
+                        return Helpers.getDayOfWeekString(pos);
                     case MONTHLY:
-                        switch (pos % 10) {
-                            case 1:
-                                return String.valueOf(pos) + "st";
-                            case 2:
-                                return String.valueOf(pos) + "nd";
-                            case 3:
-                                return String.valueOf(pos) + "rd";
-                            default:
-                                return String.valueOf(pos) + "th";
-                        }
-
-                        //return String.valueOf(value);
+                        return Helpers.getDayOfMonthString(pos);
                     case YEARLY:
-                        return ReportExpenseAdapter.YEAR[pos];
+                        return Helpers.getMonthOfYearString(pos);
                 }
                 return "";
             }
@@ -321,12 +312,8 @@ public class ReportDetailActivity extends AppCompatActivity {
 
         List<BarEntry> entries = new ArrayList<>();
 
-        for (int i = 1; i < timeSlots.length - 1; i++) {
-            if (requestCode == MONTHLY) {
-                entries.add(new BarEntry(i, (float) amountsTime[i], ""));
-            } else {
-                entries.add(new BarEntry(i, (float) amountsTime[i], timeSlots[i]));
-            }
+        for (int i = 1; i < timeSlotsLength - 1; i++) {
+            entries.add(new BarEntry(i, (float) amountsTime[i], ""));
         }
 
         BarDataSet dataSet = new BarDataSet(entries, "");
@@ -369,18 +356,17 @@ public class ReportDetailActivity extends AppCompatActivity {
                 } else {
                     latestPosition = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
                 }
-                barChart.moveViewToX(latestPosition - 6);
+                barChart.moveViewToX(Math.max(latestPosition - 6, 0));
                 break;
             case YEARLY:
                 // Limit view port to smaller data set
-                // todo: test year data display
-                barChart.setVisibleXRangeMaximum(9);
+                barChart.setVisibleXRangeMaximum(7);
                 if (isCurrentFrame) {
-                    latestPosition = Helpers.getCurrentMonthOfYear();
+                    latestPosition = Helpers.getCurrentMonthOfYear() + 1;
                 } else {
                     latestPosition = ReportExpenseAdapter.LEN_OF_YEAR;
                 }
-                barChart.moveViewToX(Math.max(latestPosition - 8, 0));
+                barChart.moveViewToX(Math.max(latestPosition - 6, 0));
         }
     }
 
@@ -414,15 +400,15 @@ public class ReportDetailActivity extends AppCompatActivity {
 
         // Initialize bar chart data set
         if (requestCode == WEEKLY) {
-            timeSlots = ReportExpenseAdapter.WEEK;
+            timeSlotsLength = DAYS_OF_WEEK + 2;
         } else if (requestCode == MONTHLY) {
             Calendar calendar = Calendar.getInstance();
             int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-            timeSlots = new String[maxDays + 2];
+            timeSlotsLength = maxDays + 2;
         } else if (requestCode == YEARLY) {
-            timeSlots = ReportExpenseAdapter.YEAR;
+            timeSlotsLength = MONTHS_OF_YEAR + 2;
         }
-        amountsTime = new double[timeSlots.length];
+        amountsTime = new double[timeSlotsLength];
 
         // Fetch data
         fetchCategoriesAndAmounts(expenses);

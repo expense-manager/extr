@@ -63,11 +63,14 @@ public class ReportActivity extends BaseActivity {
     private void setupViewPager(ViewPager viewPager) {
         ReportFragmentAdapter adapter = new ReportFragmentAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(ReportFragment.newInstance(false), "Monthly");
-        adapter.addFragment(ReportFragment.newInstance(true), "Weekly");
+        adapter.addFragment(ReportFragment.newInstance(ReportFragment.WEEKLY), "Weekly");
+        adapter.addFragment(ReportFragment.newInstance(ReportFragment.MONTHLY), "Monthly");
+        adapter.addFragment(ReportFragment.newInstance(ReportFragment.YEARLY), "Yearly");
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.setCurrentItem(ReportFragment.MONTHLY);
     }
 
     @Override

@@ -27,19 +27,23 @@ import butterknife.ButterKnife;
 public class ReportFragment extends Fragment {
     private static final String TAG = ReportFragment.class.getSimpleName();
 
-    public static final String IS_WEEKLY_KEY = "isWeekly";
+    public static final String DURATION_KEY = "duration";
+    public static final int WEEKLY = 0;
+    public static final int MONTHLY = 1;
+    public static final int YEARLY = 2;
+
 
     public ReportAdapter reportAdapter;
     public ArrayList<Date[]> dates;
-    public boolean isWeekly = true;
+    public int requestCode;
 
     @BindView(R.id.report_fragment_recycler_view_id) RecyclerView recyclerView;
 
-    public static Fragment newInstance(boolean isWeekly) {
+    public static Fragment newInstance(int requestCode) {
         Fragment reportFragment = new ReportFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putBoolean(IS_WEEKLY_KEY, isWeekly);
+        bundle.putInt(DURATION_KEY, requestCode);
         reportFragment.setArguments(bundle);
 
         return reportFragment;
@@ -56,9 +60,9 @@ public class ReportFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        isWeekly = getArguments().getBoolean(IS_WEEKLY_KEY);
+        requestCode = getArguments().getInt(DURATION_KEY);
         dates = new ArrayList<>();
-        reportAdapter = new ReportAdapter(getActivity(), dates, isWeekly);
+        reportAdapter = new ReportAdapter(getActivity(), dates, requestCode);
 
         setupRecyclerView();
         invalidateViews();
@@ -76,10 +80,12 @@ public class ReportFragment extends Fragment {
     private void getAllMonthsWeeksAsync() {
         Task.call(new Callable<Void>() {
             public Void call() {
-                if (isWeekly) {
+                if (requestCode == WEEKLY) {
                     dates.addAll(Helpers.getAllWeeks());
-                } else {
+                } else if (requestCode == MONTHLY){
                     dates.addAll(Helpers.getAllMonths());
+                } else {
+                    dates.addAll(Helpers.getAllYears());
                 }
                 reportAdapter.notifyDataSetChanged();
                 return null;
