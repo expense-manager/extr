@@ -221,6 +221,30 @@ public class Expense implements RealmModel {
         return expense;
     }
 
+    /**
+     *
+     * @return Earliest expense
+     */
+    public static Expense getOldestExpense() {
+        Realm realm = Realm.getDefaultInstance();
+        Expense expense = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.ASCENDING).first();
+        realm.close();
+
+        return expense;
+    }
+
+    /**
+     *
+     * @return Most recent expense
+     */
+    public static Expense getMostRecentExpense() {
+        Realm realm = Realm.getDefaultInstance();
+        Expense expense = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING).first();
+        realm.close();
+
+        return expense;
+    }
+
     public static void delete(String id) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();

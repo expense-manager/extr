@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.util.Log;
 
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -84,7 +85,12 @@ public class Helpers {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
-        return String.valueOf(calendar.getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.US));
+        StringBuilder sb = new StringBuilder();
+        sb.append(calendar.getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.US))
+            .append(", ")
+            .append(calendar.get(Calendar.YEAR));
+
+        return sb.toString();
     }
 
     public static String getWeekStartEndString(Date date) {
@@ -309,47 +315,48 @@ public class Helpers {
     }
 
     public static ArrayList<Date[]> getAllMonths() {
-        // todo: pass the first expense date as start date
         ArrayList<Date[]> months = new ArrayList<>();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
-        Date startDate = calendar.getTime();
+        Date startDate = Calendar.getInstance().getTime();
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startDate);
 
-        // Current calendar
-        Calendar currentCalendar = Calendar.getInstance();
-        Date currentMonth = currentCalendar.getTime();
+        Date endDate = Expense.getOldestExpense().getExpenseDate();
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endDate);
+        int endYear = endCalendar.get(Calendar.YEAR);
+        int endMonth = endCalendar.get(Calendar.MONTH);
 
-        GregorianCalendar gcal = new GregorianCalendar();
-        gcal.setTime(startDate);
+        while (startCalendar.get(Calendar.YEAR) > endYear ||
+            (startCalendar.get(Calendar.YEAR) == endYear && startCalendar.get(Calendar.MONTH) >= endMonth)) {
 
-        while (gcal.getTime().compareTo(currentMonth) <= 0) {
-            Date[] startEndDate = Helpers.getMonthStartEndDate(gcal.getTime());
-            months.add(startEndDate);
-            gcal.add(Calendar.MONTH, 1);
+            Date[] startEnd = Helpers.getMonthStartEndDate(startCalendar.getTime());
+            months.add(startEnd);
+            startCalendar.add(Calendar.MONTH, -1);
         }
 
         return months;
     }
 
     public static ArrayList<Date[]> getAllWeeks() {
-        // todo: pass the first expense date as start date
         ArrayList<Date[]> weeks = new ArrayList<>();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
-        Date startDate = calendar.getTime();
+        Date startDate = Calendar.getInstance().getTime();
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startDate);
 
-        Calendar currentCalendar = Calendar.getInstance();
-        Date currentMonth = currentCalendar.getTime();
+        Date endDate = Expense.getOldestExpense().getExpenseDate();
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endDate);
+        int endYear = endCalendar.get(Calendar.YEAR);
+        int endWeekOfYear = endCalendar.get(Calendar.WEEK_OF_YEAR);
 
-        GregorianCalendar gcal = new GregorianCalendar();
-        gcal.setTime(startDate);
+        while (startCalendar.get(Calendar.YEAR) > endYear ||
+            (startCalendar.get(Calendar.YEAR) == endYear && startCalendar.get(Calendar.WEEK_OF_YEAR) >= endWeekOfYear)) {
 
-        while (gcal.getTime().compareTo(currentMonth) <= 0) {
-            Date[] startEnd = Helpers.getWeekStartEndDate(gcal.getTime());
+            Date[] startEnd = Helpers.getWeekStartEndDate(startCalendar.getTime());
             weeks.add(startEnd);
-            gcal.add(Calendar.WEEK_OF_YEAR, 1);
+            startCalendar.add(Calendar.WEEK_OF_YEAR, -1);
         }
 
         return weeks;

@@ -1,5 +1,10 @@
 package com.expensemanager.app.report;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -7,12 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.expensemanager.app.R;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +94,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
         viewHolder.colorImageView.setImageDrawable(colorDrawable);
         viewHolder.nameTextView.setText(category.getName());
-        viewHolder.amountTextView.setText("$" + amount);
+        viewHolder.amountTextView.setText("$" + Helpers.formatNumToDouble(amount));
         viewHolder.itemView.setOnClickListener(v -> {
             // todo:jump to expense list to view expenses
         });
