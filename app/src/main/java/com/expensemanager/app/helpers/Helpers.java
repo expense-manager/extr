@@ -117,6 +117,24 @@ public class Helpers {
         return simpleDateFormat.format(weekStart.getTime()) + " - " + simpleDateFormat.format(weekEnd.getTime());
     }
 
+    public static Date[] getDayStartEndDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        Calendar monthCalendar = Calendar.getInstance();
+        monthCalendar.set(year, month, dayOfMonth, 0, 0, 0);
+        Date startDate = monthCalendar.getTime();
+
+        monthCalendar.set(year, month, dayOfMonth, 23, 59, 59);
+        Date endDate = monthCalendar.getTime();
+
+        return new Date[]{startDate, endDate};
+    }
+
     public static Date[] getWeekStartEndDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

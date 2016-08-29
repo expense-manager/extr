@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,14 +27,8 @@ public class ReportBarChartFragment extends Fragment {
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
 
-    public static final int WEEKLY = 0;
-    public static final int MONTHLY = 1;
-    public static final int YEARLY = 2;
-
     private ReportExpenseAdapter reportExpenseAdapter;
     private List<Expense> expenses;
-    private String[] timeSlots;
-    private double[] amountsTime;
     private Date[] startEnd;
     private int requestCode;
     Unbinder unbinder;

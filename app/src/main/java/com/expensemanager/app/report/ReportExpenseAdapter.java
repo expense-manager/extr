@@ -1,6 +1,7 @@
 package com.expensemanager.app.report;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 
@@ -113,8 +114,29 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         viewHolder.timeSlotTextView.setText(slotName);
         viewHolder.amountTextView.setText("$" + amount);
+
+        // Item click listener
         viewHolder.itemView.setOnClickListener(v -> {
-            // todo:jump to expense list to view expenses
+            Date[] clickedStartEnd = null;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startEnd[0]);
+
+            switch(requestCode) {
+                case WEEKLY:
+                    calendar.set(Calendar.DAY_OF_WEEK, pos);
+                    clickedStartEnd = Helpers.getDayStartEndDate(calendar.getTime());
+                    break;
+                case MONTHLY:
+                    calendar.set(Calendar.DAY_OF_MONTH, pos);
+                    clickedStartEnd = Helpers.getDayStartEndDate(calendar.getTime());
+                    break;
+                case YEARLY:
+                    calendar.set(Calendar.MONTH, pos - 1);
+                    clickedStartEnd = Helpers.getMonthStartEndDate(calendar.getTime());
+                    break;
+            }
+
+            ExpenseActivity.newInstance(getContext(), clickedStartEnd);
         });
     }
 

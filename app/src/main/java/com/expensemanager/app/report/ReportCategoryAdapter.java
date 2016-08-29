@@ -1,6 +1,7 @@
 package com.expensemanager.app.report;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private ArrayList<Category> categories;
     private ArrayList<Double> amounts;
     private Map<String, Integer> map;
+    private Date[] startEnd;
     private Context context;
 
     public ReportCategoryAdapter(Context context, ArrayList<Category> categories, ArrayList<Double> amounts) {
@@ -95,9 +99,16 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         viewHolder.colorImageView.setImageDrawable(colorDrawable);
         viewHolder.nameTextView.setText(category.getName());
         viewHolder.amountTextView.setText("$" + Helpers.formatNumToDouble(amount));
+        
+        // Item click listener
         viewHolder.itemView.setOnClickListener(v -> {
-            // todo:jump to expense list to view expenses
+            String categoryId = category != null ? category.getId() : null;
+            ExpenseActivity.newInstance(getContext(), categoryId, startEnd);
         });
+    }
+
+    public void setStartEnd(Date[] startEnd) {
+        this.startEnd = startEnd;
     }
 
     public void clear() {

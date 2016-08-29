@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,10 +28,6 @@ public class ReportPieChartFragment extends Fragment {
 
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
-
-    public static final int WEEKLY = 0;
-    public static final int MONTHLY = 1;
-    public static final int YEARLY = 2;
 
     private ReportCategoryAdapter reportCategoryAdapter;
     private List<Expense> expenses;
@@ -105,6 +100,7 @@ public class ReportPieChartFragment extends Fragment {
             }
             // Query data from date range
             expenses = Expense.getExpensesByRange(startEnd);
+            reportCategoryAdapter.setStartEnd(startEnd);
         }
         if (expenses != null) {
             reportCategoryAdapter.addAll(expenses);

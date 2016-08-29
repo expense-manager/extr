@@ -32,6 +32,9 @@ public class ExpenseActivity extends BaseActivity
 
     private static final String TAG = ExpenseActivity.class.getSimpleName();
 
+    public static final String CATEGORY_ID = "category_id";
+    public static final String START_END_DATE = "startEnd";
+    public static final String IS_CATEGORY_FILTERED = "is_category_filtered";
     public static final String CATEGORY_FRAGMENT = "Category_Fragment";
     public static final String DATE_FRAGMENT = "Dater_Fragment";
 
@@ -56,6 +59,32 @@ public class ExpenseActivity extends BaseActivity
         ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
     }
 
+    public static void newInstance(Context context, String categoryId) {
+        Intent intent = new Intent(context, ExpenseActivity.class);
+        intent.putExtra(CATEGORY_ID, categoryId);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
+    }
+
+    public static void newInstance(Context context, Date[] startEnd) {
+        Intent intent = new Intent(context, ExpenseActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(START_END_DATE, startEnd);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
+    }
+
+    public static void newInstance(Context context, String categoryId, Date[] startEnd) {
+        Intent intent = new Intent(context, ExpenseActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(START_END_DATE, startEnd);
+        intent.putExtras(bundle);
+        intent.putExtra(CATEGORY_ID, categoryId);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +92,20 @@ public class ExpenseActivity extends BaseActivity
         ButterKnife.bind(this);
 
         setupToolbar();
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            isDateFiltered = true;
+            Date[] startEnd = (Date[]) bundle.getSerializable(START_END_DATE);
+            startDate = startEnd[0];
+            endDate = startEnd[1];
+        }
+        if (getIntent().hasExtra(CATEGORY_ID)) {
+            isCategoryFiltered = true;
+            String categoryId = getIntent().getStringExtra(CATEGORY_ID);
+            category = Category.getCategoryById(categoryId);
+        }
 
         expenses = new ArrayList<>();
         expenseAdapter = new ExpenseAdapter(this, expenses);
@@ -72,6 +115,7 @@ public class ExpenseActivity extends BaseActivity
             NewExpenseActivity.newInstance(this);
             overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
+
         invalidateViews();
         SyncExpense.getAllExpenses();
     }
