@@ -23,12 +23,13 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
-import com.expensemanager.app.group.GroupActivity;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.NotificationsActivity;
 import com.expensemanager.app.overview.OverviewActivity;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.report.ReportActivity;
+import com.expensemanager.app.service.SyncCategory;
+import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.settings.SettingsActivity;
 
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
                     .addToBackStack(OverviewFragment.class.getName())
                     .commit();
         }
+
+        SyncCategory.getAllCategories();
+        SyncExpense.getAllExpenses();
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -162,14 +166,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_category:
                 CategoryActivity.newInstance(this);
                 break;
-            case R.id.nav_group:
-                GroupActivity.newInstance(this);
-                break;
+//            case R.id.nav_group:
+//                GroupActivity.newInstance(this);
+//                break;
             case R.id.nav_notifications:
                 NotificationsActivity.newInstance(this);
                 break;
-            case R.id.nav_help:
-                break;
+//            case R.id.nav_help:
+//                break;
             case R.id.nav_settings:
                 SettingsActivity.newInstance(this);
                 break;

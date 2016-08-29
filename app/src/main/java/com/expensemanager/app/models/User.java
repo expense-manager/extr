@@ -31,6 +31,8 @@ public class User implements RealmModel{
     public static final String OBJECT_ID_JSON_KEY = "objectId";
     public static final String USERNAME_JSON_KEY = "username";
     public static final String FULLNAME_JSON_KEY = "fullname";
+    public static final String FIRST_NAME_JSON_KEY = "firstName";
+    public static final String LAST_NAME_JSON_KEY = "lastName";
     public static final String EMAIL_JSON_KEY = "email";
     public static final String PHONE_JSON_KEY = "phone";
     public static final String PHOTO_JSON_KEY = "photo";
@@ -134,6 +136,8 @@ public class User implements RealmModel{
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
             this.username = jsonObject.getString(USERNAME_JSON_KEY);
             this.fullname = jsonObject.optString(FULLNAME_JSON_KEY);
+            this.firstName = jsonObject.optString(FIRST_NAME_JSON_KEY);
+            this.lastName = jsonObject.optString(LAST_NAME_JSON_KEY);
             this.email = jsonObject.optString(EMAIL_JSON_KEY);
             this.phone = jsonObject.optString(PHONE_JSON_KEY);
 

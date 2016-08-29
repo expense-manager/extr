@@ -36,6 +36,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/overview_fragment_weekly_monthly_linear_layout_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -194,5 +195,24 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/overview_fragment_recycler_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/overview_fragment_weekly_monthly_linear_layout_id"
+
+        android:paddingTop="@dimen/space_really_small"
+        android:paddingBottom="@dimen/space_really_small"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/overview_fragment_fab_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+
+        android:src="@drawable/ic_add_white_24dp"/>
 
 </RelativeLayout>

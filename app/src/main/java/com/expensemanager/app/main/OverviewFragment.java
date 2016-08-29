@@ -2,17 +2,23 @@ package com.expensemanager.app.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.overview.OverviewAdapter;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -28,12 +34,17 @@ import io.realm.RealmResults;
 public class OverviewFragment extends Fragment {
     private static final String TAG = OverviewFragment.class.getSimpleName();
 
+    private ArrayList<Expense> expenses;
+    private OverviewAdapter overviewAdapter;
+
     @BindView(R.id.overview_fragment_total_text_view_id) TextView totalTextView;
     @BindView(R.id.overview_fragment_weekly_total_text_view_id) TextView weeklyTextView;
     @BindView(R.id.overview_fragment_monthly_total_text_view_id) TextView monthlyTextView;
     @BindView(R.id.overview_fragment_monthly_label_text_view_id) TextView monthlyLabelTextView;
     @BindView(R.id.overview_fragment_weekly_average_text_view_id) TextView weeklyAverageTextView;
     @BindView(R.id.overview_fragment_monthly_average_text_view_id) TextView monthlyAverageTextView;
+    @BindView(R.id.overview_fragment_recycler_view_id) RecyclerView recyclerView;
+    @BindView(R.id.overview_fragment_fab_id) FloatingActionButton fab;
 
     public static Fragment newInstance() {
         return new OverviewFragment();
@@ -54,6 +65,15 @@ public class OverviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        expenses = new ArrayList<>();
+        overviewAdapter = new OverviewAdapter(getActivity(), expenses);
+        setupRecyclerView();
+
+        fab.setOnClickListener(v -> {
+            NewExpenseActivity.newInstance(getActivity());
+            getActivity().overridePendingTransition(R.anim.right_in, R.anim.stay);
+        });
+
         invalidateViews();
     }
 
@@ -62,11 +82,20 @@ public class OverviewFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
 
         monthlyLabelTextView.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US));
-//        totalTextView.setText("$" + new DecimalFormat("##").format(getTotalExpense()));
+        totalTextView.setText("$" + new DecimalFormat("##").format(getTotalExpense()));
         weeklyTextView.setText("$" + new DecimalFormat("##.##").format(getWeeklyExpense()));
         monthlyTextView.setText("$" + new DecimalFormat("##.##").format(getMonthlyExpense()));
-//        weeklyAverageTextView.setText("$" + new DecimalFormat("##.##").format(getWeeklyAverage()));
-//        monthlyAverageTextView.setText("$" + new DecimalFormat("##.##").format(getMonthlyAverage()));
+        weeklyAverageTextView.setText("$" + new DecimalFormat("##.##").format(getWeeklyAverage()));
+        monthlyAverageTextView.setText("$" + new DecimalFormat("##.##").format(getMonthlyAverage()));
+
+        overviewAdapter.clear();
+        ArrayList<Expense> newExpenses = new ArrayList<Expense>(Expense.getAllExpenses());
+        overviewAdapter.addAll(newExpenses);
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(overviewAdapter);
     }
 
     private double getWeeklyExpense() {
