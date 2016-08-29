@@ -57,11 +57,12 @@ public class ReportDetailActivity extends AppCompatActivity {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
 
     public static final String NO_CATEGORY_ID = "No Category";
-    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
+    public static final String NO_CATEGORY_COLOR = "#BDBDBD";
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
     public static final int DAYS_OF_WEEK = 7;
     public static final int MONTHS_OF_YEAR = 12;
+    public static final int PIE_CHART_VALUE_THRESHOLD = 5;
 
     public static final int ANIMATION_TIME_MILLISECOND = 1200;
     public static final int WEEKLY = 0;
@@ -262,6 +263,9 @@ public class ReportDetailActivity extends AppCompatActivity {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex,
                 ViewPortHandler viewPortHandler) {
+                if (value <= PIE_CHART_VALUE_THRESHOLD) {
+                    return "";
+                }
                 return value + "%";
             }
         });

@@ -25,7 +25,7 @@ public class CategoryFilterFragment extends DialogFragment {
 
     public static final int COLUMN = 3;
     public static final String NO_CATEGORY_ID = "No Category";
-    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
+    public static final String NO_CATEGORY_COLOR = "#BDBDBD";
 
     private Unbinder unbinder;
     private CategoryFilterListener categoryFilterListener;

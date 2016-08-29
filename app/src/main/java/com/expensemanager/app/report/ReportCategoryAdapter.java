@@ -30,7 +30,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final String TAG= ReportCategoryAdapter.class.getSimpleName();
 
     public static final String NO_CATEGORY_ID = "No Category";
-    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
+    public static final String NO_CATEGORY_COLOR = "#BDBDBD";
 
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Category> categories;
@@ -99,7 +99,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         viewHolder.colorImageView.setImageDrawable(colorDrawable);
         viewHolder.nameTextView.setText(category.getName());
         viewHolder.amountTextView.setText("$" + Helpers.formatNumToDouble(amount));
-        
+
         // Item click listener
         viewHolder.itemView.setOnClickListener(v -> {
             String categoryId = category != null ? category.getId() : null;

@@ -26,7 +26,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final String TAG= CategoryFilterAdapter.class.getSimpleName();
 
     public static final String NO_CATEGORY_ID = "No Category";
-    public static final String NO_CATEGORY_COLOR = "#F3F3F3";
+    public static final String NO_CATEGORY_COLOR = "#BDBDBD";
 
     private static final int VIEW_TYPE_DEFAULT = 0;
     private static final int VIEW_TYPE_NULL = 1;
@@ -98,6 +98,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 configureViewHolderDefault(viewHolderDefault, position);
                 break;
             case VIEW_TYPE_NULL:
+                ((ViewHolderDefault) viewHolder).frameOuterImageView.setBackgroundColor(Color.parseColor(NO_CATEGORY_COLOR));
                 colorDrawable = new ColorDrawable(Color.parseColor(NO_CATEGORY_COLOR));
                 if (isCategoryFiltered && category == null) {
                     ((ViewHolderDefault) viewHolder).outerImageView.setImageDrawable(colorDrawable);
