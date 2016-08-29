@@ -12,6 +12,9 @@ public class DatePickerFragment extends DialogFragment {
     public static final String YEAR = "year";
     public static final String MONTH = "month";
     public static final String DAY = "day";
+    public static int DATE_PICKER;
+
+    DatePickerDialog.OnDateSetListener listener;
 
     public static DatePickerFragment newInstance(int year, int month, int day) {
         DatePickerFragment frag = new DatePickerFragment();
@@ -21,6 +24,10 @@ public class DatePickerFragment extends DialogFragment {
         args.putInt(DAY, day);
         frag.setArguments(args);
         return frag;
+    }
+
+    public void setListener(DatePickerDialog.OnDateSetListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -36,7 +43,7 @@ public class DatePickerFragment extends DialogFragment {
             day = cal.get(Calendar.DAY_OF_MONTH);
         }
         // Activity needs to implement this interface
-        DatePickerDialog.OnDateSetListener listener = (DatePickerDialog.OnDateSetListener) getActivity();
+        //DatePickerDialog.OnDateSetListener listener = (DatePickerDialog.OnDateSetListener) getActivity();
 
         // Create a new instance of TimePickerDialog and return it
         return new DatePickerDialog(getActivity(), listener, year, month, day);  // month (0 - 11)

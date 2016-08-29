@@ -31,7 +31,7 @@ public class CategoryFilterFragment extends DialogFragment {
     private CategoryFilterListener categoryFilterListener;
     private ArrayList<Category> categories;
     private Category category;
-    private boolean isFiltered;
+    private boolean isCategoryFiltered;
     private CategoryFilterAdapter adapter;
 
     @BindView(R.id.expense_category_fragment_recycler_view_id) RecyclerView categoryRecyclerView;
@@ -65,7 +65,7 @@ public class CategoryFilterFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         categories = new ArrayList<>();
-        adapter = new CategoryFilterAdapter(getActivity(), categories, isFiltered, category);
+        adapter = new CategoryFilterAdapter(getActivity(), categories, isCategoryFiltered, category);
 
         setupRecyclerView();
         invalidateViews();
@@ -91,8 +91,8 @@ public class CategoryFilterFragment extends DialogFragment {
         });
     }
 
-    public void setFilterParams(boolean isFiltered, Category category) {
-        this.isFiltered = isFiltered;
+    public void setFilterParams(boolean isCategoryFiltered, Category category) {
+        this.isCategoryFiltered = isCategoryFiltered;
         this.category = category;
     }
 

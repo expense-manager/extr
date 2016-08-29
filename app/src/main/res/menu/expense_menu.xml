@@ -2,9 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_item_filter_fragment_id"
-          android:title="@string/filter"
-          android:icon="@drawable/ic_filter_variant"
+    <item android:id="@+id/menu_item_date_fragment_id"
+          android:title="@string/date"
+          android:icon="@drawable/ic_calendar_text"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/menu_item_category_fragment_id"
+          android:title="@string/category"
+          android:icon="@drawable/ic_format_list_type"
           app:showAsAction="always"/>
 
 </menu>

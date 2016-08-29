@@ -21,22 +21,26 @@ import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.service.SyncExpense;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
 public class ExpenseActivity extends BaseActivity
-    implements CategoryFilterFragment.CategoryFilterListener {
+    implements CategoryFilterFragment.CategoryFilterListener, DateFilterFragment.DateFilterListener {
 
     private static final String TAG = ExpenseActivity.class.getSimpleName();
 
-    public static final String FILTER_FRAGMENT = "Filter_Fragment";
+    public static final String CATEGORY_FRAGMENT = "Category_Fragment";
+    public static final String DATE_FRAGMENT = "Dater_Fragment";
 
-    CategoryFilterFragment categoryFilterFragment;
     private ArrayList<Expense> expenses;
     private Category category;
-    private boolean isFiltered;
+    private boolean isCategoryFiltered;
+    private Date startDate;
+    private Date endDate;
+    private boolean isDateFiltered;
 
     private ExpenseAdapter expenseAdapter;
 
@@ -74,22 +78,34 @@ public class ExpenseActivity extends BaseActivity
 
     @Override
     public void onFinishCategoryFilterDialog(Category category) {
-        if (!isFiltered ||
+        if (!isCategoryFiltered ||
             ((this.category == null && category == null) || (this.category != null
                 && category != null && this.category.getId().equals(category.getId())))) {
-            isFiltered = !isFiltered;
+            isCategoryFiltered = !isCategoryFiltered;
         }
         this.category = category;
+        invalidateViews();
+    }
+
+    @Override
+    public void onFinishDateFilterDialog(Date startDate, Date endDate) {
+        this.isDateFiltered = startDate != null || endDate != null;
+        this.startDate = startDate;
+        this.endDate = endDate;
         invalidateViews();
     }
 
     private void invalidateViews() {
         expenseAdapter.clear();
 
-        if (isFiltered) {
+        if (isCategoryFiltered && isDateFiltered) {
+            expenseAdapter.addAll(Expense.getAllExpensesByDateAndCategory(startDate, endDate, category));
+        } else if (isCategoryFiltered) {
             expenseAdapter.addAll(Expense.getAllExpensesByCategory(category));
+        } else if (isDateFiltered) {
+            expenseAdapter.addAll(Expense.getAllExpensesByDate(startDate, endDate));
         } else {
-            expenseAdapter.addAll(new ArrayList<>(Expense.getAllExpenses()));
+            expenseAdapter.addAll(Expense.getAllExpenses());
         }
     }
 
@@ -119,19 +135,29 @@ public class ExpenseActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_filter_fragment_id:
-                setupFilter();
+            case R.id.menu_item_category_fragment_id:
+                setupCategory();
+                break;
+            case R.id.menu_item_date_fragment_id:
+                setupDate();
                 break;
         }
 
         return true;
     }
 
-    private void setupFilter() {
-        categoryFilterFragment = CategoryFilterFragment.newInstance();
+    private void setupDate() {
+        DateFilterFragment dateFilterFragment = DateFilterFragment.newInstance();
+        dateFilterFragment.setListener(this);
+        dateFilterFragment.setFilterParams(startDate, endDate);
+        dateFilterFragment.show(getSupportFragmentManager(), DATE_FRAGMENT);
+    }
+
+    private void setupCategory() {
+        CategoryFilterFragment categoryFilterFragment = CategoryFilterFragment.newInstance();
         categoryFilterFragment.setListener(this);
-        categoryFilterFragment.setFilterParams(isFiltered, category);
-        categoryFilterFragment.show(getSupportFragmentManager(), FILTER_FRAGMENT);
+        categoryFilterFragment.setFilterParams(isCategoryFiltered, category);
+        categoryFilterFragment.show(getSupportFragmentManager(), CATEGORY_FRAGMENT);
     }
 
     @Override

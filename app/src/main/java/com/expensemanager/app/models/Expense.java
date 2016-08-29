@@ -198,12 +198,78 @@ public class Expense implements RealmModel {
     }
 
     /**
-     * @return all expenses
+     * @return all expenses by category
      */
     public static RealmResults<Expense> getAllExpensesByCategory(Category category) {
         String categoryId = category != null ? category.getId() : null;
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Expense> expenses = realm.where(Expense.class).equalTo(CATEGORY_ID_KEY, categoryId).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        realm.close();
+
+        return expenses;
+    }
+
+    /**
+     * @return all expenses by start date and/or end date
+     */
+    public static RealmResults<Expense> getAllExpensesByDate(Date startDate, Date endDate) {
+        if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0) {
+            return null;
+        }
+
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = null;
+
+        if (startDate != null && endDate != null) {
+            expenses = realm.where(Expense.class)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (startDate != null) {
+            expenses = realm.where(Expense.class)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (endDate != null) {
+            expenses = realm.where(Expense.class)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        }
+
+        realm.close();
+
+        return expenses;
+    }
+
+    /**
+     * @return all expenses by category and start date and/or end date
+     */
+    public static RealmResults<Expense> getAllExpensesByDateAndCategory(Date startDate, Date endDate, Category category) {
+        if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0) {
+            return null;
+        }
+
+        String categoryId = category != null ? category.getId() : null;
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = null;
+
+        if (startDate != null && endDate != null) {
+            expenses = realm.where(Expense.class)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .equalTo(CATEGORY_ID_KEY, categoryId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (startDate != null) {
+            expenses = realm.where(Expense.class)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .equalTo(CATEGORY_ID_KEY, categoryId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (endDate != null) {
+            expenses = realm.where(Expense.class)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .equalTo(CATEGORY_ID_KEY, categoryId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        }
+
         realm.close();
 
         return expenses;

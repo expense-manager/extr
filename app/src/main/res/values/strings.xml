@@ -30,8 +30,11 @@
 
     <string name="select_color">Select color</string>
     <string name="category">Category</string>
+    <string name="date">Date</string>
     <string name="no_category">No Category</string>
     <string name="expense_date">Expense Date</string>
+    <string name="start_expense_date">Start Expense Date</string>
+    <string name="end_expense_date">End Expense Date</string>
     <string name="expense">Expense</string>
     <string name="name">Name</string>
     <string name="filter">Filter</string>

@@ -9,6 +9,9 @@ import android.text.format.DateFormat;
 public class TimePickerFragment extends DialogFragment {
     public static final String HOUR = "hour";
     public static final String MINUTE = "minute";
+    public static int TIME_PICKER;
+
+    TimePickerDialog.OnTimeSetListener listener;
 
     public static TimePickerFragment newInstance(int hour, int minute) {
         TimePickerFragment frag = new TimePickerFragment();
@@ -19,13 +22,17 @@ public class TimePickerFragment extends DialogFragment {
         return frag;
     }
 
+    public void setListener(TimePickerDialog.OnTimeSetListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         int hour = getArguments().getInt(HOUR);
         int minute = getArguments().getInt(MINUTE);
 
         // Activity has to implement this interface
-        TimePickerDialog.OnTimeSetListener listener = (TimePickerDialog.OnTimeSetListener) getActivity();
+        //TimePickerDialog.OnTimeSetListener listener = (TimePickerDialog.OnTimeSetListener) getActivity();
 
         // Create a new instance of TimePickerDialog and return it
         return new TimePickerDialog(getActivity(), listener, hour, minute,

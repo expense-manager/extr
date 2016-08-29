@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:background="@color/white">
+
+    <!-- Start date switch -->
+    <Switch
+        android:id="@+id/date_filter_fragment_start_date_switch_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_medium_large"
+        android:layout_alignParentRight="true"/>
+
+    <!-- Start date and time label -->
+    <TextView
+        android:id="@+id/date_filter_fragment_start_date_label_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/space_medium_large"
+        android:layout_alignTop="@+id/date_filter_fragment_start_date_switch_id"
+        android:layout_alignBottom="@+id/date_filter_fragment_start_date_switch_id"
+        android:layout_toLeftOf="@+id/date_filter_fragment_start_date_switch_id"
+
+        android:paddingLeft="@dimen/space_really_small"
+        android:paddingRight="@dimen/space_really_small"
+        android:gravity="center_vertical"
+        android:text="@string/start_expense_date"
+        android:textSize="@dimen/text_small"/>
+
+    <!-- Start date and time -->
+    <LinearLayout
+        android:id="@+id/date_filter_fragment_start_date_time_linear_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/space_medium_large"
+        android:layout_marginRight="@dimen/space_medium_large"
+        android:layout_below="@+id/date_filter_fragment_start_date_switch_id"
+
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <!-- Date -->
+        <TextView
+            android:id="@+id/date_filter_fragment_start_date_text_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/space_really_small"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:background="@drawable/background_round_corner_border_gray"
+            tools:text="Date"/>
+
+        <!-- Time -->
+        <TextView
+            android:id="@+id/date_filter_fragment_start_time_text_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/space_really_small"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:background="@drawable/background_round_corner_border_gray"
+            tools:text="Time"/>
+
+    </LinearLayout>
+
+    <!-- End date switch -->
+    <Switch
+        android:id="@+id/date_filter_fragment_end_date_switch_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date_filter_fragment_start_date_time_linear_layout_id"
+        android:layout_margin="@dimen/space_medium_large"
+        android:layout_alignParentRight="true"/>
+
+    <!-- End date and time label -->
+    <TextView
+        android:id="@+id/date_filter_fragment_end_date_label_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/space_medium_large"
+        android:layout_alignTop="@+id/date_filter_fragment_end_date_switch_id"
+        android:layout_alignBottom="@+id/date_filter_fragment_end_date_switch_id"
+        android:layout_toLeftOf="@+id/date_filter_fragment_end_date_switch_id"
+
+        android:paddingLeft="@dimen/space_really_small"
+        android:paddingRight="@dimen/space_really_small"
+        android:gravity="center_vertical"
+        android:text="@string/end_expense_date"
+        android:textSize="@dimen/text_small"/>
+
+    <!-- End date and time -->
+    <LinearLayout
+        android:id="@+id/date_filter_fragment_end_date_time_linear_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/space_medium_large"
+        android:layout_marginRight="@dimen/space_medium_large"
+        android:layout_below="@+id/date_filter_fragment_end_date_switch_id"
+
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <!-- Date -->
+        <TextView
+            android:id="@+id/date_filter_fragment_end_date_text_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/space_really_small"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:background="@drawable/background_round_corner_border_gray"
+            tools:text="Date"/>
+
+        <!-- Time -->
+        <TextView
+            android:id="@+id/date_filter_fragment_end_time_text_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/space_really_small"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:background="@drawable/background_round_corner_border_gray"
+            tools:text="Time"/>
+
+    </LinearLayout>
+
+    <!-- Action -->
+    <LinearLayout
+        android:id="@+id/date_filter_fragment_action_linear_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/space_large"
+        android:layout_marginBottom="@dimen/space_large"
+        android:layout_marginLeft="@dimen/space_medium_large"
+        android:layout_marginRight="@dimen/space_medium_large"
+        android:layout_below="@+id/date_filter_fragment_end_date_time_linear_layout_id"
+
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <!-- Cancel -->
+        <Button
+            android:id="@+id/date_filter_fragment_cancel_button_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_background_gray"
+            android:text="@string/cancel"/>
+
+        <!-- Save -->
+        <Button
+            android:id="@+id/date_filter_fragment_save_button_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_background_gray"
+            android:text="@string/save"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

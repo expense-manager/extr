@@ -49,7 +49,7 @@
 
     <!-- Category dialog style -->
     <style name="CategoryColorDialogStyle" parent="PopUpDialogStyle">
-        <item name="android:background">#FFFFFF</item>
+        <item name="android:background">#00000000</item>
     </style>
 
     <!-- Dialog popup style -->

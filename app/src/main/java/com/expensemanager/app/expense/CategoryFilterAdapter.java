@@ -33,13 +33,14 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private ArrayList<Category> categories;
     private Category category;
-    private boolean isFiltered;
+    private boolean isCategoryFiltered;
     private Context context;
 
-    public CategoryFilterAdapter(Context context, ArrayList<Category> categories, boolean isFiltered, Category category) {
+    public CategoryFilterAdapter(Context context, ArrayList<Category> categories,
+            boolean isCategoryFiltered, Category category) {
         this.context = context;
         this.categories = categories;
-        this.isFiltered = isFiltered;
+        this.isCategoryFiltered = isCategoryFiltered;
         this.category = category;
     }
 
@@ -98,7 +99,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
             case VIEW_TYPE_NULL:
                 colorDrawable = new ColorDrawable(Color.parseColor(NO_CATEGORY_COLOR));
-                if (isFiltered && category == null) {
+                if (isCategoryFiltered && category == null) {
                     ((ViewHolderDefault) viewHolder).outerImageView.setImageDrawable(colorDrawable);
                     ((ViewHolderDefault) viewHolder).outerImageView.setVisibility(View.VISIBLE);
                     ((ViewHolderDefault) viewHolder).paddingImageView.setVisibility(View.VISIBLE);
@@ -116,7 +117,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         viewHolder.frameOuterImageView.setBackgroundColor(Color.parseColor(c.getColor()));
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(c.getColor()));
 
-        if (isFiltered && category != null && category.getId().equals(c.getId())) {
+        if (isCategoryFiltered && category != null && category.getId().equals(c.getId())) {
             viewHolder.outerImageView.setVisibility(View.VISIBLE);
             viewHolder.paddingImageView.setVisibility(View.VISIBLE);
             viewHolder.outerImageView.setImageDrawable(colorDrawable);
