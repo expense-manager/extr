@@ -1,6 +1,7 @@
 package com.expensemanager.app.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -10,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +34,7 @@ import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.settings.SettingsActivity;
+import com.expensemanager.app.welcome.WelcomeActivity;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -177,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_settings:
                 SettingsActivity.newInstance(this);
                 break;
+            case R.id.nav_sign_out:
+                signOut();
+                break;
             case R.id.nav_about:
                 break;
             default:
@@ -184,6 +190,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         drawerLayout.closeDrawer(navigationView);
+    }
+
+    private void signOut() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.sign_out_message)
+                .setPositiveButton(R.string.sign_out, (DialogInterface dialog, int which) -> {
+                    SyncUser.logout();
+                    SharedPreferences sharedPreferences =
+                            getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+                    sharedPreferences.edit().clear().apply();
+                    WelcomeActivity.newInstance(MainActivity.this);
+                    finish();
+                })
+                .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
+                .show();
     }
 
     @Override
@@ -217,6 +238,6 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         // Update drawer
-        setupDrawerContent(navigationView);
+
     }
 }

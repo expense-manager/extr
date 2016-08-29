@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -143,5 +144,20 @@ public class OverviewFragment extends Fragment {
         }
 
         return total;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Realm realm = Realm.getDefaultInstance();
+        realm.addChangeListener(v -> invalidateViews());
+        invalidateViews();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 }
