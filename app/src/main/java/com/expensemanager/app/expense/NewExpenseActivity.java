@@ -133,6 +133,7 @@ public class NewExpenseActivity extends AppCompatActivity
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(year, month, day);
+            datePickerFragment.setListener(this);
             datePickerFragment.show(getSupportFragmentManager(), DATE_PICKER);
         });
 
@@ -140,6 +141,7 @@ public class NewExpenseActivity extends AppCompatActivity
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
             TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(hour, minute);
+            timePickerFragment.setListener(this);
             timePickerFragment.show(getSupportFragmentManager(), TIME_PICKER);
         });
     }
