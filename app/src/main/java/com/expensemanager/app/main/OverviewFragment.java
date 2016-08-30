@@ -20,6 +20,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -124,16 +125,27 @@ public class OverviewFragment extends Fragment {
     }
 
     private double getWeeklyAverage() {
-        int weeks = Helpers.getAllWeeks().size();
+        List<Date[]> allWeeks = Helpers.getAllWeeks();
+
+        if (allWeeks == null) {
+            return 0;
+        }
+
+        int weeks = allWeeks.size();
         return getTotalExpense()/weeks;
     }
 
     private double getMonthlyAverage() {
-        int months = Helpers.getAllMonths().size();
+        List<Date[]> allMonths = Helpers.getAllMonths();
+
+        if (allMonths == null) {
+            return 0;
+        }
+        int months = allMonths.size();
         return getTotalExpense()/months;
     }
 
-    private double getTotalExpense() {
+    private double  getTotalExpense() {
         double total = 0.0;
 
         RealmResults<Expense> allExpenses = Expense.getAllExpenses();

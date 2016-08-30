@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -292,28 +293,22 @@ public class Expense implements RealmModel {
      */
     public static @Nullable Expense getOldestExpense() {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.ASCENDING);
+        List<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.ASCENDING);
         realm.close();
 
-        if (expenses.size() == 0) {
-            return null;
-        }
-
-        Expense expense = expenses.first();
-
-        return expense;
+        return expenses.size() > 0 ? expenses.get(0) : null;
     }
 
     /**
      *
      * @return Most recent expense
      */
-    public static Expense getMostRecentExpense() {
+    public static @Nullable Expense getMostRecentExpense() {
         Realm realm = Realm.getDefaultInstance();
-        Expense expense = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING).first();
+        List<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
-        return expense;
+        return expenses.size() > 0 ? expenses.get(0) : null;
     }
 
     public static void delete(String id) {

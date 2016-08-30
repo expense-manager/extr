@@ -367,7 +367,13 @@ public class Helpers {
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
-        Date endDate = Expense.getOldestExpense().getExpenseDate();
+        Expense oldestExpense = Expense.getOldestExpense();
+        if (oldestExpense == null) {
+            return null;
+        }
+
+        Date endDate = oldestExpense.getExpenseDate();
+
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(endDate);
         int endYear = endCalendar.get(Calendar.YEAR);
@@ -388,7 +394,13 @@ public class Helpers {
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
-        Date endDate = Expense.getOldestExpense().getExpenseDate();
+        Expense oldestExpense = Expense.getOldestExpense();
+        if (oldestExpense == null) {
+            return null;
+        }
+
+        Date endDate = oldestExpense.getExpenseDate();
+
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(endDate);
         int endYear = endCalendar.get(Calendar.YEAR);
@@ -412,17 +424,16 @@ public class Helpers {
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
+        Date endDate = null;
         Expense oldestExpense = Expense.getOldestExpense();
 
         if (oldestExpense == null) {
-            Date[] startEnd = new Date[2];
-            startEnd[0] = new Date();
-            startEnd[1] = new Date();
-            weeks.add(startEnd);
-            return weeks;
+            // if no expense, show current week only
+            endDate = new Date();
+        } else {
+            endDate = oldestExpense.getExpenseDate();
         }
 
-        Date endDate = oldestExpense.getExpenseDate();
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(endDate);
         int endYear = endCalendar.get(Calendar.YEAR);
