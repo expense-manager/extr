@@ -114,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
             navHeaderCircleImageView.setOnClickListener(v -> {
                 ProfileActivity.newInstance(this, null);
-                drawerLayout.closeDrawers();
+
+                drawerLayout.closeDrawer(navigationView);
             });
 
             String fullname = currentUser.getFullname();
@@ -233,8 +234,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        // Update drawer
 
+        unSelectedMenuItem();
+    }
+
+    private void unSelectedMenuItem() {
+        // todo: any better way to handle this.
+        int size = navigationView.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
     }
 
     @Override
