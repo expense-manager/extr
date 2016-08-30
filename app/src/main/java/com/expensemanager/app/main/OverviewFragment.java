@@ -15,7 +15,6 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.overview.OverviewAdapter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -79,7 +78,6 @@ public class OverviewFragment extends Fragment {
     }
 
     private void invalidateViews() {
-        //todo: uncomment out total and average when we have a large data set
         Calendar calendar = Calendar.getInstance();
 
         monthlyLabelTextView.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US));

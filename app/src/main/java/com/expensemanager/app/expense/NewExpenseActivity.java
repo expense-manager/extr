@@ -1,14 +1,5 @@
 package com.expensemanager.app.expense;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.SyncExpense;
-
-import org.json.JSONObject;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
@@ -52,6 +43,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.SyncExpense;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -395,6 +395,8 @@ public class NewExpenseActivity extends AppCompatActivity
         expense.setAmount(amount);
         if (noteTextView.getText().length() > 0) {
             expense.setNote(noteTextView.getText().toString());
+        } else {
+            expense.setNote("");
         }
         expense.setCategoryId(category != null ? category.getId() : null);
         expense.setExpenseDate(calendar.getTime());

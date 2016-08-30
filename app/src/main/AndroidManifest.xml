@@ -73,10 +73,6 @@
             android:name=".settings.SettingsActivity"
             android:theme="@style/BaseTheme"/>
         <activity
-            android:name=".overview.OverviewActivity"
-            android:label="@string/title_activity_overview"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".profile.ProfileActivity"
             android:theme="@style/BaseTheme" />
 

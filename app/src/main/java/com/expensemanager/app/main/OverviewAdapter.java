@@ -1,4 +1,4 @@
-package com.expensemanager.app.overview;
+package com.expensemanager.app.main;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.ExpenseDetailActivity;
@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;

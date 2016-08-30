@@ -79,7 +79,13 @@ public class RequestTemplateCreator {
         Expense expense = expenseBuilder.getExpense();
 
         params.put(Expense.AMOUNT_JSON_KEY, String.valueOf(expense.getAmount()));
-        params.put(Expense.NOTE_JSON_KEY, expense.getNote());
+
+        String note = expense.getNote();
+
+        if (note != null && note.isEmpty() && note.length() > 0) {
+            params.put(Expense.NOTE_JSON_KEY, expense.getNote());
+        }
+
         // todo: able to post selected category category
 
         try {

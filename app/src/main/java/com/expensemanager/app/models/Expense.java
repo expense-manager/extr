@@ -9,9 +9,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -136,7 +134,8 @@ public class Expense implements RealmModel {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
             this.amount = jsonObject.getDouble(AMOUNT_JSON_KEY);
-            this.note = jsonObject.optString(NOTE_JSON_KEY);
+
+            this.note = jsonObject.optString(NOTE_JSON_KEY, "");
             if (jsonObject.has(CATEGORY_JSON_KEY)) {
                 // {"__type":"Pointer","className":"Category","objectId":"undefined"}
                 String categoryId = jsonObject.getJSONObject(CATEGORY_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
