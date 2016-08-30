@@ -1,5 +1,6 @@
 package com.expensemanager.app.expense;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
@@ -25,6 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -79,6 +81,7 @@ public class NewExpenseActivity extends AppCompatActivity
     public static final String NEW_PHOTO = "Take a photo";
     public static final String LIBRARY_PHOTO = "Choose from library";
     public static final int SELECT_PICTURE_REQUEST_CODE = 1;
+    public static final int PERMISSIONS_REQUEST_USE_CAMERA = 101;
 
     private ArrayList<byte[]> photoList;
     private ExpensePhotoAdapter expensePhotoAdapter;
@@ -240,6 +243,7 @@ public class NewExpenseActivity extends AppCompatActivity
         photoGridView.setAdapter(expensePhotoAdapter);
         photoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             if (position == photoList.size() - 1) {
+                checkPermissionGranted();
                 openImageIntent();
             }
         });
@@ -252,6 +256,25 @@ public class NewExpenseActivity extends AppCompatActivity
             expensePhotoAdapter.notifyDataSetChanged();
             return true;
         });
+    }
+
+    // todo: make permission check reusable
+    private void checkPermissionGranted() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        PERMISSIONS_REQUEST_USE_CAMERA);
+                openImageIntent();
+            }
+        }
     }
 
     private void setPhotoSourcePicker() {
