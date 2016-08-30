@@ -24,6 +24,7 @@
     <dimen name="space_medium">12dp</dimen>
     <dimen name="space_medium_large">16dp</dimen>
     <dimen name="space_large">20dp</dimen>
+    <dimen name="space_large_large">22dp</dimen>
     <dimen name="space_really_large">28dp</dimen>
     <dimen name="space_ultra_large">36dp</dimen>
     <dimen name="space_super_large">66dp</dimen>
@@ -31,8 +32,8 @@
 
     <dimen name="login_sign_up_widget_width">300dp</dimen>
     <dimen name="button_height">40dp</dimen>
-    <dimen name="category_color_width_very_large">126dp</dimen>
-    <dimen name="category_color_width_large">76dp</dimen>
+    <dimen name="category_color_width_very_large">106dp</dimen>
+    <dimen name="category_color_width_large">56dp</dimen>
     <dimen name="category_color_width">56dp</dimen>
     <dimen name="category_color_width_small">30dp</dimen>
 

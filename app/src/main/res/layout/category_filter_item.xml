@@ -21,7 +21,7 @@
         android:id="@+id/category_item_frame_padding_color_image_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="3dp"
+        android:layout_margin="1dp"
 
         android:background="@color/white"/>
 
@@ -46,6 +46,7 @@
         android:layout_alignBottom="@id/category_item_outer_color_image_view_id"
         android:layout_margin="3dp"
 
+        tools:background="@color/white"
         android:background="#00000000"/>
 
     <!-- Inner Color -->
@@ -59,6 +60,7 @@
         android:layout_alignBottom="@id/category_item_outer_color_image_view_id"
         android:layout_margin="6dp"
 
+        tools:background="@color/black"
         android:background="#00000000"/>
 
     <!-- Name -->
@@ -70,7 +72,7 @@
         android:layout_below="@+id/category_item_outer_color_image_view_id"
 
         android:textColor="@color/black"
-        android:textSize="@dimen/text_small"
+        android:textSize="@dimen/text_ultra_small"
         android:gravity="center"
         android:maxLines="1"
         android:ellipsize="end"

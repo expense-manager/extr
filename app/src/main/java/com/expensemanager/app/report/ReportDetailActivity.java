@@ -430,8 +430,6 @@ public class ReportDetailActivity extends AppCompatActivity {
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
 
-        int currentPosition = 0;
-
         @Override
         public void onPageSelected(int newPosition) {
 
@@ -448,15 +446,23 @@ public class ReportDetailActivity extends AppCompatActivity {
             } else if (fragment instanceof ReportBarChartFragment) {
                 // Hide pie chart
                 pieChart.setVisibility(View.INVISIBLE);
-                // Update data
-                barChart.invalidate();
-                // Animate chart
-                barChart.animateY(ANIMATION_TIME_MILLISECOND, Easing.EasingOption.EaseInCubic);
                 // Show bar chart
                 barChart.setVisibility(View.VISIBLE);
+                // Move to default position
+                switch(requestCode) {
+                    case MONTHLY:
+                        barChart.moveViewToX(Math.max(latestPosition - 6, 0));
+                        break;
+                    case YEARLY:
+                        barChart.moveViewToX(Math.max(latestPosition - 6, 0));
+                        break;
+                }
+                // Animate chart
+                barChart.animateY(ANIMATION_TIME_MILLISECOND, Easing.EasingOption.EaseInCubic);
+                // Update data
+                barChart.invalidate();
             }
 
-            currentPosition = newPosition;
         }
 
         @Override

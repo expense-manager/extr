@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:paddingTop="@dimen/space_medium_small"
-        android:paddingBottom="@dimen/space_medium_small"
-        android:paddingLeft="@dimen/space_medium_small"
+        android:paddingTop="@dimen/space_large_large"
+        android:paddingBottom="@dimen/space_large_large"
+        android:paddingLeft="@dimen/space_large_large"
         android:layout_centerVertical="true"
 
         android:background="#00000000"/>
