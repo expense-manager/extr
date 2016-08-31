@@ -494,4 +494,13 @@ public class Helpers {
     public static boolean isValidPhoneNumber(CharSequence phoneNumber) {
         return !TextUtils.isEmpty(phoneNumber) && Patterns.PHONE.matcher(phoneNumber).matches();
     }
+
+    public static Date getLastWeekOfYear(Date date) {
+        // Set time
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        // Go to last week
+        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        return calendar.getTime();
+    }
 }

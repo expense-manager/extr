@@ -8,15 +8,6 @@
 
     <include layout="@layout/toolbar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/notifications_activity_recycler_view_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_id"
-
-        android:paddingTop="@dimen/space_really_small"
-        android:paddingBottom="@dimen/space_really_small"/>
-
     <TextView
         android:id="@+id/notifications_activity_empty_state_text_view_id"
         android:layout_width="wrap_content"
@@ -27,5 +18,14 @@
 
         android:text="@string/no_notifications"
         android:visibility="gone"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/notifications_activity_recycler_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_id"
+
+        android:paddingTop="@dimen/space_really_small"
+        android:paddingBottom="@dimen/space_really_small"/>
 
 </RelativeLayout>

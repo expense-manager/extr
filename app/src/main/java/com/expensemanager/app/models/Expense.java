@@ -323,8 +323,8 @@ public class Expense implements RealmModel {
     public static RealmResults<Expense> getExpensesByRange(Date[] startEnd) {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Expense> expenses = realm.where(Expense.class)
-                .greaterThan(EXPENSE_DATE_KEY, startEnd[0])
-                .lessThan(EXPENSE_DATE_KEY, startEnd[1])
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startEnd[0])
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, startEnd[1])
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 

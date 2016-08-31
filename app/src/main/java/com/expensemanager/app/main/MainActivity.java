@@ -25,6 +25,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
+import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.NotificationsActivity;
 import com.expensemanager.app.profile.ProfileActivity;
@@ -34,6 +35,8 @@ import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.WelcomeActivity;
+
+import java.util.Calendar;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -90,8 +93,19 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        testNotifications();
+
         SyncCategory.getAllCategories();
         SyncExpense.getAllExpenses();
+    }
+
+    private void testNotifications() {
+        Calendar calendar = Calendar.getInstance();
+        for (int i = 0; i < 3; i++) {
+            calendar.add(Calendar.MINUTE, 1);
+            RNotification.setupOrUpdateNotifications(this, "Title " + i, "Message " + i, false, RNotification.WEEKLY, calendar.getTime());
+        }
+        RNotification.setupOrUpdateNotifications(this, "Title Monthly", "Message Monthly", false, RNotification.MONTHLY, calendar.getTime());
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {

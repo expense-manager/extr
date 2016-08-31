@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,11 +16,14 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.models.RNotification;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 /**
  * Created by Zhaolong Zhong on 8/20/16.
@@ -28,9 +32,11 @@ import butterknife.ButterKnife;
 public class NotificationsActivity extends BaseActivity {
     private static final String TAG = NotificationsActivity.class.getSimpleName();
 
-    private static final int BROADCAST_REQUEST_CODE = 100;
     public static final String TITLE_KEY = "titleKey";
     public static final String MESSAGE_KEY = "messageKey";
+
+    private ArrayList<RNotification> notifications;
+    private NotificationAdapter notificationAdapter;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -52,13 +58,23 @@ public class NotificationsActivity extends BaseActivity {
 
         setupToolbar();
 
-        invalidateViews();
+        notifications = new ArrayList<>();
+        notificationAdapter = new NotificationAdapter(this, notifications);
+        setupRecyclerView();
 
-        setupNotifications("Expense Manager", "Your total expense for last week was $260.");
+        invalidateViews();
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(notificationAdapter);
     }
 
     private void invalidateViews() {
         noNotificationTextView.setVisibility(View.VISIBLE);
+
+        notificationAdapter.clear();
+        notificationAdapter.addAll(RNotification.getAllNotifications());
     }
 
     private void setupToolbar() {
@@ -73,22 +89,18 @@ public class NotificationsActivity extends BaseActivity {
         backImageView.setOnClickListener(v -> close());
     }
 
-    private void setupNotifications(String title, String message) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    @Override
+    public void onResume() {
+        super.onResume();
+        Realm realm = Realm.getDefaultInstance();
+        realm.addChangeListener(v -> invalidateViews());
+        invalidateViews();
+    }
 
-        Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
-        notificationIntent.addCategory("android.intent.category.DEFAULT");
-        notificationIntent.putExtra(TITLE_KEY, title);
-        notificationIntent.putExtra(MESSAGE_KEY, message);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, BROADCAST_REQUEST_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Set a timer to wake a alarm, for example, 10:26PM
-        Calendar timeAt = Calendar.getInstance();
-        timeAt.set(Calendar.HOUR_OF_DAY, 22);
-        timeAt.set(Calendar.MINUTE, 26);
-        timeAt.set(Calendar.SECOND, 0);
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAt.getTimeInMillis(), pendingIntent);
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 }
