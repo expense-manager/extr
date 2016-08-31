@@ -196,9 +196,8 @@ public class RNotification implements RealmModel {
             notificationIntent.addCategory("android.intent.category.DEFAULT");
             notificationIntent.putExtra(ID_KEY, notification.getId());
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, BROADCAST_REQUEST_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Log.i(TAG, "create new notification: " + notification.getId());
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

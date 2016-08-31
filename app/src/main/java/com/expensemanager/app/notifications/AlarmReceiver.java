@@ -18,6 +18,8 @@ import com.expensemanager.app.models.RNotification;
 
 import java.util.Date;
 
+import io.realm.Realm;
+
 /**
  * Created by Zhaolong Zhong on 8/22/16.
  */
@@ -51,6 +53,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         // todo: delete notification if amount is 0
         message += "$" + amount;
 
+        // Save to realm
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        rNotification.setMessage(message);
+        realm.copyToRealmOrUpdate(rNotification);
+        realm.commitTransaction();
+        realm.close();
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(NotificationsActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
@@ -63,10 +73,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentText(message)
                 .setSmallIcon(R.drawable.ic_notifications_white_24dp)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setContentIntent(pendingIntent).build();
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true).build();
 
-        Log.i(TAG, "notify new notification: " + message);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
+        notificationManager.notify(rNotification.getId().hashCode(), notification);
     }
 }
