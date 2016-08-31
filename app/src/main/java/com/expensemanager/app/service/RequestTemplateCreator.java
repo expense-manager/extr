@@ -1,5 +1,6 @@
 package com.expensemanager.app.service;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.expensemanager.app.expense.ExpenseBuilder;
@@ -41,13 +42,27 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
-    public static RequestTemplate signUp(String username, String password, String fullname) {
+    public static RequestTemplate signUp(String email, String password, String firstName, String lastName, String phone) {
         String url = BASE_URL + "users";
         Map<String, String> params = new HashMap<>();
 
-        params.put(User.USERNAME_JSON_KEY, username);
+        if (!TextUtils.isEmpty(phone)) {
+            params.put(User.USERNAME_JSON_KEY, phone);
+            params.put(User.PHONE_JSON_KEY, phone);
+        } else {
+            params.put(User.USERNAME_JSON_KEY, email);
+            params.put(User.EMAIL_JSON_KEY, email);
+        }
+
         params.put(User.PASSWORD_JSON_KEY, password);
-        params.put(User.FULLNAME_JSON_KEY, fullname);
+
+        if (!TextUtils.isEmpty(firstName)) {
+            params.put(User.FIRST_NAME_JSON_KEY, firstName);
+        }
+
+        if (!TextUtils.isEmpty(lastName)) {
+            params.put(User.LAST_NAME_JSON_KEY, lastName);
+        }
 
         return new RequestTemplate(POST, url, params);
     }

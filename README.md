@@ -8,18 +8,21 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 
 - user can create a expense
 - user can check out a expense detail
-- user can update a expense
+- user can update or delete a expense
 - user can create a category
 - user can check out a category detail
-- user can update a category
-- user can check out receipt weekly and monthly expense report - summary
-- user can check out receipt weekly and monthly expense report - a list of expense
-- user can check out expense in specified category - filter by category
+- user can update or delete a category
+- user can check out expense summary
+- user can check out weekly, monthly and yearly expense report
+- user can search expense by date range
+- user can search expense by category
+- user can receive a weekly and monthly report notification
 
 ## Optional
-- user(admin) can create a project or organization
-- user(admin) can add people to a project
-- members can add/update receipts in the project
+- user can create a group
+- user can invite people to a group
+- user can switch group to check out expenses in different group
+- members can create and update expense in the group
 - admin or members can have difference permission to handle expense items or check out different expense report based on the role.
 
 
@@ -30,6 +33,7 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - [Butter Knife](http://jakewharton.github.io/butterknife/) - Bind Android views and callbacks to fields and methods.
 - [Gradle Retrolambda Plugin](https://github.com/evant/gradle-retrolambda) - A gradle plugin for getting java lambda support in java 6, 7 and android
 - [Realm](http://realm.io) - Realm is a mobile database: a replacement for SQLite & ORMs.
+- [OneSignal](https://onesignal.com) - OneSignal is a free push notification service for mobile apps.
 
 ## License
 

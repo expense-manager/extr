@@ -15,9 +15,9 @@
         android:background="@color/white"
         tools:context="com.expensemanager.app.welcome.LoginActivity">
 
-        <!-- Username -->
+        <!-- Email -->
         <EditText
-            android:id="@+id/login_activity_username_edit_text_id"
+            android:id="@+id/login_activity_email_edit_text_id"
             android:layout_width="@dimen/login_sign_up_widget_width"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -26,7 +26,7 @@
 
             android:padding="@dimen/space_medium"
             android:textSize="@dimen/text_really_small"
-            android:hint="@string/username"
+            android:hint="@string/email"
             android:background="@color/gray_really_light"/>
 
         <!-- Password -->
@@ -34,7 +34,7 @@
             android:id="@+id/login_activity_password_edit_text_id"
             android:layout_width="@dimen/login_sign_up_widget_width"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/login_activity_username_edit_text_id"
+            android:layout_below="@+id/login_activity_email_edit_text_id"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="@dimen/space_medium"
             android:layout_marginRight="@dimen/space_medium"

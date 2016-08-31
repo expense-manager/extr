@@ -1,12 +1,12 @@
 package com.expensemanager.app.helpers;
 
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
+
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -410,7 +410,17 @@ public class Helpers {
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
-        Date endDate = Expense.getOldestExpense().getExpenseDate();
+        Expense oldestExpense = Expense.getOldestExpense();
+
+        if (oldestExpense == null) {
+            Date[] startEnd = new Date[2];
+            startEnd[0] = new Date();
+            startEnd[1] = new Date();
+            weeks.add(startEnd);
+            return weeks;
+        }
+
+        Date endDate = oldestExpense.getExpenseDate();
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(endDate);
         int endYear = endCalendar.get(Calendar.YEAR);

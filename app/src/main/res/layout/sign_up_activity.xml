@@ -58,12 +58,13 @@
                 <EditText
                     android:id="@+id/sign_up_activity_email_or_phone_number_edit_text_id"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/button_height"
+                    android:layout_height="wrap_content"
                     android:layout_toStartOf="@+id/sign_up_activity_clear_email_image_view_id"
                     android:layout_marginBottom="@dimen/space_really_large"
 
                     android:padding="@dimen/space_medium"
                     android:textSize="@dimen/text_really_small"
+                    android:gravity="center_vertical"
                     android:background="@color/gray_really_light" />
 
                 <!-- Clear -->
@@ -106,6 +107,7 @@
 
                     android:padding="@dimen/space_medium"
                     android:textSize="@dimen/text_really_small"
+                    android:maxLines="1"
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:background="@color/gray_really_light"/>
@@ -144,6 +146,7 @@
 
                     android:padding="@dimen/space_medium"
                     android:textSize="@dimen/text_really_small"
+                    android:maxLines="1"
                     android:hint="@string/confirm_password"
                     android:inputType="textPassword"
                     android:background="@color/gray_really_light"/>
@@ -163,41 +166,88 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/sign_up_activity_full_name_relative_layout_id"
+            <LinearLayout
                 android:layout_width="@dimen/login_sign_up_widget_width"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/sign_up_activity_confirm_password_relative_layout_id"
-                android:layout_marginBottom="@dimen/space_medium"
-                android:background="@color/gray_really_light">
+                android:layout_marginBottom="@dimen/space_medium">
 
-                 <!-- Full name -->
-                <EditText
-                    android:id="@+id/sign_up_activity_name_edit_text_id"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:id="@+id/sign_up_activity_full_name_relative_layout_id"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@+id/sign_up_activity_clear_name_image_view_id"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/space_really_small"
 
-                    android:padding="@dimen/space_medium"
-                    android:textSize="@dimen/text_really_small"
-                    android:hint="@string/full_name"
-                    android:background="@color/gray_really_light"/>
+                    android:background="@color/gray_really_light">
 
-                <!-- Clear -->
-                <ImageView
-                    android:id="@+id/sign_up_activity_clear_name_image_view_id"
-                    android:layout_width="wrap_content"
+                    <!-- First name -->
+                    <EditText
+                        android:id="@+id/sign_up_activity_first_name_edit_text_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/sign_up_activity_clear_first_name_image_view_id"
+
+                        android:padding="@dimen/space_medium"
+                        android:textSize="@dimen/text_really_small"
+                        android:maxLines="1"
+                        android:hint="@string/first_name"
+                        android:background="@color/gray_really_light"/>
+
+                    <!-- Clear -->
+                    <ImageView
+                        android:id="@+id/sign_up_activity_clear_first_name_image_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+
+                        android:padding="@dimen/space_small"
+                        android:src="@drawable/ic_window_close"
+                        android:background="@color/gray_really_light"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sign_up_activity_last_name_relative_layout_id"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/space_really_small"
 
-                    android:padding="@dimen/space_small"
-                    android:src="@drawable/ic_window_close"
-                    android:background="@color/gray_really_light"
-                    android:visibility="gone"/>
+                    android:background="@color/gray_really_light">
 
-            </RelativeLayout>
+                    <!-- Last name -->
+                    <EditText
+                        android:id="@+id/sign_up_activity_last_name_edit_text_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/sign_up_activity_clear_last_name_image_view_id"
+
+                        android:padding="@dimen/space_medium"
+                        android:textSize="@dimen/text_really_small"
+                        android:maxLines="1"
+                        android:hint="@string/last_name"
+                        android:background="@color/gray_really_light"/>
+
+                    <!-- Clear -->
+                    <ImageView
+                        android:id="@+id/sign_up_activity_clear_last_name_image_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+
+                        android:padding="@dimen/space_small"
+                        android:src="@drawable/ic_window_close"
+                        android:background="@color/gray_really_light"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
 
         </RelativeLayout>
 

@@ -11,7 +11,6 @@ import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileBuilder;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -78,9 +77,9 @@ public class SyncUser {
         return networkRequest.send().continueWith(saveCredential);
     }
 
-    public static Task<JSONObject> signUp(String username, String password, String fullname) {
+    public static Task<JSONObject> signUp(String username, String password, String firstName, String lastName, String phone) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
-        RequestTemplate requestTemplate = RequestTemplateCreator.signUp(username, password, fullname);
+        RequestTemplate requestTemplate = RequestTemplateCreator.signUp(username, password, firstName, lastName, phone);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
         Continuation<JSONObject, JSONObject> saveCredential = new Continuation<JSONObject, JSONObject>() {

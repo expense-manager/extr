@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.MainActivity;
@@ -30,24 +33,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.expensemanager.app.R.string.email;
+
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = SignUpActivity.class.getSimpleName();
 
-    private String email;
+    private String emailOrPhone;
     private String password;
     private String confirmPassword;
-    private String fullname;
+    private String firstName;
+    private String lastName;
+    private String phone;
 
     @BindView(R.id.sign_up_activity_sign_up_button_id) Button signUpButton;
-    @BindView(R.id.sign_up_activity_email_or_phone_number_edit_text_id) EditText emailEditText;
+    @BindView(R.id.sign_up_activity_email_or_phone_number_edit_text_id) EditText emailOrPhoneEditText;
     @BindView(R.id.sign_up_activity_password_edit_text_id) EditText passwordEditText;
     @BindView(R.id.sign_up_activity_confirm_password_edit_text_id) EditText confirmPasswordEditText;
-    @BindView(R.id.sign_up_activity_name_edit_text_id) EditText nameEditText;
+    @BindView(R.id.sign_up_activity_first_name_edit_text_id) EditText firstNameEditText;
+    @BindView(R.id.sign_up_activity_last_name_edit_text_id) EditText lastNameEditText;
     @BindView(R.id.sign_up_activity_error_text_view_id) TextView errorMessageTextView;
     @BindView(R.id.sign_up_activity_mismatch_image_view_id) ImageView mismatchImageView;
     @BindView(R.id.sign_up_activity_clear_email_image_view_id) ImageView clearEmailImageView;
     @BindView(R.id.sign_up_activity_clear_password_image_view_id) ImageView clearPasswordImageView;
-    @BindView(R.id.sign_up_activity_clear_name_image_view_id) ImageView clearNameImageView;
+    @BindView(R.id.sign_up_activity_clear_first_name_image_view_id) ImageView clearFirstNameImageView;
+    @BindView(R.id.sign_up_activity_clear_last_name_image_view_id) ImageView clearLastNameImageView;
     @BindView(R.id.sign_up_activity_error_relative_layout_id) RelativeLayout errorMessageRelativeLayout;
     @BindView(R.id.sign_up_activity_step_one_relative_layout_id) RelativeLayout stepOneRelativeLayout;
     @BindView(R.id.sign_up_activity_step_two_relative_layout_id) RelativeLayout stepTwoRelativeLayout;
@@ -73,10 +82,11 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setEnabled(false);
         signUpButton.setOnClickListener(this::signUp);
 
-        emailEditText.addTextChangedListener(emailTextWatcher);
+        emailOrPhoneEditText.addTextChangedListener(emailOrPhoneTextWatcher);
         passwordEditText.addTextChangedListener(passwordTextWatcher);
         confirmPasswordEditText.addTextChangedListener(confirmPasswordTextWatcher);
-        nameEditText.addTextChangedListener(nameTextWatcher);
+        firstNameEditText.addTextChangedListener(firstNameTextWatcher);
+        lastNameEditText.addTextChangedListener(lastNameTextWatcher);
         loginLinearLayout.setOnClickListener(v -> {
             LoginActivity.newInstance(this);
             finish();
@@ -84,28 +94,55 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.sign_up_activity_clear_email_image_view_id, R.id.sign_up_activity_clear_password_image_view_id,
-        R.id.sign_up_activity_clear_name_image_view_id})
+        R.id.sign_up_activity_clear_first_name_image_view_id, R.id.sign_up_activity_clear_last_name_image_view_id})
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.sign_up_activity_clear_email_image_view_id:
-                emailEditText.setText("");
+                emailOrPhoneEditText.setText("");
                 break;
             case R.id.sign_up_activity_clear_password_image_view_id:
                 passwordEditText.setText("");
                 break;
-            case R.id.sign_up_activity_clear_name_image_view_id:
-                nameEditText.setText("");
+            case R.id.sign_up_activity_clear_first_name_image_view_id:
+                firstNameEditText.setText("");
+                break;
+            case R.id.sign_up_activity_clear_last_name_image_view_id:
+                lastNameEditText.setText("");
                 break;
         }
     }
 
     public void signUp(View v) {
+        emailOrPhone = emailOrPhoneEditText.getText().toString();
+
+        if (!isValidEmail(emailOrPhone) && !isValidPhoneNumber(emailOrPhone)) {
+            Toast.makeText(this, "Invalid email or phone number.", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!isValidEmail(emailOrPhone) && isValidPhoneNumber(emailOrPhone)) {
+            phone = emailOrPhone;
+        } else if (isValidEmail(emailOrPhone) && isValidPhoneNumber(emailOrPhone)) {
+            phone = "";
+        }
+
         if (stepOneRelativeLayout.getVisibility() == View.VISIBLE) {
             setStepTwo();
+            // todo: a better way to handle this is to do a network request to check if username exists or not
         } else {
             progressBar.setVisibility(View.VISIBLE);
-            SyncUser.signUp(email, password, fullname).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
+            if (TextUtils.isEmpty(phone)) {
+                SyncUser.signUp(emailOrPhone, password, firstName, lastName, null).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
+            } else {
+                SyncUser.signUp(emailOrPhone, password, firstName, lastName, phone).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
+            }
         }
+    }
+
+    private boolean isValidEmail(CharSequence email) {
+       return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private boolean isValidPhoneNumber(CharSequence phoneNumber) {
+        return !TextUtils.isEmpty(phoneNumber) && Patterns.PHONE.matcher(phoneNumber).matches();
     }
 
     private void setStepTwo() {
@@ -120,7 +157,8 @@ public class SignUpActivity extends AppCompatActivity {
     private void resetStepTwo() {
         passwordEditText.setText("");
         confirmPasswordEditText.setText("");
-        nameEditText.setText("");
+        firstNameEditText.setText("");
+        lastNameEditText.setText("");
         setButton();
     }
 
@@ -150,7 +188,7 @@ public class SignUpActivity extends AppCompatActivity {
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             } else {
-                SyncUser.login(email, password).onSuccess(onLoginSuccess, Task.UI_THREAD_EXECUTOR);
+                SyncUser.login(emailOrPhone, password).onSuccess(onLoginSuccess, Task.UI_THREAD_EXECUTOR);
             }
             return null;
         }
@@ -184,7 +222,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     };
 
-    private TextWatcher emailTextWatcher = new TextWatcher() {
+    private TextWatcher emailOrPhoneTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -193,7 +231,7 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             setButton();
-            clearEmailImageView.setVisibility(email != null && email.length() != 0 ? View.VISIBLE : View.GONE);
+            clearEmailImageView.setVisibility(emailOrPhone != null && emailOrPhone.length() != 0 ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -244,7 +282,7 @@ public class SignUpActivity extends AppCompatActivity {
         mismatchImageView.setImageResource(password.equals(confirmPassword) ? R.drawable.ic_check : R.drawable.ic_alert_circle_outline);
     }
 
-    private TextWatcher nameTextWatcher = new TextWatcher() {
+    private TextWatcher firstNameTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -253,7 +291,26 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             setButton();
-            clearNameImageView.setVisibility(fullname != null && fullname.length() != 0 ? View.VISIBLE : View.GONE);
+            clearFirstNameImageView.setVisibility(firstName != null && firstName.length() != 0 ? View.VISIBLE : View.GONE);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    private TextWatcher lastNameTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            setButton();
+            Log.d(TAG, "onTextChanged");
+            clearLastNameImageView.setVisibility(lastName != null && lastName.length() != 0 ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -278,7 +335,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Validate SignUp Step 1
         if (stepOneRelativeLayout.getVisibility() == View.VISIBLE) {
-            if (email == null || email.length() < 7) {
+            if (emailOrPhone == null || emailOrPhone.length() < 7) {
                 return false;
             }
         } else {
@@ -291,7 +348,11 @@ public class SignUpActivity extends AppCompatActivity {
                 return false;
             }
 
-            if (fullname == null || fullname.length() < 5) {
+            if (firstName == null || firstName.length() < 3) {
+                return false;
+            }
+
+            if (lastName == null || lastName.length() < 3) {
                 return false;
             }
         }
@@ -300,10 +361,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void getSignUpInfo() {
-        email = emailEditText.getText().toString().trim();
+        emailOrPhone = emailOrPhoneEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
         confirmPassword = confirmPasswordEditText.getText().toString().trim();
-        fullname = nameEditText.getText().toString().trim();
+        firstName = firstNameEditText.getText().toString().trim();
+        lastName = lastNameEditText.getText().toString().trim();
     }
 
     public void closeSoftKeyboard() {
