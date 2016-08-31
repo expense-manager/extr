@@ -92,8 +92,10 @@ public class LoginActivity extends AppCompatActivity {
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
                 closeSoftKeyboard();
             } else {
-                MainActivity.newInstance(LoginActivity.this);
-                finish();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                // Make sure main activity at the top on stack, no other activity in the backstack.
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
             return null;
         }
