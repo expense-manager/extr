@@ -69,12 +69,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
         Notification notification = builder
+                // Set title and message
                 .setContentTitle(title)
                 .setContentText(message)
+                // Set styling
                 .setSmallIcon(R.drawable.ic_notifications_white_24dp)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true).build();
+        // Add default sound and vibration, or use builder.setVibrate(long[]).setSound(Uri.parse("uri://sadfasdfasdf.mp3"))
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
+        notification.defaults |= Notification.DEFAULT_SOUND;
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(rNotification.getId().hashCode(), notification);
