@@ -49,8 +49,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             startEnd = Helpers.getMonthStartEndDate(lastWeek);
         }
         double amount = 0;
-        for (Expense e : Expense.getExpensesByRange(startEnd)) {
-            amount += e.getAmount();
+        for (Expense expense : Expense.getExpensesByRange(startEnd)) {
+            amount += expense.getAmount();
         }
 
         // Delete notification from database if amount is zero
