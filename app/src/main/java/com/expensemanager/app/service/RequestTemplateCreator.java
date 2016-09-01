@@ -138,7 +138,9 @@ public class RequestTemplateCreator {
         return new RequestTemplate(POST, url, params);
     }
 
-    public static RequestTemplate updateExpense(Expense expense) {
+    public static RequestTemplate updateExpense(ExpenseBuilder expenseBuilder) {
+        Expense expense = expenseBuilder.getExpense();
+
         String url = BASE_URL + "classes/Expense/" + expense.getId();
         Map<String, String> params = new HashMap<>();
 

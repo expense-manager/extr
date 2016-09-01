@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import bolts.Task;
 import bolts.TaskCompletionSource;
@@ -129,7 +130,12 @@ public class NetworkRequest {
 
                 // Send request
                 try {
-                    Response response = new OkHttpClient().newCall(builder.build()).execute();
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .writeTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(30, TimeUnit.SECONDS)
+                            .build();
+                    Response response = client.newCall(builder.build()).execute();
                     String responseString = response.body().string();
                     Log.d(TAG, "Response: \n" + responseString);
                     // If response is empty or JSONArray, we convert to JSONObject

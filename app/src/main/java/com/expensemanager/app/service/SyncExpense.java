@@ -146,19 +146,29 @@ public class SyncExpense {
         return networkRequest.send().continueWith(onCreateExpenseFinished);
     }
 
-    public static Task<Void> update(Expense expense) {
+    public static Task<Void> update(ExpenseBuilder expenseBuilder) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
-        RequestTemplate requestTemplate = RequestTemplateCreator.updateExpense(expense);
+        RequestTemplate requestTemplate = RequestTemplateCreator.updateExpense(expenseBuilder);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Expense expense = expenseBuilder.getExpense();
+
+        for (int i = 0; i < expenseBuilder.getPhotoList().size(); i++) {
+            Log.d(TAG, "Update expense, start upload photo at index: " + i);
+            addExpensePhoto(expense.getId(), expenseBuilder.getPhotoList().get(i));
+        }
 
         Continuation<JSONObject, Void> onUpdateExpenseFinished = new Continuation<JSONObject, Void>() {
             @Override
             public Void then(Task<JSONObject> task) throws Exception {
+                Log.d(TAG, "onUpdateExpenseFinished before check task.isFaulted().");
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
                     Log.e(TAG, "Error in updating expense.", exception);
                     throw exception;
                 }
+
+                Log.d(TAG, "onUpdateExpenseFinished after check task.isFaulted().");
 
                 JSONObject result = task.getResult();
                 if (result == null) {
@@ -166,7 +176,7 @@ public class SyncExpense {
                 }
 
                 // Example response: {"updatedAt":"2016-08-18T23:03:51.785Z"}
-                Log.d(TAG, "Response: \n" + result);
+                Log.d(TAG, "onUpdateExpenseFinished Response: \n" + result);
                 return null;
             }
         };
@@ -320,8 +330,17 @@ public class SyncExpense {
                     throw new Exception("Empty input for addExpensePhotoToRealm");
                 }
 
-                Log.d(TAG, "Photo: " + jsonObject);
-                //todo: add file name to expense photos, so we can use the name to build photo url
+                Log.d(TAG, "New added expense photo: " + jsonObject);
+
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                ExpensePhoto expensePhoto = new ExpensePhoto();
+                expensePhoto.mapFromJSON(jsonObject);
+                realm.copyToRealmOrUpdate(expensePhoto);
+                realm.commitTransaction();
+                realm.close();
+
+                Log.d(TAG, "Add expense photo to realm success.");
 
                 return null;
             }
@@ -334,7 +353,7 @@ public class SyncExpense {
         SyncPhoto.uploadPhoto(photoName, data) // add photo to File table, return file name
                 .continueWithTask(addExpensePhoto) // return objectId(expense photo id)
                 .continueWithTask(getExpensePhotoById) // return single expense photo object
-                .continueWith(addExpensePhotoToRealm); // return null
+                .continueWith(addExpensePhotoToRealm, Task.UI_THREAD_EXECUTOR); // return null
 
         return null;
     }

@@ -10,4 +10,13 @@
         android:layout_centerInParent="true"
         android:layout_margin="10dp"/>
 
+    <ProgressBar
+        android:id="@+id/expense_photo_view_pager_item_progress_bar_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:elevation="10dp"
+        style="?android:attr/progressBarStyleLarge"/>
+
 </RelativeLayout>

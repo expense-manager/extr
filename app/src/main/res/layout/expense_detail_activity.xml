@@ -272,13 +272,34 @@
 
             </LinearLayout>
 
+            <!-- Add new expense photo -->
+            <LinearLayout
+                android:id="@+id/expense_detail_activity_new_photo_linear_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/expense_detail_activity_linear_layout_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large">
+
+                <GridView
+                    android:id="@+id/expense_detail_activity_new_photo_grid_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="176dp"
+
+                    android:columnWidth="84dp"
+                    android:numColumns="auto_fit"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
             <!-- Delete -->
             <Button
                 android:id="@+id/expense_detail_activity_delete_button_id"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="@dimen/space_medium_large"
-                android:layout_below="@+id/expense_detail_activity_linear_layout_id"
+                android:layout_below="@+id/expense_detail_activity_new_photo_linear_layout_id"
 
                 android:textSize="@dimen/text_small"
                 android:textColor="@color/black"

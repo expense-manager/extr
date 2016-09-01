@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-        testNotifications();
+//        testNotifications();
 
         SyncCategory.getAllCategories();
         SyncExpense.getAllExpenses();
