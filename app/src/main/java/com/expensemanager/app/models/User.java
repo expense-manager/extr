@@ -51,7 +51,6 @@ public class User implements RealmModel{
     @PrimaryKey
     private String id;
     private String username;
-    private String fullname;
     private String firstName;
     private String lastName;
     private String email;
@@ -92,11 +91,7 @@ public class User implements RealmModel{
     }
 
     public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+        return this.firstName + " " + this.lastName;
     }
 
     public String getEmail() {
@@ -135,7 +130,6 @@ public class User implements RealmModel{
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
             this.username = jsonObject.getString(USERNAME_JSON_KEY);
-            this.fullname = jsonObject.optString(FULLNAME_JSON_KEY);
             this.firstName = jsonObject.optString(FIRST_NAME_JSON_KEY);
             this.lastName = jsonObject.optString(LAST_NAME_JSON_KEY);
             this.email = jsonObject.optString(EMAIL_JSON_KEY);

@@ -49,7 +49,7 @@ public class NetworkRequest {
                 String url = requestTemplate.getUrl();
                 String method = requestTemplate.getMethod();
                 Map<String, String> paramsMap = requestTemplate.getParams();
-                Map<String, byte[]> parmasMapByte = requestTemplate.getParamsByte();
+                Map<String, byte[]> paramsMapByte = requestTemplate.getParamsByte();
 
                 RequestBody requestBody = null;
 
@@ -69,9 +69,9 @@ public class NetworkRequest {
                     }
 
                     url = stringBuilder.toString();
-                } else if (parmasMapByte != null) {
+                } else if (paramsMapByte != null) {
                     requestBody = RequestBody.create(MediaType.parse("image/jpeg"),
-                            parmasMapByte.get(RequestTemplateCreator.CONTENT));
+                            paramsMapByte.get(RequestTemplateCreator.CONTENT));
                 } else {
                     // POST, PUT, DELETE
                     StringBuilder jsonBuilder = new StringBuilder();
@@ -105,11 +105,12 @@ public class NetworkRequest {
 
                     jsonBuilder.append('}');
                     requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBuilder.toString());
+                    Log.d(TAG, "request params: " + jsonBuilder.toString());
                 }
 
                 // Add headers
                 Request.Builder builder = getBasicBuilder(url, method, requestBody);
-                if (parmasMapByte != null) {
+                if (paramsMapByte != null) {
                     builder.addHeader("Content-Type", "image/jpeg");
                 }
 

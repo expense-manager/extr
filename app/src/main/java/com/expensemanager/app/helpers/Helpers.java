@@ -3,7 +3,9 @@ package com.expensemanager.app.helpers;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
@@ -472,5 +474,13 @@ public class Helpers {
         calendar.set(Calendar.MONTH, month - 1);
         SimpleDateFormat format = new SimpleDateFormat("MMM", Locale.US);
         return format.format(calendar.getTime());
+    }
+
+    public static boolean isValidEmail(CharSequence email) {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    public static boolean isValidPhoneNumber(CharSequence phoneNumber) {
+        return !TextUtils.isEmpty(phoneNumber) && Patterns.PHONE.matcher(phoneNumber).matches();
     }
 }

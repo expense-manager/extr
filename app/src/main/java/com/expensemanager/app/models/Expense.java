@@ -290,10 +290,16 @@ public class Expense implements RealmModel {
      *
      * @return Earliest expense
      */
-    public static Expense getOldestExpense() {
+    public static @Nullable Expense getOldestExpense() {
         Realm realm = Realm.getDefaultInstance();
-        Expense expense = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.ASCENDING).first();
+        RealmResults<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.ASCENDING);
         realm.close();
+
+        if (expenses.size() == 0) {
+            return null;
+        }
+
+        Expense expense = expenses.first();
 
         return expense;
     }

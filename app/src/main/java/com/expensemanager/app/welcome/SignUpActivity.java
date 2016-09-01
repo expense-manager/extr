@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.service.SyncUser;
 
@@ -32,8 +32,6 @@ import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.expensemanager.app.R.string.email;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = SignUpActivity.class.getSimpleName();
@@ -115,12 +113,12 @@ public class SignUpActivity extends AppCompatActivity {
     public void signUp(View v) {
         emailOrPhone = emailOrPhoneEditText.getText().toString();
 
-        if (!isValidEmail(emailOrPhone) && !isValidPhoneNumber(emailOrPhone)) {
+        if (!Helpers.isValidEmail(emailOrPhone) && !Helpers.isValidPhoneNumber(emailOrPhone)) {
             Toast.makeText(this, "Invalid email or phone number.", Toast.LENGTH_SHORT).show();
             return;
-        } else if (!isValidEmail(emailOrPhone) && isValidPhoneNumber(emailOrPhone)) {
+        } else if (!Helpers.isValidEmail(emailOrPhone) && Helpers.isValidPhoneNumber(emailOrPhone)) {
             phone = emailOrPhone;
-        } else if (isValidEmail(emailOrPhone) && isValidPhoneNumber(emailOrPhone)) {
+        } else if (Helpers.isValidEmail(emailOrPhone) && Helpers.isValidPhoneNumber(emailOrPhone)) {
             phone = "";
         }
 
@@ -135,14 +133,6 @@ public class SignUpActivity extends AppCompatActivity {
                 SyncUser.signUp(emailOrPhone, password, firstName, lastName, phone).continueWith(onSignUpSuccess, Task.UI_THREAD_EXECUTOR);
             }
         }
-    }
-
-    private boolean isValidEmail(CharSequence email) {
-       return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private boolean isValidPhoneNumber(CharSequence phoneNumber) {
-        return !TextUtils.isEmpty(phoneNumber) && Patterns.PHONE.matcher(phoneNumber).matches();
     }
 
     private void setStepTwo() {
@@ -278,7 +268,7 @@ public class SignUpActivity extends AppCompatActivity {
     };
 
     private void setMismatchSign() {
-        mismatchImageView.setVisibility(confirmPassword != null && confirmPassword.length() > 0 ? View.VISIBLE : View.GONE);
+        mismatchImageView.setVisibility(confirmPassword != null && password.length() == confirmPassword.length() ? View.VISIBLE : View.GONE);
         mismatchImageView.setImageResource(password.equals(confirmPassword) ? R.drawable.ic_check : R.drawable.ic_alert_circle_outline);
     }
 

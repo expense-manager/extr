@@ -36,6 +36,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
@@ -60,6 +61,7 @@ import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 
 /**
  * Created by Zhaolong Zhong on 8/22/16.
@@ -126,7 +128,7 @@ public class ProfileActivity extends BaseActivity {
         setupToolbar();
 
         invalidateViews();
-
+        setupEditableViews(false);
         SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
     }
 
@@ -148,7 +150,7 @@ public class ProfileActivity extends BaseActivity {
         }
 
         String photoUrl = currentUser.getPhotoUrl();
-        isPlaceholder = photoUrl != null && photoUrl.length() > 0 ? false : true;
+        isPlaceholder = !(photoUrl != null && photoUrl.length() > 0);
 
         Log.i(TAG, "new invalidate: " + currentUser.getPhotoUrl());
         // todo: glide disallow putting bitmap into imageview
@@ -358,28 +360,34 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void save() {
-//        String name = fullnameEditText.getText().toString();
-//
-//        // Check name input
-//        if (name == null || name.length() == 0) {
-//            Toast.makeText(this, "Invalid name.", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        String email = emailEditText.getText().toString().trim();
+        String phone = mobileEditText.getText().toString().trim();
+        String firstName = firstNameEditText.getText().toString().trim();
+        String lastName = lastNameEditText.getText().toString().trim();
 
-        User updatedUser = new User();
+        // todo: validate username, email in server
+        if (!Helpers.isValidEmail(email)) {
+            Toast.makeText(this, "Invalid email.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        updatedUser.setId(currentUser.getId());
-        updatedUser.setFirstName(firstNameEditText.getText().toString());
-        updatedUser.setLastName(lastNameEditText.getText().toString());
-        updatedUser.setEmail(emailEditText.getText().toString());
-        updatedUser.setPhone(mobileEditText.getText().toString());
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        currentUser.setFirstName(firstName);
+        currentUser.setLastName(lastName);
+        currentUser.setEmail(email);
+        currentUser.setPhone(phone);
 
         ProfileBuilder profileBuilder = new ProfileBuilder()
-            .setUser(updatedUser)
+            .setUser(currentUser)
             .setProfileImage(profileImage);
 
-        SyncUser.update(profileBuilder).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
+        realm.copyToRealmOrUpdate(currentUser);
+        realm.commitTransaction();
+        realm.close();
 
+        SyncUser.update(profileBuilder).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
         progressBar.setVisibility(View.VISIBLE);
         isEditable = !isEditable;
         invalidateViews();

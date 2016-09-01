@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -163,7 +164,7 @@ public class RequestTemplateCreator {
 
             // Date pointer
             // "spentAt" -> "{"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}"
-            SimpleDateFormat timezoneFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'Z'");
+            SimpleDateFormat timezoneFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:00.000'Z'", Locale.US);
             timezoneFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             String time = timezoneFormat.format(expense.getExpenseDate());
 
@@ -332,8 +333,28 @@ public class RequestTemplateCreator {
         String url = BASE_URL + "users/" + user.getId();
         Map<String, String> params = new HashMap<>();
 
-        params.put(User.FULLNAME_JSON_KEY, user.getFullname());
-        // todo: save more info
+        if (user.getEmail() != null && Helpers.isValidEmail(user.getEmail())) {
+            params.put(User.EMAIL_JSON_KEY, user.getEmail());
+            if (user.getUsername().contains("@") ) {
+                params.put(User.USERNAME_JSON_KEY, user.getEmail());
+            }
+        }
+
+        if (user.getFirstName() != null) {
+            params.put(User.FIRST_NAME_JSON_KEY, user.getFirstName());
+        }
+
+        if (user.getLastName() != null) {
+            params.put(User.LAST_NAME_JSON_KEY, user.getLastName());
+        }
+
+        if (user.getPhone() != null && user.getUsername().contains("@")) {
+            params.put(User.PHONE_JSON_KEY, user.getPhone());
+        }
+
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            Log.d(TAG, "entry key: " + entry.getKey() + ", value:" + entry.getValue());
+        }
 
         return new RequestTemplate(PUT, url, params);
     }
