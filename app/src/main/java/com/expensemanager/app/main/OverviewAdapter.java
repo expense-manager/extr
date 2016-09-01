@@ -119,7 +119,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (expenses == null) {
             return;
         }
-        
+
         this.expenses.addAll(expenses);
         notifyDataSetChanged();
     }

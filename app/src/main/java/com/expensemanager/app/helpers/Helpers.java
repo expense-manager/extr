@@ -368,7 +368,7 @@ public class Helpers {
         startCalendar.setTime(startDate);
 
         Expense oldestExpense = Expense.getOldestExpense();
-
+        
         if (oldestExpense == null) {
             return null;
         }
