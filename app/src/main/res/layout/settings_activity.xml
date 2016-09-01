@@ -8,4 +8,169 @@
 
     <include layout="@layout/toolbar" />
 
+    <RelativeLayout
+        android:id="@+id/setting_activity_weekly_notification_relative_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_id"
+
+        android:background="@drawable/background_top_bottom_line_gray_dark_fill_white">
+
+        <RelativeLayout
+            android:id="@+id/setting_activity_weekly_notification_enable_relative_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:paddingLeft="@dimen/space_medium_large"
+            android:paddingRight="@dimen/space_medium_large">
+
+            <!-- Start date switch -->
+            <Switch
+                android:id="@+id/setting_activity_weekly_notification_switch_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"/>
+
+            <!-- Weekly notification label -->
+            <TextView
+                android:id="@+id/setting_activity_weekly_notification_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_toLeftOf="@+id/setting_activity_weekly_notification_switch_id"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:text="@string/weekly_notification"
+                android:textSize="@dimen/text_small"/>
+
+        </RelativeLayout>
+
+        <!-- Weekly notification time -->
+        <RelativeLayout
+            android:id="@+id/setting_activity_weekly_notification_time_relative_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/setting_activity_weekly_notification_enable_relative_layout_id"
+
+            android:paddingLeft="@dimen/space_medium_large"
+            android:paddingRight="@dimen/space_medium_large">
+
+            <!-- Time -->
+            <TextView
+                android:id="@+id/setting_activity_weekly_notification_time_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+
+                android:gravity="center"
+                android:padding="@dimen/space_medium_small"
+                android:textSize="@dimen/text_small"
+                android:textColor="@color/black"
+                android:background="@drawable/background_round_corner_border_gray"
+                tools:text="00:00 AM"/>
+
+            <!-- Weekly notification date label -->
+            <TextView
+                android:id="@+id/setting_activity_weekly_notification_time_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_toLeftOf="@+id/setting_activity_weekly_notification_time_text_view_id"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:gravity="center_vertical"
+                android:text="@string/notification_time"
+                android:textSize="@dimen/text_small"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setting_activity_monthly_notification_relative_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setting_activity_weekly_notification_relative_layout_id"
+        android:layout_marginTop="@dimen/space_medium_large"
+
+        android:background="@drawable/background_top_bottom_line_gray_dark_fill_white">
+
+        <RelativeLayout
+            android:id="@+id/setting_activity_monthly_notification_enable_relative_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:paddingLeft="@dimen/space_medium_large"
+            android:paddingRight="@dimen/space_medium_large">
+
+            <!-- Start date switch -->
+            <Switch
+                android:id="@+id/setting_activity_monthly_notification_switch_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"/>
+
+            <!-- Weekly notification label -->
+            <TextView
+                android:id="@+id/setting_activity_monthly_notification_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_toLeftOf="@+id/setting_activity_monthly_notification_switch_id"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:text="@string/monthly_notification"
+                android:textSize="@dimen/text_small"/>
+
+        </RelativeLayout>
+
+        <!-- Monthly notification time -->
+        <RelativeLayout
+            android:id="@+id/setting_activity_monthly_notification_time_relative_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/setting_activity_monthly_notification_enable_relative_layout_id"
+
+            android:paddingLeft="@dimen/space_medium_large"
+            android:paddingRight="@dimen/space_medium_large">
+
+            <!-- Monthly notification time -->
+            <TextView
+                android:id="@+id/setting_activity_monthly_notification_time_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+
+                android:gravity="center"
+                android:padding="@dimen/space_medium_small"
+                android:textSize="@dimen/text_small"
+                android:textColor="@color/black"
+                android:background="@drawable/background_round_corner_border_gray"
+                tools:text="00:00 AM"/>
+
+            <!-- Monthly notification time label -->
+            <TextView
+                android:id="@+id/setting_activity_monthly_notification_time_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_toLeftOf="@+id/setting_activity_monthly_notification_time_text_view_id"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:gravity="center_vertical"
+                android:text="@string/notification_time"
+                android:textSize="@dimen/text_small"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

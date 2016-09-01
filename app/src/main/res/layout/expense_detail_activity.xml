@@ -47,7 +47,7 @@
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
-                android:background="@drawable/background_botton_line"/>
+                android:background="@drawable/background_bottom_line_gray"/>
 
             <!-- Category label -->
             <TextView
@@ -219,7 +219,7 @@
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
-                android:background="@drawable/background_botton_line"/>
+                android:background="@drawable/background_bottom_line_gray"/>
 
             <!-- Created At label -->
             <TextView
@@ -249,7 +249,7 @@
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
-                android:background="@drawable/background_botton_line"/>
+                android:background="@drawable/background_bottom_line_gray"/>
 
             <!-- Expense photo -->
             <LinearLayout

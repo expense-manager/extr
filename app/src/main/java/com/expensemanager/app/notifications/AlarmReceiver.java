@@ -15,6 +15,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.RNotification;
+import com.expensemanager.app.settings.SettingsActivity;
 
 import java.util.Date;
 
@@ -36,6 +37,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // Return if is null
         if (rNotification == null) {
+            return;
+        } else if ((rNotification.getType() == RNotification.WEEKLY && !SettingsActivity.setWeekly)
+            || ((rNotification.getType() == RNotification.MONTHLY && !SettingsActivity.setMonthly))) {
+
+            RNotification.delete(rNotification.getId());
             return;
         }
 

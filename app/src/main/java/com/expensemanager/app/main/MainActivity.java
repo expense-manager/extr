@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void testNotifications() {
         Calendar calendar = Calendar.getInstance();
+        // todo:set notification fime according to setting millis
         calendar.add(Calendar.MINUTE, 1);
         RNotification.setupOrUpdateNotifications(this, getString(R.string.weekly_report), getString(R.string.weekly_report_message), false, RNotification.WEEKLY, calendar.getTime());
         calendar.add(Calendar.MINUTE, 1);
