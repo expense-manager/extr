@@ -26,6 +26,13 @@ public class PermissionsManager {
                 Manifest.permission.CAMERA);
     }
 
+    public static void verifyExternalStoragePermissionGranted(BaseActivity baseActivity,
+                                                     OnVerifyPermissionsGrantedCallback onVerifyPermissionsGrantedCallback) {
+        verifyPermissionsGranted(baseActivity,
+                onVerifyPermissionsGrantedCallback,
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
     public static void verifyPermissionsGranted(BaseActivity baseActivity,
                                                 final OnVerifyPermissionsGrantedCallback onVerifyPermissionsGrantedCallback,
                                                 String... permissions) {
