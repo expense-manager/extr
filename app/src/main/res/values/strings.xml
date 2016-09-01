@@ -32,6 +32,10 @@
     <string name="no_category">No Category</string>
     <string name="expense_date">Expense Date</string>
     <string name="start_expense_date">Start Expense Date</string>
+    <string name="weekly_notification">Weekly report</string>
+    <string name="monthly_notification">Monthly report</string>
+    <string name="notification_date">Notification date</string>
+    <string name="notification_time">Notification time</string>
     <string name="end_expense_date">End Expense Date</string>
     <string name="expense">Expense</string>
     <string name="name">Name</string>

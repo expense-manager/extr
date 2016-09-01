@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
 
         android:padding="@dimen/space_large"
-        android:background="@drawable/background_botton_line">
+        android:background="@drawable/background_bottom_line_gray">
 
         <!-- Month -->
         <TextView
