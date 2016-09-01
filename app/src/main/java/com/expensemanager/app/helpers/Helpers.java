@@ -368,6 +368,7 @@ public class Helpers {
         startCalendar.setTime(startDate);
 
         Expense oldestExpense = Expense.getOldestExpense();
+
         if (oldestExpense == null) {
             return null;
         }
@@ -395,6 +396,7 @@ public class Helpers {
         startCalendar.setTime(startDate);
 
         Expense oldestExpense = Expense.getOldestExpense();
+
         if (oldestExpense == null) {
             return null;
         }
@@ -424,15 +426,13 @@ public class Helpers {
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
-        Date endDate = null;
         Expense oldestExpense = Expense.getOldestExpense();
 
         if (oldestExpense == null) {
-            // if no expense, show current week only
-            endDate = new Date();
-        } else {
-            endDate = oldestExpense.getExpenseDate();
+            return null;
         }
+
+        Date endDate = oldestExpense.getExpenseDate();
 
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(endDate);

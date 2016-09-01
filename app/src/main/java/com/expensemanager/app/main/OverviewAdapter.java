@@ -116,6 +116,10 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void addAll(List<Expense> expenses) {
+        if (expenses == null) {
+            return;
+        }
+        
         this.expenses.addAll(expenses);
         notifyDataSetChanged();
     }

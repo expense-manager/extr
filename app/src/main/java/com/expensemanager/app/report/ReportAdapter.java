@@ -119,6 +119,9 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public void addAll(List<Date[]> dates) {
+        if (dates == null) {
+            return;
+        }
         this.dates.addAll(dates);
         notifyDataSetChanged();
     }

@@ -89,7 +89,7 @@ public class OverviewFragment extends Fragment {
         monthlyAverageTextView.setText("$" + new DecimalFormat("##.##").format(getMonthlyAverage()));
 
         overviewAdapter.clear();
-        ArrayList<Expense> newExpenses = new ArrayList<Expense>(Expense.getAllExpenses());
+        ArrayList<Expense> newExpenses = new ArrayList<>(Expense.getAllExpenses());
         overviewAdapter.addAll(newExpenses);
     }
 

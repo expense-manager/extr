@@ -81,11 +81,11 @@ public class ReportFragment extends Fragment {
         Task.call(new Callable<Void>() {
             public Void call() {
                 if (requestCode == WEEKLY) {
-                    dates.addAll(Helpers.getAllWeeks());
+                    reportAdapter.addAll(Helpers.getAllWeeks());
                 } else if (requestCode == MONTHLY){
-                    dates.addAll(Helpers.getAllMonths());
+                    reportAdapter.addAll(Helpers.getAllMonths());
                 } else {
-                    dates.addAll(Helpers.getAllYears());
+                    reportAdapter.addAll(Helpers.getAllYears());
                 }
                 reportAdapter.notifyDataSetChanged();
                 return null;
