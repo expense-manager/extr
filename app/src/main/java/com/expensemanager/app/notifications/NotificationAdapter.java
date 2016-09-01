@@ -7,9 +7,10 @@ import com.expensemanager.app.report.ReportDetailActivity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,7 +90,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.titleTextView.setText(notification.getTitle());
         viewHolder.createdAtTextView.setText(Helpers.formatCreateAt(notification.getCreatedAt()));
         viewHolder.messageTextView.setText(notification.getMessage());
-        int notRead = ContextCompat.getColor(context, R.color.red);
+        int notRead = ContextCompat.getColor(context, R.color.colorPrimary);
         ColorDrawable colorDrawable = new ColorDrawable(notRead);
         viewHolder.checkImageView.setImageDrawable(colorDrawable);
 
@@ -119,14 +119,29 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ReportDetailActivity.newInstance(context, startEnd, requestCode);
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
 
-            // Save to realm
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            notification.setChecked(true);
-            realm.copyToRealmOrUpdate(notification);
-            realm.commitTransaction();
-            realm.close();
+            checkNotification(notification);
         });
+
+        // Delete notification
+        viewHolder.itemView.setOnLongClickListener(v -> {
+            new AlertDialog.Builder(getContext())
+                .setTitle(R.string.delete_notification)
+                .setMessage(R.string.delete_notification_message)
+                .setPositiveButton(R.string.delete, (DialogInterface dialog, int which) -> RNotification.delete(notification.getId()))
+                .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
+                .show();
+            return true;
+        });
+    }
+
+    private void checkNotification(RNotification notification) {
+        // Save to realm
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        notification.setChecked(true);
+        realm.copyToRealmOrUpdate(notification);
+        realm.commitTransaction();
+        realm.close();
     }
 
     public void clear() {
@@ -136,7 +151,42 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void addAll(List<RNotification> expenses) {
         this.notifications.addAll(expenses);
+        removeExpiredNotification();
         notifyDataSetChanged();
+    }
+
+    private void removeExpiredNotification() {
+        if (notifications == null) {
+            return;
+        }
+        for (int i = notifications.size() - 1; i >= 0; i--) {
+            RNotification notification = notifications.get(i);
+            if (hasExpired(notification)) {
+                notifications.remove(i);
+                RNotification.delete(notification.getId());
+            }
+        }
+    }
+
+    private boolean hasExpired(RNotification notification) {
+        Calendar currentCalendar = Calendar.getInstance();
+        Calendar targetCalendar = Calendar.getInstance();
+        targetCalendar.setTime(notification.getCreatedAt());
+
+        int currentYear = currentCalendar.get(Calendar.YEAR);
+        int targetYear = currentCalendar.get(Calendar.YEAR);
+        int currentMonth = currentCalendar.get(Calendar.MONTH);
+        int targetMonth = currentCalendar.get(Calendar.MONTH);
+        int currentWeek = currentCalendar.get(Calendar.WEEK_OF_YEAR);
+        int targetWeek = currentCalendar.get(Calendar.WEEK_OF_YEAR);
+
+        switch (notification.getType()) {
+            case RNotification.WEEKLY:
+                return targetYear < currentYear || targetWeek < currentWeek;
+            case RNotification.MONTHLY:
+                return targetYear < currentYear || targetMonth < currentMonth;
+        }
+        return false;
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {

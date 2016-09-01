@@ -148,7 +148,9 @@ public class Category implements RealmModel {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         RealmResults<Category> categories = realm.where(Category.class).equalTo(ID_KEY, id).findAll();
-        categories.deleteFromRealm(0);
+        if (categories.size() > 0) {
+            categories.deleteFromRealm(0);
+        }
         realm.commitTransaction();
         realm.close();
     }

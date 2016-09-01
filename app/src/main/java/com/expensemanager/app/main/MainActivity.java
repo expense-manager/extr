@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
     private void testNotifications() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 1);
-        RNotification.setupOrUpdateNotifications(this, "Title Weekly", "Message Weekly expense is ", false, RNotification.WEEKLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(this, getString(R.string.weekly_report), getString(R.string.weekly_report_message), false, RNotification.WEEKLY, calendar.getTime());
         calendar.add(Calendar.MINUTE, 1);
-        RNotification.setupOrUpdateNotifications(this, "Title Monthly", "Message Monthly expense is ", false, RNotification.MONTHLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(this, getString(R.string.monthly_report), getString(R.string.monthly_report_message), false, RNotification.MONTHLY, calendar.getTime());
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {

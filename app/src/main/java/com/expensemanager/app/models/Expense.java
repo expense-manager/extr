@@ -315,7 +315,9 @@ public class Expense implements RealmModel {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         RealmResults<Expense> expenses = realm.where(Expense.class).equalTo(ID_KEY, id).findAll();
-        expenses.deleteFromRealm(0);
+        if (expenses.size() > 0) {
+            expenses.deleteFromRealm(0);
+        }
         realm.commitTransaction();
         realm.close();
     }

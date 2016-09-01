@@ -2,12 +2,10 @@ package com.expensemanager.app.models;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,10 +17,6 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
-
-/**
- * Created by Zhaolong Zhong on 8/23/16.
- */
 
 @RealmClass
 public class RNotification implements RealmModel {
@@ -40,7 +34,6 @@ public class RNotification implements RealmModel {
     public static final String CREATED_AT_KEY= "createdAt";
     public static final String TYPE_KEY= "type";
 
-    private static final int BROADCAST_REQUEST_CODE = 100;
     public static final int WEEKLY = 0;
     public static final int MONTHLY = 1;
 
@@ -123,7 +116,7 @@ public class RNotification implements RealmModel {
     }
 
     /**
-     * @param id
+     * @param id notification id
      * @return RNotification object if exist, otherwise return null.
      */
     public static @Nullable RNotification getNotificationById(String id) {
@@ -135,8 +128,8 @@ public class RNotification implements RealmModel {
     }
 
     /**
-     * @param type
-     * @param createdAt
+     * @param type notification type
+     * @param createdAt date to notify
      * @return RNotification object if exist, otherwise return null.
      */
     public static @Nullable RNotification getNotificationByTypeAndDate(int type, Date createdAt) {
@@ -151,15 +144,29 @@ public class RNotification implements RealmModel {
     }
 
     /**
-     * @param activity
-     * @param title
-     * @param message
-     * @param isRemote
-     * @param type
-     * @param date
+     * @param id notification id
      */
-    public static void setupOrUpdateNotifications(Activity activity, String title, String message, boolean isRemote, int type, Date date) {
-        if (title == null || message == null || date == null) {
+    public static void delete(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<RNotification> notifications = realm.where(RNotification.class).equalTo(ID_KEY, id).findAll();
+        if (notifications.size() > 0) {
+            notifications.deleteFromRealm(0);
+        }
+        realm.commitTransaction();
+        realm.close();
+    }
+
+    /**
+     * @param activity activity that sets the notification
+     * @param title notification title
+     * @param message notification message
+     * @param isRemote if notification is remote from server
+     * @param type notification type: WEEKLY or MONTHLY
+     * @param createdAt date to notify
+     */
+    public static void setupOrUpdateNotifications(Activity activity, String title, String message, boolean isRemote, int type, Date createdAt) {
+        if (title == null || message == null || createdAt == null) {
             return;
         } else if (type != WEEKLY && type != MONTHLY) {
             return;
@@ -167,7 +174,7 @@ public class RNotification implements RealmModel {
 
         // Create notification object
         boolean isNew = false;
-        RNotification notification = getNotificationByTypeAndDate(type, date);
+        RNotification notification = getNotificationByTypeAndDate(type, createdAt);
         if (notification == null) {
             isNew = true;
             // Create new notification if not exist
@@ -175,7 +182,7 @@ public class RNotification implements RealmModel {
             String uuid = UUID.randomUUID().toString();
             notification.setId(uuid);
             notification.setType(type);
-            notification.setCreatedAt(date);
+            notification.setCreatedAt(createdAt);
         }
 
         notification.setTitle(title);
@@ -199,7 +206,7 @@ public class RNotification implements RealmModel {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
+            calendar.setTime(createdAt);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
     }

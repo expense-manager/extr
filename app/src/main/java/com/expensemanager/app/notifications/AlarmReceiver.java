@@ -33,9 +33,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String notificationId = intent.getStringExtra(RNotification.ID_KEY);
         RNotification rNotification = RNotification.getNotificationById(notificationId);
+
+        // Return if is null
         if (rNotification == null) {
             return;
         }
+
         String title = rNotification.getTitle();
         String message = rNotification.getMessage();
         Date lastWeek = Helpers.getLastWeekOfYear(rNotification.getCreatedAt());
@@ -50,8 +53,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             amount += e.getAmount();
         }
 
-        // todo: delete notification if amount is 0
-        message += "$" + amount;
+        // Delete notification from database if amount is zero
+        if (amount == 0) {
+            RNotification.delete(rNotification.getId());
+            return;
+        }
+
+        message += " $" + amount;
 
         // Save to realm
         Realm realm = Realm.getDefaultInstance();
