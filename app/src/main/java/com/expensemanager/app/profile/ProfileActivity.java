@@ -42,6 +42,7 @@ import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.service.ProfileBuilder;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncUser;
 

@@ -1,7 +1,4 @@
-package com.expensemanager.app.category;
-
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
+package com.expensemanager.app.category.color_picker;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,11 +33,11 @@ public class ColorPickerFragment extends DialogFragment {
 
     Unbinder unbinder;
     private ColorPickerListener listener;
-    private CategoryColorAdapter adapter;
+    private ColorPickerAdapter adapter;
     private Set<String> usedColors;
     private String currentColor;
 
-    @BindView(R.id.category_color_fragment_recycler_view_id) RecyclerView categoryColorRecyclerView;
+    @BindView(R.id.color_picker_fragment_recycler_view_id) RecyclerView categoryColorRecyclerView;
 
     public ColorPickerFragment() {}
 
@@ -82,7 +82,7 @@ public class ColorPickerFragment extends DialogFragment {
         currentColor = getArguments().getString(CURRENT_COLOR);
         usedColors = Helpers.getUsedColorSet();
 
-        adapter = new CategoryColorAdapter(getActivity(), listener, this, currentColor, COLORS, usedColors);
+        adapter = new ColorPickerAdapter(getActivity(), listener, this, currentColor, COLORS, usedColors);
         setupRecyclerView();
     }
 

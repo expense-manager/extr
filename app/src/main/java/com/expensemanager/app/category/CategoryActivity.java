@@ -13,10 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.expense.CategoryFilterFragment;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.service.SyncCategory;
 
 import java.util.ArrayList;

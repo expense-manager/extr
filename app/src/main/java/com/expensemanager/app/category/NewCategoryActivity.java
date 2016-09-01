@@ -1,6 +1,7 @@
 package com.expensemanager.app.category;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.category.color_picker.ColorPickerFragment;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.User;

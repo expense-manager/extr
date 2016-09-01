@@ -9,7 +9,6 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.User;
-import com.expensemanager.app.profile.ProfileBuilder;
 
 import org.json.JSONObject;
 

@@ -1,6 +1,5 @@
 package com.expensemanager.app.expense;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
@@ -26,11 +25,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -47,10 +44,17 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.expense.category_picker.CategoryPickerFragment;
+import com.expensemanager.app.expense.photo.ExpensePhotoAdapter;
+import com.expensemanager.app.helpers.DatePickerFragment;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.helpers.TimePickerFragment;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.ExpenseBuilder;
+import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncExpense;
 
 import org.json.JSONObject;
@@ -65,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -72,8 +77,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NewExpenseActivity extends AppCompatActivity
-    implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class NewExpenseActivity extends BaseActivity {
     private static final String TAG = NewExpenseActivity.class.getSimpleName();
 
     public static final String DATE_PICKER = "date_picker";
@@ -81,7 +85,6 @@ public class NewExpenseActivity extends AppCompatActivity
     public static final String NEW_PHOTO = "Take a photo";
     public static final String LIBRARY_PHOTO = "Choose from library";
     public static final int SELECT_PICTURE_REQUEST_CODE = 1;
-    public static final int PERMISSIONS_REQUEST_USE_CAMERA = 101;
 
     private ArrayList<byte[]> photoList;
     private ExpensePhotoAdapter expensePhotoAdapter;
@@ -117,7 +120,7 @@ public class NewExpenseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_expense_activity);
         ButterKnife.bind(this);
-        // Setup toolbar
+
         setupToolbar();
 
         setupToolbar();
@@ -136,7 +139,7 @@ public class NewExpenseActivity extends AppCompatActivity
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(year, month, day);
-            datePickerFragment.setListener(this);
+            datePickerFragment.setListener(onDateSetListener);
             datePickerFragment.show(getSupportFragmentManager(), DATE_PICKER);
         });
 
@@ -144,32 +147,35 @@ public class NewExpenseActivity extends AppCompatActivity
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
             TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(hour, minute);
-            timePickerFragment.setListener(this);
+            timePickerFragment.setListener(onTimeSetListener);
             timePickerFragment.show(getSupportFragmentManager(), TIME_PICKER);
         });
     }
 
+    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+            calendar.set(year, monthOfYear, dayOfMonth);
+            formatDateAndTime(calendar.getTime());
+        }
+    };
+
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            formatDateAndTime(calendar.getTime());
+        }
+    };
+
     private void formatDateAndTime(Date date) {
         // Create format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
         // Parse date and set text
         expenseDateTextView.setText(dateFormat.format(date));
         expenseTimeTextView.setText(timeFormat.format(date));
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        calendar.set(year, monthOfYear, dayOfMonth);
-        formatDateAndTime(calendar.getTime());
-    }
-
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        formatDateAndTime(calendar.getTime());
     }
 
     private void setupCategory() {
@@ -243,8 +249,7 @@ public class NewExpenseActivity extends AppCompatActivity
         photoGridView.setAdapter(expensePhotoAdapter);
         photoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             if (position == photoList.size() - 1) {
-                checkPermissionGranted();
-                openImageIntent();
+                checkCameraPermission();
             }
         });
 
@@ -256,25 +261,6 @@ public class NewExpenseActivity extends AppCompatActivity
             expensePhotoAdapter.notifyDataSetChanged();
             return true;
         });
-    }
-
-    // todo: make permission check reusable
-    private void checkPermissionGranted() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)) {
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA},
-                        PERMISSIONS_REQUEST_USE_CAMERA);
-                openImageIntent();
-            }
-        }
     }
 
     private void setPhotoSourcePicker() {
@@ -471,7 +457,8 @@ public class NewExpenseActivity extends AppCompatActivity
                 .show();
     }
 
-    private void close() {
+    @Override
+    protected void close() {
         finish();
         overridePendingTransition(0, R.anim.right_out);
     }
@@ -479,5 +466,15 @@ public class NewExpenseActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         closeWithUnSavedChangesCheck();
+    }
+
+    private void checkCameraPermission() {
+        PermissionsManager.verifyCameraPermissionGranted(this, (boolean isGranted) -> {
+            if (isGranted) {
+                openImageIntent();
+            } else {
+                Log.d(TAG, "Permission is not granted.");
+            }
+        });
     }
 }

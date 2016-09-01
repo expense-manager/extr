@@ -1,6 +1,4 @@
-package com.expensemanager.app.category;
-
-import com.expensemanager.app.R;
+package com.expensemanager.app.category.color_picker;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.expensemanager.app.R;
+
 import java.util.List;
 import java.util.Set;
 
@@ -18,8 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private static final String TAG= CategoryColorAdapter.class.getSimpleName();
+public class ColorPickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private static final String TAG= ColorPickerAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_DEFAULT = 0;
 
@@ -30,8 +30,8 @@ public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ColorPickerFragment.ColorPickerListener listener;
     private ColorPickerFragment fragment;
 
-    public CategoryColorAdapter(Context context, ColorPickerFragment.ColorPickerListener listener,
-            ColorPickerFragment fragment, String currentColor, List<String> colors, Set<String> usedColors) {
+    public ColorPickerAdapter(Context context, ColorPickerFragment.ColorPickerListener listener,
+                              ColorPickerFragment fragment, String currentColor, List<String> colors, Set<String> usedColors) {
         this.context = context;
         this.listener = listener;
         this.fragment = fragment;
@@ -61,11 +61,11 @@ public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         switch (viewType) {
             case VIEW_TYPE_DEFAULT:
-                View view = inflater.inflate(R.layout.category_item_color, parent, false);
+                View view = inflater.inflate(R.layout.color_item, parent, false);
                 viewHolder = new ViewHolderDefault(view);
                 break;
             default:
-                View defaultView = inflater.inflate(R.layout.category_item_color, parent, false);
+                View defaultView = inflater.inflate(R.layout.color_item, parent, false);
                 viewHolder = new ViewHolderDefault(defaultView);
                 break;
         }
@@ -145,9 +145,9 @@ public class CategoryColorAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.category_item_outer_color_image_view_id) CircleImageView outerColorImageView;
-        @BindView(R.id.category_item_padding_color_image_view_id) CircleImageView paddingColorImageView;
-        @BindView(R.id.category_item_inner_color_image_view_id) CircleImageView innerColorImageView;
+        @BindView(R.id.color_item_outer_color_image_view_id) CircleImageView outerColorImageView;
+        @BindView(R.id.color_item_padding_color_image_view_id) CircleImageView paddingColorImageView;
+        @BindView(R.id.color_item_inner_color_image_view_id) CircleImageView innerColorImageView;
 
         private View itemView;
 

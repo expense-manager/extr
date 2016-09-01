@@ -1,8 +1,4 @@
-package com.expensemanager.app.expense;
-
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.ItemClickSupport;
-import com.expensemanager.app.models.Category;
+package com.expensemanager.app.expense.category_picker;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.ItemClickSupport;
+import com.expensemanager.app.models.Category;
 
 import java.util.ArrayList;
 

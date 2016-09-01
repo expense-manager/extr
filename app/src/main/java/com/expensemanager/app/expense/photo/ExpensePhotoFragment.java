@@ -1,4 +1,4 @@
-package com.expensemanager.app.expense;
+package com.expensemanager.app.expense.photo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

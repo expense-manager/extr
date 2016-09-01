@@ -1,10 +1,5 @@
 package com.expensemanager.app.category;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.service.SyncCategory;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,6 +16,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.category.color_picker.ColorPickerFragment;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.service.SyncCategory;
 
 import java.util.Set;
 
@@ -63,7 +64,7 @@ public class CategoryDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.category_detail_activity);
         ButterKnife.bind(this);
-        // Setup toolbar
+
         setupToolbar();
 
         String categoryId = getIntent().getStringExtra(CATEGORY_ID);

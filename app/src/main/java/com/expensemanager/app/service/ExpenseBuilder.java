@@ -1,4 +1,4 @@
-package com.expensemanager.app.expense;
+package com.expensemanager.app.service;
 
 import com.expensemanager.app.models.Expense;
 

@@ -1,4 +1,4 @@
-package com.expensemanager.app.profile;
+package com.expensemanager.app.service;
 
 import com.expensemanager.app.models.User;
 

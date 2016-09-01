@@ -8,14 +8,14 @@
 
     <!-- Color -->
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/category_item_outer_color_image_view_id"
+        android:id="@+id/color_item_outer_color_image_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
         tools:background="@color/black"/>
     <!-- Color -->
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/category_item_padding_color_image_view_id"
+        android:id="@+id/color_item_padding_color_image_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="3dp"
@@ -23,7 +23,7 @@
         tools:background="@color/white"/>
     <!-- Color -->
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/category_item_inner_color_image_view_id"
+        android:id="@+id/color_item_inner_color_image_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="6dp"

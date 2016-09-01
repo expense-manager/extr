@@ -1,4 +1,4 @@
-package com.expensemanager.app.expense;
+package com.expensemanager.app.expense.category_picker;
 
 import android.content.Context;
 import android.graphics.Color;

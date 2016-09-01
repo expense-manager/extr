@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.expense.ExpenseBuilder;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Expense;

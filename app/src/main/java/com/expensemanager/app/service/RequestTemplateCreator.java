@@ -3,7 +3,6 @@ package com.expensemanager.app.service;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.expensemanager.app.expense.ExpenseBuilder;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;

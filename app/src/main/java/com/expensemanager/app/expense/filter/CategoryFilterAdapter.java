@@ -1,4 +1,4 @@
-package com.expensemanager.app.expense;
+package com.expensemanager.app.expense.filter;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Category;
@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,9 +144,9 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
         @BindView(R.id.category_item_frame_outer_color_image_view_id) ImageView frameOuterImageView;
-        @BindView(R.id.category_item_outer_color_image_view_id) CircleImageView outerImageView;
-        @BindView(R.id.category_item_padding_color_image_view_id) CircleImageView paddingImageView;
-        @BindView(R.id.category_item_inner_color_image_view_id) CircleImageView innerImageView;
+        @BindView(R.id.color_item_outer_color_image_view_id) CircleImageView outerImageView;
+        @BindView(R.id.color_item_padding_color_image_view_id) CircleImageView paddingImageView;
+        @BindView(R.id.color_item_inner_color_image_view_id) CircleImageView innerImageView;
         @BindView(R.id.category_item_name_text_view_id) TextView nameTextView;
 
         private View itemView;
