@@ -57,9 +57,8 @@ public class GroupActivity extends AppCompatActivity {
         setupRecyclerView();
 
         fab.setOnClickListener(v -> {
-            // todo: jump to new group activity
-            //NewGroupActivity.newInstance(this);
-            //overridePendingTransition(R.anim.right_in, R.anim.stay);
+            NewGroupActivity.newInstance(this);
+            overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
 
         invalidateViews();

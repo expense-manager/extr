@@ -126,6 +126,7 @@
     <string name="update_photo">Update photo</string>
     <string name="title_activity_group">GroupActivity</string>
     <string name="title_activity_member">MemberActivity</string>
-    <string name="title_activity_group_detail">GroupDetailActivity</string>
+    <string name="title_activity_group_detail">Group Detail</string>
+    <string name="title_activity_new_group">New Group</string>
 
 </resources>
