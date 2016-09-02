@@ -25,6 +25,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
+import com.expensemanager.app.group.GroupActivity;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.NotificationsActivity;
@@ -179,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_category:
                 CategoryActivity.newInstance(this);
                 break;
-//            case R.id.nav_group:
-//                GroupActivity.newInstance(this);
-//                break;
+            case R.id.nav_group:
+                GroupActivity.newInstance(this);
+                break;
             case R.id.nav_notifications:
                 NotificationsActivity.newInstance(this);
                 break;

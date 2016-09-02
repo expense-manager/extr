@@ -19,10 +19,10 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - user can receive a weekly and monthly report notification
 
 ## Optional
-- user can create a group
-- user can invite people to a group
-- user can switch group to check out expenses in different group
-- members can create and update expense in the group
+- user can create a groupname
+- user can invite people to a groupname
+- user can switch groupname to check out expenses in different groupname
+- members can create and update expense in the groupname
 - admin or members can have difference permission to handle expense items or check out different expense report based on the role.
 
 

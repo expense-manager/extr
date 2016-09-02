@@ -11,20 +11,20 @@ import io.realm.annotations.RealmClass;
  */
 
 @RealmClass
-public class Group implements RealmModel {
-    private static final String TAG = Group.class.getSimpleName();
+public class GroupUser implements RealmModel {
+    private static final String TAG = GroupUser.class.getSimpleName();
 
     // Keys in JSON response
     public static final String OBJECT_ID_JSON_KEY = "objectId";
-    public static final String GROUPNAME_JSON_KEY = "groupname";
-    public static final String NAME_JSON_KEY = "name";
+    public static final String GROUP_ID_JSON_KEY = "groupId";
     public static final String USER_ID_JSON_KEY = "userId";
+    public static final String IS_ACCEPTED_JSON_KEY = "isAccepted";
 
     @PrimaryKey
     private String id;
-    private String groupname;
-    private String name;
-    private String userId;
+    private Group group;
+    private User user;
+    private boolean isAccepted;
     private Date createdAt;
 
     public String getId() {
@@ -35,28 +35,28 @@ public class Group implements RealmModel {
         this.id = id;
     }
 
-    public String getGroupname() {
-        return groupname;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setGroupname(String groupname) {
-        this.groupname = groupname;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
-    public String getName() {
-        return name;
+    public User getUser() {
+        return user;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getUserId() {
-        return userId;
+    public boolean isAccepted() {
+        return isAccepted;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
     }
 
     public Date getCreatedAt() {
