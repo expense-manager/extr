@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.expensemanager.app.helpers.EGlideModule"
-            android:value="GlideModule" />
+            android:value="GlideModule"/>
+
         <activity
             android:name=".welcome.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -45,10 +46,10 @@
             android:theme="@style/BaseTheme"/>
         <activity
             android:name=".category.CategoryActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".expense.ExpenseDetailActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
         <activity
             android:name=".category.CategoryDetailActivity"
             android:label="@string/title_activity_category_detail"
@@ -78,7 +79,7 @@
             android:theme="@style/BaseTheme"/>
         <activity
             android:name=".profile.ProfileActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseTheme"/>
 
         <receiver android:name=".notifications.AlarmReceiver">
             <intent-filter>
@@ -88,7 +89,14 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".group.GroupActivity"></activity>
+        <activity
+            android:name=".group.GroupActivity"
+            android:theme="@style/BaseTheme"/>
+        <activity
+            android:name=".group.GroupDetailActivity"
+            android:label="@string/title_activity_group_detail"
+            android:theme="@style/BaseTheme">
+        </activity>
     </application>
 
 </manifest>

@@ -4,10 +4,27 @@
     android:id="@+id/group_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.expensemanager.app.groupname.GroupActivity">
+    tools:context="com.expensemanager.app.group.GroupActivity">
+
+    <include layout="@layout/toolbar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/group_activity_recycler_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_id"
+
+        android:paddingTop="@dimen/space_really_small"
+        android:paddingBottom="@dimen/space_really_small"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/group_activity_fab_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+
+        android:src="@drawable/ic_add_white_24dp"/>
 
 </RelativeLayout>
