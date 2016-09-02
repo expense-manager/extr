@@ -97,6 +97,11 @@
             android:label="@string/title_activity_group_detail"
             android:theme="@style/BaseTheme">
         </activity>
+        <activity
+            android:name=".group.NewGroupActivity"
+            android:label="@string/title_activity_new_group"
+            android:theme="@style/BaseTheme">
+        </activity>
     </application>
 
 </manifest>
