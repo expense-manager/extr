@@ -197,6 +197,9 @@ public class RNotification implements RealmModel {
         realm.close();
 
         if (isNew) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(createdAt);
+
             AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
 
             Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
@@ -205,8 +208,6 @@ public class RNotification implements RealmModel {
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(createdAt);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
     }
