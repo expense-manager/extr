@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/expense_detail_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@color/white"
+    tools:context="com.expensemanager.app.group.GroupDetailActivity">
+
+    <include layout="@layout/toolbar_light" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_id">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Name label -->
+            <TextView
+                android:id="@+id/group_detail_activity_name_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/name"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Name -->
+            <EditText
+                android:id="@+id/group_detail_activity_name_edit_text_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_name_label_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+
+                android:padding="@dimen/space_really_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"
+                android:background="@drawable/background_bottom_line_gray"/>
+
+            <!-- Group label -->
+            <TextView
+                android:id="@+id/group_detail_activity_group_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_name_edit_text_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/group"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Group -->
+            <EditText
+                android:id="@+id/group_detail_activity_group_edit_text_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_group_label_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+
+                android:padding="@dimen/space_really_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"
+                android:background="@drawable/background_bottom_line_gray"/>
+
+            <!-- About label -->
+            <TextView
+                android:id="@+id/group_detail_activity_about_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_group_edit_text_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/about"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- About -->
+            <EditText
+                android:id="@+id/group_detail_activity_about_edit_text_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_about_label_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+
+                android:padding="@dimen/space_really_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"
+                android:background="@drawable/background_bottom_line_gray"/>
+
+            <!-- Created by label -->
+            <TextView
+                android:id="@+id/group_detail_activity_created_by_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_about_edit_text_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/created_by"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Created by info -->
+            <RelativeLayout
+                android:id="@+id/group_detail_activity_created_by_relative_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_below="@+id/group_detail_activity_created_by_label_text_view_id"
+
+                android:padding="@dimen/space_medium"
+                android:background="@drawable/background_round_corner_border_gray">
+
+                <!-- Color -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/group_detail_activity_created_by_photo_image_view_id"
+                    android:layout_width="@dimen/category_color_width_small"
+                    android:layout_height="@dimen/category_color_width_small"
+                    android:layout_marginEnd="@dimen/space_medium"/>
+
+                <!-- Name -->
+                <TextView
+                    android:id="@+id/group_detail_activity_created_by_name_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/group_detail_activity_created_by_photo_image_view_id"
+                    android:layout_alignTop="@+id/group_detail_activity_created_by_photo_image_view_id"
+
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_small"
+                    android:gravity="center_vertical"
+                    tools:text="name"/>
+
+                <!-- Email -->
+                <TextView
+                    android:id="@+id/group_detail_activity_created_by_email_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/group_detail_activity_created_by_name_text_view_id"
+                    android:layout_alignLeft="@+id/group_detail_activity_created_by_name_text_view_id"
+
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_really_small"
+                    android:gravity="center_vertical"
+                    tools:text="1234"/>
+
+            </RelativeLayout>
+
+            <!-- Created At label -->
+            <TextView
+                android:id="@+id/group_detail_activity_created_at_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_created_by_relative_layout_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/created_at"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Created At -->
+            <TextView
+                android:id="@+id/group_detail_activity_created_at_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_created_at_label_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+
+                android:padding="@dimen/space_really_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"
+                android:background="@drawable/background_bottom_line_gray"/>
+
+            <!-- Member label -->
+            <TextView
+                android:id="@+id/group_detail_activity_member_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_created_at_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/member"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Member recycler view -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/group_detail_activity_member_recycler_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_detail_activity_member_label_text_view_id"
+
+                android:paddingTop="@dimen/space_really_small"
+                android:paddingBottom="@dimen/space_really_small"/>
+
+            <!-- Delete -->
+            <Button
+                android:id="@+id/group_detail_activity_delete_button_id"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/space_medium_large"
+                android:layout_below="@+id/group_detail_activity_member_recycler_view_id"
+
+                android:textSize="@dimen/text_small"
+                android:textColor="@color/black"
+                android:text="@string/delete"
+                android:textAllCaps="false"
+                android:stateListAnimator="@null"
+                android:background="@drawable/button_background_gray"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/group_detail_activity_progress_bar_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleLarge"/>
+
+</RelativeLayout>

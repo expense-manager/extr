@@ -1,7 +1,6 @@
 package com.expensemanager.app.settings;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.expense.TimePickerFragment;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.profile.ProfileActivity;
@@ -9,7 +8,6 @@ import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.welcome.WelcomeActivity;
 
 import android.app.Activity;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,7 +23,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

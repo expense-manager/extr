@@ -38,6 +38,7 @@
     <string name="notification_time">Notification time</string>
     <string name="end_expense_date">End Expense Date</string>
     <string name="expense">Expense</string>
+    <string name="group">Group</string>
     <string name="name">Name</string>
     <string name="filter">Filter</string>
     <string name="report">Report</string>
@@ -56,8 +57,11 @@
     <string name="title_activity_report_detail">Report Detail</string>
     <string name="title_activity_overview">OverviewActivity</string>
     <string name="amount">Amount</string>
+    <string name="about">About</string>
     <string name="note">Note</string>
+    <string name="member">Members</string>
     <string name="created_at">Created At</string>
+    <string name="created_by">Created By</string>
     <string name="shared_preferences_session_key">Session</string>
     <string name="create_an_expense">Create an expense</string>
     <string name="photo_date_format_string">yyyyMMddHHmmss</string>
@@ -68,11 +72,15 @@
     <string name="monthly_report">Monthly Report</string>
     <string name="monthly_report_message">Your total expense for last month is</string>
     <string name="delete_profile_image">Delete Profile Image</string>
-    <string name="unsaved_changes_message">Are you sure you want to discard your unsaved changes?</string>
+    <string name="unsaved_changes_message">Are you sure you want to discard your unsaved changes?
+    </string>
     <string name="read_all_notification">Read all notifications</string>
-    <string name="read_all_notification_message">Are you sure to mark all notifications as read?</string>
+    <string name="read_all_notification_message">Are you sure to mark all notifications as read?
+    </string>
     <string name="no_unread_notification">No unread notification</string>
-    <string name="no_unread_notification_message">You do not have any unread notification right now.</string>
+    <string name="no_unread_notification_message">You do not have any unread notification right
+        now.
+    </string>
     <string name="delete_notification">Delete notification</string>
     <string name="delete_notification_message">Are you sure to delete this notification?</string>
     <string name="delete_photo">Delete photo</string>
@@ -118,5 +126,6 @@
     <string name="update_photo">Update photo</string>
     <string name="title_activity_group">GroupActivity</string>
     <string name="title_activity_member">MemberActivity</string>
+    <string name="title_activity_group_detail">GroupDetailActivity</string>
 
 </resources>
