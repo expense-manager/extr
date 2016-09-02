@@ -56,7 +56,8 @@
             android:layout_below="@+id/setting_activity_weekly_notification_enable_relative_layout_id"
 
             android:paddingLeft="@dimen/space_medium_large"
-            android:paddingRight="@dimen/space_medium_large">
+            android:paddingRight="@dimen/space_medium_large"
+            android:visibility="gone">
 
             <!-- Time -->
             <TextView
@@ -139,7 +140,8 @@
             android:layout_below="@+id/setting_activity_monthly_notification_enable_relative_layout_id"
 
             android:paddingLeft="@dimen/space_medium_large"
-            android:paddingRight="@dimen/space_medium_large">
+            android:paddingRight="@dimen/space_medium_large"
+            android:visibility="gone">
 
             <!-- Monthly notification time -->
             <TextView
