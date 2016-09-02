@@ -109,32 +109,6 @@
                 android:textSize="@dimen/text_medium_small"
                 android:background="@drawable/background_bottom_line_gray"/>
 
-            <!-- Member label -->
-            <TextView
-                android:id="@+id/new_group_activity_member_label_text_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/new_group_activity_about_edit_text_id"
-                android:layout_marginLeft="@dimen/space_medium_large"
-                android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_marginTop="@dimen/space_medium_large"
-                android:layout_marginBottom="@dimen/space_medium"
-
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
-                android:text="@string/member"
-                android:textSize="@dimen/text_small"/>
-
-            <!-- Member recycler view -->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/new_group_activity_member_recycler_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/new_group_activity_member_label_text_view_id"
-
-                android:paddingTop="@dimen/space_really_small"
-                android:paddingBottom="@dimen/space_really_small"/>
-
         </RelativeLayout>
     </ScrollView>
 

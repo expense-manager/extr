@@ -102,6 +102,11 @@
             android:label="@string/title_activity_new_group"
             android:theme="@style/BaseTheme">
         </activity>
+        <activity
+            android:name=".group.MemberActivity"
+            android:label="@string/title_activity_member"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

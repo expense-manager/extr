@@ -1,7 +1,9 @@
 package com.expensemanager.app.group;
 
+import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,17 +18,18 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-public class GroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private static final String TAG= GroupAdapter.class.getSimpleName();
+public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private static final String TAG= MemberAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_DEFAULT = 0;
-    private ArrayList<Group> groups;
+    private ArrayList<User> users;
     private Context context;
 
-    public GroupAdapter(Context context, ArrayList<Group> groups) {
+    public MemberAdapter(Context context, ArrayList<User> users) {
         this.context = context;
-        this.groups = groups;
+        this.users = users;
     }
 
     private Context getContext() {
@@ -35,7 +38,7 @@ public class GroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return this.groups.size();
+        return this.users.size();
     }
 
     @Override
@@ -50,11 +53,11 @@ public class GroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         switch (viewType) {
             case VIEW_TYPE_DEFAULT:
-                View view = inflater.inflate(R.layout.group_item_default, parent, false);
+                View view = inflater.inflate(R.layout.member_item_default, parent, false);
                 viewHolder = new ViewHolderDefault(view);
                 break;
             default:
-                View defaultView = inflater.inflate(R.layout.group_item_default, parent, false);
+                View defaultView = inflater.inflate(R.layout.member_item_default, parent, false);
                 viewHolder = new ViewHolderDefault(defaultView);
                 break;
         }
@@ -75,40 +78,46 @@ public class GroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
-        Group group = groups.get(position);
+        User user = users.get(position);
 
-        viewHolder.nameTextView.setText(group.getName());
+        Glide.with(context)
+            .load(user.getPhotoUrl())
+            .placeholder(R.drawable.profile_place_holder_image)
+            .into(viewHolder.photoImageView);
+
+        viewHolder.nameTextView.setText(user.getFullname());
 
         // Set item click listener
         viewHolder.itemView.setOnClickListener(v -> {
-            //todo: jump to group details activity
-            GroupDetailActivity.newInstance(context, groups.get(position).getId());
-            ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+            //todo: jump to profile activity
+            //ProfileActivity.newInstance(context, users.get(position).getId());
+            //((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }
 
     public void clear() {
-        groups.clear();
+        users.clear();
         notifyDataSetChanged();
     }
 
-    public void add(Group group) {
-        this.groups.add(group);
-        notifyItemChanged(groups.size() - 1);
+    public void add(User user) {
+        this.users.add(user);
+        notifyItemChanged(users.size() - 1);
     }
 
 
-    public void addAll(List<Group> groups) {
-        if (groups == null) {
+    public void addAll(List<User> users) {
+        if (users == null) {
             return;
         }
 
-        this.groups.addAll(groups);
+        this.users.addAll(users);
         notifyDataSetChanged();
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.group_item_default_name_text_view_id) TextView nameTextView;
+        @BindView(R.id.member_item_default_photo_image_view_id) CircleImageView photoImageView;
+        @BindView(R.id.member_item_default_name_text_view_id) TextView nameTextView;
 
         private View itemView;
 

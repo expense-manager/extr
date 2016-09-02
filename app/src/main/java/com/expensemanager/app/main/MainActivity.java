@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void testEmail() {
         // Fill google email and password
-        String email = "";
-        String password = "";
+        String email = "expensemanagers@gmail.com";
+        String password = "expense_managers";
         MailSender mailSender = new MailSender(email, password);
 
         Mail.MailBuilder builder = new Mail.MailBuilder();
