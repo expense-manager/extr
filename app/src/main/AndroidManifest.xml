@@ -93,6 +93,11 @@
             android:label="@string/title_activity_new_group"
             android:theme="@style/BaseTheme">
         </activity>
+        <activity
+            android:name=".group.MemberActivity"
+            android:label="@string/title_activity_member"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <receiver android:name=".notifications.AlarmReceiver">
             <intent-filter>
@@ -105,7 +110,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="e6a9a40d9b430aa527fc471b8c19385f55b0858c" />
-
     </application>
 
 </manifest>

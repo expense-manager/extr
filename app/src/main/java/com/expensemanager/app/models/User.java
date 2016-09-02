@@ -14,6 +14,8 @@ import java.util.TimeZone;
 
 import io.realm.Realm;
 import io.realm.RealmModel;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 
@@ -46,6 +48,8 @@ public class User implements RealmModel{
     // Property name key
     public static final String ID_KEY = "id";
     public static final String CREATED_AT_KEY = "createdAt";
+    public static final String GROUP_ID_KEY = "groupId";
+    public static final String FIRST_NAME_KEY = "firstName";
 
     // Property
     @PrimaryKey
@@ -57,6 +61,7 @@ public class User implements RealmModel{
     private String phone;
     private String photoUrl;
     private Date createdAt;
+    private String groupId;
 
     public String getId() {
         return id;
@@ -126,6 +131,14 @@ public class User implements RealmModel{
         this.createdAt = createdAt;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     public void mapFromJSON(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
@@ -161,5 +174,16 @@ public class User implements RealmModel{
         realm.close();
 
         return user;
+    }
+
+    /**
+     * @return all userss by group id
+     */
+    public static RealmResults<User> getAllUsersByGroupId(String groupId) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<User> users = realm.where(User.class).equalTo(GROUP_ID_KEY, groupId).findAllSorted(FIRST_NAME_KEY, Sort.ASCENDING);
+        realm.close();
+
+        return users;
     }
 }

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -48,6 +49,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     @BindView(R.id.group_detail_activity_group_edit_text_id) EditText groupEditText;
     @BindView(R.id.group_detail_activity_about_edit_text_id) EditText aboutEditText;
     @BindView(R.id.group_detail_activity_delete_button_id) Button deleteButton;
+    @BindView(R.id.group_detail_activity_member_relative_layout_id) RelativeLayout memberRelativeLayout;
     @BindView(R.id.group_detail_activity_created_by_photo_image_view_id) CircleImageView createdByPhotoImageView;
     @BindView(R.id.group_detail_activity_created_by_name_text_view_id) TextView createdByNameTextView;
     @BindView(R.id.group_detail_activity_created_by_email_text_view_id) TextView createdByEmailTextView;
@@ -72,6 +74,11 @@ public class GroupDetailActivity extends AppCompatActivity {
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
         String groupId = getIntent().getStringExtra(GROUP_ID);
+
+        memberRelativeLayout.setOnClickListener(v -> {
+            MemberActivity.newInstance(this, groupId);
+        });
+
         group = Group.getGroupById(groupId);
 
         // todo: load createdBy user by userId

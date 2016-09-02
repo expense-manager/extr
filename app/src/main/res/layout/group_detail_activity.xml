@@ -202,31 +202,41 @@
                 android:textSize="@dimen/text_medium_small"
                 android:background="@drawable/background_bottom_line_gray"/>
 
-            <!-- Member label -->
-            <TextView
-                android:id="@+id/group_detail_activity_member_label_text_view_id"
+            <!-- Created by info -->
+            <RelativeLayout
+                android:id="@+id/group_detail_activity_member_relative_layout_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/group_detail_activity_created_at_text_view_id"
+                android:layout_marginTop="@dimen/space_medium_large"
                 android:layout_marginLeft="@dimen/space_medium_large"
                 android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_marginTop="@dimen/space_medium_large"
-                android:layout_marginBottom="@dimen/space_medium"
+                android:layout_below="@+id/group_detail_activity_created_at_text_view_id"
 
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
-                android:text="@string/member"
-                android:textSize="@dimen/text_small"/>
+                android:padding="@dimen/space_medium"
+                android:background="@drawable/background_round_corner_border_gray">
 
-            <!-- Member recycler view -->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/group_detail_activity_member_recycler_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/group_detail_activity_member_label_text_view_id"
+                <!-- Member label -->
+                <TextView
+                    android:id="@+id/group_detail_activity_member_label_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-                android:paddingTop="@dimen/space_really_small"
-                android:paddingBottom="@dimen/space_really_small"/>
+                    android:paddingLeft="@dimen/space_really_small"
+                    android:paddingRight="@dimen/space_really_small"
+                    android:text="@string/member"
+                    android:textSize="@dimen/text_small"/>
+
+                <!-- Email -->
+                <ImageView
+                    android:id="@+id/group_detail_activity_member_image_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_chevron_right"/>
+
+            </RelativeLayout>
 
             <!-- Delete -->
             <Button
@@ -234,7 +244,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="@dimen/space_medium_large"
-                android:layout_below="@+id/group_detail_activity_member_recycler_view_id"
+                android:layout_below="@+id/group_detail_activity_member_relative_layout_id"
 
                 android:textSize="@dimen/text_small"
                 android:textColor="@color/black"
