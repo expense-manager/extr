@@ -28,6 +28,7 @@ import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupActivity;
+import com.expensemanager.app.group.GroupDetailActivity;
 import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.Group;
@@ -41,7 +42,6 @@ import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.WelcomeActivity;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -120,13 +120,10 @@ public class MainActivity extends AppCompatActivity {
         SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
         SyncCategory.getAllCategories();
         SyncExpense.getAllExpenses();
-
-        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-        FirebaseCrash.log("Activity created");
     }
 
     private void setupDrawerListItems() {
-        drawerAdapter.add( new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
+        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
         drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
         drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_buffer).setTitle(getString(R.string.nav_category)));
         drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
@@ -141,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupGroupListItems() {
+        groupDrawerAdapter.clear();
         groupDrawerAdapter.addAll(Group.getAllGroups());
     }
 
@@ -150,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
         drawerAdapter.setOnItemClickLister(new DrawerAdapter.OnItemSelecteListener() {
             @Override
             public void onItemSelected(View v, int position) {
+                if (position != 0) {
+                    drawerLayout.closeDrawer(drawRecyclerView);
+                }
                 switch(position) {
                     case 0:
                         setupGroupList();
@@ -175,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
                     case 7:
                         SettingsActivity.newInstance(MainActivity.this);
                         break;
-                    case 8:
+                    case 9:
                         signOut();
                         break;
-                    case 9:
+                    case 10:
                         // About
                         break;
                     default:
@@ -189,16 +190,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupGroupList() {
+        setupGroupListItems();
         drawRecyclerView.setAdapter(groupDrawerAdapter);
 
         groupDrawerAdapter.setOnItemClickLister(new GroupDrawerAdapter.OnItemSelecteListener() {
             @Override
             public void onItemSelected(View v, int position) {
-                if (position == 0) {
-                    setupDrawerList();
-                } else {
-                    groupId = groups.get(position).getId();
+                if (position != 0) {
+                    drawerLayout.closeDrawer(drawRecyclerView);
+                    groupId = groups.get(position - 1).getId();
+                    // todo: sync with data for new selected group
                 }
+                setupDrawerList();
             }
         });
     }

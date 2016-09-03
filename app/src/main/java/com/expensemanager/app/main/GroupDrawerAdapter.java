@@ -133,6 +133,11 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        groups.clear();
+        notifyDataSetChanged();
+    }
+
     class DrawerViewHolder extends RecyclerView.ViewHolder{
         // DrawerHeader
         CircleImageView accountPhotoImageView;
