@@ -24,6 +24,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
 
     public final static int TYPE_HEADER = 0;
     public final static int TYPE_MENU = 1;
+    public final static int TYPE_NEW = 2;
 
 
     private Context context;
@@ -43,19 +44,19 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
     public DrawerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if(viewType == TYPE_HEADER){
-
             view = LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.drawer_header, parent, false);
 
-        }else{
-
+        } else if (viewType == TYPE_MENU){
             view = LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.drawer_item_group, parent, false);
+        } else {
+            view = LayoutInflater
+                .from(parent.getContext()).inflate(R.layout.drawer_item_group_new, parent, false);
         }
 
         return new DrawerViewHolder(view, viewType);
     }
-
 
     @Override
     public void onBindViewHolder(DrawerViewHolder holder, int position) {
@@ -75,7 +76,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
             holder.accountPhotoImageView.setOnClickListener(v -> {
                 ProfileActivity.newInstance(context, null);
             });
-        }else{
+        } else if (type == TYPE_MENU){
             Group group = groups.get(position - 1);
             holder.titleTextView.setText(group.getName());
             User user = User.getUserById(group.getUserId());
@@ -112,15 +113,18 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
 
     @Override
     public int getItemCount() {
-        return groups.size()+1;
+        return groups.size() + 2;
     }
 
     @Override
     public int getItemViewType(int position) {
         if(position == 0){
             return  TYPE_HEADER;
+        } else if (position <= groups.size()) {
+            return TYPE_MENU;
+        } else {
+            return TYPE_NEW;
         }
-        return TYPE_MENU;
     }
 
     public void add(Group group) {

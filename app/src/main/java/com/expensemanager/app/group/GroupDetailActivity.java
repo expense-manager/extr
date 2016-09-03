@@ -102,6 +102,9 @@ public class GroupDetailActivity extends BaseActivity {
 
     private void invalidateViews() {
         group = Group.getGroupById(groupId);
+        if (group == null) {
+            return;
+        }
         group.print();
         nameEditText.setText(group.getName());
         groupEditText.setText(group.getGroupname());

@@ -29,6 +29,7 @@ import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
+import com.expensemanager.app.group.NewGroupActivity;
 import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.Group;
@@ -51,6 +52,7 @@ import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -58,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private DrawerAdapter drawerAdapter;
     private GroupDrawerAdapter groupDrawerAdapter;
-    public static String groupId;
     private ArrayList<DrawerItem> drawerItems;
     private ArrayList<DrawerSubItem> drawerSubItems;
     private ArrayList<Group> groups;
     private String loginUserId;
+    public static String groupId;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
@@ -140,6 +143,10 @@ public class MainActivity extends AppCompatActivity {
     private void setupGroupListItems() {
         groupDrawerAdapter.clear();
         groupDrawerAdapter.addAll(Group.getAllGroups());
+        if (groupId == null && groups.size() > 0) {
+            groupId = groups.get(0).getId();
+            saveGroupId();
+        }
     }
 
     private void setupDrawerList() {
@@ -165,7 +172,8 @@ public class MainActivity extends AppCompatActivity {
                         CategoryActivity.newInstance(MainActivity.this);
                         break;
                     case 4:
-                        GroupActivity.newInstance(MainActivity.this);
+                        GroupDetailActivity.newInstance(MainActivity.this, groupId);
+                        // todo: remove group list activity
                         break;
                     case 5:
                         NotificationsActivity.newInstance(MainActivity.this);
@@ -196,14 +204,25 @@ public class MainActivity extends AppCompatActivity {
         groupDrawerAdapter.setOnItemClickLister(new GroupDrawerAdapter.OnItemSelecteListener() {
             @Override
             public void onItemSelected(View v, int position) {
-                if (position != 0) {
-                    drawerLayout.closeDrawer(drawRecyclerView);
+                if (position > 0 && position <= groups.size()) {
                     groupId = groups.get(position - 1).getId();
-                    // todo: sync with data for new selected group
+                    drawerLayout.closeDrawer(drawRecyclerView);
+                    // todo: sync data for new selected group
+
+                    saveGroupId();
+                } else if (position == groups.size() + 1) {
+                    NewGroupActivity.newInstance(MainActivity.this);
+                    drawerLayout.closeDrawer(drawRecyclerView);
                 }
+
                 setupDrawerList();
             }
         });
+    }
+
+    private void saveGroupId() {
+        SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0).edit();
+        sharedPreferencesEditor.putString(Group.ID_KEY, groupId);
     }
 
     private void testNotifications() {
@@ -281,6 +300,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        Realm realm = Realm.getDefaultInstance();
+        realm.addChangeListener(v -> setupGroupListItems());
+        setupGroupListItems();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 
     @Override

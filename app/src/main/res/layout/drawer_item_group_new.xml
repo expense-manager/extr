@@ -3,35 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/drawer_item_primary"
+
     android:paddingEnd="@dimen/drawer_vertical_padding"
     android:paddingLeft="@dimen/drawer_vertical_padding"
     android:paddingRight="@dimen/drawer_vertical_padding"
     android:paddingStart="@dimen/drawer_vertical_padding">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/drawer_icon_image_view_id"
-        android:layout_width="@dimen/drawer_item_primary_icon"
-        android:layout_height="@dimen/drawer_item_primary"
-
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="@dimen/space_small"
-        android:layout_marginBottom="@dimen/space_small"
-        android:layout_marginRight="@dimen/drawer_vertical_padding"/>
-
     <TextView
         android:id="@+id/drawer_name_text_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/drawer_icon_image_view_id"
-        android:layout_alignTop="@+id/drawer_icon_image_view_id"
-        android:layout_alignBottom="@+id/drawer_icon_image_view_id"
 
         android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical|start"
+        android:gravity="center"
         android:lines="1"
         android:singleLine="true"
+        android:text="@string/new_group"
         android:textDirection="anyRtl"
         android:textSize="@dimen/drawer_item_primary_text"
-        tools:text="Some drawer text"/>
+        android:background="@drawable/button_background_gray"/>
 </RelativeLayout>
