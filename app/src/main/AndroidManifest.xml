@@ -96,7 +96,7 @@
         <activity
             android:name=".group.MemberActivity"
             android:label="@string/title_activity_member"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/BaseTheme">
         </activity>
 
         <receiver android:name=".notifications.AlarmReceiver">

@@ -34,11 +34,9 @@ public class MemberActivity extends AppCompatActivity {
     private String groupId;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
-    @BindView(R.id.toolbar_back_image_view_id)
-    ImageView backImageView;
+    @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.member_activity_recycler_view_id) RecyclerView recyclerView;
-    @BindView(R.id.group_activity_fab_id) FloatingActionButton fab;
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, MemberActivity.class);
@@ -50,7 +48,7 @@ public class MemberActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.group_activity);
+        setContentView(R.layout.member_activity);
         ButterKnife.bind(this);
 
         setupToolbar();
@@ -60,11 +58,6 @@ public class MemberActivity extends AppCompatActivity {
         users = new ArrayList<>();
         memberAdapter = new MemberAdapter(this, users);
         setupRecyclerView();
-
-        fab.setOnClickListener(v -> {
-            NewGroupActivity.newInstance(this);
-            overridePendingTransition(R.anim.right_in, R.anim.stay);
-        });
 
         invalidateViews();
         //todo: sync all members
@@ -88,7 +81,7 @@ public class MemberActivity extends AppCompatActivity {
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
-        titleTextView.setText(getString(R.string.group));
+        titleTextView.setText(getString(R.string.member));
         titleTextView.setOnClickListener(v -> finish());
         backImageView.setOnClickListener(v -> finish());
     }
