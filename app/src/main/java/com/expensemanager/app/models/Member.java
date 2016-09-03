@@ -11,8 +11,8 @@ import io.realm.annotations.RealmClass;
  */
 
 @RealmClass
-public class GroupUser implements RealmModel {
-    private static final String TAG = GroupUser.class.getSimpleName();
+public class Member implements RealmModel {
+    private static final String TAG = Member.class.getSimpleName();
 
     // Keys in JSON response
     public static final String OBJECT_ID_JSON_KEY = "objectId";
@@ -24,7 +24,7 @@ public class GroupUser implements RealmModel {
     private String id;
     private Group group;
     private User user;
-    private boolean isAccepted;
+    private boolean isAccepted = true;
     private Date createdAt;
 
     public String getId() {
