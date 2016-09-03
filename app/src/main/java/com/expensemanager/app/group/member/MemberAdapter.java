@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
+import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 
 import java.util.ArrayList;
@@ -22,12 +23,12 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String TAG= MemberAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_DEFAULT = 0;
-    private ArrayList<User> users;
+    private ArrayList<Member> members;
     private Context context;
 
-    public MemberAdapter(Context context, ArrayList<User> users) {
+    public MemberAdapter(Context context, ArrayList<Member> members) {
         this.context = context;
-        this.users = users;
+        this.members = members;
     }
 
     private Context getContext() {
@@ -36,7 +37,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return this.users.size();
+        return this.members.size();
     }
 
     @Override
@@ -76,7 +77,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
-        User user = users.get(position);
+        User user = members.get(position).getUser();
 
         Glide.with(context)
             .load(user.getPhotoUrl())
@@ -94,22 +95,22 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public void clear() {
-        users.clear();
+        members.clear();
         notifyDataSetChanged();
     }
 
-    public void add(User user) {
-        this.users.add(user);
-        notifyItemChanged(users.size() - 1);
+    public void add(Member member) {
+        this.members.add(member);
+        notifyItemChanged(members.size() - 1);
     }
 
 
-    public void addAll(List<User> users) {
-        if (users == null) {
+    public void addAll(List<Member> members) {
+        if (members == null) {
             return;
         }
 
-        this.users.addAll(users);
+        this.members.addAll(members);
         notifyDataSetChanged();
     }
 

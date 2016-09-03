@@ -3,6 +3,7 @@ package com.expensemanager.app.service;
 import android.util.Log;
 
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,25 +18,24 @@ import io.realm.Realm;
  * Created by Zhaolong Zhong on 9/1/16.
  */
 
-public class SyncGroup {
-    private static final String TAG = SyncGroup.class.getSimpleName();
+public class SyncMember {
+    private static final String TAG = SyncMember.class.getSimpleName();
 
     private static final String NAME = "name";
     private static final String OBJECT_ID = "objectId";
     private static final String RESULTS = "results";
 
-    public static Task<Void> getGroupByUserId(String userId) {
-
+    public static Task<Void> getMembersByGroupId(String groupId) {
         TaskCompletionSource tcs = new TaskCompletionSource();
-        RequestTemplate template = RequestTemplateCreator.getAllGroupByUserId(userId);
+        RequestTemplate template = RequestTemplateCreator.getMembersByGroupId(groupId);
         NetworkRequest networkRequest = new NetworkRequest(template, tcs);
 
-        Continuation<JSONObject, Void> addGroupItemToRealm = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, Void> addMemberToRealm = new Continuation<JSONObject, Void>() {
             @Override
             public Void then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
-                    Log.e(TAG, "Error in getGroupByUserId", exception);
+                    Log.e(TAG, "Error in getMembersByGroupId", exception);
                     throw exception;
                 }
 
@@ -45,33 +45,69 @@ public class SyncGroup {
                     throw new Exception("Empty response");
                 }
 
-                Log.d(TAG, "Groups: " + jsonObject.toString());
+                Log.d(TAG, "Member: " + jsonObject.toString());
                 try {
-                    JSONArray groupArray = jsonObject.getJSONArray("results");
-                    Group.mapFromJSONArray(groupArray);
+                    JSONArray memberArray = jsonObject.getJSONArray("results");
+                    Member.mapFromJSONArray(memberArray);
                 } catch (JSONException e) {
-                    Log.e(TAG, "Error in getting expense JSONArray.", e);
+                    Log.e(TAG, "Error in getting member JSONArray.", e);
                 }
 
                 return null;
             }
         };
 
-        Log.d(TAG, "start getGroupByUserId: " + userId);
-        return networkRequest.send().continueWith(addGroupItemToRealm);
+        Log.d(TAG, "start getMembersByGroupId: " + groupId);
+        return networkRequest.send().continueWith(addMemberToRealm);
     }
 
-    public static Task<Void> getGroupById(String groupId) {
-        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
-        RequestTemplate requestTemplate = RequestTemplateCreator.getGroupById(groupId);
-        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+    public static Task<Void> getMembersByUserId(String userId) {
+        TaskCompletionSource tcs = new TaskCompletionSource();
+        RequestTemplate template = RequestTemplateCreator.getMembersByUserId(userId);
+        NetworkRequest networkRequest = new NetworkRequest(template, tcs);
 
-        Continuation<JSONObject, Void> saveGroup = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, Void> addMemberToRealm = new Continuation<JSONObject, Void>() {
             @Override
             public Void then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
-                    Log.e(TAG, "Error in getGroupById.", exception);
+                    Log.e(TAG, "Error in getMembersByUserId", exception);
+                    throw exception;
+                }
+
+                JSONObject jsonObject = task.getResult();
+
+                if (jsonObject == null) {
+                    throw new Exception("Empty response");
+                }
+
+                Log.d(TAG, "getMembersByUserId: Member: " + jsonObject.toString());
+                try {
+                    JSONArray memberArray = jsonObject.getJSONArray("results");
+                    Member.mapFromJSONArray(memberArray);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error in getting member JSONArray.", e);
+                }
+
+                return null;
+            }
+        };
+
+        Log.d(TAG, "start getMembersByUserId: " + userId);
+        return networkRequest.send().continueWith(addMemberToRealm);
+    }
+
+    public static Task<Void> getMemberById(String memberId) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getMemberById(memberId);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> saveMember = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in downloading member.", exception);
                     throw  exception;
                 }
 
@@ -80,7 +116,7 @@ public class SyncGroup {
                     throw new Exception("Empty response.");
                 }
 
-                Log.d(TAG, "Group: \n" + result);
+                Log.d(TAG, "Member: \n" + result);
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
@@ -94,24 +130,22 @@ public class SyncGroup {
             }
         };
 
-        Log.d(TAG, "Start getGroupById: " + groupId);
-        return networkRequest.send().continueWith(saveGroup);
+        Log.d(TAG, "Start to download member");
+        return networkRequest.send().continueWith(saveMember);
     }
 
-    public static Task<JSONObject> create(Group group) {
+    public static Task<JSONObject> create(Member member) {
         TaskCompletionSource<JSONObject> tcs = new TaskCompletionSource<>();
-        RequestTemplate template = RequestTemplateCreator.createGroup(group);
+        RequestTemplate template = RequestTemplateCreator.createMember(member);
         NetworkRequest networkRequest = new NetworkRequest(template, tcs);
 
-        Log.d(TAG, "start create group");
-
-        Continuation<JSONObject, JSONObject> onCreateGroupFinished = new Continuation<JSONObject, JSONObject>() {
+        Continuation<JSONObject, JSONObject> onCreateMemberFinished = new Continuation<JSONObject, JSONObject>() {
             @Override
             public JSONObject then(Task<JSONObject> task) throws Exception {
-                Log.d(TAG, "onCreateGroupFinished");
+                Log.d(TAG, "onCreateMemberFinished");
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
-                    Log.e(TAG, "Error in create group", exception);
+                    Log.e(TAG, "Error in create member", exception);
                     throw exception;
                 }
 
@@ -121,29 +155,30 @@ public class SyncGroup {
                     throw new Exception("Empty response");
                 }
 
-                String groupId = jsonObject.getString(Group.OBJECT_ID_JSON_KEY);
-                // Sync new added group.
-                getGroupById(groupId);
+                String memberId = jsonObject.getString(Member.OBJECT_ID_JSON_KEY);
+                // Sync new added member.
+                getMemberById(memberId);
 
                 return null;
             }
         };
 
-        return networkRequest.send().continueWith(onCreateGroupFinished);
+        Log.d(TAG, "start to create member.");
+        return networkRequest.send().continueWith(onCreateMemberFinished);
     }
 
-    public static Task<Void> update(Group group) {
+    public static Task<Void> update(Member member) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
-        RequestTemplate requestTemplate = RequestTemplateCreator.updateGroup(group);
+        RequestTemplate requestTemplate = RequestTemplateCreator.updateMember(member);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Continuation<JSONObject, Void> onUpdateGroupFinished = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, Void> onUpdateMemberFinished = new Continuation<JSONObject, Void>() {
             @Override
             public Void then(Task<JSONObject> task) throws Exception {
-                Log.d(TAG, "onUpdateGroupFinished before check task.isFaulted().");
+                Log.d(TAG, "onUpdateMemberFinished before check task.isFaulted().");
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
-                    Log.e(TAG, "Error in updating group.", exception);
+                    Log.e(TAG, "Error in updating member.", exception);
                     throw exception;
                 }
 
@@ -154,18 +189,18 @@ public class SyncGroup {
                 }
 
                 // Example response: {"updatedAt":"2016-08-18T23:03:51.785Z"}
-                Log.d(TAG, "onUpdateGroupFinished Response: \n" + result);
+                Log.d(TAG, "onUpdateMemberFinished Response: \n" + result);
                 return null;
             }
         };
 
-        Log.d(TAG, "Start updating group.");
-        return networkRequest.send().continueWith(onUpdateGroupFinished);
+        Log.d(TAG, "Start to update member.");
+        return networkRequest.send().continueWith(onUpdateMemberFinished);
     }
 
-    public static Task<Void> delete(String groupId) {
+    public static Task<Void> delete(String memberId) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
-        RequestTemplate requestTemplate = RequestTemplateCreator.deleteGroup(groupId);
+        RequestTemplate requestTemplate = RequestTemplateCreator.deleteMember(memberId);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
         Continuation<JSONObject, Void> onUpdateExpenseFinished = new Continuation<JSONObject, Void>() {
@@ -173,7 +208,7 @@ public class SyncGroup {
             public Void then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
-                    Log.e(TAG, "Error in deleting group.", exception);
+                    Log.e(TAG, "Error in deleting member.", exception);
                     throw  exception;
                 }
 
@@ -188,7 +223,7 @@ public class SyncGroup {
             }
         };
 
-        Log.d(TAG, "Start updating expense.");
+        Log.d(TAG, "Start to delete member.");
         return networkRequest.send().continueWith(onUpdateExpenseFinished);
     }
 }

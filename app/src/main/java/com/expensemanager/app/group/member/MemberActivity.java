@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.group.GroupActivity;
-import com.expensemanager.app.models.User;
+import com.expensemanager.app.models.Member;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class MemberActivity extends AppCompatActivity {
 
     public static final String GROUP_ID = "groupId";
 
-    private ArrayList<User> users;
+    private ArrayList<Member> members;
     private MemberAdapter memberAdapter;
     private String groupId;
 
@@ -55,18 +55,16 @@ public class MemberActivity extends AppCompatActivity {
 
         groupId = getIntent().getStringExtra(GROUP_ID);
 
-        users = new ArrayList<>();
-        memberAdapter = new MemberAdapter(this, users);
+        members = new ArrayList<>();
+        memberAdapter = new MemberAdapter(this, members);
         setupRecyclerView();
 
         invalidateViews();
-        //todo: sync all members
-        //SyncGroup.getAllExpenses();
     }
 
     private void invalidateViews() {
         memberAdapter.clear();
-        memberAdapter.addAll(User.getAllUsersByGroupId(groupId));
+        memberAdapter.addAll(Member.getAllMembersByGroupId(groupId));
     }
 
     private void setupRecyclerView() {

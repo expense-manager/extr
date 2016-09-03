@@ -1,5 +1,7 @@
 package com.expensemanager.app.helpers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,8 +9,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -502,5 +507,11 @@ public class Helpers {
         // Go to last week
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         return calendar.getTime();
+    }
+
+    public static String getLoginUserId() {
+        Context context = EApplication.getInstance();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.shared_preferences_session_key), 0);
+        return sharedPreferences.getString(User.USER_ID, null);
     }
 }
