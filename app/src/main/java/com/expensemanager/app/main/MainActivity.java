@@ -42,7 +42,6 @@ import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.WelcomeActivity;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -121,9 +120,6 @@ public class MainActivity extends AppCompatActivity {
         SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
         SyncCategory.getAllCategories();
         SyncExpense.getAllExpenses();
-
-        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-        FirebaseCrash.log("Activity created");
     }
 
     private void setupDrawerListItems() {
