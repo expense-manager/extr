@@ -1,6 +1,19 @@
 package com.expensemanager.app.report;
 
-import com.astuetz.PagerSlidingTabStrip;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
@@ -29,19 +42,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,8 +69,7 @@ public class ReportDetailActivity extends AppCompatActivity {
     public static final int MONTHLY = 1;
     public static final int YEARLY = 2;
 
-    ReportPagerAdapter reportPagerAdapter;
-    private ReportCategoryAdapter reportCategoryAdapter;
+    private ReportPagerAdapter reportPagerAdapter;
     private Date[] startEnd;
     private ArrayList<Category> categories;
     private ArrayList<Double> amountsCategory;
@@ -81,11 +80,11 @@ public class ReportDetailActivity extends AppCompatActivity {
     private int requestCode;
     private Map<String, Integer> map;
 
-    @BindView(R.id.report_activity_fab_id) FloatingActionButton fab;
-    @BindView(R.id.report_activity_tabs_id) PagerSlidingTabStrip tabStrip;
-    @BindView(R.id.report_activity_viewpager_id) ViewPager viewPager;
-    @BindView(R.id.report_activity_pie_chart_id) PieChart pieChart;
-    @BindView(R.id.report_activity_bar_chart_id) BarChart barChart;
+    @BindView(R.id.report_detail_activity_fab_id) FloatingActionButton fab;
+    @BindView(R.id.report_detail_activity_tabs_id) TabLayout tabStrip;
+    @BindView(R.id.report_detail_activity_viewpager_id) ViewPager viewPager;
+    @BindView(R.id.report_detail_activity_pie_chart_id) PieChart pieChart;
+    @BindView(R.id.report_detail_activity_bar_chart_id) BarChart barChart;
 
     public static void newInstance(Context context, Date[] startEnd, int requestCode) {
         Intent intent = new Intent(context, ReportDetailActivity.class);
@@ -420,11 +419,8 @@ public class ReportDetailActivity extends AppCompatActivity {
 
         // Create new Adapter
         reportPagerAdapter = new ReportPagerAdapter(getSupportFragmentManager(), startEnd, requestCode);
-        // Set viewpager adapter for the pager
         viewPager.setAdapter(reportPagerAdapter);
-        // Attach the pager tab to viewpager
-        tabStrip.setViewPager(viewPager);
-        // Listen to viewpager
+        tabStrip.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(pageChangeListener);
     }
 
