@@ -125,8 +125,6 @@ public class GroupDetailActivity extends AppCompatActivity {
         }
 
         setupEditableViews(isEditable);
-
-        // todo: load members to honrizontal recycler
     }
 
     private void setupEditableViews(boolean isEditable) {

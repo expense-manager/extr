@@ -69,6 +69,7 @@ public class GroupActivity extends AppCompatActivity {
     private void invalidateViews() {
         groupAdapter.clear();
         groupAdapter.addAll(Group.getAllGroups());
+        // todo: remove temporary group
         if (groups.size() == 0) {
 
             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
