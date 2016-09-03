@@ -39,6 +39,7 @@ import com.expensemanager.app.service.email.MailSender;
 import com.expensemanager.app.service.email.Recipient;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.WelcomeActivity;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.Calendar;
 
@@ -101,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
 
         SyncCategory.getAllCategories();
         SyncExpense.getAllExpenses();
+
+        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+        FirebaseCrash.log("Activity created");
     }
 
     private void testEmail() {

@@ -89,6 +89,9 @@
         </receiver>
 
         <activity android:name=".group.GroupActivity"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="e6a9a40d9b430aa527fc471b8c19385f55b0858c" />
     </application>
 
 </manifest>

@@ -26,7 +26,7 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - admin or members can have difference permission to handle expense items or check out different expense report based on the role.
 
 
-## Open-source libraries used
+## Libraries used
 - [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications.
 - [Bolts](http://boltsframework.github.io/Bolts-Android/) - Bolts is a collection of low-level libraries designed to make developing mobile apps easier.
 - [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling.
@@ -34,6 +34,8 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - [Gradle Retrolambda Plugin](https://github.com/evant/gradle-retrolambda) - A gradle plugin for getting java lambda support in java 6, 7 and android
 - [Realm](http://realm.io) - Realm is a mobile database: a replacement for SQLite & ORMs.
 - [OneSignal](https://onesignal.com) - OneSignal is a free push notification service for mobile apps.
+- [Crashlytics for Android](https://fabric.io/kits/android/crashlytics) - The most powerful, yet lightest weight crash reporting solution.
+- [Firebase Analytics](https://firebase.google.com/docs/analytics/) - Firebase Analytics is a free app measurement solution that provides insight on app usage and user engagement.
 
 ## License
 

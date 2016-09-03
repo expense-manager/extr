@@ -4,12 +4,14 @@ import android.app.Application;
 import android.graphics.Typeface;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -28,6 +30,7 @@ public class EApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         application = this;
 
         // Configure Realm
