@@ -1,11 +1,9 @@
-package com.expensemanager.app.group;
+package com.expensemanager.app.group.member;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.group.GroupActivity;
 import com.expensemanager.app.models.User;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import io.realm.Realm;
 public class MemberActivity extends AppCompatActivity {
     private static final String TAG = GroupActivity.class.getSimpleName();
 
-    public static final String GROUP_ID = "group_id";
+    public static final String GROUP_ID = "groupId";
 
     private ArrayList<User> users;
     private MemberAdapter memberAdapter;
@@ -36,6 +35,7 @@ public class MemberActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.toolbar_right_title_text_view_id) TextView inviteTextView;
     @BindView(R.id.member_activity_recycler_view_id) RecyclerView recyclerView;
 
     public static void newInstance(Context context, String id) {
@@ -78,12 +78,18 @@ public class MemberActivity extends AppCompatActivity {
         toolbar.setContentInsetsAbsolute(0,0);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+
         titleTextView.setText(getString(R.string.member));
+        inviteTextView.setText(getString(R.string.invite));
+        inviteTextView.setVisibility(View.VISIBLE);
+
         titleTextView.setOnClickListener(v -> finish());
         backImageView.setOnClickListener(v -> finish());
+        inviteTextView.setOnClickListener(v -> InviteActivity.newInstance(this, groupId));
     }
 
     @Override

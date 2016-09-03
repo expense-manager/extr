@@ -34,9 +34,6 @@ import com.expensemanager.app.report.ReportActivity;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncUser;
-import com.expensemanager.app.service.email.Mail;
-import com.expensemanager.app.service.email.MailSender;
-import com.expensemanager.app.service.email.Recipient;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.WelcomeActivity;
 import com.google.firebase.crash.FirebaseCrash;
@@ -105,34 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseCrash.report(new Exception("My first Android non-fatal error"));
         FirebaseCrash.log("Activity created");
-    }
-
-    private void testEmail() {
-        // Fill google email and password
-        String email = "expensemanagers@gmail.com";
-        String password = "expense_managers";
-        MailSender mailSender = new MailSender(email, password);
-
-        Mail.MailBuilder builder = new Mail.MailBuilder();
-        Mail mail = builder
-                .setSender(email)
-                .addRecipient(new Recipient(email))
-                .setSubject("Expense Manager Team")
-                .setText("Hello from Expense Manager Team")
-                .setHtml("<h1 style=\"color:black;\">Thank you!</h1>")
-                .build();
-
-        mailSender.sendMail(mail, new MailSender.OnMailSentListener() {
-            @Override
-            public void onSuccess() {
-                Log.d(TAG, "sendMail onSuccess");
-            }
-
-            @Override
-            public void onError(Exception error) {
-                Log.e(TAG, "sendMail onError", error);
-            }
-        });
     }
 
     private void testNotifications() {

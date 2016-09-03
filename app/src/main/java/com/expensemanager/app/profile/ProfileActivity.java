@@ -109,6 +109,9 @@ public class ProfileActivity extends BaseActivity {
         setContentView(R.layout.profile_activity);
         ButterKnife.bind(this);
 
+        String uriPath = getIntent().getDataString();
+        Log.d(TAG, "token: uriPath=" + uriPath);
+
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         String loginUserId = sharedPreferences.getString(User.USER_ID, null);
 

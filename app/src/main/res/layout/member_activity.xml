@@ -4,7 +4,7 @@
                 android:id="@+id/member_activity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.expensemanager.app.group.MemberActivity">
+                tools:context="com.expensemanager.app.group.member.MemberActivity">
 
     <include layout="@layout/toolbar" />
 

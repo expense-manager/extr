@@ -5,17 +5,14 @@ import android.util.Log;
 
 import java.security.Security;
 
-import javax.activation.DataHandler;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
 
 /**
  * Created by Zhaolong Zhong on 9/1/16.
@@ -93,23 +90,25 @@ public class MailSender extends javax.mail.Authenticator {
 
                 Multipart multipart = new MimeMultipart();
 
-                if(mail.getText() != null) {
-                    MimeBodyPart textBodyPart = new MimeBodyPart();
-                    ByteArrayDataSource textDatasource = new ByteArrayDataSource(mail.getText().getBytes(), "text/plain");
-                    DataHandler handler = new DataHandler(textDatasource);
-                    textBodyPart.setDataHandler(handler);
-                    multipart.addBodyPart(textBodyPart);
-                }
+//                if(mail.getText() != null) {
+//                    MimeBodyPart textBodyPart = new MimeBodyPart();
+//                    ByteArrayDataSource textDatasource = new ByteArrayDataSource(mail.getText().getBytes(), "text/plain");
+//                    DataHandler handler = new DataHandler(textDatasource);
+//                    textBodyPart.setDataHandler(handler);
+//                    multipart.addBodyPart(textBodyPart);
+//                }
+//
+//                if(mail.getHtml() != null) {
+//                    MimeBodyPart htmlBodyPart = new MimeBodyPart();
+//                    ByteArrayDataSource htmlDatasource = new ByteArrayDataSource(mail.getHtml().getBytes(), "text/html");
+//                    DataHandler handler = new DataHandler(htmlDatasource);
+//                    htmlBodyPart.setDataHandler(handler);
+//                    multipart.addBodyPart(htmlBodyPart);
+//                }
+//
+//                message.setContent(multipart);
 
-                if(mail.getHtml() != null) {
-                    MimeBodyPart htmlBodyPart = new MimeBodyPart();
-                    ByteArrayDataSource htmlDatasource = new ByteArrayDataSource(mail.getHtml().getBytes(), "text/html");
-                    DataHandler handler = new DataHandler(htmlDatasource);
-                    htmlBodyPart.setDataHandler(handler);
-                    multipart.addBodyPart(htmlBodyPart);
-                }
-
-                message.setContent(multipart);
+                message.setContent(mail.getText(), "text/html; charset=utf-8");
 
                 Transport.send(message);
 

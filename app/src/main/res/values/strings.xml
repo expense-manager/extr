@@ -60,6 +60,8 @@
     <string name="about">About</string>
     <string name="note">Note</string>
     <string name="member">Members</string>
+    <string name="invite">Invite</string>
+    <string name="invite_new">New invitation</string>
     <string name="created_at">Created At</string>
     <string name="created_by">Created By</string>
     <string name="shared_preferences_session_key">Session</string>
@@ -108,6 +110,7 @@
     <string name="cancel">Cancel</string>
     <string name="post">Post</string>
     <string name="discard">Discard</string>
+    <string name="send">Send</string>
 
     <!-- Navigation -->
     <string name="nav_overview">Overview</string>

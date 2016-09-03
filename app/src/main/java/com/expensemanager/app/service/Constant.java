@@ -6,4 +6,7 @@ package com.expensemanager.app.service;
 
 public class Constant {
     public static final String BASE_FILE_URL = "https://e-manager.herokuapp.com/parse/files/ExpenseManager/";
+
+    public static final String EMAIL_ACCOUNT = "expensemanagers@gmail.com";
+    public static final String EMAIL_PASSWORD = "expense_managers";
 }
