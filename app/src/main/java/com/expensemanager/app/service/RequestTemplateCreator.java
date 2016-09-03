@@ -427,6 +427,8 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
+
+
     public static RequestTemplate getGroupByGroupname(String groupname) {
         String url = BASE_URL + "classes/Group";
 
@@ -494,6 +496,12 @@ public class RequestTemplateCreator {
         return new RequestTemplate(DELETE, url, null);
     }
 
+    public static RequestTemplate getMemberById(String id) {
+        String url = BASE_URL + "classes/Member" + "/" + id;
+
+        return new RequestTemplate(GET, url, null);
+    }
+
     public static RequestTemplate getMembersByUserId(String userId) {
         String url = BASE_URL + "classes/Member";
         Map<String, String> params = new HashMap<>();
@@ -509,6 +517,7 @@ public class RequestTemplateCreator {
             Log.e(TAG, "Error creating user id pointer object for where in getMembersByUserId", e);
         }
 
+        params.put(INCLUDE, "groupId,userId,createdBy");
         params.put(WHERE, Helpers.encodeURIComponent(userIdObj.toString()));
 
         return new RequestTemplate(GET, url, params);
@@ -517,19 +526,20 @@ public class RequestTemplateCreator {
     public static RequestTemplate getMembersByGroupId(String groupId) {
         String url = BASE_URL + "classes/Member";
         Map<String, String> params = new HashMap<>();
-        JSONObject subUserIdObj = new JSONObject();
-        JSONObject userIdObj=new JSONObject();
+        JSONObject subGroupIdObj = new JSONObject();
+        JSONObject groupIdObj=new JSONObject();
 
         try {
-            subUserIdObj.put("__type", "Pointer");
-            subUserIdObj.put("className", "Group");
-            subUserIdObj.put("objectId", groupId);
-            userIdObj.put("userId", subUserIdObj);
+            subGroupIdObj.put("__type", "Pointer");
+            subGroupIdObj.put("className", "Group");
+            subGroupIdObj.put("objectId", groupId);
+            groupIdObj.put("groupId", subGroupIdObj);
         } catch (JSONException e) {
             Log.e(TAG, "Error creating user id pointer object for where in getMembersByGroupId", e);
         }
 
-        params.put(WHERE, Helpers.encodeURIComponent(userIdObj.toString()));
+        params.put(INCLUDE, "groupId,userId,createdBy");
+        params.put(WHERE, Helpers.encodeURIComponent(groupIdObj.toString()));
 
         return new RequestTemplate(GET, url, params);
     }
@@ -544,14 +554,14 @@ public class RequestTemplateCreator {
         try {
             groupIdObject.put("__type", "Pointer");
             groupIdObject.put("className", "Group");
-            groupIdObject.put("objectId", member.getGroup().getId());
-            params.put(Member.GROUP_ID_JSON_KEY, groupIdObject.toString());
+            groupIdObject.put("objectId", member.getGroupId());
+            params.put(Member.GROUP_ID_KEY, groupIdObject.toString());
 
             userIdObj.put("__type", "Pointer");
             userIdObj.put("className", "_User");
-            userIdObj.put("objectId", member.getUser().getId());
-            params.put(Member.USER_ID_JSON_KEY, userIdObj.toString());
-            params.put(Member.IS_ACCEPTED_JSON_KEY, String.valueOf(member.isAccepted()));
+            userIdObj.put("objectId", member.getUserId());
+            params.put(Member.USER_ID_KEY, userIdObj.toString());
+            params.put(Member.IS_ACCEPTED_KEY, String.valueOf(member.isAccepted()));
 
             return new RequestTemplate(PUT, url, params, true);
 
@@ -562,11 +572,11 @@ public class RequestTemplateCreator {
         return null;
     }
 
-    public static RequestTemplate updateGroupUser(Member member) {
+    public static RequestTemplate updateMember(Member member) {
         String url = BASE_URL + "classes/Member/" + member.getId();
         Map<String, String> params = new HashMap<>();
 
-        params.put(Member.IS_ACCEPTED_JSON_KEY, String.valueOf(member.isAccepted()));
+        params.put(Member.IS_ACCEPTED_KEY, String.valueOf(member.isAccepted()));
 
         return new RequestTemplate(PUT, url, params);
     }
