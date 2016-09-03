@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
         groupDrawerAdapter = new GroupDrawerAdapter(this, groups, currentUser);
         setupDrawerListItems();
+        setupGroupListItems();
         setupDrawerList();
 
         drawerToggle = setupDrawerToggle();
@@ -137,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
         drawerAdapter.add(drawerSubItem);
         drawerSubItem = new DrawerSubItem().setTitle(getString(R.string.nav_about));
         drawerAdapter.add(drawerSubItem);
+    }
+
+    private void setupGroupListItems() {
+        groupDrawerAdapter.addAll(Group.getAllGroups());
     }
 
     private void setupDrawerList() {

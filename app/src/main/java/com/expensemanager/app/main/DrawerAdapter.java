@@ -73,10 +73,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             Typeface font= Typeface.createFromAsset(context.getAssets(),
                 "fonts/materialdrawerfont-font-v5.0.0.ttf");
             holder.groupSwitcherTextView.setTypeface(font);
-            holder.groupSwitcherTextView.setText("\uE5C5");
+            holder.groupSwitcherTextView.setText("\uE5C7");
 
             holder.groupSwitcherTextView.clearAnimation();
-            ViewCompat.animate(holder.groupSwitcherTextView).rotation(180).start();
+            ViewCompat.animate(holder.groupSwitcherTextView).rotation(-180).start();
 
             holder.accountPhotoImageView.setOnClickListener(v -> {
                 ProfileActivity.newInstance(context, null);

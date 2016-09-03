@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -66,10 +67,10 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
             Typeface font= Typeface.createFromAsset(context.getAssets(),
                 "fonts/materialdrawerfont-font-v5.0.0.ttf");
             holder.groupSwitcherTextView.setTypeface(font);
-            holder.groupSwitcherTextView.setText("\uE5C7");
+            holder.groupSwitcherTextView.setText("\uE5C5");
 
             holder.groupSwitcherTextView.clearAnimation();
-            ViewCompat.animate(holder.groupSwitcherTextView).rotation(-180).start();
+            ViewCompat.animate(holder.groupSwitcherTextView).rotation(180).start();
 
             holder.accountPhotoImageView.setOnClickListener(v -> {
                 ProfileActivity.newInstance(context, null);
@@ -83,7 +84,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
                     .load(user.getPhotoUrl())
                     .placeholder(R.drawable.profile_place_holder_image)
                     .dontAnimate()
-                    .into(headerHolder.iconImageView);
+                    .into(holder.iconImageView);
             }
         }
 
@@ -125,6 +126,11 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
     public void add(Group group) {
         groups.add(group);
         notifyItemChanged(groups.size() - 1);
+    }
+
+    public void addAll(List<Group> groups) {
+        this.groups.addAll(groups);
+        notifyDataSetChanged();
     }
 
     class DrawerViewHolder extends RecyclerView.ViewHolder{

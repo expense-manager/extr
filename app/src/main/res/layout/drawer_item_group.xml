@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/drawer_item_primary"
-    android:orientation="horizontal"
+    android:layout_height="wrap_content"
     android:paddingEnd="@dimen/drawer_vertical_padding"
     android:paddingLeft="@dimen/drawer_vertical_padding"
     android:paddingRight="@dimen/drawer_vertical_padding"
@@ -13,31 +13,24 @@
         android:id="@+id/drawer_icon_image_view_id"
         android:layout_width="@dimen/drawer_item_primary_icon"
         android:layout_height="@dimen/drawer_item_primary"
+
         android:layout_gravity="center_vertical"
-        android:paddingBottom="@dimen/drawer_item_primary_icon_padding"
-        android:paddingEnd="@dimen/drawer_item_primary_icon_padding_right"
-        android:paddingLeft="0dp"
-        android:paddingRight="@dimen/drawer_item_primary_icon_padding_right"
-        android:paddingStart="0dp"
-        android:paddingTop="@dimen/drawer_item_primary_icon_padding" />
+        android:layout_marginBottom="@dimen/drawer_item_primary_icon_padding"
+        android:layout_marginRight="@dimen/drawer_vertical_padding"/>
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/drawer_name_text_view_id"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical|start"
-        android:orientation="vertical">
+        android:layout_toRightOf="@+id/drawer_icon_image_view_id"
+        android:layout_alignTop="@+id/drawer_icon_image_view_id"
+        android:layout_alignBottom="@+id/drawer_icon_image_view_id"
 
-        <TextView
-            android:id="@+id/drawer_name_text_view_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center_vertical|start"
-            android:lines="1"
-            android:singleLine="true"
-            android:textDirection="anyRtl"
-            android:textSize="@dimen/drawer_item_primary_text"
-            tools:text="Some drawer text" />
-    </LinearLayout>
-</LinearLayout>
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical|start"
+        android:lines="1"
+        android:singleLine="true"
+        android:textDirection="anyRtl"
+        android:textSize="@dimen/drawer_item_primary_text"
+        tools:text="Some drawer text"/>
+</RelativeLayout>
