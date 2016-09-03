@@ -162,9 +162,6 @@ public class MainActivity extends AppCompatActivity {
         drawerAdapter.setOnItemClickLister(new DrawerAdapter.OnItemSelecteListener() {
             @Override
             public void onItemSelected(View v, int position) {
-                if (position != 0) {
-                    drawerLayout.closeDrawer(drawRecyclerView);
-                }
                 switch(position) {
                     case 0:
                         setupGroupList();
@@ -200,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         break;
                 }
+                if (position != 0) {
+                    drawerLayout.closeDrawer(drawRecyclerView);
+                }
             }
         });
     }
@@ -211,7 +211,9 @@ public class MainActivity extends AppCompatActivity {
         groupDrawerAdapter.setOnItemClickLister(new GroupDrawerAdapter.OnItemSelecteListener() {
             @Override
             public void onItemSelected(View v, int position) {
-                if (position > 0 && position <= groups.size()) {
+                if (position == 0) {
+                    setupDrawerList();
+                } else if (position <= groups.size()) {
                     groupId = groups.get(position - 1).getId();
                     drawerLayout.closeDrawer(drawRecyclerView);
                     // todo: sync data for new selected group
@@ -221,8 +223,6 @@ public class MainActivity extends AppCompatActivity {
                     NewGroupActivity.newInstance(MainActivity.this);
                     drawerLayout.closeDrawer(drawRecyclerView);
                 }
-
-                setupDrawerList();
             }
         });
     }
@@ -243,7 +243,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                // Reset to drawer menu list at close
+                setupDrawerList();
+            }
+        };
     }
 
     private Continuation<Void, Void> onGetLoginUserFinished = new Continuation<Void, Void>() {
@@ -275,6 +282,13 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences =
                             getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
                     sharedPreferences.edit().clear().apply();
+                    // Clear data when signout
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+                    realm.deleteAll();
+                    realm.commitTransaction();
+                    realm.close();
+                    // Go to welcome
                     WelcomeActivity.newInstance(MainActivity.this);
                     finish();
                 })
