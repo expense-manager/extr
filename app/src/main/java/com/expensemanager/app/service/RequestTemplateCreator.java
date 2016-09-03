@@ -141,7 +141,14 @@ public class RequestTemplateCreator {
             categoryIdObj.put("__type", "Pointer");
             categoryIdObj.put("className", "Category");
             categoryIdObj.put("objectId", expense.getCategoryId());
-            params.put("categoryId", categoryIdObj.toString());
+            params.put(Expense.CATEGORY_JSON_KEY, categoryIdObj.toString());
+
+            // Group pointer
+            JSONObject subGroupIdObj=new JSONObject();
+            subGroupIdObj.put("__type", "Pointer");
+            subGroupIdObj.put("className", "Group");
+            subGroupIdObj.put("objectId", expense.getGroupId());
+            params.put(Expense.GROUP_JSON_KEY, subGroupIdObj.toString());
 
             // Date pointer
             // "spentAt" -> "{"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}"
@@ -185,7 +192,14 @@ public class RequestTemplateCreator {
             categoryIdObj.put("__type", "Pointer");
             categoryIdObj.put("className", "Category");
             categoryIdObj.put("objectId", expense.getCategoryId());
-            params.put("categoryId", categoryIdObj.toString());
+            params.put(Expense.CATEGORY_JSON_KEY, categoryIdObj.toString());
+
+            // Group pointer
+            JSONObject subGroupIdObj=new JSONObject();
+            subGroupIdObj.put("__type", "Pointer");
+            subGroupIdObj.put("className", "Group");
+            subGroupIdObj.put("objectId", expense.getGroupId());
+            params.put(Expense.GROUP_JSON_KEY, subGroupIdObj.toString());
 
             // Date pointer
             // "spentAt" -> "{"__type":"Date","iso":"2016-08-04T21:48:00.000Z"}"
@@ -233,6 +247,14 @@ public class RequestTemplateCreator {
             userIdObj.put("className", "_User");
             userIdObj.put("objectId", category.getUserId());
             params.put(Category.USER_JSON_KEY, userIdObj.toString());
+
+            // Group pointer
+            JSONObject subGroupIdObj=new JSONObject();
+            subGroupIdObj.put("__type", "Pointer");
+            subGroupIdObj.put("className", "Group");
+            subGroupIdObj.put("objectId", category.getGroupId());
+            params.put(Category.GROUP_JSON_KEY, subGroupIdObj.toString());
+
         } catch (JSONException e) {
             Log.e(TAG, "Error pointer object for 'where' in createExpense", e);
         }
@@ -255,6 +277,13 @@ public class RequestTemplateCreator {
             userIdObj.put("className", "_User");
             userIdObj.put("objectId", category.getUserId());
             params.put(Category.USER_JSON_KEY, userIdObj.toString());
+
+            // Group pointer
+            JSONObject subGroupIdObj=new JSONObject();
+            subGroupIdObj.put("__type", "Pointer");
+            subGroupIdObj.put("className", "Group");
+            subGroupIdObj.put("objectId", category.getGroupId());
+            params.put(Category.GROUP_JSON_KEY, subGroupIdObj.toString());
         } catch (JSONException e) {
             Log.e(TAG, "Error pointer object for 'where' in createExpense", e);
         }

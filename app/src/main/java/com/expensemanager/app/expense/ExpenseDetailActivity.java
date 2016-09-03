@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -56,6 +57,8 @@ import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.ExpensePhoto;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.ExpenseBuilder;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncExpense;
@@ -409,11 +412,22 @@ public class ExpenseDetailActivity extends BaseActivity {
             return;
         }
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
+        if (loginUserId == null || groupId == null) {
+            Log.i(TAG, "Error getting login user id or group id.");
+            return;
+        }
+
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         expense.setAmount(amount);
         expense.setNote(noteTextView.getText().toString());
         expense.setCategoryId(category != null ? category.getId() : null);
+        expense.setUserId(loginUserId);
+        expense.setGroupId(groupId);
         expense.setExpenseDate(calendar.getTime());
         expense.setSynced(false);
         realm.copyToRealmOrUpdate(expense);

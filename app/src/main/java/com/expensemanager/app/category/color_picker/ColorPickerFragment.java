@@ -55,7 +55,7 @@ public class ColorPickerFragment extends DialogFragment {
         Random ran = new Random();
         int pos = ran.nextInt(COLORS.size());
         String color = COLORS.get(pos);
-        while (usedColors.contains(color)) {
+        while (usedColors != null && usedColors.contains(color)) {
             pos = ran.nextInt(COLORS.size());
             color = COLORS.get(pos);
         }

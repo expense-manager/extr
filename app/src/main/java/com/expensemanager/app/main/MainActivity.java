@@ -40,6 +40,8 @@ import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.report.ReportActivity;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
+import com.expensemanager.app.service.SyncGroup;
+import com.expensemanager.app.service.SyncMember;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.settings.SettingsActivity;
 import com.expensemanager.app.welcome.WelcomeActivity;
@@ -86,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
+        if (loginUserId == null || groupId == null) {
+            Log.i(TAG, "Error getting login user id or group id.");
+        }
+
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
 
@@ -121,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         SettingsActivity.loadSetting(this);
 
         SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
+
         SyncCategory.getAllCategories();
         SyncExpense.getAllExpenses();
     }
@@ -223,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveGroupId() {
         SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0).edit();
         sharedPreferencesEditor.putString(Group.ID_KEY, groupId);
+        sharedPreferencesEditor.apply();
     }
 
     private void testNotifications() {
@@ -247,6 +255,10 @@ public class MainActivity extends AppCompatActivity {
 
             User currentUser = User.getUserById(loginUserId);
             if (currentUser != null) {
+                // Sync all groups after getting current user
+                SyncGroup.getGroupByUserId(loginUserId);
+                SyncMember.getMembersByUserId(loginUserId);
+
                 drawerAdapter.loadUser(currentUser);
                 groupDrawerAdapter.loadUser(currentUser);
             }

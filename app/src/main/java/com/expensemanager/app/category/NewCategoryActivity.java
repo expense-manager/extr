@@ -4,6 +4,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.color_picker.ColorPickerFragment;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 
@@ -117,11 +118,14 @@ public class NewCategoryActivity extends AppCompatActivity
     private void save() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         String loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        if (loginUserId == null) {
-            Log.i(TAG, "Error getting login user id.");
+        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        if (loginUserId == null || groupId == null) {
+            Log.i(TAG, "Error getting login user id or group id.");
             return;
         }
         category.setUserId(loginUserId);
+        category.setGroupId(groupId);
+
         String uuid = UUID.randomUUID().toString();
         category.setId(uuid);
         category.setName(nameEditText.getText().toString());

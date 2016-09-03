@@ -1,5 +1,7 @@
 package com.expensemanager.app.models;
 
+import com.expensemanager.app.category.color_picker.ColorPickerFragment;
+
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -41,6 +43,8 @@ public class Group implements RealmModel {
     // Property name key
     public static final String ID_KEY = "id";
     public static final String CREATED_AT_KEY = "createdAt";
+    public static final String COLOR_KEY = "color";
+    public static final String NAME_KEY = "name";
 
     @PrimaryKey
     private String id;
@@ -49,6 +53,7 @@ public class Group implements RealmModel {
     private String about;
     private String userId;
     private Date createdAt;
+    private String color;
 
     public String getId() {
         return id;
@@ -98,6 +103,14 @@ public class Group implements RealmModel {
         this.about = about;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public void print() {
         Log.d(TAG, ("group id:" + this.id + "\n"
                 + "groupname:" + this.groupname + "\n"
@@ -120,6 +133,9 @@ public class Group implements RealmModel {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             this.createdAt = simpleDateFormat.parse(jsonObject.getString(CREATED_AT_JSON_KEY));
+
+            // Get a random unused color
+            this.color = ColorPickerFragment.getRandomColor(null);
         } catch (JSONException e) {
             Log.e(TAG, "Error in parsing group.", e);
         } catch (ParseException e) {
@@ -165,7 +181,7 @@ public class Group implements RealmModel {
      */
     public static RealmResults<Group> getAllGroups() {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Group> groups = realm.where(Group.class).findAllSorted(CREATED_AT_KEY, Sort.DESCENDING);
+        RealmResults<Group> groups = realm.where(Group.class).findAllSorted(NAME_KEY, Sort.ASCENDING);
         realm.close();
 
         return groups;

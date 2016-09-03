@@ -39,6 +39,7 @@ public class Expense implements RealmModel {
     public static final String ISO_EXPENSE_DATE_JSON_KEY = "iso";
     public static final String CATEGORY_JSON_KEY = "categoryId";
     public static final String USER_JSON_KEY = "userId";
+    public static final String GROUP_JSON_KEY = "groupId";
 
     public static final String NO_CATEGORY_JSON_VALUE = "undefined";
 
@@ -58,6 +59,7 @@ public class Expense implements RealmModel {
     private boolean isSynced;
     private String userId;
     private String categoryId;
+    private String groupId;
 
     public String getId() {
         return id;
@@ -135,6 +137,14 @@ public class Expense implements RealmModel {
        return Category.getCategoryById(this.categoryId);
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     public void mapFromJSON(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
@@ -151,6 +161,10 @@ public class Expense implements RealmModel {
             if (jsonObject.has(USER_JSON_KEY)) {
                 // {"__type":"Pointer","className":"_User","objectId":"2ZutGFhpA3"}
                 this.userId = jsonObject.getJSONObject(USER_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+            }
+            if (jsonObject.has(GROUP_JSON_KEY)) {
+                // {"__type":"Pointer","className":"Group","objectId":"2ZutGFhpA3"}
+                this.userId = jsonObject.getJSONObject(GROUP_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
             }
             // Parse createdAt and convert UTC time to local time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);

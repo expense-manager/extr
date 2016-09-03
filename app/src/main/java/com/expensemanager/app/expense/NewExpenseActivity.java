@@ -48,6 +48,7 @@ import com.expensemanager.app.helpers.TimePickerFragment;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.ExpenseBuilder;
 import com.expensemanager.app.service.PermissionsManager;
@@ -454,11 +455,13 @@ public class NewExpenseActivity extends BaseActivity {
     private void save() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         String loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        if (loginUserId == null) {
-            Log.i(TAG, "Error getting login user id.");
+        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        if (loginUserId == null || groupId == null) {
+            Log.i(TAG, "Error getting login user id or group id.");
             return;
         }
         expense.setUserId(loginUserId);
+        expense.setGroupId(groupId);
 
         double amount;
         try {

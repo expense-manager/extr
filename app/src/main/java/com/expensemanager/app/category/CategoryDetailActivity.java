@@ -2,6 +2,7 @@ package com.expensemanager.app.category;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.category.color_picker.ColorPickerFragment;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 
 import java.util.Set;
@@ -166,10 +169,21 @@ public class CategoryDetailActivity extends AppCompatActivity
             return;
         }
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
+        if (loginUserId == null || groupId == null) {
+            Log.i(TAG, "Error getting login user id or group id.");
+            return;
+        }
+
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         category.setName(name);
         category.setColor(currentColor);
+        category.setUserId(loginUserId);
+        category.setGroupId(groupId);
         realm.copyToRealmOrUpdate(category);
         realm.commitTransaction();
         realm.close();

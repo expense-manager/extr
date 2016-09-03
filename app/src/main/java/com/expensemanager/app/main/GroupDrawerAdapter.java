@@ -7,7 +7,9 @@ import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -79,14 +81,9 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
         } else if (type == TYPE_MENU){
             Group group = groups.get(position - 1);
             holder.titleTextView.setText(group.getName());
-            User user = User.getUserById(group.getUserId());
-            if (user != null) {
-                Glide.with(context)
-                    .load(user.getPhotoUrl())
-                    .placeholder(R.drawable.profile_place_holder_image)
-                    .dontAnimate()
-                    .into(holder.iconImageView);
-            }
+            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(group.getColor()));
+            holder.iconImageView.setImageDrawable(colorDrawable);
+            holder.iconCharTextView.setText(group.getName().substring(0, 1).toUpperCase());
         }
 
     }
@@ -151,6 +148,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
 
         // DrawerItem
         TextView titleTextView;
+        TextView iconCharTextView;
         CircleImageView iconImageView;
 
         public DrawerViewHolder(View itemView, int viewType) {
@@ -163,6 +161,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
                 groupSwitcherTextView = (TextView) itemView.findViewById(R.id.drawer_header_group_switcher_text_view_id);
             }else if(viewType == TYPE_MENU){
                 titleTextView = (TextView) itemView.findViewById(R.id.drawer_name_text_view_id);
+                iconCharTextView = (TextView) itemView.findViewById(R.id.drawer_icon_char_text_view_id);
                 iconImageView = (CircleImageView) itemView.findViewById(R.id.drawer_icon_image_view_id);
             }
 
