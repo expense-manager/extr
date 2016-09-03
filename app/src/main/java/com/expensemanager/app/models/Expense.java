@@ -131,6 +131,10 @@ public class Expense implements RealmModel {
         this.userId = userId;
     }
 
+    public @Nullable Category getCategory() {
+       return Category.getCategoryById(this.categoryId);
+    }
+
     public void mapFromJSON(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);

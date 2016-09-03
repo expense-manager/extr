@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
@@ -18,7 +17,6 @@ import com.expensemanager.app.models.Expense;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,14 +27,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Expense> expenses;
-    private Map<String, Category> categoriesMap;
     private Context context;
 
     public ExpenseAdapter(Context context, ArrayList<Expense> expenses) {
         this.context = context;
         this.expenses = expenses;
-        // Get map of all category
-        categoriesMap = Category.getAllCategoriesMap();
     }
 
     private Context getContext() {
@@ -86,7 +81,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Expense expense = expenses.get(position);
-        Category category = categoriesMap.get(expense.getCategoryId());
+        Category category = expense.getCategory();
 
         viewHolder.spentAtTextView.setText(Helpers.formatCreateAt(expense.getExpenseDate()));
         viewHolder.amountTextView.setText("$" + expense.getAmount());

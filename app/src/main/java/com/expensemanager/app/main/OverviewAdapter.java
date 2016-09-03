@@ -1,11 +1,5 @@
 package com.expensemanager.app.main;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.expense.ExpenseDetailActivity;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -16,9 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.expense.ExpenseDetailActivity;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,14 +28,11 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Expense> expenses;
-    private Map<String, Category> categoriesMap;
     private Context context;
 
     public OverviewAdapter(Context context, ArrayList<Expense> expenses) {
         this.context = context;
         this.expenses = expenses;
-        // Get map of all category
-        categoriesMap = Category.getAllCategoriesMap();
     }
 
     private Context getContext() {
@@ -86,7 +82,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Expense expense = expenses.get(position);
-        Category category = categoriesMap.get(expense.getCategoryId());
+        Category category = expense.getCategory();
 
         viewHolder.spentAtTextView.setText(Helpers.formatCreateAt(expense.getExpenseDate()));
         viewHolder.amountTextView.setText("$" + expense.getAmount());
