@@ -4,33 +4,35 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.SyncUser;
+import com.expensemanager.app.service.SyncGroup;
 
+import bolts.Continuation;
+import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
-public class GroupDetailActivity extends AppCompatActivity {
+public class GroupDetailActivity extends BaseActivity {
     private static final String TAG = GroupDetailActivity.class.getSimpleName();
 
     private static final String GROUP_ID = "group_id";
@@ -39,6 +41,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     private User createdBy;
     private String loginUserId;
     private boolean isEditable = false;
+    private String groupId;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -73,15 +76,11 @@ public class GroupDetailActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
-        String groupId = getIntent().getStringExtra(GROUP_ID);
+        groupId = getIntent().getStringExtra(GROUP_ID);
 
         memberRelativeLayout.setOnClickListener(v -> {
             MemberActivity.newInstance(this, groupId);
         });
-
-        group = Group.getGroupById(groupId);
-
-        // todo: load createdBy user by userId
 
         invalidateViews();
     }
@@ -101,11 +100,14 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
     private void invalidateViews() {
+        group = Group.getGroupById(groupId);
+        group.print();
         nameEditText.setText(group.getName());
         groupEditText.setText(group.getGroupname());
         aboutEditText.setText(group.getAbout());
         createdAtTextView.setText(Helpers.formatCreateAt(group.getCreatedAt()));
 
+        createdBy = User.getUserById(group.getUserId());
         if (createdBy != null) {
             Glide.with(this)
                 .load(createdBy.getPhotoUrl())
@@ -156,7 +158,13 @@ public class GroupDetailActivity extends AppCompatActivity {
         String groupName = groupEditText.getText().toString();
         String about = aboutEditText.getText().toString();
 
-        if (name.length() == 0) {
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this, "Name cannot be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(groupName)) {
+            Toast.makeText(this, "Group cannot be empty.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -169,29 +177,53 @@ public class GroupDetailActivity extends AppCompatActivity {
         realm.commitTransaction();
         realm.close();
 
-        // todo:sync group update to parse
-
         progressBar.setVisibility(View.VISIBLE);
+        SyncGroup.update(group).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
+
         closeSoftKeyboard();
         isEditable = false;
         invalidateViews();
     }
 
-    public void closeSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    private Continuation<Void, Void> onUpdateSuccess = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            progressBar.setVisibility(View.GONE);
+            Log.d(TAG, "onUpdateSuccess");
 
-        View view = this.getCurrentFocus();
-        if (inputMethodManager != null && view != null){
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error in updating group.", task.getError());
+            }
+
+            Log.d(TAG, "Update group success.");
+
+            return null;
         }
-    }
+    };
 
     private void delete() {
         progressBar.setVisibility(View.VISIBLE);
-        // todo:sync delete to parse
+        SyncGroup.delete(groupId).continueWith(onDeleteSuccess, Task.UI_THREAD_EXECUTOR);
+
     }
 
-    private void close() {
+    private Continuation<Void, Void> onDeleteSuccess = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            progressBar.setVisibility(View.GONE);
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error in deleting expense.", task.getError());
+            }
+
+            Group.delete(groupId);
+            Log.d(TAG, "Delete group success.");
+            close();
+            return null;
+        }
+    };
+
+    @Override
+    public void close() {
         finish();
         overridePendingTransition(0, R.anim.right_out);
     }

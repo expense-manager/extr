@@ -170,6 +170,7 @@ public class SyncExpense {
                 Log.d(TAG, "onUpdateExpenseFinished after check task.isFaulted().");
 
                 JSONObject result = task.getResult();
+
                 if (result == null) {
                     throw new Exception("Empty response.");
                 }

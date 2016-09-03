@@ -1,10 +1,13 @@
 package com.expensemanager.app.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.expensemanager.app.R;
 
@@ -58,5 +61,14 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         close();
+    }
+
+    protected void closeSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        View view = this.getCurrentFocus();
+        if (inputMethodManager != null && view != null){
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

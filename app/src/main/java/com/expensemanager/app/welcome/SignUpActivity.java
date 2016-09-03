@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +20,7 @@ import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.service.SyncUser;
 
@@ -33,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends BaseActivity {
     private static final String TAG = SignUpActivity.class.getSimpleName();
 
     private String emailOrPhone;
@@ -200,7 +199,6 @@ public class SignUpActivity extends AppCompatActivity {
                 // Show error messasge
                 errorMessageTextView.setText(task.getResult().getString("error"));
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
-                closeSoftKeyboard();
             } else {
                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                 // Make sure main activity at the top on stack, no other activity in the backstack.
@@ -356,15 +354,6 @@ public class SignUpActivity extends AppCompatActivity {
         confirmPassword = confirmPasswordEditText.getText().toString().trim();
         firstName = firstNameEditText.getText().toString().trim();
         lastName = lastNameEditText.getText().toString().trim();
-    }
-
-    public void closeSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        View view = this.getCurrentFocus();
-        if (inputMethodManager != null && view != null){
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     @Override

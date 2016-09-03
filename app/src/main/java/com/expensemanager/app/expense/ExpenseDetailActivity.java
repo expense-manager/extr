@@ -428,8 +428,8 @@ public class ExpenseDetailActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
         SyncExpense.update(expenseBuilder).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
 
-        closeSoftKeyboard();
         isEditable = false;
+        closeSoftKeyboard();
         invalidateViews();
     }
 

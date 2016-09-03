@@ -1,15 +1,27 @@
 package com.expensemanager.app.models;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
+
+import static com.expensemanager.app.models.Expense.CREATED_AT_JSON_KEY;
 
 /**
  * Created by Zhaolong Zhong on 8/25/16.
@@ -84,6 +96,68 @@ public class Group implements RealmModel {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public void print() {
+        Log.d(TAG, ("group id:" + this.id + "\n"
+                + "groupname:" + this.groupname + "\n"
+                + "name: " + this.name + "\n"
+                + "about: " + this.about + "\n")
+                + "userId: " + this.userId + "\n");
+    }
+
+    public void mapFromJSON(JSONObject jsonObject) {
+        try {
+            this.id = jsonObject.getString(OBJECT_ID_JSON_KEY);
+            this.groupname = jsonObject.getString(GROUPNAME_JSON_KEY);
+            this.name = jsonObject.optString(NAME_JSON_KEY, "");
+            this.about = jsonObject.optString(ABOUT_JSON_KEY, "");
+
+            JSONObject userIdJSON = jsonObject.getJSONObject(USER_ID_JSON_KEY);
+            this.userId = userIdJSON.getString(OBJECT_ID_JSON_KEY);
+
+            // Parse createdAt and convert UTC time to local time
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            this.createdAt = simpleDateFormat.parse(jsonObject.getString(CREATED_AT_JSON_KEY));
+        } catch (JSONException e) {
+            Log.e(TAG, "Error in parsing group.", e);
+        } catch (ParseException e) {
+            Log.e(TAG, "Error parsing createdAt.", e);
+        }
+    }
+
+    public static void mapFromJSONArray(JSONArray jsonArray) {
+        RealmList<Group> groups = new RealmList<>();
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject expenseJson = jsonArray.getJSONObject(i);
+                Group group = new Group();
+                group.mapFromJSON(expenseJson);
+                groups.add(group);
+            } catch (JSONException e) {
+                Log.e(TAG, "Error in parsing group.", e);
+            }
+        }
+
+        realm.copyToRealmOrUpdate(groups);
+        realm.commitTransaction();
+        realm.close();
+    }
+
+    public static void delete(String id) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<Group> groups = realm.where(Group.class).equalTo(ID_KEY, id).findAll();
+        if (groups.size() > 0) {
+            groups.deleteFromRealm(0);
+        }
+        realm.commitTransaction();
+        realm.close();
     }
 
     /**

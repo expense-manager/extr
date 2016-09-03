@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.service.SyncUser;
 
@@ -28,7 +27,7 @@ import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private String email;
@@ -73,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View v) {
         progressBar.setVisibility(View.VISIBLE);
+        closeSoftKeyboard();
         SyncUser.login(email, password).onSuccess(onLoginSuccess, Task.UI_THREAD_EXECUTOR);
     }
 
@@ -163,14 +163,5 @@ public class LoginActivity extends AppCompatActivity {
     private void getLoginInfo() {
         email = emailEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
-    }
-
-    public void closeSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        View view = this.getCurrentFocus();
-        if (inputMethodManager != null && view != null){
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 }

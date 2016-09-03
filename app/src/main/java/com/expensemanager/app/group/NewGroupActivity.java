@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,6 +20,7 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.SyncGroup;
 
 import org.json.JSONObject;
 
@@ -32,8 +30,6 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
-import io.realm.Realm;
 
 public class NewGroupActivity extends AppCompatActivity {
     private static final String TAG = NewGroupActivity.class.getSimpleName();
@@ -59,10 +55,14 @@ public class NewGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_group_activity);
         ButterKnife.bind(this);
-        // Setup toolbar
+
         setupToolbar();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+
         group = new Group();
+        group.setUserId(loginUserId);
         // Get a random unused color
 
         progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_ATOP);
@@ -96,12 +96,11 @@ public class NewGroupActivity extends AppCompatActivity {
         String uuid = UUID.randomUUID().toString();
         group.setId(uuid);
         group.setName(nameEditText.getText().toString());
-        group.setGroupname(groupEditText.getText().toString());
+        group.setGroupname(groupEditText.getText().toString().toLowerCase());
         group.setAbout(aboutEditText.getText().toString());
 
         progressBar.setVisibility(View.VISIBLE);
-        // todo:sync new group to parse
-        //SyncGroup.create(group).continueWith(onCreateSuccess, Task.UI_THREAD_EXECUTOR);
+        SyncGroup.create(group).continueWith(onCreateSuccess, Task.UI_THREAD_EXECUTOR);
         closeSoftKeyboard();
     }
 
@@ -113,15 +112,7 @@ public class NewGroupActivity extends AppCompatActivity {
                 Log.e(TAG, "Error in creating new category.", task.getError());
             }
 
-            JSONObject result = task.getResult();
-            String categoryId = result.optString(Group.OBJECT_ID_JSON_KEY);
-
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            group.setId(categoryId);
-            realm.copyToRealmOrUpdate(group);
-            realm.commitTransaction();
-            realm.close();
+            JSONObject jsonObject = task.getResult();
 
             close();
 

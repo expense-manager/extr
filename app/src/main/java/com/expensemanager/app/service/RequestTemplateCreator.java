@@ -484,6 +484,12 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
+    public static RequestTemplate getGroupById(String id) {
+        String url = BASE_URL + "classes/Group" + "/" + id;
+
+        return new RequestTemplate(GET, url, null);
+    }
+
     public static RequestTemplate createGroup(Group group) {
         String url = BASE_URL + "classes/Group";
         Map<String, String> params = new HashMap<>();
@@ -514,6 +520,10 @@ public class RequestTemplateCreator {
 
         params.put(Group.GROUPNAME_JSON_KEY, group.getGroupname());
         params.put(Group.NAME_JSON_KEY, group.getName());
+
+        if (!TextUtils.isEmpty(group.getAbout())) {
+            params.put(Group.ABOUT_JSON_KEY, group.getAbout());
+        }
 
         return new RequestTemplate(PUT, url, params);
     }

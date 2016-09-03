@@ -17,10 +17,9 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.SyncGroup;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +51,9 @@ public class GroupActivity extends AppCompatActivity {
 
         setupToolbar();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+
         groups = new ArrayList<>();
         groupAdapter = new GroupAdapter(this, groups);
         setupRecyclerView();
@@ -63,37 +65,12 @@ public class GroupActivity extends AppCompatActivity {
 
         invalidateViews();
         //todo: sync all groups
-        //SyncGroup.getAllExpenses();
+        SyncGroup.getGroupByUserId(loginUserId);
     }
 
     private void invalidateViews() {
         groupAdapter.clear();
         groupAdapter.addAll(Group.getAllGroups());
-        // todo: remove temporary group
-        if (groups.size() == 0) {
-
-            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-            String loginUserId = sharedPreferences.getString(User.USER_ID, null);
-            User loginUser = User.getUserById(loginUserId);
-
-            Group personal = new Group();
-            personal.setName("Personal");
-            if (loginUser != null) {
-                personal.setGroupname(loginUser.getFullname());
-            }
-            personal.setCreatedAt(new Date());
-            personal.setAbout("Personal Expenses");
-            personal.setId(UUID.randomUUID().toString());
-            personal.setUserId(loginUserId);
-
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(personal);
-            realm.commitTransaction();
-            realm.close();
-
-            groupAdapter.add(personal);
-        }
     }
 
     private void setupRecyclerView() {
