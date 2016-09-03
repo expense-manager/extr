@@ -175,6 +175,11 @@ public class RNotification implements RealmModel {
         // Create notification object
         boolean isNew = false;
         RNotification notification = getNotificationByTypeAndDate(type, createdAt);
+
+        // Save to realm
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
         if (notification == null) {
             isNew = true;
             // Create new notification if not exist
@@ -189,9 +194,6 @@ public class RNotification implements RealmModel {
         notification.setMessage(message);
         notification.setRemote(isRemote);
 
-        // Save to realm
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
         realm.copyToRealmOrUpdate(notification);
         realm.commitTransaction();
         realm.close();
