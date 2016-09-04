@@ -5,10 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar_id"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
+    android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
+    android:fitsSystemWindows="true"
 
-    android:background="?attr/colorPrimary"
+    android:background="@color/white"
     android:elevation="2dp"
     app:theme="@style/ActionBarLightTheme"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -26,10 +27,11 @@
             android:layout_centerVertical="true"
 
             android:padding="10dp"
+            android:tint="@color/colorPrimary"
             android:src="@drawable/ic_arrow_left_24dp"/>
 
         <!-- Title -->
-        <TextView
+        <com.expensemanager.app.helpers.ETextView
             android:id="@+id/toolbar_title_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,36 +39,52 @@
             android:layout_centerVertical="true"
 
             android:textColor="?attr/android:textColorPrimary"
-            android:textSize="@dimen/text_medium_less_small"
+            android:textSize="@dimen/text_medium_small"
             tools:text="Title"/>
 
         <!-- Edit -->
-        <TextView
+        <com.expensemanager.app.helpers.ETextView
             android:id="@+id/toolbar_edit_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/toolbar_title_text_view_id"
+            android:layout_centerVertical="true"
 
-            android:textColor="?attr/android:textColorPrimary"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_medium_small"
-            android:paddingRight="10dp"
+            android:textStyle="bold"
+            android:paddingEnd="10dp"
             android:text="@string/edit"
             android:visibility="invisible"/>
 
         <!-- Save -->
-        <TextView
+        <com.expensemanager.app.helpers.ETextView
             android:id="@+id/toolbar_save_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/toolbar_title_text_view_id"
+            android:layout_centerVertical="true"
 
-            android:textColor="?attr/android:textColorPrimary"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_medium_small"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/save"
             android:visibility="invisible"/>
+
+        <!-- Right title -->
+        <com.expensemanager.app.helpers.ETextView
+            android:id="@+id/toolbar_right_title_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/space_medium"
+
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_medium_small"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

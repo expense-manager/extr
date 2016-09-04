@@ -47,6 +47,13 @@ public class EApplication extends Application {
         FontHelper.setDefaultFont(defaultTypeface);
     }
 
+    public Typeface getTypeface(Font font) {
+        if (!typefaceMap.keySet().contains(font.getName())) {
+            loadTypeFace(font.getName());
+        }
+        return typefaceMap.get(font.getName());
+    }
+
     private Typeface loadTypeFace(String name) {
         try {
             Typeface typeface = Typeface.createFromAsset(this.getAssets(), FONTS_DIR + name);

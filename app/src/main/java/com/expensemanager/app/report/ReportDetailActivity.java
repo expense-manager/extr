@@ -11,19 +11,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
+import com.expensemanager.app.service.font.Font;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -56,7 +62,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class ReportDetailActivity extends AppCompatActivity {
+public class ReportDetailActivity extends BaseActivity {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
 
     public static final String NO_CATEGORY_ID = "No Category";
@@ -85,6 +91,11 @@ public class ReportDetailActivity extends AppCompatActivity {
     private String groupId;
     private Map<String, Integer> categoryPositionMap;
 
+    @BindView(R.id.toolbar_id) Toolbar toolbar;
+    @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
+    @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.toolbar_edit_text_view_id) TextView editTextView;
+    @BindView(R.id.toolbar_save_text_view_id) TextView saveTextView;
     @BindView(R.id.report_detail_activity_fab_id) FloatingActionButton fab;
     @BindView(R.id.report_detail_activity_tabs_id) TabLayout tabStrip;
     @BindView(R.id.report_detail_activity_viewpager_id) ViewPager viewPager;
@@ -105,6 +116,8 @@ public class ReportDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_detail_activity);
         ButterKnife.bind(this);
+
+        setupToolbar();
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
@@ -177,6 +190,19 @@ public class ReportDetailActivity extends AppCompatActivity {
         viewPager.setAdapter(reportPagerAdapter);
         tabStrip.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(pageChangeListener);
+    }
+
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        titleTextView.setText(getString(R.string.title_activity_report_detail));
+        titleTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
     }
 
     private void setUpPieChart() {

@@ -63,14 +63,14 @@ public class ExpenseActivity extends BaseActivity
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, ExpenseActivity.class);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     public static void newInstance(Context context, String categoryId) {
         Intent intent = new Intent(context, ExpenseActivity.class);
         intent.putExtra(CATEGORY_ID, categoryId);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     public static void newInstance(Context context, Date[] startEnd) {
@@ -79,7 +79,7 @@ public class ExpenseActivity extends BaseActivity
         bundle.putSerializable(START_END_DATE, startEnd);
         intent.putExtras(bundle);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     public static void newInstance(Context context, String categoryId, Date[] startEnd) {
@@ -89,7 +89,7 @@ public class ExpenseActivity extends BaseActivity
         intent.putExtras(bundle);
         intent.putExtra(CATEGORY_ID, categoryId);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -184,8 +184,8 @@ public class ExpenseActivity extends BaseActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
         titleTextView.setText(getString(R.string.expense));
-        titleTextView.setOnClickListener(v -> finish());
-        backImageView.setOnClickListener(v -> finish());
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
     }
 
     @Override
