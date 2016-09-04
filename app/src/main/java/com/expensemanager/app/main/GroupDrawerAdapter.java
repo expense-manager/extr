@@ -7,14 +7,19 @@ import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,6 +32,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
     public final static int TYPE_HEADER = 0;
     public final static int TYPE_MENU = 1;
     public final static int TYPE_NEW = 2;
+    public final static int TYPE_SELECT_HINT = 3;
 
 
     private Context context;
@@ -45,16 +51,19 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
     @Override
     public DrawerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if(viewType == TYPE_HEADER){
+        if(viewType == TYPE_HEADER) {
             view = LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.drawer_header, parent, false);
 
-        } else if (viewType == TYPE_MENU){
+        } else if (viewType == TYPE_MENU) {
             view = LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.drawer_item_group, parent, false);
-        } else {
+        } else if (viewType == TYPE_NEW) {
             view = LayoutInflater
                 .from(parent.getContext()).inflate(R.layout.drawer_item_group_new, parent, false);
+        } else {
+            view = LayoutInflater
+            .from(parent.getContext()).inflate(R.layout.drawer_item_group_hint, parent, false);
         }
 
         return new DrawerViewHolder(view, viewType);
@@ -79,11 +88,23 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
                 ProfileActivity.newInstance(context, null);
             });
         } else if (type == TYPE_MENU){
-            Group group = groups.get(position - 1);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.shared_preferences_session_key), 0);
+            String groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
+            Group group = groups.get(position - 2);
             holder.titleTextView.setText(group.getName());
             ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(group.getColor()));
             holder.iconImageView.setImageDrawable(colorDrawable);
             holder.iconCharTextView.setText(group.getName().substring(0, 1).toUpperCase());
+
+            if (group.getId().equals(groupId)) {
+                // Set drawable color dynamically
+                Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_check);
+                drawable.setColorFilter(Color.parseColor(group.getColor()), PorterDuff.Mode.SRC_ATOP);
+                holder.selectImageView.setImageDrawable(drawable);
+            } else {
+                holder.selectImageView.setVisibility(View.INVISIBLE);
+            }
         }
 
     }
@@ -110,14 +131,16 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
 
     @Override
     public int getItemCount() {
-        return groups.size() + 2;
+        return groups.size() + 3;
     }
 
     @Override
     public int getItemViewType(int position) {
         if(position == 0){
             return  TYPE_HEADER;
-        } else if (position <= groups.size()) {
+        } else if (position == 1) {
+            return TYPE_SELECT_HINT;
+        } else if (position <= groups.size() + 1) {
             return TYPE_MENU;
         } else {
             return TYPE_NEW;
@@ -126,7 +149,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
 
     public void add(Group group) {
         groups.add(group);
-        notifyItemChanged(groups.size() - 1);
+        notifyItemChanged(groups.size() - 2);
     }
 
     public void addAll(List<Group> groups) {
@@ -150,6 +173,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
         TextView titleTextView;
         TextView iconCharTextView;
         CircleImageView iconImageView;
+        ImageView selectImageView;
 
         public DrawerViewHolder(View itemView, int viewType) {
             super(itemView);
@@ -163,6 +187,11 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
                 titleTextView = (TextView) itemView.findViewById(R.id.drawer_name_text_view_id);
                 iconCharTextView = (TextView) itemView.findViewById(R.id.drawer_icon_char_text_view_id);
                 iconImageView = (CircleImageView) itemView.findViewById(R.id.drawer_icon_image_view_id);
+                selectImageView = (ImageView) itemView.findViewById(R.id.drawer_icon_select_image_view_id);
+            }
+
+            if (viewType == TYPE_SELECT_HINT) {
+                return;
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {

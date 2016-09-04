@@ -10,24 +10,19 @@
     android:paddingRight="@dimen/drawer_vertical_padding"
     android:paddingStart="@dimen/drawer_vertical_padding">
 
-    <ImageView
-        android:id="@+id/category_activity_fab_id"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-
-        android:src="@drawable/ic_plus"/>
-
     <TextView
         android:id="@+id/drawer_name_text_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/space_small"
+        android:padding="@dimen/space_small"
         android:layout_marginBottom="@dimen/space_small"
 
-        android:gravity="center"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center|start"
         android:lines="1"
         android:singleLine="true"
-        android:textSize="@dimen/text_medium"
-        android:background="@drawable/button_background_gray"/>
+        android:text="@string/select_a_group"
+        android:textDirection="anyRtl"
+        android:textSize="@dimen/drawer_item_primary_text"
+        android:background="@drawable/background_bottom_line_gray_light"/>
 </RelativeLayout>

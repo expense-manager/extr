@@ -212,13 +212,13 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(View v, int position) {
                 if (position == 0) {
                     setupDrawerList();
-                } else if (position <= groups.size()) {
-                    groupId = groups.get(position - 1).getId();
+                } else if (position <= groups.size() + 1) {
+                    groupId = groups.get(position - 2).getId();
                     drawerLayout.closeDrawer(drawRecyclerView);
                     // todo: sync data for new selected group
                     saveGroupId();
                     overviewFragment.invalidateViews();
-                } else if (position == groups.size() + 1) {
+                } else if (position == groups.size() + 2) {
                     NewGroupActivity.newInstance(MainActivity.this);
                     drawerLayout.closeDrawer(drawRecyclerView);
                 }
