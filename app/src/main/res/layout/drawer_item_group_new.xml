@@ -10,14 +10,6 @@
     android:paddingRight="@dimen/drawer_vertical_padding"
     android:paddingStart="@dimen/drawer_vertical_padding">
 
-    <ImageView
-        android:id="@+id/category_activity_fab_id"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-
-        android:src="@drawable/ic_plus"/>
-
     <TextView
         android:id="@+id/drawer_name_text_view_id"
         android:layout_width="match_parent"
@@ -30,4 +22,12 @@
         android:singleLine="true"
         android:textSize="@dimen/text_medium"
         android:background="@drawable/button_background_gray"/>
+
+    <ImageView
+        android:id="@+id/category_activity_fab_id"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+
+        android:src="@drawable/ic_plus"/>
 </RelativeLayout>
