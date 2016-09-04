@@ -81,9 +81,9 @@ public class ReportDetailActivity extends AppCompatActivity {
     private double[] amountsTime;
     private int latestPosition;
     private int requestCode;
-    private Map<String, Integer> map;
     private String loginUserId;
     private String groupId;
+    private Map<String, Integer> categoryPositionMap;
 
     @BindView(R.id.report_detail_activity_fab_id) FloatingActionButton fab;
     @BindView(R.id.report_detail_activity_tabs_id) TabLayout tabStrip;
@@ -110,12 +110,23 @@ public class ReportDetailActivity extends AppCompatActivity {
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
+        categories = new ArrayList<>();
+        amountsCategory = new ArrayList<>();
+        categoryPositionMap = new HashMap<>();
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            startEnd = (Date[]) bundle.getSerializable(START_END_DATE);
+            requestCode = bundle.getInt(REQUEST_CODE);
+        }
+
         fab.setOnClickListener(v -> {
             NewExpenseActivity.newInstance(this);
             overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
 
-        setupViews();
+        invalidateViews();
 
         setUpPieChart();
         setUpBarChart();
@@ -125,6 +136,47 @@ public class ReportDetailActivity extends AppCompatActivity {
 
         SyncCategory.getAllCategoriesByGroupId(groupId);
         SyncExpense.getAllExpensesByGroupId(groupId);
+    }
+
+    private void invalidateViews() {
+        if (startEnd != null) {
+            Log.d(TAG, "Start: " + startEnd[0].getTime());
+            Log.d(TAG, "End: " + startEnd[1].getTime());
+            int[] startEndDay = Helpers.getStartEndDay(startEnd);
+            if (startEndDay == null) {
+                Log.i(TAG, "Invalid start end day.");
+                return;
+            }
+            // Query data from date range
+            expenses = Expense.getExpensesByRangeAndGroupId(startEnd, groupId);
+        }
+
+        if (expenses == null || expenses.size() == 0) {
+            return;
+        }
+
+        // Initialize bar chart data set
+        if (requestCode == WEEKLY) {
+            timeSlotsLength = DAYS_OF_WEEK + 2;
+        } else if (requestCode == MONTHLY) {
+            Calendar calendar = Calendar.getInstance();
+            int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            timeSlotsLength = maxDays + 2;
+        } else if (requestCode == YEARLY) {
+            timeSlotsLength = MONTHS_OF_YEAR + 2;
+        }
+
+        amountsTime = new double[timeSlotsLength];
+
+        // Fetch data
+        fetchCategoriesAndAmounts(expenses);
+        fetchTimeAndAmounts(expenses);
+
+        // Create new Adapter
+        reportPagerAdapter = new ReportPagerAdapter(getSupportFragmentManager(), startEnd, requestCode);
+        viewPager.setAdapter(reportPagerAdapter);
+        tabStrip.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(pageChangeListener);
     }
 
     private void setUpPieChart() {
@@ -180,56 +232,52 @@ public class ReportDetailActivity extends AppCompatActivity {
     }
 
     private void fetchCategoriesAndAmounts(List<Expense> expenses) {
-        if (expenses == null || expenses.size() == 0) {
-            return;
-        }
-
-        for (Expense e : expenses) {
-            String cId = e.getCategoryId();
-            if (cId == null) {
-                cId = NO_CATEGORY_ID;
+        for (Expense expense : expenses) {
+            String categoryId = expense.getCategoryId();
+            if (categoryId == null) {
+                categoryId = NO_CATEGORY_ID;
             }
-            Integer pos = map.get(cId);
-            if (pos == null) {
-                Category c = null;
-                // Get new category
-                if (cId.equals(NO_CATEGORY_ID)) {
-                    // Get temp category for no category
-                    c = new Category();
-                    c.setColor(NO_CATEGORY_COLOR);
-                    c.setName(NO_CATEGORY_ID);
-                } else {
-                    c = Category.getCategoryById(cId);
+
+            Integer position = categoryPositionMap.get(categoryId);
+
+            if (position == null) {
+                Category category = null;
+                if (!categoryId.equals(NO_CATEGORY_ID)) {
+                    category = Category.getCategoryById(categoryId);
                 }
-                // Store pos of new category into map
-                map.put(cId, categories.size());
+
+                if (category == null){
+                    category = new Category();
+                    category.setColor(NO_CATEGORY_COLOR);
+                    category.setName(NO_CATEGORY_ID);
+                }
+
+                // Store position of new category into categoryPositionMap
+                categoryPositionMap.put(categoryId, categories.size());
                 // Add new category to list
-                categories.add(c);
+                categories.add(category);
                 // Add first amount to list
-                amountsCategory.add(e.getAmount());
+                amountsCategory.add(expense.getAmount());
             } else {
                 // Get current amount
-                double am = amountsCategory.get(pos);
+                double amount = amountsCategory.get(position);
                 // Store new amount
-                amountsCategory.set(pos, am + e.getAmount());
+                amountsCategory.set(position, amount + expense.getAmount());
             }
         }
     }
 
     private void fetchTimeAndAmounts(List<Expense> expenses) {
-        if (expenses == null) {
-            return;
-        }
-        for (Expense e : expenses) {
+        for (Expense expense : expenses) {
             if (requestCode == WEEKLY) {
-                int dateNum = Helpers.getDayOfWeek(e.getExpenseDate());
-                amountsTime[dateNum] += e.getAmount();
+                int dateNum = Helpers.getDayOfWeek(expense.getExpenseDate());
+                amountsTime[dateNum] += expense.getAmount();
             } else if (requestCode == MONTHLY) {
-                int dateNum = Helpers.getDayOfMonth(e.getExpenseDate());
-                amountsTime[dateNum] += e.getAmount();
+                int dateNum = Helpers.getDayOfMonth(expense.getExpenseDate());
+                amountsTime[dateNum] += expense.getAmount();
             } else {
-                int monthNum = Helpers.getMonthOfYear(e.getExpenseDate());
-                amountsTime[monthNum + 1] += e.getAmount();
+                int monthNum = Helpers.getMonthOfYear(expense.getExpenseDate());
+                amountsTime[monthNum + 1] += expense.getAmount();
             }
         }
     }
@@ -237,8 +285,8 @@ public class ReportDetailActivity extends AppCompatActivity {
     private void updatePieChart() {
         // Get colors from categories
         List<Integer> colors = new ArrayList<>();
-        for (Category c : categories) {
-            colors.add(Color.parseColor(c.getColor()));
+        for (Category category : categories) {
+            colors.add(Color.parseColor(category.getColor()));
         }
 
         // Calculate total expense
@@ -380,57 +428,6 @@ public class ReportDetailActivity extends AppCompatActivity {
                 }
                 barChart.moveViewToX(Math.max(latestPosition - 6, 0));
         }
-    }
-
-    private void setupViews() {
-        categories = new ArrayList<>();
-        amountsCategory = new ArrayList<>();
-        map = new HashMap<>();
-
-        Bundle bundle = getIntent().getExtras();
-
-        if (bundle != null) {
-            startEnd = (Date[]) bundle.getSerializable(START_END_DATE);
-            requestCode = bundle.getInt(REQUEST_CODE);
-        }
-
-        if (startEnd != null) {
-            Log.d(TAG, "Start: " + startEnd[0].getTime());
-            Log.d(TAG, "End: " + startEnd[1].getTime());
-            int[] startEndDay = Helpers.getStartEndDay(startEnd);
-            if (startEndDay == null) {
-                Log.i(TAG, "Invalid start end day.");
-                return;
-            }
-            // Query data from date range
-            expenses = Expense.getExpensesByRangeAndGroupId(startEnd, groupId);
-        }
-
-        if (expenses == null) {
-            return;
-        }
-
-        // Initialize bar chart data set
-        if (requestCode == WEEKLY) {
-            timeSlotsLength = DAYS_OF_WEEK + 2;
-        } else if (requestCode == MONTHLY) {
-            Calendar calendar = Calendar.getInstance();
-            int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-            timeSlotsLength = maxDays + 2;
-        } else if (requestCode == YEARLY) {
-            timeSlotsLength = MONTHS_OF_YEAR + 2;
-        }
-        amountsTime = new double[timeSlotsLength];
-
-        // Fetch data
-        fetchCategoriesAndAmounts(expenses);
-        fetchTimeAndAmounts(expenses);
-
-        // Create new Adapter
-        reportPagerAdapter = new ReportPagerAdapter(getSupportFragmentManager(), startEnd, requestCode);
-        viewPager.setAdapter(reportPagerAdapter);
-        tabStrip.setupWithViewPager(viewPager);
-        viewPager.addOnPageChangeListener(pageChangeListener);
     }
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {

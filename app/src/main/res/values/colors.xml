@@ -18,4 +18,21 @@
     <color name="dark_blue">#1976D2</color>
     <color name="transparent_gray">#269E9E9E</color>
     <color name="teal">#009688</color>
+
+    <!-- Custom color-->
+    <color name="soft_default">@color/colorPrimary</color>
+    <color name="soft_blue">#67ABF5</color>
+    <color name="soft_blue_gray">#848EA5</color>
+    <color name="soft_brown">#916A6A</color>
+    <color name="soft_cyan_like">#66BFB3</color>
+    <color name="soft_deep_purple">#A17AFF</color>
+    <color name="soft_green">#6FBF43</color>
+    <color name="soft_indigo">#819DD8</color>
+    <color name="soft_orange">#FF8D36</color>
+    <color name="soft_purple">#ED72D7</color>
+    <color name="soft_purple_deep">#9551A5</color>
+    <color name="soft_purple_deep_light">#9E88B2</color>
+    <color name="soft_red">#F17071</color>
+    <color name="soft_yellow">#F7B314</color>
+
 </resources>

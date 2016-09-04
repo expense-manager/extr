@@ -1,15 +1,5 @@
 package com.expensemanager.app.category;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.category.color_picker.ColorPickerFragment;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Group;
-import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.SyncCategory;
-
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +19,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.category.color_picker.ColorPickerFragment;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.SyncCategory;
+
+import org.json.JSONObject;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,7 +44,6 @@ public class NewCategoryActivity extends AppCompatActivity
     private static final String TAG = NewCategoryActivity.class.getSimpleName();
 
     private Category category;
-
     private Set<String> usedColors;
     private String currentColor;
     private String groupId;
@@ -79,7 +78,7 @@ public class NewCategoryActivity extends AppCompatActivity
         // Get used color set
         usedColors = Helpers.getUsedColorSet(groupId);
         // Get a random unused color
-        currentColor = ColorPickerFragment.getRandomColor(usedColors);
+        currentColor = Helpers.getRandomColor(usedColors);
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(currentColor));
         colorImageView.setImageDrawable(colorDrawable);
 

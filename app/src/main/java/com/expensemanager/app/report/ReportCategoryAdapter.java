@@ -1,11 +1,5 @@
 package com.expensemanager.app.report;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.expense.ExpenseActivity;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Expense;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,8 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.expense.ExpenseActivity;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Expense;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Category> categories;
     private ArrayList<Double> amounts;
-    private Map<String, Integer> map;
+    private Map<String, Integer> categoryPositionMap;
     private Date[] startEnd;
     private Context context;
 
@@ -43,7 +42,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.context = context;
         this.categories = categories;
         this.amounts = amounts;
-        map = new HashMap<>();
+        categoryPositionMap = new HashMap<>();
     }
 
     private Context getContext() {
@@ -114,7 +113,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void clear() {
         categories.clear();
         amounts.clear();
-        map.clear();
+        categoryPositionMap.clear();
         notifyDataSetChanged();
     }
 
@@ -128,34 +127,38 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             return;
         }
 
-        for (Expense e : expenses) {
-            String cId = e.getCategoryId();
-            if (cId == null) {
-                cId = NO_CATEGORY_ID;
+        for (Expense expense : expenses) {
+            String categoryId = expense.getCategoryId();
+
+            if (categoryId == null) {
+                categoryId = NO_CATEGORY_ID;
             }
-            Integer pos = map.get(cId);
-            if (pos == null) {
-                Category c = null;
+
+            Integer position = categoryPositionMap.get(categoryId);
+
+            if (position == null) {
+                Category category = null;
                 // Get new category
-                if (cId.equals(NO_CATEGORY_ID)) {
-                    // Get temp category for no category
-                    c = new Category();
-                    c.setColor(NO_CATEGORY_COLOR);
-                    c.setName(NO_CATEGORY_ID);
-                } else {
-                    c = Category.getCategoryById(cId);
+                if (!categoryId.equals(NO_CATEGORY_ID)) {
+                    category = Category.getCategoryById(categoryId);
                 }
-                // Store pos of new category into map
-                map.put(cId, categories.size());
+
+                if (category == null) {
+                    // Get temp category for no category
+                    category = new Category();
+                    category.setColor(NO_CATEGORY_COLOR);
+                    category.setName(NO_CATEGORY_ID);
+                }
+
+                // Store position of new category into map
+                categoryPositionMap.put(categoryId, categories.size());
                 // Add new category to list
-                categories.add(c);
+                categories.add(category);
                 // Add first amount to list
-                amounts.add(e.getAmount());
+                amounts.add(expense.getAmount());
             } else {
-                // Get current amount
-                double am = amounts.get(pos);
-                // Store new amount
-                amounts.set(pos, am + e.getAmount());
+                double amount = amounts.get(position);
+                amounts.set(position, amount + expense.getAmount());
             }
         }
     }

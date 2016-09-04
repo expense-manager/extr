@@ -101,6 +101,22 @@
     <string name="last_name">Last Name</string>
     <string name="mobile">Mobile</string>
 
+    <!-- Color -->
+    <string name="soft_default">Default</string>
+    <string name="soft_blue">Blue</string>
+    <string name="soft_blue_gray">Blue Gray</string>
+    <string name="soft_brown">Brown</string>
+    <string name="soft_cyan_like">Cyan</string>
+    <string name="soft_deep_purple">Deep Purple</string>
+    <string name="soft_green">Green</string>
+    <string name="soft_indigo">Indigo</string>
+    <string name="soft_orange">Orange</string>
+    <string name="soft_purple">Purple</string>
+    <string name="soft_purple_deep">Purple Deep</string>
+    <string name="soft_purple_deep_light">Purple Deep Light</string>
+    <string name="soft_red">Red</string>
+    <string name="soft_yellow">Yellow</string>
+
     <!-- Action -->
     <string name="add">Add</string>
     <string name="save">Save</string>

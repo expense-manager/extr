@@ -14,6 +14,7 @@ import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.EColor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,7 +26,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -513,5 +516,17 @@ public class Helpers {
         Context context = EApplication.getInstance();
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.shared_preferences_session_key), 0);
         return sharedPreferences.getString(User.USER_ID, null);
+    }
+
+    public static String getRandomColor(Set<String> usedColors) {
+        List<String> colors = colors = EColor.getAllColors();
+        Random ran = new Random();
+        int pos = ran.nextInt(colors.size());
+        String color = colors.get(pos);
+        while (usedColors != null && usedColors.contains(color)) {
+            pos = ran.nextInt(colors.size());
+            color = colors.get(pos);
+        }
+        return color;
     }
 }

@@ -101,6 +101,7 @@ public class ExpenseDetailActivity extends BaseActivity {
     private ExpensePhotoAdapter newExpensePhotoAdapter;
     private Uri outputFileUri;
 
+    private String expenseId;
     private Expense expense;
     private Category category;
     private Calendar calendar;
@@ -144,7 +145,7 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         setupToolbar();
 
-        String expenseId = getIntent().getStringExtra(EXPENSE_ID);
+        expenseId = getIntent().getStringExtra(EXPENSE_ID);
         expense = Expense.getExpenseById(expenseId);
         category = Category.getCategoryById(expense.getCategoryId());
 
@@ -157,6 +158,12 @@ public class ExpenseDetailActivity extends BaseActivity {
 
     private void invalidateViews() {
         Log.d(TAG, "invalidateViews()");
+        expense = Expense.getExpenseById(expenseId);
+
+        if (expense == null) {
+            return;
+        }
+
         amountTextView.setText(String.valueOf(expense.getAmount()));
         setupCategory();
         noteTextView.setText(String.valueOf(expense.getNote()));

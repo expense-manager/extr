@@ -1,9 +1,9 @@
 package com.expensemanager.app.models;
 
-import com.expensemanager.app.category.color_picker.ColorPickerFragment;
-
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.expensemanager.app.helpers.Helpers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -135,7 +135,7 @@ public class Group implements RealmModel {
             this.createdAt = simpleDateFormat.parse(jsonObject.getString(CREATED_AT_JSON_KEY));
 
             // Get a random unused color
-            this.color = ColorPickerFragment.getRandomColor(null);
+            this.color = Helpers.getRandomColor(null);
         } catch (JSONException e) {
             Log.e(TAG, "Error in parsing group.", e);
         } catch (ParseException e) {

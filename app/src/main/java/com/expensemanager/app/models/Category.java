@@ -1,12 +1,11 @@
 package com.expensemanager.app.models;
 
+import android.support.annotation.Nullable;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.graphics.Color;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
