@@ -43,6 +43,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.category_picker.CategoryPickerFragment;
 import com.expensemanager.app.expense.photo.ExpensePhotoAdapter;
@@ -55,6 +56,7 @@ import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.ExpensePhoto;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.ExpenseBuilder;
 import com.expensemanager.app.service.PermissionsManager;
@@ -111,6 +113,7 @@ public class ExpenseDetailActivity extends BaseActivity {
     private Calendar calendar;
     private boolean isEditable = false;
     private long lastPhotoClickTime = 0;
+    private String groupId;
 
     private ArrayList<ExpensePhoto> expensePhotos;
     private ExpensePhotoAdapter expensePhotoAdapter;
@@ -134,6 +137,10 @@ public class ExpenseDetailActivity extends BaseActivity {
     @BindView(R.id.expense_detail_activity_category_amount_text_view_id) TextView categoryAmountTextView;
     @BindView(R.id.expense_detail_activity_expense_date_text_view_id) TextView expenseDateTextView;
     @BindView(R.id.expense_detail_activity_expense_time_text_view_id) TextView expenseTimeTextView;
+    @BindView(R.id.expense_detail_activity_created_by_relative_layout_id) RelativeLayout createdByRelativeLayout;
+    @BindView(R.id.expense_detail_activity_created_by_photo_image_view_id) CircleImageView createdByPhotoImageView;
+    @BindView(R.id.expense_detail_activity_created_by_name_text_view_id) TextView createdByNameTextView;
+    @BindView(R.id.expense_detail_activity_created_by_email_text_view_id) TextView createdByEmailTextView;
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, ExpenseDetailActivity.class);
@@ -148,6 +155,9 @@ public class ExpenseDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setupToolbar();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
         expenseId = getIntent().getStringExtra(EXPENSE_ID);
         expense = Expense.getExpenseById(expenseId);
@@ -172,6 +182,19 @@ public class ExpenseDetailActivity extends BaseActivity {
         setupCategory();
         noteTextView.setText(String.valueOf(expense.getNote()));
         createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
+
+        User createdBy = User.getUserById(expense.getUserId());
+        if (createdBy != null && Member.getAllMembersByGroupId(groupId).size() > 1) {
+            Glide.with(this)
+                .load(createdBy.getPhotoUrl())
+                .placeholder(R.drawable.profile_place_holder_image)
+                .into(createdByPhotoImageView);
+
+            createdByNameTextView.setText(createdBy.getFullname());
+            createdByEmailTextView.setText(createdBy.getEmail());
+        } else {
+            createdByRelativeLayout.setVisibility(View.GONE);
+        }
 
         deleteButton.setOnClickListener(v -> delete());
 
@@ -437,7 +460,6 @@ public class ExpenseDetailActivity extends BaseActivity {
         expense.setAmount(amount);
         expense.setNote(noteTextView.getText().toString());
         expense.setCategoryId(category != null ? category.getId() : null);
-        expense.setUserId(loginUserId);
         expense.setGroupId(groupId);
         expense.setExpenseDate(calendar.getTime());
         expense.setSynced(false);

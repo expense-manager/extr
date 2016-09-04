@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.group.GroupActivity;
 import com.expensemanager.app.models.Member;
+import com.expensemanager.app.service.SyncMember;
 
 import java.util.ArrayList;
 
@@ -60,6 +61,8 @@ public class MemberActivity extends AppCompatActivity {
         setupRecyclerView();
 
         invalidateViews();
+        // Sync all members of current group
+        SyncMember.getMembersByGroupId(groupId);
     }
 
     private void invalidateViews() {

@@ -17,6 +17,7 @@ import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -95,6 +96,11 @@ public class OverviewFragment extends Fragment {
         monthlyAverageTextView.setText("$" + new DecimalFormat("##.##").format(getMonthlyAverage()));
 
         overviewAdapter.clear();
+        if (Member.getAllMembersByGroupId(groupId).size() > 1) {
+            overviewAdapter.setShowMember(true);
+        } else {
+            overviewAdapter.setShowMember(false);
+        }
         overviewAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
     }
 
