@@ -1,5 +1,6 @@
 package com.expensemanager.app.group.member;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.profile.ProfileActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +91,8 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         // Set item click listener
         viewHolder.itemView.setOnClickListener(v -> {
             //todo: jump to profile activity
-            //ProfileActivity.newInstance(context, users.get(position).getId());
-            //((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+            ProfileActivity.newInstance(context, members.get(position).getUserId());
+            ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
     }
 

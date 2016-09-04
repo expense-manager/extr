@@ -22,6 +22,7 @@ import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncExpense;
 
@@ -151,6 +152,13 @@ public class ExpenseActivity extends BaseActivity
 
     private void invalidateViews() {
         expenseAdapter.clear();
+
+        // Check size of group members
+        if (Member.getAllMembersByGroupId(groupId).size() > 1) {
+            expenseAdapter.setShowMember(true);
+        } else {
+            expenseAdapter.setShowMember(false);
+        }
 
         if (isCategoryFiltered && isDateFiltered) {
             expenseAdapter.addAll(Expense.getAllExpensesByDateAndCategoryAndGrouopId(startDate, endDate, category, groupId));

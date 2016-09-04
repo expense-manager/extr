@@ -186,7 +186,6 @@ public class CategoryDetailActivity extends AppCompatActivity
         realm.beginTransaction();
         category.setName(name);
         category.setColor(currentColor);
-        category.setUserId(loginUserId);
         category.setGroupId(groupId);
         realm.copyToRealmOrUpdate(category);
         realm.commitTransaction();

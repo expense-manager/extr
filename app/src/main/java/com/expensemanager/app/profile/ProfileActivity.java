@@ -84,6 +84,7 @@ public class ProfileActivity extends BaseActivity {
     private byte[] profileImage;
     private boolean isEditable = false;
     private String userId;
+    private String loginUserId;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -113,7 +114,7 @@ public class ProfileActivity extends BaseActivity {
         Log.d(TAG, "token: uriPath=" + uriPath);
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
         userId = getIntent().getStringExtra(USER_ID);
 
@@ -133,6 +134,7 @@ public class ProfileActivity extends BaseActivity {
 
         invalidateViews();
         setupEditableViews(false);
+        // todo: update user by id
         SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
     }
 
@@ -297,7 +299,11 @@ public class ProfileActivity extends BaseActivity {
 
         titleTextView.setText(getString(R.string.profile));
         editTextView.setText(getString(R.string.edit));
-        editTextView.setVisibility(View.VISIBLE);
+        if (loginUserId.equals(userId)) {
+            editTextView.setVisibility(View.VISIBLE);
+        } else {
+            editTextView.setVisibility(View.INVISIBLE);
+        }
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
     }

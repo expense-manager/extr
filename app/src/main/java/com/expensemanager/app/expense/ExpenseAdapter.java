@@ -5,15 +5,18 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Expense> expenses;
     private Context context;
+    private boolean showMember;
 
     public ExpenseAdapter(Context context, ArrayList<Expense> expenses) {
         this.context = context;
@@ -80,6 +84,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
+        // Reset views
+        viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
+        viewHolder.categoryNameTextView.setVisibility(View.INVISIBLE);
+        viewHolder.userPhotoImageView.setVisibility(View.INVISIBLE);
+
         Expense expense = expenses.get(position);
         Category category = expense.getCategory();
 
@@ -88,15 +97,22 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // Load category data or hide
         if (category != null) {
-            viewHolder.categoryColorImageView.setVisibility(View.VISIBLE);
-            viewHolder.categoryNameTextView.setVisibility(View.VISIBLE);
-
             ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
             viewHolder.categoryColorImageView.setImageDrawable(colorDrawable);
             viewHolder.categoryNameTextView.setText(category.getName());
-        } else {
-            viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
-            viewHolder.categoryNameTextView.setVisibility(View.INVISIBLE);
+
+            viewHolder.categoryColorImageView.setVisibility(View.VISIBLE);
+            viewHolder.categoryNameTextView.setVisibility(View.VISIBLE);
+        }
+
+        User user = User.getUserById(expense.getUserId());
+        if (showMember && user != null) {
+            Glide.with(context)
+                .load(user.getPhotoUrl())
+                .placeholder(R.drawable.profile_place_holder_image)
+                .into(viewHolder.userPhotoImageView);
+
+            viewHolder.userPhotoImageView.setVisibility(View.VISIBLE);
         }
 
         // Set item click listener
@@ -104,6 +120,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
+    }
+
+    public void setShowMember(boolean showMember) {
+        this.showMember = showMember;
+        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -120,6 +141,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.expense_item_default_spent_at_text_view_id) TextView spentAtTextView;
         @BindView(R.id.expense_item_default_amount_text_view_id) TextView amountTextView;
         @BindView(R.id.expense_item_default_category_color_image_view_id) CircleImageView categoryColorImageView;
+        @BindView(R.id.expense_item_default_user_photo_image_view_id) CircleImageView userPhotoImageView;
         @BindView(R.id.expense_item_default_category_name_text_view_id) TextView categoryNameTextView;
 
         private View itemView;

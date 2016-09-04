@@ -51,6 +51,18 @@
 
             tools:background="@color/black"/>
 
+        <!-- User -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/expense_item_default_user_photo_image_view_id"
+            android:layout_width="@dimen/category_color_width_small"
+            android:layout_height="@dimen/category_color_width_small"
+            android:layout_below="@+id/expense_item_default_spent_at_text_view_id"
+            android:layout_toLeftOf="@+id/expense_item_default_category_color_image_view_id"
+            android:layout_marginRight="@dimen/space_medium"
+            android:layout_marginBottom="@dimen/space_medium"
+
+            tools:background="@color/black"/>
+
         <!-- Name -->
         <TextView
             android:id="@+id/expense_item_default_category_name_text_view_id"

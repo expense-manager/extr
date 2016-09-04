@@ -277,9 +277,12 @@ public class MainActivity extends AppCompatActivity {
             for (Group group : Group.getAllGroups()) {
                 if (group != null) {
                     Log.i(TAG, "group id: " + group.getId());
-                    // Sync all expenses and category
+                    // Sync all categories of current group
                     SyncCategory.getAllCategoriesByGroupId(group.getId());
+                    // Sync all expenses of current group
                     SyncExpense.getAllExpensesByGroupId(group.getId());
+                    // Sync all members of current group
+                    SyncMember.getMembersByGroupId(group.getId());
                 }
             }
 
