@@ -28,11 +28,8 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
     public static final int YEARLY = 2;
     public static final int LEN_OF_WEEK = 7;
     public static final int LEN_OF_YEAR = 12;
-    public static final int DAYS_OF_WEEK = 7;
-    public static final int MONTHS_OF_YEAR = 12;
 
     private static final int VIEW_TYPE_DEFAULT = 0;
-    private int timeSlotsLength;
     private double[] amounts;
     private Date[] startEnd;
     private int requestCode;
@@ -41,7 +38,6 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
     public ReportExpenseAdapter(Context context, Date[] startEnd, int requestCode) {
         this.context = context;
         amounts = new double[0];
-        timeSlotsLength = 0;
         this.startEnd = startEnd;
         this.requestCode = requestCode;
     }
@@ -164,7 +160,6 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        timeSlotsLength = DAYS_OF_WEEK + 2;
         if (new Date().compareTo(startEnd[1]) >= 0) {
             amounts = new double[LEN_OF_WEEK];
         } else {
@@ -173,11 +168,9 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
             amounts = new double[day];
         }
 
-        for (Expense e : expenses) {
-            // todo: use expense time instead of created time
-            int day = Helpers.getDayOfWeek(e.getExpenseDate());
-            String s = e.getCreatedAt().toString();
-            amounts[day - 1] += e.getAmount();
+        for (Expense expense : expenses) {
+            int day = Helpers.getDayOfWeek(expense.getExpenseDate());
+            amounts[day - 1] += expense.getAmount();
         }
     }
 
@@ -187,11 +180,10 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         Calendar calendar = Calendar.getInstance();
-        int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        timeSlotsLength = maxDays + 2;
+        calendar.setTime(startEnd[0]);
 
         if (new Date().compareTo(startEnd[1]) >= 0) {
-            int day = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+            int day = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             amounts = new double[day];
         } else {
             // Show list items up to today
@@ -199,11 +191,9 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
             amounts = new double[day];
         }
 
-        for (Expense e : expenses) {
-            // todo: use expense time instead of created time
-            int day = Helpers.getDayOfMonth(e.getExpenseDate());
-            String s = e.getCreatedAt().toString();
-            amounts[day - 1] += e.getAmount();
+        for (Expense expense : expenses) {
+            int day = Helpers.getDayOfMonth(expense.getExpenseDate());
+            amounts[day - 1] += expense.getAmount();
         }
     }
 
@@ -212,7 +202,6 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        timeSlotsLength = MONTHS_OF_YEAR;
         if (new Date().compareTo(startEnd[1]) >= 0) {
             amounts = new double[LEN_OF_YEAR];
         } else {
@@ -221,10 +210,9 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
             amounts = new double[month + 1];
         }
 
-        for (Expense e : expenses) {
-            // todo: use expense time instead of created time
-            int month = Helpers.getMonthOfYear(e.getExpenseDate());
-            amounts[month] += e.getAmount();
+        for (Expense expense : expenses) {
+            int month = Helpers.getMonthOfYear(expense.getExpenseDate());
+            amounts[month] += expense.getAmount();
         }
     }
 

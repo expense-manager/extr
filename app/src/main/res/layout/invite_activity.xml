@@ -5,11 +5,12 @@
     android:id="@+id/invite_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
 
     android:background="@color/white"
     tools:context="com.expensemanager.app.group.member.InviteActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar_light" />
 
     <ScrollView
         android:layout_width="match_parent"

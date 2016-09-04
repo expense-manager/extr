@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar_id"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
+    android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
+    android:fitsSystemWindows="true"
 
     android:background="?attr/colorPrimary"
     android:elevation="2dp"
@@ -27,7 +28,7 @@
             android:src="@drawable/ic_arrow_back_white_24dp"/>
 
         <!-- Title -->
-        <TextView
+        <com.expensemanager.app.helpers.ETextView
             android:id="@+id/toolbar_title_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +39,7 @@
             android:textSize="@dimen/text_medium_small"/>
 
         <!-- Right title -->
-        <TextView
+        <com.expensemanager.app.helpers.ETextView
             android:id="@+id/toolbar_right_title_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
