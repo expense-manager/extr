@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,14 +19,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
-import com.expensemanager.app.group.GroupActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
 import com.expensemanager.app.group.NewGroupActivity;
 import com.expensemanager.app.models.DrawerItem;
@@ -36,7 +32,6 @@ import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.NotificationsActivity;
-import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.report.ReportActivity;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
@@ -53,7 +48,6 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<DrawerSubItem> drawerSubItems;
     private ArrayList<Group> groups;
     private String loginUserId;
-    public String groupId;
+    private String groupId;
     private OverviewFragment overviewFragment;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;

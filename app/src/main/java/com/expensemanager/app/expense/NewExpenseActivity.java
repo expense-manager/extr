@@ -125,12 +125,11 @@ public class NewExpenseActivity extends BaseActivity {
 
         setupToolbar();
 
-        setupToolbar();
         expense = new Expense();
         progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_ATOP);
         setupCategory();
         setupDateAndTime();
-        setupPhotoSourcePicker();
+        setupPhoto();
     }
 
     private void setupDateAndTime() {
@@ -239,7 +238,7 @@ public class NewExpenseActivity extends BaseActivity {
         saveTextView.setOnClickListener(v -> save());
     }
 
-    private void setupPhotoSourcePicker() {
+    private void setupPhoto() {
         // Photo
         photoList = new ArrayList<>();
         Bitmap cameraIconBitmap = getCameraIconBitmap();

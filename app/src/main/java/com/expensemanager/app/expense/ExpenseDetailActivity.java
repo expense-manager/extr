@@ -2,13 +2,10 @@ package com.expensemanager.app.expense;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -24,7 +21,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +31,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -69,13 +66,14 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import bolts.Continuation;
@@ -92,14 +90,20 @@ public class ExpenseDetailActivity extends BaseActivity {
     public static final String DATE_PICKER = "date_picker";
     public static final String TIME_PICKER = "time_picker";
     private static final String EXPENSE_ID = "EXPENSE_ID";
-
-    public static final int SELECT_PICTURE_REQUEST_CODE = 1;
+    public static final String NEW_PHOTO = "Take a photo";
+    public static final String LIBRARY_PHOTO = "Choose from library";
+    private static final int TAKE_PHOTO_CODE = 1;
+    private static final int PICK_PHOTO_CODE = 2;
+    private static final int CROP_PHOTO_CODE = 3;
+    private static final int POST_PHOTO_CODE = 4;
     private static final int PROGRESS_BAR_DISPLAY_LENGTH = 6000;
 
     private Handler handler;
     private ArrayList<byte[]> photoList;
     private ExpensePhotoAdapter newExpensePhotoAdapter;
     private Uri outputFileUri;
+    private String photoFileName;
+    private AlertDialog.Builder choosePhotoSource;
 
     private String expenseId;
     private Expense expense;
@@ -151,6 +155,7 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         invalidateViews();
         setupDateAndTime();
+        setupNewPhoto();
 
         SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
     }
@@ -178,7 +183,6 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         setupExpensePhoto();
         setupEditableViews(isEditable);
-        setupPhotoSourcePicker();
     }
 
     private void setupDateAndTime() {
@@ -457,7 +461,7 @@ public class ExpenseDetailActivity extends BaseActivity {
         invalidateViews();
     }
 
-    private void setupPhotoSourcePicker() {
+    private void setupNewPhoto() {
         // Photo
         photoList = new ArrayList<>();
         Bitmap cameraIconBitmap = getCameraIconBitmap();
@@ -469,7 +473,7 @@ public class ExpenseDetailActivity extends BaseActivity {
         newPhotoGridView.setAdapter(newExpensePhotoAdapter);
         newPhotoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             if (position == photoList.size() - 1) {
-                checkCameraPermission();
+                setPhotoSourcePicker();
             }
         });
 
@@ -483,46 +487,126 @@ public class ExpenseDetailActivity extends BaseActivity {
         });
     }
 
+    private void setPhotoSourcePicker() {
+        choosePhotoSource = new AlertDialog.Builder(this);
+
+        final ArrayAdapter<String> photoSourceAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1);
+        photoSourceAdapter.add(NEW_PHOTO);
+        photoSourceAdapter.add(LIBRARY_PHOTO);
+
+        choosePhotoSource.setAdapter(photoSourceAdapter, (DialogInterface dialog, int which) -> {
+            String photoSource = photoSourceAdapter.getItem(which);
+            if (photoSource == null) {
+                checkCameraPermission();
+                return;
+            }
+
+            switch (photoSource) {
+                case NEW_PHOTO:
+                    Log.d(TAG, "Take a photo");
+                    checkCameraPermission();
+                    break;
+                case LIBRARY_PHOTO:
+                    Log.d(TAG, "Choose photo from library");
+                    checkExternalStoragePermission();
+                    break;
+            }
+        });
+
+        choosePhotoSource.show();
+    }
+
+    private void launchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFileName = Helpers.dateToString(new Date(), getString(R.string.photo_date_format_string));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName));
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, TAKE_PHOTO_CODE);
+        }
+    }
+
+    private void openGallery() {
+//        Intent intent = new Intent(Intent.ACTION_PICK,
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE_REQUEST_CODE) {
-                final boolean isCamera;
-                if (data == null) {
-                    isCamera = true;
-                } else {
-                    final String action = data.getAction();
-                    isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
-                }
+            if (requestCode == TAKE_PHOTO_CODE) {
+                Log.d(TAG, "TAKE_PHOTO_CODE");
 
-                Uri selectedImageUri;
-                if (isCamera) {
-                    selectedImageUri = outputFileUri;
-                } else {
-                    selectedImageUri = data.getData();
-                }
+                outputFileUri = getPhotoFileUri(photoFileName);
+                cropPhoto(outputFileUri);
+            } else if (requestCode == PICK_PHOTO_CODE) {
+                Log.d(TAG, "PICK_PHOTO_CODE");
+
+                Uri photoUri = data.getData();
 
                 try {
-                    InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                    try {
-                        byte[] inputData = Helpers.getBytesFromInputStream(inputStream);
-                        Bitmap bitmap = Helpers.decodeSampledBitmapFromByteArray(inputData, 0, 400, 400);
-                        int dimension = Helpers.getCenterCropDimensionForBitmap(bitmap);
-                        bitmap = ThumbnailUtils.extractThumbnail(bitmap, dimension, dimension);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                        byte[] sampledInputData = stream.toByteArray();
-                        byte[] cameraBytes = photoList.get(photoList.size() - 1);
-                        photoList.remove(photoList.size() - 1);
-                        photoList.add(sampledInputData);
-                        photoList.add(cameraBytes);
-                        newExpensePhotoAdapter.notifyDataSetChanged();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error reading image byte data from uri");
-                    }
-                } catch (FileNotFoundException e) {
-                    Log.e(TAG, "Error file with uri " + selectedImageUri + " not found", e);
+                    InputStream inputStream = getContentResolver().openInputStream(photoUri);
+                    byte[] inputData = Helpers.getBytesFromInputStream(inputStream);
+
+                    String directoryName = Helpers.dateToString(new Date(), getString(R.string.photo_date_format_string));
+                    final File outputFileRoot = new File(Environment.getExternalStorageDirectory() + File.separator + directoryName + File.separator);
+                    outputFileRoot.mkdirs();
+                    final File outputFile = new File(outputFileRoot, directoryName);
+                    outputFileUri = Uri.fromFile(outputFileRoot);
+
+                    OutputStream out;
+                    out = new FileOutputStream(outputFile);
+                    out.write(inputData);
+                    out.close();
+
+                    outputFileUri = Uri.fromFile(outputFile);
+                    cropPhoto(outputFileUri);
+
+                } catch (IOException e) {
+                    Log.e(TAG, "Error in getting photo data.", e);
                 }
+            } else if (requestCode == CROP_PHOTO_CODE) {
+                Log.d(TAG, "CROP_PHOTO_CODE");
+
+                Uri photoUri = data.getData();
+                if (photoUri != null) {
+                    try {
+                        InputStream inputStream = getContentResolver().openInputStream(photoUri);
+                        try {
+                            byte[] inputData = Helpers.getBytesFromInputStream(inputStream);
+                            Bitmap bitmap = Helpers.decodeSampledBitmapFromByteArray(inputData, 0, 400, 400);
+                            int dimension = Helpers.getCenterCropDimensionForBitmap(bitmap);
+                            bitmap = ThumbnailUtils.extractThumbnail(bitmap, dimension, dimension);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            byte[] sampledInputData = stream.toByteArray();
+                            byte[] cameraBytes = photoList.get(photoList.size() - 1);
+                            photoList.remove(photoList.size() - 1);
+                            photoList.add(sampledInputData);
+                            photoList.add(cameraBytes);
+                            Log.d(TAG, "photoList size: " + photoList.size());
+                            newExpensePhotoAdapter.notifyDataSetChanged();
+                        } catch (IOException e) {
+                            Log.e(TAG, "Error reading image byte data from uri");
+                        }
+                    } catch (FileNotFoundException e) {
+                        Log.e(TAG, "Error file with uri " + photoUri + " not found", e);
+                    }
+                } else {
+                    Toast.makeText(this, "Cannot get cropped photo data!", Toast.LENGTH_SHORT).show();
+                }
+
+            } else if (requestCode == POST_PHOTO_CODE) {
+                Log.d(TAG, "POST_PHOTO_CODE");
             }
         }
     }
@@ -540,36 +624,55 @@ public class ExpenseDetailActivity extends BaseActivity {
         return Helpers.padBitmap(cameraIconBitmap, 20, 20);
     }
 
-    private void openImageIntent() {
-        // Path to save image
-        String directoryName = Helpers.dateToString(new Date(), getString(R.string.photo_date_format_string));
-        final File root = new File(Environment.getExternalStorageDirectory() + File.separator + directoryName + File.separator);
-        root.mkdirs();
-        final File sdImageMainDirectory = new File(root, directoryName);
-        outputFileUri = Uri.fromFile(sdImageMainDirectory);
+    private void cropPhoto(Uri photoUri) {
+        //call the standard crop action intent (the user device may not support it)
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        //indicate image type and Uri
+        cropIntent.setDataAndType(photoUri, "image/*");
 
-        // Take a photo
-        final List<Intent> cameraIntents = new ArrayList<>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        final PackageManager packageManager = getPackageManager();
-        final List<ResolveInfo> listCamera = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCamera) {
-            final String packageName = res.activityInfo.packageName;
-            final Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(packageName);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            cameraIntents.add(intent);
+        //set crop properties
+        cropIntent.putExtra("crop", "true");
+        //indicate aspect of desired crop
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        //indicate output X and Y
+        cropIntent.putExtra("outputX", 400);
+        cropIntent.putExtra("outputY", 400);
+        //retrieve data on return
+        cropIntent.putExtra("return-data", true);
+
+        //start the activity - we handle returning in onActivityResult
+        startActivityForResult(cropIntent, CROP_PHOTO_CODE);
+    }
+
+    // Returns the Uri for a photo stored on disk given the fileName
+    public Uri getPhotoFileUri(String fileName) {
+        Log.d(TAG, "getPhotoFileUri: isExternalStorageAvailable() : " + isExternalStorageAvailable());
+        // Only continue if the SD Card is mounted
+        if (isExternalStorageAvailable()) {
+            // Get safe storage directory for photos
+            // Use `getExternalFilesDir` on Context to access package-specific directories.
+            // This way, we don't need to request external read/write runtime permissions.
+            File mediaStorageDir = new File(
+                    this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+
+            // Create the storage directory if it does not exist
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+                Log.d(TAG, "failed to create directory");
+            }
+
+            // Return the file target for the photo based on filename
+            return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
         }
+        return null;
+    }
 
-        // Choose a photo
-        final Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        final Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.photo_select_source));
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
-        startActivityForResult(chooserIntent, SELECT_PICTURE_REQUEST_CODE);
+    /**
+     * Returns true if external storage for photos is available
+     */
+    private boolean isExternalStorageAvailable() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 
     private Continuation<Void, Void> onDeleteSuccess = new Continuation<Void, Void>() {
@@ -656,7 +759,17 @@ public class ExpenseDetailActivity extends BaseActivity {
     private void checkCameraPermission() {
         PermissionsManager.verifyCameraPermissionGranted(this, (boolean isGranted) -> {
             if (isGranted) {
-                openImageIntent();
+                launchCamera();
+            } else {
+                Log.d(TAG, "Permission is not granted.");
+            }
+        });
+    }
+
+    private void checkExternalStoragePermission() {
+        PermissionsManager.verifyExternalStoragePermissionGranted(this, (boolean isGranted) -> {
+            if (isGranted) {
+                openGallery();
             } else {
                 Log.d(TAG, "Permission is not granted.");
             }

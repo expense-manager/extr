@@ -148,11 +148,9 @@ public class RequestTemplateCreator {
 
         String note = expense.getNote();
 
-        if (note != null && note.isEmpty() && note.length() > 0) {
+        if (note != null && !note.isEmpty() && note.length() > 0) {
             params.put(Expense.NOTE_JSON_KEY, expense.getNote());
         }
-
-        // todo: able to post selected category category
 
         try {
             // User pointer
@@ -191,7 +189,6 @@ public class RequestTemplateCreator {
             Log.e(TAG, "Error pointer object for 'where' in createExpense", e);
         }
 
-        // todo: build User Pointer
         return new RequestTemplate(POST, url, params);
     }
 
