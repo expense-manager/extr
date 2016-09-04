@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.service.Constant;
 import com.expensemanager.app.service.email.Mail;
 import com.expensemanager.app.service.email.MailSender;
@@ -22,7 +22,7 @@ import com.expensemanager.app.service.email.Recipient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class InviteActivity extends AppCompatActivity {
+public class InviteActivity extends BaseActivity {
     private static final String TAG = InviteActivity.class.getSimpleName();
 
     public static final String GROUP_ID = "groupId";

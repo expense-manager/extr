@@ -6,6 +6,17 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="BaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="BaseTheme.TranslucentStatus" parent="BaseTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="SplashTheme" parent="NoActionBarBaseTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>

@@ -1,5 +1,6 @@
 package com.expensemanager.app.group;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,9 +23,11 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.group.member.MemberActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncGroup;
+import com.expensemanager.app.service.font.Font;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -64,6 +67,7 @@ public class GroupDetailActivity extends BaseActivity {
         Intent intent = new Intent(context, GroupDetailActivity.class);
         intent.putExtra(GROUP_ID, id);
         context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
@@ -94,10 +98,13 @@ public class GroupDetailActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
         titleTextView.setText(getString(R.string.title_activity_group_detail));
+        titleTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
         editTextView.setOnClickListener(v -> setEditMode(true));
         saveTextView.setOnClickListener(v -> save());
+        editTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
+        saveTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
     }
 
     private void invalidateViews() {
@@ -208,7 +215,6 @@ public class GroupDetailActivity extends BaseActivity {
     private void delete() {
         progressBar.setVisibility(View.VISIBLE);
         SyncGroup.delete(groupId).continueWith(onDeleteSuccess, Task.UI_THREAD_EXECUTOR);
-
     }
 
     private Continuation<Void, Void> onDeleteSuccess = new Continuation<Void, Void>() {
@@ -225,15 +231,4 @@ public class GroupDetailActivity extends BaseActivity {
             return null;
         }
     };
-
-    @Override
-    public void close() {
-        finish();
-        overridePendingTransition(0, R.anim.right_out);
-    }
-
-    @Override
-    public void onBackPressed() {
-        close();
-    }
 }

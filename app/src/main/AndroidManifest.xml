@@ -40,7 +40,7 @@
         <activity
             android:name=".report.ReportDetailActivity"
             android:label="@string/title_activity_report_detail"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/BaseThemeDetail" />
         <activity
             android:name=".report.ReportActivity"
             android:theme="@style/BaseTheme" />
@@ -49,11 +49,11 @@
             android:theme="@style/BaseTheme" />
         <activity
             android:name=".expense.ExpenseDetailActivity"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseThemeDetail" />
         <activity
             android:name=".category.CategoryDetailActivity"
             android:label="@string/title_activity_category_detail"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseThemeDetail" />
         <activity
             android:name=".category.NewCategoryActivity"
             android:label="@string/title_activity_new_category"
@@ -97,7 +97,7 @@
         <activity
             android:name=".group.GroupDetailActivity"
             android:label="@string/title_activity_group_detail"
-            android:theme="@style/BaseTheme" />
+            android:theme="@style/BaseThemeDetail" />
         <activity
             android:name=".group.NewGroupActivity"
             android:label="@string/title_activity_new_group"

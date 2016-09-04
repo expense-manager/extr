@@ -9,7 +9,7 @@
 
     <!-- Welcome, Login and Sign up-->
     <string name="welcome">Welcome</string>
-    <string name="welcome_title">Welcome To Expense Manager</string>
+    <string name="welcome_title">Welcome to Expense Manager</string>
     <string name="welcome_sub_title">An easy and fast way to manage your expense</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -50,13 +50,13 @@
     <string name="edit_account">Edit Account</string>
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_expense_detail">Expense detail</string>
-    <string name="title_activity_category_detail">Category Detail</string>
+    <string name="title_activity_category_detail">Category detail</string>
     <string name="title_activity_new_expense">New Expense</string>
     <string name="title_activity_new_category">New Category</string>
     <string name="title_activity_welcome">Welcome</string>
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="title_activity_login">Login</string>
-    <string name="title_activity_report_detail">Report Detail</string>
+    <string name="title_activity_report_detail">Report detail</string>
     <string name="title_activity_overview">OverviewActivity</string>
     <string name="amount">Amount</string>
     <string name="about">About</string>
@@ -147,7 +147,7 @@
     <string name="update_photo">Update photo</string>
     <string name="title_activity_group">GroupActivity</string>
     <string name="title_activity_member">MemberActivity</string>
-    <string name="title_activity_group_detail">Group Detail</string>
+    <string name="title_activity_group_detail">Group detail</string>
     <string name="title_activity_new_group">New Group</string>
 
 </resources>

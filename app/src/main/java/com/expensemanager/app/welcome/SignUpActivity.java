@@ -313,7 +313,7 @@ public class SignUpActivity extends BaseActivity {
             int color = ContextCompat.getColor(this, R.color.white);
             signUpButton.setTextColor(color);
         } else {
-            int color = ContextCompat.getColor(this, R.color.blue);
+            int color = ContextCompat.getColor(this, R.color.colorPrimary);
             signUpButton.setTextColor(color);
         }
     }

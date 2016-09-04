@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/blue"
+    android:background="@color/colorPrimary"
     tools:context="com.expensemanager.app.welcome.WelcomeActivity">
 
     <!-- Title -->
@@ -51,7 +51,7 @@
         android:layout_margin="@dimen/space_medium"
 
         android:text="@string/sign_up"
-        android:textColor="@color/blue"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_medium_small"
         android:textAllCaps="false"
         android:background="@drawable/background_round_corner_white"/>
