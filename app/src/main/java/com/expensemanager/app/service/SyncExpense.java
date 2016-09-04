@@ -224,9 +224,11 @@ public class SyncExpense {
 
         Expense expense = expenseBuilder.getExpense();
 
-        for (int i = 0; i < expenseBuilder.getPhotoList().size(); i++) {
-            Log.d(TAG, "Update expense, start upload photo at index: " + i);
-            addExpensePhoto(expense.getId(), expenseBuilder.getPhotoList().get(i));
+        if (expenseBuilder.getPhotoList() != null) {
+            for (int i = 0; i < expenseBuilder.getPhotoList().size(); i++) {
+                Log.d(TAG, "Update expense, start upload photo at index: " + i);
+                addExpensePhoto(expense.getId(), expenseBuilder.getPhotoList().get(i));
+            }
         }
 
         Continuation<JSONObject, Void> onUpdateExpenseFinished = new Continuation<JSONObject, Void>() {

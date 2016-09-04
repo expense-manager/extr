@@ -151,7 +151,6 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         invalidateViews();
         setupDateAndTime();
-        setupPhotoSourcePicker();
 
         SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
     }
@@ -179,6 +178,7 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         setupExpensePhoto();
         setupEditableViews(isEditable);
+        setupPhotoSourcePicker();
     }
 
     private void setupDateAndTime() {
@@ -443,8 +443,11 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         ExpenseBuilder expenseBuilder = new ExpenseBuilder();
         expenseBuilder.setExpense(expense);
-        photoList.remove(photoList.size() - 1);
-        expenseBuilder.setPhotoList(photoList);
+
+        if (photoList.size() >= 2) {
+            photoList.remove(photoList.size() - 1);
+            expenseBuilder.setPhotoList(photoList);
+        }
 
         progressBar.setVisibility(View.VISIBLE);
         SyncExpense.update(expenseBuilder).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
