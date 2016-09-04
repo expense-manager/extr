@@ -50,6 +50,78 @@ public class SyncCategory {
         return networkRequest.send().continueWith(saveCategory);
     }
 
+    public static Task<Void> getAllCategoriesByUserId(String userId) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getAllCategoriesByUserId(userId);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> saveCategory = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in downloading all categories.", exception);
+                    throw  exception;
+                }
+
+                JSONObject categories = task.getResult();
+                if (categories == null) {
+                    throw new Exception("Empty response.");
+                }
+
+                Log.d(TAG, "Categories: \n" + categories);
+
+                try {
+                    JSONArray categoriesArray = categories.getJSONArray("results");
+                    Category.mapFromJSONArray(categoriesArray);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error in getting category JSONArray.", e);
+                }
+
+                return null;
+            }
+        };
+
+        Log.d(TAG, "Start downloading categories");
+        return networkRequest.send().continueWith(saveCategory);
+    }
+
+    public static Task<Void> getAllCategoriesByGroupId(String groupId) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getAllCategoriesByGroupId(groupId);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> saveCategory = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in downloading all categories.", exception);
+                    throw  exception;
+                }
+
+                JSONObject categories = task.getResult();
+                if (categories == null) {
+                    throw new Exception("Empty response.");
+                }
+
+                Log.d(TAG, "Categories: \n" + categories);
+
+                try {
+                    JSONArray categoriesArray = categories.getJSONArray("results");
+                    Category.mapFromJSONArray(categoriesArray);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error in getting category JSONArray.", e);
+                }
+
+                return null;
+            }
+        };
+
+        Log.d(TAG, "Start downloading categories");
+        return networkRequest.send().continueWith(saveCategory);
+    }
+
     public static Task<JSONObject> create(Category category) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.createCategory(category);

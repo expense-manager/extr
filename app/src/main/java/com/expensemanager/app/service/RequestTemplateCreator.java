@@ -85,22 +85,49 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
-    public static RequestTemplate getAllExpensesByGroupId(String groupId) {
+    public static RequestTemplate getAllExpensesByUserId(String userId) {
+        if (userId == null) {
+            return null;
+        }
+
         String url = BASE_URL + "classes/Expense";
         Map<String, String> params = new HashMap<>();
+        JSONObject subUserIdObj = new JSONObject();
+        JSONObject userIdObj=new JSONObject();
 
+        try {
+            subUserIdObj.put("__type", "Pointer");
+            subUserIdObj.put("className", "_User");
+            subUserIdObj.put("objectId", userId);
+            userIdObj.put("userId", subUserIdObj);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating user id pointer object for where in getGroupUsersByUserId", e);
+        }
+
+        params.put(WHERE, Helpers.encodeURIComponent(userIdObj.toString()));
+
+        return new RequestTemplate(GET, url, params);
+    }
+
+    public static RequestTemplate getAllExpensesByGroupId(String groupId) {
+        if (groupId == null) {
+            return null;
+        }
+
+        String url = BASE_URL + "classes/Expense";
+        Map<String, String> params = new HashMap<>();
         JSONObject subGroupIdObj = new JSONObject();
         JSONObject groupIdObj=new JSONObject();
+
         try {
             subGroupIdObj.put("__type", "Pointer");
             subGroupIdObj.put("className", "Group");
             subGroupIdObj.put("objectId", groupId);
-            groupIdObj.put("groupId", subGroupIdObj);
+            groupIdObj.put(Expense.GROUP_JSON_KEY, subGroupIdObj);
         } catch (JSONException e) {
-            Log.d(TAG, "Error creating group id object for where in getGroceryItemsByGroupId", e);
+            Log.e(TAG, "Error creating user id pointer object for where in getGroupUsersByUserId", e);
         }
 
-        params.put(INCLUDE, "userId,groupId");
         params.put(WHERE, Helpers.encodeURIComponent(groupIdObj.toString()));
         return new RequestTemplate(GET, url, params);
     }
@@ -228,6 +255,54 @@ public class RequestTemplateCreator {
         String url = BASE_URL + "classes/Category";
         Map<String, String> params = new HashMap<>();
         //todo: getAllCategoriesByUserId
+
+        return new RequestTemplate(GET, url, params);
+    }
+
+    public static RequestTemplate getAllCategoriesByUserId(String userId) {
+        if (userId == null) {
+            return null;
+        }
+
+        String url = BASE_URL + "classes/Category";
+        Map<String, String> params = new HashMap<>();
+        JSONObject subUserIdObj = new JSONObject();
+        JSONObject userIdObj=new JSONObject();
+
+        try {
+            subUserIdObj.put("__type", "Pointer");
+            subUserIdObj.put("className", "_User");
+            subUserIdObj.put("objectId", userId);
+            userIdObj.put("userId", subUserIdObj);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating user id pointer object for where in getGroupUsersByUserId", e);
+        }
+
+        params.put(WHERE, Helpers.encodeURIComponent(userIdObj.toString()));
+
+        return new RequestTemplate(GET, url, params);
+    }
+
+    public static RequestTemplate getAllCategoriesByGroupId(String groupId) {
+        if (groupId == null) {
+            return null;
+        }
+
+        String url = BASE_URL + "classes/Category";
+        Map<String, String> params = new HashMap<>();
+        JSONObject subGroupIdObj = new JSONObject();
+        JSONObject groupIdObj=new JSONObject();
+
+        try {
+            subGroupIdObj.put("__type", "Pointer");
+            subGroupIdObj.put("className", "Group");
+            subGroupIdObj.put("objectId", groupId);
+            groupIdObj.put(Category.GROUP_JSON_KEY, subGroupIdObj);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating user id pointer object for where in getGroupUsersByUserId", e);
+        }
+
+        params.put(WHERE, Helpers.encodeURIComponent(groupIdObj.toString()));
 
         return new RequestTemplate(GET, url, params);
     }

@@ -2,6 +2,7 @@ package com.expensemanager.app.settings;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncUser;
@@ -32,6 +33,7 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -90,16 +92,18 @@ public class SettingsActivity extends BaseActivity {
         SettingsActivity.setWeekly = sharedPreferences.getBoolean(SET_WEEKLY, true);
         SettingsActivity.setMonthly = sharedPreferences.getBoolean(SET_MONTHLY, true);
 
-        setNotification(activity);
+        for (Group group : Group.getAllGroups()) {
+            setNotification(activity, group.getId());
+        }
     }
 
-    public static void setNotification(Activity activity) {
+    public static void setNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
         // todo:set notification fime according to setting millis
         calendar.setTimeInMillis(getDefaultWeeklyNotification());
-        RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.weekly_report), activity.getString(R.string.weekly_report_message), false, RNotification.WEEKLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.weekly_report), activity.getString(R.string.weekly_report_message), groupId, false, RNotification.WEEKLY, calendar.getTime());
         calendar.setTimeInMillis(getDefaultMonthlyNotification());
-        RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.monthly_report), activity.getString(R.string.monthly_report_message), false, RNotification.MONTHLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.monthly_report), activity.getString(R.string.monthly_report_message), groupId, false, RNotification.MONTHLY, calendar.getTime());
     }
 
     private void setupTimeSetting(boolean isCheck, TextView timeLabel, TextView time) {

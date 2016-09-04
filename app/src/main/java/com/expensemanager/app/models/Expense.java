@@ -47,6 +47,7 @@ public class Expense implements RealmModel {
     public static final String ID_KEY = "id";
     public static final String EXPENSE_DATE_KEY = "expenseDate";
     public static final String CATEGORY_ID_KEY = "categoryId";
+    public static final String GROUP_KEY = "groupId";
 
     // Property
     @PrimaryKey
@@ -164,7 +165,7 @@ public class Expense implements RealmModel {
             }
             if (jsonObject.has(GROUP_JSON_KEY)) {
                 // {"__type":"Pointer","className":"Group","objectId":"2ZutGFhpA3"}
-                this.userId = jsonObject.getJSONObject(GROUP_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+                this.groupId = jsonObject.getJSONObject(GROUP_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
             }
             // Parse createdAt and convert UTC time to local time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
@@ -207,9 +208,9 @@ public class Expense implements RealmModel {
     /**
      * @return all expenses
      */
-    public static RealmResults<Expense> getAllExpenses() {
+    public static RealmResults<Expense> getAllExpensesByGroupId(String groupId) {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        RealmResults<Expense> expenses = realm.where(Expense.class).equalTo(GROUP_KEY, groupId).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
         return expenses;
@@ -218,10 +219,10 @@ public class Expense implements RealmModel {
     /**
      * @return all expenses by category
      */
-    public static RealmResults<Expense> getAllExpensesByCategory(Category category) {
+    public static RealmResults<Expense> getAllExpensesByCategoryAndGroupId(Category category, String groupId) {
         String categoryId = category != null ? category.getId() : null;
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Expense> expenses = realm.where(Expense.class).equalTo(CATEGORY_ID_KEY, categoryId).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        RealmResults<Expense> expenses = realm.where(Expense.class).equalTo(CATEGORY_ID_KEY, categoryId).equalTo(GROUP_KEY, groupId).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
         return expenses;
@@ -230,7 +231,7 @@ public class Expense implements RealmModel {
     /**
      * @return all expenses by start date and/or end date
      */
-    public static RealmResults<Expense> getAllExpensesByDate(Date startDate, Date endDate) {
+    public static RealmResults<Expense> getAllExpensesByDateAndGroupId(Date startDate, Date endDate, String groupId) {
         if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0) {
             return null;
         }
@@ -240,15 +241,18 @@ public class Expense implements RealmModel {
 
         if (startDate != null && endDate != null) {
             expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
                 .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
                 .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         } else if (startDate != null) {
             expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
                 .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         } else if (endDate != null) {
             expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
                 .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         }
@@ -261,7 +265,7 @@ public class Expense implements RealmModel {
     /**
      * @return all expenses by category and start date and/or end date
      */
-    public static RealmResults<Expense> getAllExpensesByDateAndCategory(Date startDate, Date endDate, Category category) {
+    public static RealmResults<Expense> getAllExpensesByDateAndCategoryAndGrouopId(Date startDate, Date endDate, Category category, String groupId) {
         if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0) {
             return null;
         }
@@ -272,17 +276,20 @@ public class Expense implements RealmModel {
 
         if (startDate != null && endDate != null) {
             expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
                 .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
                 .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
                 .equalTo(CATEGORY_ID_KEY, categoryId)
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         } else if (startDate != null) {
             expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
                 .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
                 .equalTo(CATEGORY_ID_KEY, categoryId)
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         } else if (endDate != null) {
             expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
                 .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
                 .equalTo(CATEGORY_ID_KEY, categoryId)
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
@@ -309,9 +316,11 @@ public class Expense implements RealmModel {
      *
      * @return Earliest expense
      */
-    public static @Nullable Expense getOldestExpense() {
+    public static @Nullable Expense getOldestExpenseByGroupId(String groupId) {
         Realm realm = Realm.getDefaultInstance();
-        List<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.ASCENDING);
+        List<Expense> expenses = realm.where(Expense.class)
+            .equalTo(GROUP_KEY, groupId)
+            .findAllSorted(EXPENSE_DATE_KEY, Sort.ASCENDING);
         realm.close();
 
         return expenses.size() > 0 ? expenses.get(0) : null;
@@ -321,9 +330,11 @@ public class Expense implements RealmModel {
      *
      * @return Most recent expense
      */
-    public static @Nullable Expense getMostRecentExpense() {
+    public static @Nullable Expense getMostRecentExpenseByGroupId(String groupId) {
         Realm realm = Realm.getDefaultInstance();
-        List<Expense> expenses = realm.where(Expense.class).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        List<Expense> expenses = realm.where(Expense.class)
+            .equalTo(GROUP_KEY, groupId)
+            .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
         return expenses.size() > 0 ? expenses.get(0) : null;
@@ -340,12 +351,13 @@ public class Expense implements RealmModel {
         realm.close();
     }
 
-    public static RealmResults<Expense> getExpensesByRange(Date[] startEnd) {
+    public static RealmResults<Expense> getExpensesByRangeAndGroupId(Date[] startEnd, String groupId) {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Expense> expenses = realm.where(Expense.class)
-                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startEnd[0])
-                .lessThanOrEqualTo(EXPENSE_DATE_KEY, startEnd[1])
-                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+            .equalTo(GROUP_KEY, groupId)
+            .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startEnd[0])
+            .lessThanOrEqualTo(EXPENSE_DATE_KEY, startEnd[1])
+            .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         realm.close();
 
         return expenses;

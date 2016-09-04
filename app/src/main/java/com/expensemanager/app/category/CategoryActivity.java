@@ -3,6 +3,7 @@ package com.expensemanager.app.category;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class CategoryActivity extends BaseActivity {
     private Category category;
     private boolean isFiltered;
     private CategoryAdapter categoryAdapter;
+    private String groupId;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -51,6 +55,10 @@ public class CategoryActivity extends BaseActivity {
 
         setupToolbar();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
         categories = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(this, categories);
         setupRecyclerView();
@@ -61,12 +69,12 @@ public class CategoryActivity extends BaseActivity {
         });
 
         invalidateViews();
-        SyncCategory.getAllCategories();
+        SyncCategory.getAllCategoriesByGroupId(groupId);
     }
 
     private void invalidateViews() {
         categoryAdapter.clear();
-        categoryAdapter.addAll(Category.getAllCategories());
+        categoryAdapter.addAll(Category.getAllCategoriesByGroupId(groupId));
     }
 
     private void setupRecyclerView() {
@@ -91,7 +99,7 @@ public class CategoryActivity extends BaseActivity {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
-        invalidateViews();
+        SyncCategory.getAllCategoriesByGroupId(groupId);
     }
 
     @Override

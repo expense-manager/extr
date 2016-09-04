@@ -1,5 +1,6 @@
 package com.expensemanager.app.report;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Group;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +38,7 @@ public class ReportFragment extends Fragment {
     public ReportAdapter reportAdapter;
     public ArrayList<Date[]> dates;
     public int requestCode;
+    private String groupId;
 
     @BindView(R.id.report_fragment_recycler_view_id) RecyclerView recyclerView;
 
@@ -60,6 +63,9 @@ public class ReportFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
         requestCode = getArguments().getInt(DURATION_KEY);
         dates = new ArrayList<>();
         reportAdapter = new ReportAdapter(getActivity(), dates, requestCode);
@@ -81,11 +87,11 @@ public class ReportFragment extends Fragment {
         Task.call(new Callable<Void>() {
             public Void call() {
                 if (requestCode == WEEKLY) {
-                    reportAdapter.addAll(Helpers.getAllWeeks());
+                    reportAdapter.addAll(Helpers.getAllWeeks(groupId));
                 } else if (requestCode == MONTHLY){
-                    reportAdapter.addAll(Helpers.getAllMonths());
+                    reportAdapter.addAll(Helpers.getAllMonths(groupId));
                 } else {
-                    reportAdapter.addAll(Helpers.getAllYears());
+                    reportAdapter.addAll(Helpers.getAllYears(groupId));
                 }
                 reportAdapter.notifyDataSetChanged();
                 return null;

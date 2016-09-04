@@ -286,10 +286,10 @@ public class Helpers {
     }
 
     // Get used color set
-    public static Set<String> getUsedColorSet() {
+    public static Set<String> getUsedColorSet(String groupId) {
         Set<String> newUsedColors = new HashSet<>();
 
-        for (Category c : Category.getAllCategories()) {
+        for (Category c : Category.getAllCategoriesByGroupId(groupId)) {
             if (c != null) {
                 newUsedColors.add(c.getColor());
             }
@@ -365,14 +365,14 @@ public class Helpers {
         return startEndDay;
     }
 
-    public static ArrayList<Date[]> getAllYears() {
+    public static ArrayList<Date[]> getAllYears(String groupId) {
         ArrayList<Date[]> years = new ArrayList<>();
 
         Date startDate = Calendar.getInstance().getTime();
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
-        Expense oldestExpense = Expense.getOldestExpense();
+        Expense oldestExpense = Expense.getOldestExpenseByGroupId(groupId);
         
         if (oldestExpense == null) {
             return null;
@@ -393,14 +393,14 @@ public class Helpers {
         return years;
     }
 
-    public static ArrayList<Date[]> getAllMonths() {
+    public static ArrayList<Date[]> getAllMonths(String groupId) {
         ArrayList<Date[]> months = new ArrayList<>();
 
         Date startDate = Calendar.getInstance().getTime();
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
-        Expense oldestExpense = Expense.getOldestExpense();
+        Expense oldestExpense = Expense.getOldestExpenseByGroupId(groupId);
 
         if (oldestExpense == null) {
             return null;
@@ -424,14 +424,14 @@ public class Helpers {
         return months;
     }
 
-    public static ArrayList<Date[]> getAllWeeks() {
+    public static ArrayList<Date[]> getAllWeeks(String groupId) {
         ArrayList<Date[]> weeks = new ArrayList<>();
 
         Date startDate = Calendar.getInstance().getTime();
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(startDate);
 
-        Expense oldestExpense = Expense.getOldestExpense();
+        Expense oldestExpense = Expense.getOldestExpenseByGroupId(groupId);
 
         if (oldestExpense == null) {
             return null;

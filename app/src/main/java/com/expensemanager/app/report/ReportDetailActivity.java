@@ -2,6 +2,7 @@ package com.expensemanager.app.report;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,8 @@ import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
 import com.github.mikephil.charting.animation.Easing;
@@ -79,6 +82,8 @@ public class ReportDetailActivity extends AppCompatActivity {
     private int latestPosition;
     private int requestCode;
     private Map<String, Integer> map;
+    private String loginUserId;
+    private String groupId;
 
     @BindView(R.id.report_detail_activity_fab_id) FloatingActionButton fab;
     @BindView(R.id.report_detail_activity_tabs_id) TabLayout tabStrip;
@@ -101,6 +106,10 @@ public class ReportDetailActivity extends AppCompatActivity {
         setContentView(R.layout.report_detail_activity);
         ButterKnife.bind(this);
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
         fab.setOnClickListener(v -> {
             NewExpenseActivity.newInstance(this);
             overridePendingTransition(R.anim.right_in, R.anim.stay);
@@ -114,8 +123,8 @@ public class ReportDetailActivity extends AppCompatActivity {
         updatePieChart();
         updateBarChart();
 
-        SyncCategory.getAllCategories();
-        SyncExpense.getAllExpenses();
+        SyncCategory.getAllCategoriesByGroupId(groupId);
+        SyncExpense.getAllExpensesByGroupId(groupId);
     }
 
     private void setUpPieChart() {
@@ -394,7 +403,7 @@ public class ReportDetailActivity extends AppCompatActivity {
                 return;
             }
             // Query data from date range
-            expenses = Expense.getExpensesByRange(startEnd);
+            expenses = Expense.getExpensesByRangeAndGroupId(startEnd, groupId);
         }
 
         if (expenses == null) {
@@ -531,8 +540,8 @@ public class ReportDetailActivity extends AppCompatActivity {
         // Listen to database updates
         realm.addChangeListener(v -> reportPagerAdapter.updateFragments());
         // Sync for updates
-        SyncCategory.getAllCategories();
-        SyncExpense.getAllExpenses();
+        SyncCategory.getAllCategoriesByGroupId(groupId);
+        SyncExpense.getAllExpensesByGroupId(groupId);
     }
 
     @Override

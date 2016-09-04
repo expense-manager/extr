@@ -63,6 +63,78 @@ public class SyncExpense {
         return networkRequest.send().continueWith(saveExpense);
     }
 
+    public static Task<Void> getAllExpensesByUserId(String userId) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getAllExpensesByUserId(userId);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> saveExpense = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in downloading all expenses.", exception);
+                    throw  exception;
+                }
+
+                JSONObject expenses = task.getResult();
+                if (expenses == null) {
+                    throw new Exception("Empty response.");
+                }
+
+                Log.d(TAG, "Expenses: \n" + expenses);
+
+                try {
+                    JSONArray expenseArray = expenses.getJSONArray("results");
+                    Expense.mapFromJSONArray(expenseArray);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error in getting expense JSONArray.", e);
+                }
+
+                return null;
+            }
+        };
+
+        Log.d(TAG, "Start downloading Expenses");
+        return networkRequest.send().continueWith(saveExpense);
+    }
+
+    public static Task<Void> getAllExpensesByGroupId(String groupId) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getAllExpensesByGroupId(groupId);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Continuation<JSONObject, Void> saveExpense = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in downloading all expenses.", exception);
+                    throw  exception;
+                }
+
+                JSONObject expenses = task.getResult();
+                if (expenses == null) {
+                    throw new Exception("Empty response.");
+                }
+
+                Log.d(TAG, "Expenses: \n" + expenses);
+
+                try {
+                    JSONArray expenseArray = expenses.getJSONArray("results");
+                    Expense.mapFromJSONArray(expenseArray);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error in getting expense JSONArray.", e);
+                }
+
+                return null;
+            }
+        };
+
+        Log.d(TAG, "Start downloading Expenses");
+        return networkRequest.send().continueWith(saveExpense);
+    }
+
     public static Task<Void> getExpenseById(String expenseId) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.getExpenseById(expenseId);

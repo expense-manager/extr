@@ -33,6 +33,7 @@ public class RNotification implements RealmModel {
     public static final String IS_CHECKED = "isChecked";
     public static final String CREATED_AT_KEY= "createdAt";
     public static final String TYPE_KEY= "type";
+    public static final String GROUP_KEY = "groupId";
 
     public static final int WEEKLY = 0;
     public static final int MONTHLY = 1;
@@ -45,6 +46,7 @@ public class RNotification implements RealmModel {
     private boolean isChecked;
     private Date createdAt;
     private int type;
+    private String groupId;
 
     public String getId() {
         return id;
@@ -102,6 +104,14 @@ public class RNotification implements RealmModel {
         this.type = type;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     /**
      * @return all notifications
      */
@@ -132,11 +142,12 @@ public class RNotification implements RealmModel {
      * @param createdAt date to notify
      * @return RNotification object if exist, otherwise return null.
      */
-    public static @Nullable RNotification getNotificationByTypeAndDate(int type, Date createdAt) {
+    public static @Nullable RNotification getNotificationByTypeAndDateAndGroupId(int type, Date createdAt, String groupId) {
         Realm realm = Realm.getDefaultInstance();
         RNotification notification = realm.where(RNotification.class)
             .equalTo(TYPE_KEY, type)
             .equalTo(CREATED_AT_KEY, createdAt)
+            .equalTo(GROUP_KEY, groupId)
             .findFirst();
         realm.close();
 
@@ -165,7 +176,7 @@ public class RNotification implements RealmModel {
      * @param type notification type: WEEKLY or MONTHLY
      * @param createdAt date to notify
      */
-    public static void setupOrUpdateNotifications(Activity activity, String title, String message, boolean isRemote, int type, Date createdAt) {
+    public static void setupOrUpdateNotifications(Activity activity, String title, String message, String groupId, boolean isRemote, int type, Date createdAt) {
         if (title == null || message == null || createdAt == null) {
             return;
         } else if (type != WEEKLY && type != MONTHLY) {
@@ -174,7 +185,7 @@ public class RNotification implements RealmModel {
 
         // Create notification object
         boolean isNew = false;
-        RNotification notification = getNotificationByTypeAndDate(type, createdAt);
+        RNotification notification = getNotificationByTypeAndDateAndGroupId(type, createdAt, groupId);
 
         // Save to realm
         Realm realm = Realm.getDefaultInstance();
@@ -187,6 +198,7 @@ public class RNotification implements RealmModel {
             String uuid = UUID.randomUUID().toString();
             notification.setId(uuid);
             notification.setType(type);
+            notification.setGroupId(groupId);
             notification.setCreatedAt(createdAt);
         }
 
@@ -208,7 +220,7 @@ public class RNotification implements RealmModel {
             notificationIntent.addCategory("android.intent.category.DEFAULT");
             notificationIntent.putExtra(ID_KEY, notification.getId());
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, groupId.hashCode() + type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }

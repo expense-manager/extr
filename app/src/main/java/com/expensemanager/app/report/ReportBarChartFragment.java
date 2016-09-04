@@ -3,7 +3,9 @@ package com.expensemanager.app.report;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.Group;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,7 @@ public class ReportBarChartFragment extends Fragment {
     private Date[] startEnd;
     private int requestCode;
     Unbinder unbinder;
+    private String groupId;
 
     @BindView(R.id.report_chart_fragment_recycler_view_id) RecyclerView recyclerView;
 
@@ -51,6 +54,8 @@ public class ReportBarChartFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
     }
 
     // 3.onCreateView() creates and returns the view hierarchy associated with the fragment.
@@ -94,7 +99,7 @@ public class ReportBarChartFragment extends Fragment {
                 return;
             }
             // Query data from date range
-            expenses = Expense.getExpensesByRange(startEnd);
+            expenses = Expense.getExpensesByRangeAndGroupId(startEnd, groupId);
         }
         if (expenses != null) {
             reportExpenseAdapter.addAll(expenses, requestCode);

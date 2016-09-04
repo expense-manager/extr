@@ -3,6 +3,7 @@ package com.expensemanager.app.expense;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -20,6 +21,8 @@ import com.expensemanager.app.expense.filter.DateFilterFragment;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncExpense;
 
 import java.util.ArrayList;
@@ -46,6 +49,7 @@ public class ExpenseActivity extends BaseActivity
     private Date startDate;
     private Date endDate;
     private boolean isDateFiltered;
+    private String groupId;
 
     private ExpenseAdapter expenseAdapter;
 
@@ -95,6 +99,10 @@ public class ExpenseActivity extends BaseActivity
 
         setupToolbar();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
@@ -119,7 +127,7 @@ public class ExpenseActivity extends BaseActivity
         });
 
         invalidateViews();
-        SyncExpense.getAllExpenses();
+        SyncExpense.getAllExpensesByGroupId(groupId);
     }
 
     @Override
@@ -145,13 +153,13 @@ public class ExpenseActivity extends BaseActivity
         expenseAdapter.clear();
 
         if (isCategoryFiltered && isDateFiltered) {
-            expenseAdapter.addAll(Expense.getAllExpensesByDateAndCategory(startDate, endDate, category));
+            expenseAdapter.addAll(Expense.getAllExpensesByDateAndCategoryAndGrouopId(startDate, endDate, category, groupId));
         } else if (isCategoryFiltered) {
-            expenseAdapter.addAll(Expense.getAllExpensesByCategory(category));
+            expenseAdapter.addAll(Expense.getAllExpensesByCategoryAndGroupId(category, groupId));
         } else if (isDateFiltered) {
-            expenseAdapter.addAll(Expense.getAllExpensesByDate(startDate, endDate));
+            expenseAdapter.addAll(Expense.getAllExpensesByDateAndGroupId(startDate, endDate, groupId));
         } else {
-            expenseAdapter.addAll(Expense.getAllExpenses());
+            expenseAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
         }
     }
 
@@ -211,7 +219,7 @@ public class ExpenseActivity extends BaseActivity
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
-        invalidateViews();
+        SyncExpense.getAllExpensesByGroupId(groupId);
     }
 
     @Override

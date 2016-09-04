@@ -45,6 +45,7 @@ public class CategoryDetailActivity extends AppCompatActivity
     private boolean isEditable = false;
     private Set<String> usedColors;
     private String currentColor;
+    private String groupId;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -70,10 +71,13 @@ public class CategoryDetailActivity extends AppCompatActivity
 
         setupToolbar();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
         String categoryId = getIntent().getStringExtra(CATEGORY_ID);
         category = Category.getCategoryById(categoryId);
 
-        usedColors = Helpers.getUsedColorSet();
+        usedColors = Helpers.getUsedColorSet(groupId);
 
         invalidateViews();
     }

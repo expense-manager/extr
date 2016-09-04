@@ -271,7 +271,7 @@ public class ExpenseDetailActivity extends BaseActivity {
         photoGridView.setOnItemLongClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             Log.d(TAG, "Photo long clicked at position: " + position);
 
-            if (expensePhotos != null && expensePhotos.size() > position) {
+            if (isEditable && expensePhotos != null && expensePhotos.size() > position) {
                 ExpensePhoto expensePhoto = expensePhotos.get(position);
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.delete_photo)

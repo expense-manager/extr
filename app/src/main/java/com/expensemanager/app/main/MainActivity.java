@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<DrawerSubItem> drawerSubItems;
     private ArrayList<Group> groups;
     private String loginUserId;
-    public static String groupId;
+    public String groupId;
+    private OverviewFragment overviewFragment;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
@@ -118,8 +119,9 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
 
         if (fragment == null) {
+            overviewFragment = OverviewFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
+                    .replace(R.id.main_activity_frame_layout_id, overviewFragment)
                     .addToBackStack(OverviewFragment.class.getName())
                     .commit();
         }
@@ -127,9 +129,6 @@ public class MainActivity extends AppCompatActivity {
         SettingsActivity.loadSetting(this);
 
         SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
-
-        SyncCategory.getAllCategories();
-        SyncExpense.getAllExpenses();
     }
 
     private void setupDrawerListItems() {
@@ -217,8 +216,8 @@ public class MainActivity extends AppCompatActivity {
                     groupId = groups.get(position - 1).getId();
                     drawerLayout.closeDrawer(drawRecyclerView);
                     // todo: sync data for new selected group
-
                     saveGroupId();
+                    overviewFragment.invalidateViews();
                 } else if (position == groups.size() + 1) {
                     NewGroupActivity.newInstance(MainActivity.this);
                     drawerLayout.closeDrawer(drawRecyclerView);
@@ -237,9 +236,9 @@ public class MainActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         // todo:set notification fime according to setting millis
         calendar.add(Calendar.MINUTE, 1);
-        RNotification.setupOrUpdateNotifications(this, getString(R.string.weekly_report), getString(R.string.weekly_report_message), false, RNotification.WEEKLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(this, getString(R.string.weekly_report), getString(R.string.weekly_report_message), groupId, false, RNotification.WEEKLY, calendar.getTime());
         calendar.add(Calendar.MINUTE, 1);
-        RNotification.setupOrUpdateNotifications(this, getString(R.string.monthly_report), getString(R.string.monthly_report_message), false, RNotification.MONTHLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(this, getString(R.string.monthly_report), getString(R.string.monthly_report_message), groupId, false, RNotification.MONTHLY, calendar.getTime());
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -263,11 +262,31 @@ public class MainActivity extends AppCompatActivity {
             User currentUser = User.getUserById(loginUserId);
             if (currentUser != null) {
                 // Sync all groups after getting current user
-                SyncGroup.getGroupByUserId(loginUserId);
-                SyncMember.getMembersByUserId(loginUserId);
+                SyncGroup.getGroupByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
+                SyncMember.getMembersByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
 
                 drawerAdapter.loadUser(currentUser);
                 groupDrawerAdapter.loadUser(currentUser);
+            }
+
+            return null;
+        }
+    };
+
+    private Continuation<Void, Void> onGetGroupsFinished = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error:", task.getError());
+            }
+
+            for (Group group : Group.getAllGroups()) {
+                if (group != null) {
+                    Log.i(TAG, "group id: " + group.getId());
+                    // Sync all expenses and category
+                    SyncCategory.getAllCategoriesByGroupId(group.getId());
+                    SyncExpense.getAllExpensesByGroupId(group.getId());
+                }
             }
 
             return null;

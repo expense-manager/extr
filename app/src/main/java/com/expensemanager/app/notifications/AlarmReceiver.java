@@ -47,6 +47,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String title = rNotification.getTitle();
         String message = rNotification.getMessage();
+        String groupId = rNotification.getGroupId();
         Date lastWeek = Helpers.getLastWeekOfYear(rNotification.getCreatedAt());
         Date[] startEnd = null;
         if (rNotification.getType() == RNotification.WEEKLY) {
@@ -55,7 +56,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             startEnd = Helpers.getMonthStartEndDate(lastWeek);
         }
         double amount = 0;
-        for (Expense expense : Expense.getExpensesByRange(startEnd)) {
+
+        for (Expense expense : Expense.getExpensesByRangeAndGroupId(startEnd, groupId)) {
             amount += expense.getAmount();
         }
 

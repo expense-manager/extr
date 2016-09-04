@@ -1,5 +1,6 @@
 package com.expensemanager.app.expense.category_picker;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.ItemClickSupport;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.models.Group;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ public class CategoryPickerFragment extends DialogFragment {
     private CategoryPickerListener categoryPickerListener;
     private ArrayList<Category> categories;
     private CategoryPickerAdapter adapter;
+    private String groupId;
 
     @BindView(R.id.expense_category_fragment_recycler_view_id) RecyclerView categoryRecyclerView;
 
@@ -43,6 +46,8 @@ public class CategoryPickerFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.CategoryColorDialogStyle);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
     }
 
     @Override
@@ -69,7 +74,7 @@ public class CategoryPickerFragment extends DialogFragment {
         // Add no category option
         adapter.add(null);
         // Add all categories
-        adapter.addAll(Category.getAllCategories());
+        adapter.addAll(Category.getAllCategoriesByGroupId(groupId));
     }
 
     private void setupRecyclerView() {

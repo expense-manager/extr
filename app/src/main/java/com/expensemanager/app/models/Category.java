@@ -32,6 +32,7 @@ public class Category implements RealmModel {
     // Property name key
     public static final String ID_KEY = "id";
     public static final String NAME_KEY = "name";
+    public static final String GROUP_KEY = "groupId";
 
     // Property
     @PrimaryKey
@@ -93,7 +94,7 @@ public class Category implements RealmModel {
             }
             if (jsonObject.has(GROUP_JSON_KEY)) {
                 // {"__type":"Pointer","className":"Group","objectId":"2ZutGFhpA3"}
-                this.userId = jsonObject.getJSONObject(GROUP_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
+                this.groupId = jsonObject.getJSONObject(GROUP_JSON_KEY).getString(OBJECT_ID_JSON_KEY);
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error in parsing category.", e);
@@ -125,10 +126,10 @@ public class Category implements RealmModel {
     /**
      * @return map of all categories
      */
-    public static Map<String, Category> getAllCategoriesMap() {
+    public static Map<String, Category> getAllCategoriesMapByGroupId(String groupId) {
         Map<String, Category> map = new HashMap<>();
 
-        for (Category c : getAllCategories()) {
+        for (Category c : getAllCategoriesByGroupId(groupId)) {
             map.put(c.getId(), c);
         }
 
@@ -138,9 +139,9 @@ public class Category implements RealmModel {
     /**
      * @return all categories
      */
-    public static RealmResults<Category> getAllCategories() {
+    public static RealmResults<Category> getAllCategoriesByGroupId(String groupId) {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Category> categories = realm.where(Category.class).findAll();
+        RealmResults<Category> categories = realm.where(Category.class).equalTo(GROUP_KEY, groupId).findAll();
         realm.close();
 
         return categories;
