@@ -41,12 +41,27 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>
 
+    <!-- Join -->
+    <TextView
+        android:id="@+id/drawer_join_text_view_id"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+
+        android:padding="@dimen/space_small"
+        android:background="@drawable/button_background_gray"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/text_really_small"
+        android:text="@string/join"
+        android:gravity="center"/>
+
     <TextView
         android:id="@+id/drawer_name_text_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/drawer_icon_image_view_id"
-        android:layout_toLeftOf="@+id/drawer_icon_select_image_view_id"
+        android:layout_toLeftOf="@+id/drawer_join_text_view_id"
         android:layout_alignTop="@+id/drawer_icon_image_view_id"
         android:layout_alignBottom="@+id/drawer_icon_image_view_id"
 

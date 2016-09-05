@@ -29,6 +29,7 @@ import com.expensemanager.app.group.NewGroupActivity;
 import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.NotificationsActivity;
@@ -43,6 +44,9 @@ import com.expensemanager.app.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private GroupDrawerAdapter groupDrawerAdapter;
     private ArrayList<DrawerItem> drawerItems;
     private ArrayList<DrawerSubItem> drawerSubItems;
-    private ArrayList<Group> groups;
+    private ArrayList<Member> members;
     private String loginUserId;
     private String groupId;
     private OverviewFragment overviewFragment;
@@ -93,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
         User currentUser = User.getUserById(loginUserId);
         drawerItems = new ArrayList<>();
         drawerSubItems = new ArrayList<>();
-        groups = new ArrayList<>();
+        members = new ArrayList<>();
         drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
-        groupDrawerAdapter = new GroupDrawerAdapter(this, groups, currentUser);
+        groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
         setupDrawerListItems();
         setupGroupListItems();
         setupDrawerList();
@@ -142,11 +146,48 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupGroupListItems() {
         groupDrawerAdapter.clear();
-        groupDrawerAdapter.addAll(Group.getAllGroups());
-        if (groupId == null && groups.size() > 0) {
-            groupId = groups.get(0).getId();
+        List<Member> newMembers = Member.getAllMembersByUserId(loginUserId);
+
+        // Not accepted -> accepted, group name A -> Z
+        Collections.sort(newMembers, new Comparator<Member>(){
+            @Override
+            public int compare(Member m1, Member m2) {
+                if (m1.isAccepted() != m2.isAccepted()) {
+                    return m1.isAccepted() ? 1 : -1;
+                }
+                return m1.getGroup().getName().compareTo(m2.getGroup().getName());
+            }
+        });
+
+        if (groupId == null && newMembers.size() > 0) {
+            int index = getFirstAcceptedGroup(newMembers, 0, newMembers.size() - 1);
+            if (index == -1) {
+                return; // maybe throw an exception?
+            }
+            groupId = newMembers.get(index).getGroupId();
             saveGroupId();
         }
+
+        groupDrawerAdapter.addAll(newMembers);
+    }
+
+    private int getFirstAcceptedGroup(List<Member> members, int left, int right) {
+        int mid = 0;
+        while (left + 1 < right) {
+            mid = left + (right - left) / 2;
+            if (members.get(mid).isAccepted()) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        if (members.get(left).isAccepted()) {
+            return left;
+        } else if (members.get(right).isAccepted()) {
+            return right;
+        }
+        Log.i(TAG, "No accepted group found.");
+        return -1;
     }
 
     private void setupDrawerList() {
@@ -206,13 +247,16 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(View v, int position) {
                 if (position == 0) {
                     setupDrawerList();
-                } else if (position <= groups.size() + 1) {
-                    groupId = groups.get(position - 2).getId();
+                } else if (position <= members.size() + 1) {
+                    Member member = members.get(position - 2);
+                    if (!member.isAccepted()) {
+                        return;
+                    }
+                    groupId = member.getGroupId();
                     drawerLayout.closeDrawer(drawRecyclerView);
-                    // todo: sync data for new selected group
                     saveGroupId();
                     overviewFragment.invalidateViews();
-                } else if (position == groups.size() + 2) {
+                } else if (position == members.size() + 2) {
                     NewGroupActivity.newInstance(MainActivity.this);
                     drawerLayout.closeDrawer(drawRecyclerView);
                 }
