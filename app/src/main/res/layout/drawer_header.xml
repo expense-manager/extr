@@ -33,6 +33,7 @@
         android:maxLines="1"
         android:textSize="@dimen/text_small"
         android:textColor="@color/white"
+        android:alpha="0.8"
         tools:text="email"/>
 
     <TextView

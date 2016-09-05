@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/space_medium_large"
+        android:layout_marginTop="@dimen/space_medium_large"
+        android:layout_marginStart="24dp"
 
         android:text="@string/sign_up_title_step_one"
         android:textSize="@dimen/text_medium"
@@ -110,6 +111,7 @@
                     android:maxLines="1"
                     android:hint="@string/password"
                     android:inputType="textPassword"
+                    android:fontFamily="sans-serif"
                     android:background="@color/gray_really_light"/>
 
                 <!-- Clear -->
@@ -149,6 +151,7 @@
                     android:maxLines="1"
                     android:hint="@string/confirm_password"
                     android:inputType="textPassword"
+                    android:fontFamily="sans-serif"
                     android:background="@color/gray_really_light"/>
 
                 <!-- Mismatch Sign -->
@@ -263,7 +266,7 @@
         android:layout_margin="@dimen/space_medium"
 
         android:text="@string/next"
-        android:textColor="@color/blue"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_medium_small"
         android:textAllCaps="false"
         android:background="@drawable/button_background"/>

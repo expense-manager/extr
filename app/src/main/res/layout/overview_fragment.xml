@@ -12,7 +12,7 @@
         android:layout_margin="@dimen/space_medium"
 
         android:gravity="center"
-        android:background="@drawable/background_circle_border_blue">
+        android:background="@drawable/background_circle_border_cyan">
 
         <TextView
             android:id="@+id/overview_fragment_total_text_view_id"
@@ -22,7 +22,6 @@
             android:layout_marginBottom="@dimen/space_small"
 
             android:text="$98636"
-            android:fontFamily=""
             android:textSize="@dimen/text_small"/>
 
         <!-- Total label -->
@@ -57,7 +56,7 @@
                 android:layout_height="60dp"
                 android:layout_margin="@dimen/space_really_small"
 
-                android:background="@drawable/background_circle_border_blue">
+                android:background="@drawable/background_circle_border_cyan">
 
                 <!-- Weekly label -->
                 <TextView
@@ -94,7 +93,7 @@
                 android:layout_height="60dp"
                 android:layout_margin="@dimen/space_really_small"
 
-                android:background="@drawable/background_circle_border_blue">
+                android:background="@drawable/background_circle_border_cyan">
 
                 <!-- Month label -->
                 <TextView
@@ -132,7 +131,7 @@
                 android:layout_height="60dp"
                 android:layout_margin="@dimen/space_really_small"
 
-                android:background="@drawable/background_circle_border_blue">
+                android:background="@drawable/background_circle_border_cyan">
 
                 <!-- Weekly average label -->
                 <TextView
@@ -170,7 +169,7 @@
                 android:layout_height="60dp"
                 android:layout_margin="@dimen/space_really_small"
 
-                android:background="@drawable/background_circle_border_blue">
+                android:background="@drawable/background_circle_border_cyan">
 
                 <!-- Month average label -->
                 <TextView
