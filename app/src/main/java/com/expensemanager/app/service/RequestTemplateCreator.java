@@ -583,6 +583,9 @@ public class RequestTemplateCreator {
         if (!TextUtils.isEmpty(group.getName())) {
             params.put(Group.NAME_JSON_KEY, group.getName());
         }
+        if (!TextUtils.isEmpty(group.getAbout())) {
+            params.put(Group.ABOUT_JSON_KEY, group.getAbout());
+        }
 
         JSONObject userIdObj=new JSONObject();
 

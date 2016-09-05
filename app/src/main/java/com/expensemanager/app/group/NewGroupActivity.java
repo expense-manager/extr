@@ -88,6 +88,8 @@ public class NewGroupActivity extends AppCompatActivity {
     }
 
     private void save() {
+        closeSoftKeyboard();
+
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         String loginUserId = sharedPreferences.getString(User.USER_ID, null);
         if (loginUserId == null) {
@@ -102,46 +104,9 @@ public class NewGroupActivity extends AppCompatActivity {
         group.setAbout(aboutEditText.getText().toString());
 
         progressBar.setVisibility(View.VISIBLE);
-        SyncGroup.create(group).continueWith(onCreateSuccess, Task.UI_THREAD_EXECUTOR);
+        SyncGroup.create(group);
         closeSoftKeyboard();
-    }
-
-    private Continuation<JSONObject, Void> onCreateSuccess = new Continuation<JSONObject, Void>() {
-        @Override
-        public Void then(Task<JSONObject> task) throws Exception {
-            progressBar.setVisibility(View.GONE);
-            if (task.isFaulted()) {
-                Log.e(TAG, "Error in creating new category.", task.getError());
-            }
-
-            JSONObject jsonObject = task.getResult();
-            // todo: fix not able to self invite
-            // Self invite after creating a new group
-            String groupId = jsonObject.getString(Group.ID_KEY);
-            //selfInvite(groupId);
-            close();
-
-            return null;
-        }
-    };
-
-    private void selfInvite(String groupId) {
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        Group group = Group.getGroupById(groupId);
-        User user = User.getUserById(loginUserId);
-
-        if (group == null || user == null) {
-            return;
-        }
-
-        Member member = new Member();
-        member.setGroup(group);
-        member.setCreatedBy(user);
-        member.setUser(user);
-        member.setAccepted(true);
-
-        SyncMember.create(member);
+        close();
     }
 
     public void closeSoftKeyboard() {

@@ -3,6 +3,8 @@ package com.expensemanager.app.service;
 import android.util.Log;
 
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
+import com.expensemanager.app.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,6 +126,19 @@ public class SyncGroup {
                 String groupId = jsonObject.getString(Group.OBJECT_ID_JSON_KEY);
                 // Sync new added group.
                 getGroupById(groupId);
+
+                // Self invite
+                group.setId(groupId);
+                User user = new User();
+                user.setId(group.getUserId());
+
+                Member member = new Member();
+                member.setGroup(group);
+                member.setCreatedBy(user);
+                member.setUser(user);
+                member.setAccepted(true);
+
+                SyncMember.create(member);
 
                 return jsonObject;
             }
