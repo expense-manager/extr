@@ -135,6 +135,10 @@ public class GroupDetailActivity extends BaseActivity {
             saveTextView.setVisibility(isEditable ? View.VISIBLE : View.GONE);
             deleteButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
             deleteButton.setOnClickListener(v -> delete());
+        } else {
+            editTextView.setVisibility(View.INVISIBLE);
+            saveTextView.setVisibility(View.INVISIBLE);
+            deleteButton.setVisibility(View.INVISIBLE);
         }
 
         setupEditableViews(isEditable);
