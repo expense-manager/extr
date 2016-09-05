@@ -51,7 +51,7 @@
         android:textColor="@color/white"
         tools:text="name"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/drawer_account_header_acount_photo_id"
         android:layout_width="@dimen/drawer_account_header_selected"
         android:layout_height="@dimen/drawer_account_header_selected"

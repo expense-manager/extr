@@ -2,6 +2,7 @@ package com.expensemanager.app.main;
 
 import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.User;
@@ -91,11 +92,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     public void loadUser(User user) {
         if (user != null) {
-            Glide.with(context)
-                .load(user.getPhotoUrl())
-                .placeholder(R.drawable.profile_place_holder_image)
-                .dontAnimate()
-                .into(headerHolder.accountPhotoImageView);
+            Helpers.loadProfilePhoto(headerHolder.accountPhotoImageView, user.getPhotoUrl());
             headerHolder.accountNameTextView.setText(user.getFullname());
             headerHolder.accountEmailTextView.setText(user.getEmail());
 
@@ -139,7 +136,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     class DrawerViewHolder extends RecyclerView.ViewHolder{
         // DrawerHeader
-        CircleImageView accountPhotoImageView;
+        ImageView accountPhotoImageView;
         TextView accountNameTextView;
         TextView accountEmailTextView;
         TextView groupSwitcherTextView;
@@ -152,7 +149,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             super(itemView);
 
             if(viewType == TYPE_HEADER){
-                accountPhotoImageView = (CircleImageView) itemView.findViewById(R.id.drawer_account_header_acount_photo_id);
+                accountPhotoImageView = (ImageView) itemView.findViewById(R.id.drawer_account_header_acount_photo_id);
                 accountNameTextView = (TextView) itemView.findViewById(R.id.drawer_header_name_id);
                 accountEmailTextView = (TextView) itemView.findViewById(R.id.drawer_header_email_id);
                 groupSwitcherTextView = (TextView) itemView.findViewById(R.id.drawer_header_group_switcher_text_view_id);

@@ -52,7 +52,7 @@
             tools:background="@color/black"/>
 
         <!-- User -->
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/expense_item_default_user_photo_image_view_id"
             android:layout_width="@dimen/category_color_width_small"
             android:layout_height="@dimen/category_color_width_small"

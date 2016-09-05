@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -108,11 +109,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         User user = User.getUserById(expense.getUserId());
         if (showMember && user != null) {
-            Glide.with(context)
-                .load(user.getPhotoUrl())
-                .placeholder(R.drawable.profile_place_holder_image)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(viewHolder.userPhotoImageView);
+            Helpers.loadIconPhoto(viewHolder.userPhotoImageView, user.getPhotoUrl());
 
             viewHolder.userPhotoImageView.setVisibility(View.VISIBLE);
         }
@@ -147,7 +144,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.expense_item_default_spent_at_text_view_id) TextView spentAtTextView;
         @BindView(R.id.expense_item_default_amount_text_view_id) TextView amountTextView;
         @BindView(R.id.expense_item_default_category_color_image_view_id) CircleImageView categoryColorImageView;
-        @BindView(R.id.expense_item_default_user_photo_image_view_id) CircleImageView userPhotoImageView;
+        @BindView(R.id.expense_item_default_user_photo_image_view_id) ImageView userPhotoImageView;
         @BindView(R.id.expense_item_default_category_name_text_view_id) TextView categoryNameTextView;
 
         private View itemView;
