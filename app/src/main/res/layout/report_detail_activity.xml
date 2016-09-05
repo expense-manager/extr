@@ -62,6 +62,15 @@
         android:layout_below="@+id/report_detail_activity_pie_chart_id"
         android:background="@android:color/white" />
 
+    <TextView
+        android:id="@+id/report_detail_activity_no_expense_hint_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/space_medium_large"
+
+        android:text="@string/no_expense_hint"
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/report_detail_activity_fab_id"

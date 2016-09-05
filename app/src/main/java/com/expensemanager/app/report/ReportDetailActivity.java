@@ -101,6 +101,7 @@ public class ReportDetailActivity extends BaseActivity {
     @BindView(R.id.report_detail_activity_viewpager_id) ViewPager viewPager;
     @BindView(R.id.report_detail_activity_pie_chart_id) PieChart pieChart;
     @BindView(R.id.report_detail_activity_bar_chart_id) BarChart barChart;
+    @BindView(R.id.report_detail_activity_no_expense_hint_id) TextView noExpenseHintTextView;
 
     public static void newInstance(Context context, Date[] startEnd, int requestCode) {
         Intent intent = new Intent(context, ReportDetailActivity.class);
@@ -164,8 +165,10 @@ public class ReportDetailActivity extends BaseActivity {
             expenses = Expense.getExpensesByRangeAndGroupId(startEnd, groupId);
         }
 
-        if (expenses == null || expenses.size() == 0) {
-            return;
+        if (expenses.size() == 0) {
+            pieChart.setVisibility(View.INVISIBLE);
+            barChart.setVisibility(View.INVISIBLE);
+            noExpenseHintTextView.setVisibility(View.VISIBLE);
         }
 
         // Initialize bar chart data set
@@ -241,13 +244,17 @@ public class ReportDetailActivity extends BaseActivity {
         // Show description on bottom right corner
         barChart.setDescription("");
         // Set min value for x axis
-        barChart.getXAxis().setAxisMinValue(0);
-        // Set max value for x axis
-        barChart.getXAxis().setAxisMaxValue(timeSlotsLength - 1);
-        // Hide grid line of x axis
-        barChart.getXAxis().setDrawGridLines(false);
-        // Place x axis to bottom
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        if (expenses.size() == 0) {
+            barChart.getXAxis().setEnabled(false);
+        } else {
+            barChart.getXAxis().setAxisMinValue(0);
+            // Set max value for x axis
+            barChart.getXAxis().setAxisMaxValue(timeSlotsLength - 1);
+            // Hide grid line of x axis
+            barChart.getXAxis().setDrawGridLines(false);
+            // Place x axis to bottom
+            barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        }
         // Hide grid lines from left y axis
         barChart.getAxisLeft().setDrawGridLines(false);
         // Hide grid lines from right y axis
@@ -461,6 +468,11 @@ public class ReportDetailActivity extends BaseActivity {
 
         @Override
         public void onPageSelected(int newPosition) {
+            if (expenses.size() == 0) {
+                pieChart.setVisibility(View.INVISIBLE);
+                barChart.setVisibility(View.INVISIBLE);
+                noExpenseHintTextView.setVisibility(View.VISIBLE);
+            }
 
             Fragment fragment = reportPagerAdapter.getFragmentByPosition(newPosition);
             if (fragment instanceof ReportPieChartFragment) {

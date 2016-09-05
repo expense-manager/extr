@@ -96,6 +96,7 @@
     <string name="delete_photo_message">Are you sure to delete this photo?</string>
     <string name="delete_profile_image_message">Are you sure to delete profile image?</string>
     <string name="no_notifications">YOU HAVE NO NOTIFICATIONS</string>
+    <string name="no_expense_hint">NO EXPENSE DATA AVAILABLE</string>
     <string name="profile">Profile</string>
     <string name="choose_a_category">Choose a category</string>
     <string name="sign_out_message">Are you sure you want to sign out?</string>
