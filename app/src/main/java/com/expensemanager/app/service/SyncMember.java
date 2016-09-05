@@ -167,14 +167,14 @@ public class SyncMember {
         return networkRequest.send().continueWith(onCreateMemberFinished);
     }
 
-    public static Task<Void> update(Member member) {
+    public static Task<JSONObject> update(Member member) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.updateMember(member);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Continuation<JSONObject, Void> onUpdateMemberFinished = new Continuation<JSONObject, Void>() {
+        Continuation<JSONObject, JSONObject> onUpdateMemberFinished = new Continuation<JSONObject, JSONObject>() {
             @Override
-            public Void then(Task<JSONObject> task) throws Exception {
+            public JSONObject then(Task<JSONObject> task) throws Exception {
                 Log.d(TAG, "onUpdateMemberFinished before check task.isFaulted().");
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
@@ -190,7 +190,11 @@ public class SyncMember {
 
                 // Example response: {"updatedAt":"2016-08-18T23:03:51.785Z"}
                 Log.d(TAG, "onUpdateMemberFinished Response: \n" + result);
-                return null;
+
+                String memberId = result.getString(Member.OBJECT_ID_JSON_KEY);
+                // Sync new added member.
+                getMemberByMemberId(memberId);
+                return result;
             }
         };
 
