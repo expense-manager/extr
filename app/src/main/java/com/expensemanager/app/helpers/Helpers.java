@@ -8,7 +8,10 @@ import android.graphics.Canvas;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Category;
@@ -30,6 +33,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by Zhaolong Zhong on 8/19/16.
@@ -528,5 +533,21 @@ public class Helpers {
             color = colors.get(pos);
         }
         return color;
+    }
+
+    public static void loadIconPhoto(ImageView view, String url) {
+        Glide.with(view.getContext())
+            .load(url)
+            .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 90, 0))
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(view);
+    }
+
+    public static void loadProfilePhoto(ImageView view, String url) {
+        Glide.with(view.getContext())
+            .load(url)
+            .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 180, 0))
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(view);
     }
 }

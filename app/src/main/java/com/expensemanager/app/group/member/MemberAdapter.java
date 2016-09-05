@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
@@ -82,11 +84,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         User user = members.get(position).getUser();
 
-        Glide.with(context)
-            .load(user.getPhotoUrl())
-            .placeholder(R.drawable.profile_place_holder_image)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(viewHolder.photoImageView);
+        Helpers.loadIconPhoto(viewHolder.photoImageView, user.getPhotoUrl());
 
         viewHolder.nameTextView.setText(user.getFullname());
 
@@ -119,7 +117,7 @@ public class MemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.member_item_default_photo_image_view_id) CircleImageView photoImageView;
+        @BindView(R.id.member_item_default_photo_image_view_id) ImageView photoImageView;
         @BindView(R.id.member_item_default_name_text_view_id) TextView nameTextView;
 
         private View itemView;

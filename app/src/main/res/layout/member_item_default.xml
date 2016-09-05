@@ -13,8 +13,8 @@
     android:elevation="2dp"
     android:background="@drawable/background_round_corner_white">
 
-    <!-- Color -->
-    <de.hdodenhof.circleimageview.CircleImageView
+    <!-- Photo -->
+    <ImageView
         android:id="@+id/member_item_default_photo_image_view_id"
         android:layout_width="@dimen/category_color_width_small"
         android:layout_height="@dimen/category_color_width_small"

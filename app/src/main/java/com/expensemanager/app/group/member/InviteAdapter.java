@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -105,11 +106,7 @@ public class InviteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         User user = users.get(position);
 
         Log.i(TAG, user.getFirstName() + " photo: " + user.getPhotoUrl());
-        Glide.with(context)
-            .load(user.getPhotoUrl())
-            .placeholder(R.drawable.profile_place_holder_image)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(viewHolder.userPhotoImageView);
+        Helpers.loadIconPhoto(viewHolder.userPhotoImageView, user.getPhotoUrl());
 
         viewHolder.userNameTextView.setText(user.getFullname());
         viewHolder.userEmailTextView.setText(user.getEmail());
@@ -169,7 +166,7 @@ public class InviteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
-        @BindView(R.id.member_item_invite_photo_image_view_id) CircleImageView userPhotoImageView;
+        @BindView(R.id.member_item_invite_photo_image_view_id) ImageView userPhotoImageView;
         @BindView(R.id.member_item_invite_name_text_view_id) TextView userNameTextView;
         @BindView(R.id.member_item_invite_email_text_view_id) TextView userEmailTextView;
         @BindView(R.id.member_item_invite_invite_text_view_id) TextView inviteTextView;
