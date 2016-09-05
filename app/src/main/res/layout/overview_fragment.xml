@@ -22,7 +22,6 @@
             android:layout_marginBottom="@dimen/space_small"
 
             android:text="$98636"
-            android:fontFamily=""
             android:textSize="@dimen/text_small"/>
 
         <!-- Total label -->
