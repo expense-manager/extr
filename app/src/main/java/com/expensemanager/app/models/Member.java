@@ -117,7 +117,9 @@ public class Member implements RealmModel {
             this.user.mapFromJSON(jsonObject.getJSONObject(USER_ID_KEY));
             this.createdBy.mapFromJSON(jsonObject.getJSONObject(CREATED_BY_KEY));
 
-            // Parse createdAt and convert UTC time to local time
+            this.isAccepted = jsonObject.getBoolean(IS_ACCEPTED_KEY);
+
+                // Parse createdAt and convert UTC time to local time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             this.createdAt = simpleDateFormat.parse(jsonObject.getString(CREATED_AT_JSON_KEY));

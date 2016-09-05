@@ -444,6 +444,27 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, null, true);
     }
 
+    public static RequestTemplate getAllUsersByUserFullName(String userFullName) {
+        if (userFullName == null) {
+            return null;
+        }
+
+        String url = BASE_URL + "users";
+        Map<String, String> params = new HashMap<>();
+
+        JSONObject userNameObj=new JSONObject();
+
+        try {
+            userNameObj.put(User.FULLNAME_JSON_KEY, userFullName);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating user full name object for where in getAllUsersByUserFullName", e);
+        }
+
+        params.put(WHERE, Helpers.encodeURIComponent(userNameObj.toString()));
+
+        return new RequestTemplate(GET, url, params);
+    }
+
     public static RequestTemplate deleteFileByName(String fileName) {
         String url = BASE_URL + "files/" + fileName;
 
@@ -597,10 +618,13 @@ public class RequestTemplateCreator {
         return new RequestTemplate(DELETE, url, null);
     }
 
-    public static RequestTemplate getMemberById(String id) {
-        String url = BASE_URL + "classes/Member" + "/" + id;
+    public static RequestTemplate getMemberByMemberId(String memberId) {
+        String url = BASE_URL + "classes/Member" + "/" + memberId;
+        Map<String, String> params = new HashMap<>();
 
-        return new RequestTemplate(GET, url, null);
+        params.put(INCLUDE, "groupId,userId,createdBy");
+
+        return new RequestTemplate(GET, url, params);
     }
 
     public static RequestTemplate getMembersByUserId(String userId) {
@@ -651,23 +675,33 @@ public class RequestTemplateCreator {
         Map<String, String> params = new HashMap<>();
         JSONObject groupIdObject = new JSONObject();
         JSONObject userIdObj=new JSONObject();
+        JSONObject createdByObj=new JSONObject();
 
         try {
+            // Group pointer
             groupIdObject.put("__type", "Pointer");
             groupIdObject.put("className", "Group");
             groupIdObject.put("objectId", member.getGroupId());
             params.put(Member.GROUP_ID_KEY, groupIdObject.toString());
 
+            // Reseiver User pointer
             userIdObj.put("__type", "Pointer");
             userIdObj.put("className", "_User");
             userIdObj.put("objectId", member.getUserId());
             params.put(Member.USER_ID_KEY, userIdObj.toString());
+
+            // Reseiver User pointer
+            createdByObj.put("__type", "Pointer");
+            createdByObj.put("className", "_User");
+            createdByObj.put("objectId", member.getCreatedBy().getId());
+            params.put(Member.CREATED_BY_KEY, createdByObj.toString());
+
             params.put(Member.IS_ACCEPTED_KEY, String.valueOf(member.isAccepted()));
 
-            return new RequestTemplate(PUT, url, params, true);
+            return new RequestTemplate(POST, url, params);
 
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating groupId or userId pointer object for where in joinGroup()", e);
+            Log.e(TAG, "Error creating groupId or userId or createdBy pointer object for where in createMember()", e);
         }
 
         return null;

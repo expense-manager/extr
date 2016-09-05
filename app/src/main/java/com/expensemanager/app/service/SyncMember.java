@@ -97,9 +97,9 @@ public class SyncMember {
         return networkRequest.send().continueWith(addMemberToRealm);
     }
 
-    public static Task<Void> getMemberById(String memberId) {
+    public static Task<Void> getMemberByMemberId(String memberId) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
-        RequestTemplate requestTemplate = RequestTemplateCreator.getMemberById(memberId);
+        RequestTemplate requestTemplate = RequestTemplateCreator.getMemberByMemberId(memberId);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
         Continuation<JSONObject, Void> saveMember = new Continuation<JSONObject, Void>() {
@@ -120,9 +120,9 @@ public class SyncMember {
 
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
-                Group group = new Group();
-                group.mapFromJSON(result);
-                realm.copyToRealmOrUpdate(group);
+                Member member = new Member();
+                member.mapFromJSON(result);
+                realm.copyToRealmOrUpdate(member);
                 realm.commitTransaction();
                 realm.close();
 
@@ -157,7 +157,7 @@ public class SyncMember {
 
                 String memberId = jsonObject.getString(Member.OBJECT_ID_JSON_KEY);
                 // Sync new added member.
-                getMemberById(memberId);
+                getMemberByMemberId(memberId);
 
                 return null;
             }

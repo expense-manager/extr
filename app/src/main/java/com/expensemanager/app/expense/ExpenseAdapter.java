@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
@@ -110,6 +111,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Glide.with(context)
                 .load(user.getPhotoUrl())
                 .placeholder(R.drawable.profile_place_holder_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(viewHolder.userPhotoImageView);
 
             viewHolder.userPhotoImageView.setVisibility(View.VISIBLE);
