@@ -44,6 +44,7 @@
             android:textSize="@dimen/text_really_small"
             android:inputType="textPassword"
             android:hint="@string/password"
+            android:fontFamily="sans-serif"
             android:background="@color/gray_really_light"/>
 
         <!-- Login -->
@@ -56,7 +57,7 @@
             android:layout_margin="@dimen/space_medium"
 
             android:text="@string/login"
-            android:textColor="@color/blue"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_medium_small"
             android:textAllCaps="false"
             android:background="@drawable/button_background"/>
