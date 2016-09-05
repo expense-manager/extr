@@ -153,7 +153,7 @@ public class ExpenseActivity extends BaseActivity
         expenseAdapter.clear();
 
         // Check size of group members
-        if (Member.getAllMembersByGroupId(groupId).size() > 1) {
+        if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             expenseAdapter.setShowMember(true);
         } else {
             expenseAdapter.setShowMember(false);

@@ -96,7 +96,7 @@ public class OverviewFragment extends Fragment {
         monthlyAverageTextView.setText("$" + new DecimalFormat("##.##").format(getMonthlyAverage()));
 
         overviewAdapter.clear();
-        if (Member.getAllMembersByGroupId(groupId).size() > 1) {
+        if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             overviewAdapter.setShowMember(true);
         } else {
             overviewAdapter.setShowMember(false);

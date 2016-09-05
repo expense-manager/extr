@@ -10,6 +10,7 @@ import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncMember;
 
 import android.app.Activity;
@@ -123,9 +124,11 @@ public class InviteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         // Set item click listener
         viewHolder.itemView.setOnClickListener(v -> {
-            // todo: show user info dialog fragment
-            //ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
-            //((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+            // todo: show user info dialog fragment or profile activity
+            if (member != null && member.getUserId() != null) {
+                ProfileActivity.newInstance(context, member.getUserId());
+                ((Activity) getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+            }
         });
     }
 
