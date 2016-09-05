@@ -67,7 +67,7 @@ public class MemberActivity extends AppCompatActivity {
 
     private void invalidateViews() {
         memberAdapter.clear();
-        memberAdapter.addAll(Member.getAllMembersByGroupId(groupId));
+        memberAdapter.addAll(Member.getAllAcceptedMembersByGroupId(groupId));
     }
 
     private void setupRecyclerView() {

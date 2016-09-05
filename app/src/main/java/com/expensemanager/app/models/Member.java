@@ -184,6 +184,26 @@ public class Member implements RealmModel {
     }
 
     /**
+     * @return all accepted members by groupId
+     */
+    public static RealmList<Member> getAllAcceptedMembersByGroupId(String groupId) {
+        RealmList<Member> realmList = new RealmList<>();
+
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Member> members = realm.where(Member.class)
+            .findAllSorted(CREATED_AT_KEY, Sort.DESCENDING);
+        realm.close();
+
+        for (Member member : members) {
+            if (member.getGroupId().equals(groupId) && member.isAccepted()) {
+                realmList.add(member);
+            }
+        }
+
+        return realmList;
+    }
+
+    /**
      * @return all members by userId
      */
     public static RealmList<Member> getAllMembersByUserId(String userId) {
