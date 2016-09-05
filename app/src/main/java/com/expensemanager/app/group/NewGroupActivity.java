@@ -19,8 +19,10 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncGroup;
+import com.expensemanager.app.service.SyncMember;
 
 import org.json.JSONObject;
 
@@ -113,12 +115,34 @@ public class NewGroupActivity extends AppCompatActivity {
             }
 
             JSONObject jsonObject = task.getResult();
-            // todo: created member for owner
+            // todo: fix not able to self invite
+            // Self invite after creating a new group
+            String groupId = jsonObject.getString(Group.ID_KEY);
+            //selfInvite(groupId);
             close();
 
             return null;
         }
     };
+
+    private void selfInvite(String groupId) {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        Group group = Group.getGroupById(groupId);
+        User user = User.getUserById(loginUserId);
+
+        if (group == null || user == null) {
+            return;
+        }
+
+        Member member = new Member();
+        member.setGroup(group);
+        member.setCreatedBy(user);
+        member.setUser(user);
+        member.setAccepted(true);
+
+        SyncMember.create(member);
+    }
 
     public void closeSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

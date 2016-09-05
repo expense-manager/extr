@@ -125,7 +125,7 @@ public class SyncGroup {
                 // Sync new added group.
                 getGroupById(groupId);
 
-                return null;
+                return jsonObject;
             }
         };
 
