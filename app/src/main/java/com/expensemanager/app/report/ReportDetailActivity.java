@@ -173,6 +173,7 @@ public class ReportDetailActivity extends BaseActivity {
             timeSlotsLength = DAYS_OF_WEEK + 2;
         } else if (requestCode == MONTHLY) {
             Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startEnd[0]);
             int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             timeSlotsLength = maxDays + 2;
         } else if (requestCode == YEARLY) {
