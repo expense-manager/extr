@@ -113,7 +113,7 @@ public class NewGroupActivity extends AppCompatActivity {
             }
 
             JSONObject jsonObject = task.getResult();
-
+            // todo: created member for owner
             close();
 
             return null;

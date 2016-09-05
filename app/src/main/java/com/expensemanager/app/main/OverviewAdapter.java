@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.ExpenseDetailActivity;
 import com.expensemanager.app.helpers.Helpers;
@@ -110,6 +111,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Glide.with(context)
                 .load(user.getPhotoUrl())
                 .placeholder(R.drawable.profile_place_holder_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(viewHolder.userPhotoImageView);
 
             viewHolder.userPhotoImageView.setVisibility(View.VISIBLE);

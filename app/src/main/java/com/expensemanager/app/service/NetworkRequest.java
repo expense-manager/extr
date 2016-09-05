@@ -92,9 +92,15 @@ public class NetworkRequest {
                             } else {
                                 jsonBuilder.append("\"");
                                 jsonBuilder.append(entry.getKey());
-                                jsonBuilder.append("\":\"");
-                                jsonBuilder.append(entry.getValue());
-                                jsonBuilder.append("\"");
+
+                                if (entry.getValue().equals("true") || entry.getValue().equals("false")) {
+                                    jsonBuilder.append("\":");
+                                    jsonBuilder.append(entry.getValue());
+                                } else {
+                                    jsonBuilder.append("\":\"");
+                                    jsonBuilder.append(entry.getValue());
+                                    jsonBuilder.append("\"");
+                                }
                             }
 
                             if (i < size - 1) {

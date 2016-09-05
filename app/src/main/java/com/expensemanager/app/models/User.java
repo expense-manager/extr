@@ -3,6 +3,7 @@ package com.expensemanager.app.models;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +14,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -163,6 +165,23 @@ public class User implements RealmModel{
         } catch (ParseException e) {
             Log.e(TAG, "Error parsing createdAt.", e);
         }
+    }
+
+    public static RealmList<User> mapFromJSONArrayWithoutSaving(JSONArray jsonArray) {
+        RealmList<User> users = new RealmList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject userJson = jsonArray.getJSONObject(i);
+                User user = new User();
+                user.mapFromJSON(userJson);
+                users.add(user);
+            } catch (JSONException e) {
+                Log.e(TAG, "Error in parsing users.", e);
+            }
+        }
+
+        return users;
     }
 
     /**

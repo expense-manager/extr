@@ -10,6 +10,8 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.User;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -186,6 +188,15 @@ public class SyncUser {
         };
 
         return networkRequest.send().continueWith(onResponseReturned);
+    }
+
+    public static Task<JSONObject> getAllUsersByUserFullName(String userFullName) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getAllUsersByUserFullName(userFullName);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Log.d(TAG, "Start downloading Expenses");
+        return networkRequest.send();
     }
 
     public static Task<JSONObject> update(ProfileBuilder profileBuilder) {

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/invite_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@color/white"
+    tools:context="com.expensemanager.app.group.member.InvitationEmailActivity">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_id">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Email label -->
+            <TextView
+                android:id="@+id/invite_activity_email_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/email"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Email -->
+            <EditText
+                android:id="@+id/invite_activity_email_edit_text_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/invite_activity_email_label_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+
+                android:padding="@dimen/space_really_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"
+                android:background="@drawable/background_bottom_line_gray"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <include layout="@layout/progress_bar" />
+
+</RelativeLayout>

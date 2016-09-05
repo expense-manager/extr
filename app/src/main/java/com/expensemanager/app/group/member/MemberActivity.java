@@ -90,7 +90,7 @@ public class MemberActivity extends AppCompatActivity {
 
         titleTextView.setOnClickListener(v -> finish());
         backImageView.setOnClickListener(v -> finish());
-        inviteTextView.setOnClickListener(v -> InviteActivity.newInstance(this, groupId));
+        inviteTextView.setOnClickListener(v -> InviteActivity.newInstance(this));
     }
 
     @Override

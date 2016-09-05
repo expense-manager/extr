@@ -101,7 +101,6 @@ public class ExpenseActivity extends BaseActivity
         setupToolbar();
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
         Bundle bundle = getIntent().getExtras();
