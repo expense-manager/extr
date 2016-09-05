@@ -344,7 +344,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> setupGroupListItems());
-        setupGroupListItems();
+        // Sync all groups after getting current user
+        SyncGroup.getGroupByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
+        SyncMember.getMembersByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
     }
 
     @Override

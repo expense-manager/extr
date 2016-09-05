@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/space_medium_small"
+    android:layout_marginRight="@dimen/space_medium_small"
+    android:layout_marginTop="@dimen/space_really_small"
+    android:layout_marginBottom="@dimen/space_really_small"
+
+    android:elevation="3dp">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/expense_detail_activity_created_by_relative_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:padding="@dimen/space_medium">
+
+        <!-- Color -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/member_item_invite_photo_image_view_id"
+            android:layout_width="@dimen/category_color_width_small"
+            android:layout_height="@dimen/category_color_width_small"
+            android:layout_marginEnd="@dimen/space_medium"/>
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/member_item_invite_name_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/member_item_invite_photo_image_view_id"
+            android:layout_alignTop="@+id/member_item_invite_photo_image_view_id"
+
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_small"
+            android:gravity="center_vertical"
+            tools:text="name"/>
+
+        <!-- Email -->
+        <TextView
+            android:id="@+id/member_item_invite_email_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/member_item_invite_name_text_view_id"
+            android:layout_alignLeft="@+id/member_item_invite_name_text_view_id"
+
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_really_small"
+            android:gravity="center_vertical"
+            tools:text="1234"/>
+
+        <!-- Invite -->
+        <TextView
+            android:id="@+id/member_item_invite_invite_text_view_id"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/member_item_invite_name_text_view_id"
+            android:layout_alignBottom="@+id/member_item_invite_email_text_view_id"
+
+            android:background="@drawable/button_background_gray"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_really_small"
+            android:text="@string/invite"
+            android:gravity="center"/>
+
+        <!-- Invited -->
+        <TextView
+            android:id="@+id/member_item_invite_sent_text_view_id"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/member_item_invite_name_text_view_id"
+            android:layout_alignBottom="@+id/member_item_invite_email_text_view_id"
+
+            android:background="@drawable/background_round_corner_border_gray"
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/text_really_small"
+            android:text="@string/sent"
+            android:gravity="center"/>
+
+        <!-- Accepted -->
+        <TextView
+            android:id="@+id/member_item_invite_accepted_text_view_id"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/member_item_invite_name_text_view_id"
+            android:layout_alignBottom="@+id/member_item_invite_email_text_view_id"
+
+            android:background="@drawable/background_round_corner_border_gray"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_really_small"
+            android:text="@string/accepted"
+            android:gravity="center"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

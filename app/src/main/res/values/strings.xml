@@ -63,6 +63,10 @@
     <string name="note">Note</string>
     <string name="member">Members</string>
     <string name="invite">Invite</string>
+    <string name="sent">Sent</string>
+    <string name="search">Search</string>
+    <string name="accepted">Accepted</string>
+    <string name="accept">Accept</string>
     <string name="invite_new">New invitation</string>
     <string name="created_at">Created At</string>
     <string name="created_by">Created By</string>
@@ -149,5 +153,6 @@
     <string name="title_activity_member">MemberActivity</string>
     <string name="title_activity_group_detail">Group detail</string>
     <string name="title_activity_new_group">New Group</string>
+    <string name="title_activity_invitation_email">InvitationEmailActivity</string>
 
 </resources>
