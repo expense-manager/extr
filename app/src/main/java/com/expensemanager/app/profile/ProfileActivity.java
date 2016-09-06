@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -89,7 +90,7 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.toolbar_right_title_text_view_id) TextView editTextView;
-    @BindView(R.id.profile_activity_profile_photo_image_view_id) CircleImageView profilePhotoImageView;
+    @BindView(R.id.profile_activity_profile_photo_image_view_id) ImageView profilePhotoImageView;
     @BindView(R.id.profile_activity_profile_camera_image_view_id) CircleImageView cameraImageView;
     @BindView(R.id.profile_activity_first_name_edit_text_id) EditText firstNameEditText;
     @BindView(R.id.profile_activity_last_name_edit_text_id) EditText lastNameEditText;
@@ -193,17 +194,9 @@ public class ProfileActivity extends BaseActivity {
         // todo: glide disallow putting bitmap into imageview
 
         if (photoList.size() > 0) {
-            Glide.with(this)
-                    .load(photoList.get(0))
-                    .fitCenter()
-                    .into(profilePhotoImageView);
-
+            Helpers.loadProfilePhoto(profilePhotoImageView, Arrays.toString(photoList.get(0)));
         } else if (photoUrl != null && photoUrl.length() > 0) {
-            Glide.with(this)
-                .load(currentUser.getPhotoUrl())
-                .placeholder(cameraIconHolder)
-                .fitCenter()
-                .into(profilePhotoImageView);
+            Helpers.loadProfilePhoto(profilePhotoImageView, currentUser.getPhotoUrl(), cameraIconHolder);
         }
 
         profilePhotoImageView.setOnClickListener(v -> {

@@ -193,7 +193,9 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         for (Expense expense : expenses) {
             int day = Helpers.getDayOfMonth(expense.getExpenseDate());
-            amounts[day - 1] += expense.getAmount();
+            if (day <= amounts.length) {
+                amounts[day - 1] += expense.getAmount();
+            }
         }
     }
 

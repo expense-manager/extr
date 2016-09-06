@@ -2,6 +2,7 @@ package com.expensemanager.app.settings;
 
 import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,7 +57,7 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
-    @BindView(R.id.setting_activity_profile_photo_image_view_id) CircleImageView photoImageView;
+    @BindView(R.id.setting_activity_profile_photo_image_view_id) ImageView photoImageView;
     @BindView(R.id.setting_activity_edit_profile_text_view_id) TextView editProfileTextView;
     @BindView(R.id.setting_activity_weekly_notification_switch_id) Switch weeklyNotificationSwitch;
     @BindView(R.id.setting_activity_monthly_notification_switch_id) Switch monthlyNotificationSwitch;
@@ -79,23 +81,34 @@ public class SettingsActivity extends BaseActivity {
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
-        weeklyNotificationSwitch.setOnCheckedChangeListener(
-            (compoundButton, b) -> {
-                setWeekly = b;
-                saveSettings();
-                if (b) {
-                    SettingsActivity.setWeeklyNotification(this, groupId);
-                }
-            });
+        if (groupId != null) {
+            weeklyNotificationSwitch.setOnCheckedChangeListener(
+                (compoundButton, b) -> {
+                    setWeekly = b;
+                    saveSettings();
+                    if (b) {
+                        SettingsActivity.setWeeklyNotification(this, groupId);
+                    }
+                });
 
-        monthlyNotificationSwitch.setOnCheckedChangeListener(
-            (compoundButton, b) -> {
-                setMonthly = b;
-                saveSettings();
-                if (b) {
-                    SettingsActivity.setMonthlyNotification(this, groupId);
-                }
-            });
+            monthlyNotificationSwitch.setOnCheckedChangeListener(
+                (compoundButton, b) -> {
+                    setMonthly = b;
+                    saveSettings();
+                    if (b) {
+                        SettingsActivity.setMonthlyNotification(this, groupId);
+                    }
+                });
+        } else {
+            weeklyNotificationSwitch.setEnabled(false);
+            weeklyNotificationSwitch.setOnClickListener(v ->
+                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show()
+            );
+            monthlyNotificationSwitch.setEnabled(false);
+            monthlyNotificationSwitch.setOnClickListener(v ->
+                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show()
+            );
+        }
 
         signoutTextView.setOnClickListener(v -> signOut());
 
@@ -129,7 +142,7 @@ public class SettingsActivity extends BaseActivity {
     private void setupViews() {
         User user = User.getUserById(loginUserId);
         if (user != null) {
-            Glide.with(this).load(user.getPhotoUrl()).into(photoImageView);
+            Helpers.loadProfilePhoto(photoImageView, user.getPhotoUrl());
         }
         editProfileTextView.setOnClickListener(v -> ProfileActivity.newInstance(this, null, true));
 

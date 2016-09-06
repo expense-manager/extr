@@ -137,8 +137,8 @@
                 android:padding="@dimen/space_medium"
                 android:background="@drawable/background_round_corner_border_gray">
 
-                <!-- Color -->
-                <de.hdodenhof.circleimageview.CircleImageView
+                <!-- User photo -->
+                <ImageView
                     android:id="@+id/group_detail_activity_created_by_photo_image_view_id"
                     android:layout_width="@dimen/category_color_width_small"
                     android:layout_height="@dimen/category_color_width_small"
