@@ -10,8 +10,6 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.User;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -204,7 +202,7 @@ public class SyncUser {
         RequestTemplate requestTemplate = RequestTemplateCreator.updateUser(profileBuilder.getUser());
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Continuation<JSONObject, JSONObject> onCreateExpenseFinished = new Continuation<JSONObject, JSONObject>() {
+        Continuation<JSONObject, JSONObject> onUpdateUserDetailFinished = new Continuation<JSONObject, JSONObject>() {
             @Override
             public JSONObject then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
@@ -221,15 +219,17 @@ public class SyncUser {
                 // Example response: {"objectId":"tUfEENoHSS","createdAt":"2016-08-18T22:34:59.262Z"}
                 Log.d(TAG, "Response: \n" + result);
 
-                // Add photo
-                addUserPhoto(profileBuilder.getUserId(), profileBuilder.getProfileImage());
-
                 return result;
             }
         };
 
+        // Update photo
+        if (profileBuilder.getPhotoList().size() > 0) {
+            addUserPhoto(profileBuilder.getUserId(), profileBuilder.getPhotoList().get(0));
+        }
+
         Log.d(TAG, "Start updating user info.");
-        return networkRequest.send().continueWith(onCreateExpenseFinished);
+        return networkRequest.send().continueWith(onUpdateUserDetailFinished);
     }
     /**
      * Add expense photo to Photo table in server
@@ -237,13 +237,13 @@ public class SyncUser {
      * @param data
      * @return
      */
-    public static Task<JSONObject> addUserPhoto(final String userId, byte[] data) {
-        Continuation<JSONObject, Task<JSONObject>> addUserPhoto = new Continuation<JSONObject, Task<JSONObject>>() {
+    public static Task<Void> addUserPhoto(final String userId, byte[] data) {
+        Continuation<JSONObject, Task<JSONObject>> onAddFileFinished = new Continuation<JSONObject, Task<JSONObject>>() {
             @Override
             public Task<JSONObject> then(Task<JSONObject> task) throws Exception {
                 if (task.isFaulted()) {
                     Exception exception = task.getError();
-                    Log.e(TAG, "Error in addUserPhoto", exception);
+                    Log.e(TAG, "Error in onAddFileFinished", exception);
                     throw exception;
                 }
 
@@ -252,7 +252,9 @@ public class SyncUser {
                     throw new Exception("Empty input for addUserPhoto");
                 }
 
-                Log.d(TAG, "addUserPhoto - photoName:" + fileName);
+                Log.d(TAG, "onAddFileFinished - new added photoName:" + fileName);
+                Log.d(TAG, "onAddFileFinished - start to add photo to user table:" + fileName);
+
                 // After we have file name, we add file name and expense id to Photo table.
                 TaskCompletionSource<JSONObject> tcs = new TaskCompletionSource<>();
                 RequestTemplate template = RequestTemplateCreator.addUserPhoto(userId, fileName);
@@ -261,11 +263,42 @@ public class SyncUser {
             }
         };
 
+        // Input: Create expense photo success object which contains expense photo id.
+        Continuation<JSONObject, Void> onAddPhotoToUserFinished = new Continuation<JSONObject, Void>() {
+            @Override
+            public Void then(Task<JSONObject> task) throws Exception {
+                if (task.isFaulted()) {
+                    Exception exception = task.getError();
+                    Log.e(TAG, "Error in onAddPhotoToUserFinished", exception);
+                    throw exception;
+                }
+
+                // Response example:{"updatedAt":"2016-09-06T03:36:55.075Z"}
+                JSONObject jsonObject = task.getResult();
+                Log.d(TAG, "onAddPhotoToUserFinished: - result:" + jsonObject.toString());
+
+                String fileName = task.getResult().optString("updatedAt");
+
+                if (fileName.length() > 0) {
+                    String photoUrl = User.getUserById(userId).getPhotoUrl();
+                    String oldPhotoName = photoUrl.substring(photoUrl.lastIndexOf("/") + 1);
+                    Log.d(TAG, "onAddPhotoToUserFinished - start delete user oldPhotoName: " + oldPhotoName);
+                    SyncFile.deleteFile(oldPhotoName);
+                    SyncUser.getLoginUser(); // Get the photo from user table.
+                } else {
+                    Log.d(TAG, "onAddPhotoToUserFinished - new fileName is not valid.");
+                }
+
+                return null;
+            }
+        };
+
         String photoName = Helpers.dateToString(new Date(), EApplication.getInstance()
             .getString(R.string.photo_date_format_string)) + ".jpg";
 
         return SyncPhoto.uploadPhoto(photoName, data) // add photo to File table, return file name
-            .continueWithTask(addUserPhoto); // return objectId(user photo id)
+                .continueWithTask(onAddFileFinished)// return objectId(user photo id)
+                .continueWith(onAddPhotoToUserFinished);
 
     }
 }

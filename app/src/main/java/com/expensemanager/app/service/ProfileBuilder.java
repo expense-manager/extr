@@ -2,10 +2,12 @@ package com.expensemanager.app.service;
 
 import com.expensemanager.app.models.User;
 
+import java.util.ArrayList;
+
 public class ProfileBuilder {
     private User user;
     private String userId;
-    private byte[] profileImage;
+    private ArrayList<byte[]> photoList;
 
     public ProfileBuilder() {
 
@@ -21,13 +23,12 @@ public class ProfileBuilder {
         return this;
     }
 
-    public byte[] getProfileImage() {
-        return profileImage;
+    public ArrayList<byte[]> getPhotoList() {
+        return photoList;
     }
 
-    public ProfileBuilder setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
-        return this;
+    public void setPhotoList(ArrayList<byte[]> photoList) {
+        this.photoList = photoList;
     }
 
     public String getUserId() {

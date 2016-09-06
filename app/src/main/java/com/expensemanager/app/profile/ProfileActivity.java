@@ -1,29 +1,18 @@
 package com.expensemanager.app.profile;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -42,8 +31,9 @@ import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
-import com.expensemanager.app.service.ProfileBuilder;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.PermissionsManager;
+import com.expensemanager.app.service.ProfileBuilder;
 import com.expensemanager.app.service.SyncUser;
 
 import org.json.JSONObject;
@@ -51,11 +41,12 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -74,12 +65,18 @@ public class ProfileActivity extends BaseActivity {
     private static final String USER_ID = "userId";
     public static final String NEW_PHOTO = "Take a photo";
     public static final String LIBRARY_PHOTO = "Choose from library";
-    public static final int SELECT_PICTURE_REQUEST_CODE = 1;
+    private static final int TAKE_PHOTO_CODE = 1;
+    private static final int PICK_PHOTO_CODE = 2;
+    private static final int CROP_PHOTO_CODE = 3;
+    private static final int POST_PHOTO_CODE = 4;
+
 
     private boolean isPlaceholder;
+    private ArrayList<byte[]> photoList;
     private Uri outputFileUri;
-    private Drawable cameraIconHolder;
+    private String photoFileName;
     private AlertDialog.Builder choosePhotoSource;
+    private Drawable cameraIconHolder;
     private User currentUser;
     private byte[] profileImage;
     private boolean isEditable = false;
@@ -91,6 +88,7 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.toolbar_right_title_text_view_id) TextView editTextView;
     @BindView(R.id.profile_activity_profile_photo_image_view_id) CircleImageView profilePhotoImageView;
+    @BindView(R.id.profile_activity_profile_camera_image_view_id) CircleImageView cameraImageView;
     @BindView(R.id.profile_activity_first_name_edit_text_id) EditText firstNameEditText;
     @BindView(R.id.profile_activity_last_name_edit_text_id) EditText lastNameEditText;
     @BindView(R.id.profile_activity_email_edit_text_id) EditText emailEditText;
@@ -123,8 +121,9 @@ public class ProfileActivity extends BaseActivity {
         }
 
         currentUser = User.getUserById(userId);
+        photoList = new ArrayList<>();
         // Convert bitmap to drawable
-        cameraIconHolder = new BitmapDrawable(getResources(), getCameraIconBitmap());
+        cameraIconHolder = new BitmapDrawable(getResources(), Helpers.getCameraIconBitmap(this));
 
         if (currentUser != null) {
             Log.d(TAG, "current user name: " + currentUser.getFullname());
@@ -148,6 +147,8 @@ public class ProfileActivity extends BaseActivity {
             editTextView.setOnClickListener(v -> save());
             titleTextView.setText(getString(R.string.cancel));
             titleTextView.setOnClickListener(v -> setEditMode(false));
+            cameraImageView.setVisibility(View.VISIBLE);
+            cameraImageView.setImageDrawable(cameraIconHolder);
         } else {
             editTextView.setText(getString(R.string.edit));
             editTextView.setOnClickListener(v -> setEditMode(true));
@@ -160,7 +161,14 @@ public class ProfileActivity extends BaseActivity {
 
         Log.i(TAG, "new invalidate: " + currentUser.getPhotoUrl());
         // todo: glide disallow putting bitmap into imageview
-        if (photoUrl != null && photoUrl.length() > 0) {
+
+        if (photoList.size() > 0) {
+            Glide.with(this)
+                    .load(photoList.get(0))
+                    .fitCenter()
+                    .into(profilePhotoImageView);
+
+        } else if (photoUrl != null && photoUrl.length() > 0) {
             Glide.with(this)
                 .load(currentUser.getPhotoUrl())
                 .placeholder(cameraIconHolder)
@@ -191,53 +199,181 @@ public class ProfileActivity extends BaseActivity {
         mobileEditText.setOnClickListener(v -> requestFocus(v));
     }
 
+    private void setPhotoSourcePicker() {
+        choosePhotoSource = new AlertDialog.Builder(this);
+
+        final ArrayAdapter<String> photoSourceAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1);
+        photoSourceAdapter.add(NEW_PHOTO);
+        photoSourceAdapter.add(LIBRARY_PHOTO);
+
+        choosePhotoSource.setAdapter(photoSourceAdapter, (DialogInterface dialog, int which) -> {
+            String photoSource = photoSourceAdapter.getItem(which);
+            if (photoSource == null) {
+                checkCameraPermission();
+                return;
+            }
+
+            switch (photoSource) {
+                case NEW_PHOTO:
+                    Log.d(TAG, "Take a photo");
+                    checkCameraPermission();
+                    break;
+                case LIBRARY_PHOTO:
+                    Log.d(TAG, "Choose photo from library");
+                    checkExternalStoragePermission();
+                    break;
+            }
+        });
+
+        choosePhotoSource.show();
+    }
+
+    private void launchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFileName = Helpers.dateToString(new Date(), getString(R.string.photo_date_format_string));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(photoFileName));
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, TAKE_PHOTO_CODE);
+        }
+    }
+
+    private void openGallery() {
+//        Intent intent = new Intent(Intent.ACTION_PICK,
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE_REQUEST_CODE) {
-                final boolean isCamera;
-                if (data == null) {
-                    isCamera = true;
-                } else {
-                    final String action = data.getAction();
-                    isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
-                }
+            if (requestCode == TAKE_PHOTO_CODE) {
+                Log.d(TAG, "TAKE_PHOTO_CODE");
 
-                Uri selectedImageUri;
-                if (isCamera) {
-                    selectedImageUri = outputFileUri;
-                } else {
-                    selectedImageUri = data.getData();
-                }
+                outputFileUri = getPhotoFileUri(photoFileName);
+                cropPhoto(outputFileUri);
+            } else if (requestCode == PICK_PHOTO_CODE) {
+                Log.d(TAG, "PICK_PHOTO_CODE");
+
+                Uri photoUri = data.getData();
 
                 try {
-                    InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                    try {
-                        byte[] inputData = Helpers.getBytesFromInputStream(inputStream);
-                        Bitmap bitmap = Helpers.decodeSampledBitmapFromByteArray(inputData, 0, 400, 400);
-                        int dimension = Helpers.getCenterCropDimensionForBitmap(bitmap);
-                        bitmap = ThumbnailUtils.extractThumbnail(bitmap, dimension, dimension);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                        profileImage = stream.toByteArray();
+                    InputStream inputStream = getContentResolver().openInputStream(photoUri);
+                    byte[] inputData = Helpers.getBytesFromInputStream(inputStream);
 
-                        bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-                        profilePhotoImageView.setImageBitmap(bitmap);
+                    String directoryName = Helpers.dateToString(new Date(), getString(R.string.photo_date_format_string));
+                    final File outputFileRoot = new File(Environment.getExternalStorageDirectory() + File.separator + directoryName + File.separator);
+                    outputFileRoot.mkdirs();
+                    final File outputFile = new File(outputFileRoot, directoryName);
+                    outputFileUri = Uri.fromFile(outputFileRoot);
 
-                        isPlaceholder = false;
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error reading image byte data from uri");
-                    }
-                } catch (FileNotFoundException e) {
-                    Log.e(TAG, "Error file with uri " + selectedImageUri + " not found", e);
+                    OutputStream out;
+                    out = new FileOutputStream(outputFile);
+                    out.write(inputData);
+                    out.close();
+
+                    outputFileUri = Uri.fromFile(outputFile);
+                    cropPhoto(outputFileUri);
+
+                } catch (IOException e) {
+                    Log.e(TAG, "Error in getting photo data.", e);
                 }
+            } else if (requestCode == CROP_PHOTO_CODE) {
+                Log.d(TAG, "CROP_PHOTO_CODE");
+
+                Uri photoUri = data.getData();
+                if (photoUri != null) {
+                    try {
+                        InputStream inputStream = getContentResolver().openInputStream(photoUri);
+                        try {
+                            byte[] inputData = Helpers.getBytesFromInputStream(inputStream);
+                            Bitmap bitmap = Helpers.decodeSampledBitmapFromByteArray(inputData, 0, 400, 400);
+                            int dimension = Helpers.getCenterCropDimensionForBitmap(bitmap);
+                            bitmap = ThumbnailUtils.extractThumbnail(bitmap, dimension, dimension);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            byte[] sampledInputData = stream.toByteArray();
+                            photoList.clear();
+                            photoList.add(sampledInputData);
+                            invalidateViews();
+                            Log.d(TAG, "photoList size: " + photoList.size());
+                        } catch (IOException e) {
+                            Log.e(TAG, "Error reading image byte data from uri");
+                        }
+                    } catch (FileNotFoundException e) {
+                        Log.e(TAG, "Error file with uri " + photoUri + " not found", e);
+                    }
+                } else {
+                    Toast.makeText(this, "Cannot get cropped photo data!", Toast.LENGTH_SHORT).show();
+                }
+
+            } else if (requestCode == POST_PHOTO_CODE) {
+                Log.d(TAG, "POST_PHOTO_CODE");
             }
         }
     }
 
+    private void cropPhoto(Uri photoUri) {
+        //call the standard crop action intent (the user device may not support it)
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        //indicate image type and Uri
+        cropIntent.setDataAndType(photoUri, "image/*");
+
+        //set crop properties
+        cropIntent.putExtra("crop", "true");
+        //indicate aspect of desired crop
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        //indicate output X and Y
+        cropIntent.putExtra("outputX", 400);
+        cropIntent.putExtra("outputY", 400);
+        //retrieve data on return
+        cropIntent.putExtra("return-data", true);
+
+        //start the activity - we handle returning in onActivityResult
+        startActivityForResult(cropIntent, CROP_PHOTO_CODE);
+    }
+
+    // Returns the Uri for a photo stored on disk given the fileName
+    public Uri getPhotoFileUri(String fileName) {
+        Log.d(TAG, "getPhotoFileUri: isExternalStorageAvailable() : " + isExternalStorageAvailable());
+        // Only continue if the SD Card is mounted
+        if (isExternalStorageAvailable()) {
+            // Get safe storage directory for photos
+            // Use `getExternalFilesDir` on Context to access package-specific directories.
+            // This way, we don't need to request external read/write runtime permissions.
+            File mediaStorageDir = new File(
+                    this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+
+            // Create the storage directory if it does not exist
+            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+                Log.d(TAG, "failed to create directory");
+            }
+
+            // Return the file target for the photo based on filename
+            return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
+        }
+        return null;
+    }
+
+    /**
+     * Returns true if external storage for photos is available
+     */
+    private boolean isExternalStorageAvailable() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
+    }
     private void updateProfileImage() {
         if (isEditable) {
-            openImageIntent();
+            setPhotoSourcePicker();
         }
     }
 
@@ -322,53 +458,6 @@ public class ProfileActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Bitmap getCameraIconBitmap() {
-        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_camera_alt_white_24dp);
-        Bitmap originalBitmap = ((BitmapDrawable)drawable).getBitmap();
-        Paint paint = new Paint();
-        ColorFilter filter = new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.gray), PorterDuff.Mode.SRC_IN);
-        paint.setColorFilter(filter);
-        Bitmap cameraIconBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas canvas = new Canvas(cameraIconBitmap);
-        canvas.drawBitmap(originalBitmap, -2, 2, paint);
-
-        return Helpers.padBitmap(cameraIconBitmap, 20, 20);
-    }
-
-    private void openImageIntent() {
-        // Path to save image
-        String directoryName = Helpers.dateToString(new Date(), getString(R.string.photo_date_format_string));
-        final File root = new File(
-            Environment.getExternalStorageDirectory() + File.separator + directoryName + File.separator);
-        root.mkdirs();
-        final File sdImageMainDirectory = new File(root, directoryName);
-        outputFileUri = Uri.fromFile(sdImageMainDirectory);
-
-        // todo: request runtime permission
-        // Take a photo
-        final List<Intent> cameraIntents = new ArrayList<>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        final PackageManager packageManager = getPackageManager();
-        final List<ResolveInfo> listCamera = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCamera) {
-            final String packageName = res.activityInfo.packageName;
-            final Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(packageName);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            cameraIntents.add(intent);
-        }
-
-        // Choose a photo
-        final Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        final Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.photo_select_source));
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
-        startActivityForResult(chooserIntent, SELECT_PICTURE_REQUEST_CODE);
-    }
-
     private void save() {
         String email = emailEditText.getText().toString().trim();
         String phone = mobileEditText.getText().toString().trim();
@@ -389,9 +478,9 @@ public class ProfileActivity extends BaseActivity {
         currentUser.setEmail(email);
         currentUser.setPhone(phone);
 
-        ProfileBuilder profileBuilder = new ProfileBuilder()
-            .setUser(currentUser)
-            .setProfileImage(profileImage);
+        ProfileBuilder profileBuilder = new ProfileBuilder();
+        profileBuilder.setUser(currentUser);
+        profileBuilder.setPhotoList(photoList);
 
         realm.copyToRealmOrUpdate(currentUser);
         realm.commitTransaction();
@@ -399,9 +488,10 @@ public class ProfileActivity extends BaseActivity {
 
         SyncUser.update(profileBuilder).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
         progressBar.setVisibility(View.VISIBLE);
+        cameraImageView.setVisibility(View.GONE);
         isEditable = !isEditable;
         invalidateViews();
-        closeSoftKeyboard();
+        Helpers.closeSoftKeyboard(this);
     }
 
     private Continuation<JSONObject, Void> onUpdateSuccess = new Continuation<JSONObject, Void>() {
@@ -434,12 +524,42 @@ public class ProfileActivity extends BaseActivity {
         }
     };
 
-    public void closeSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    private void checkCameraPermission() {
+        PermissionsManager.verifyCameraPermissionGranted(this, (boolean isGranted) -> {
+            if (isGranted) {
+                launchCamera();
+            } else {
+                Log.d(TAG, "Permission is not granted.");
+            }
+        });
+    }
 
-        View view = this.getCurrentFocus();
-        if (inputMethodManager != null && view != null){
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+    private void checkExternalStoragePermission() {
+        PermissionsManager.verifyExternalStoragePermissionGranted(this, (boolean isGranted) -> {
+            if (isGranted) {
+                openGallery();
+            } else {
+                Log.d(TAG, "Permission is not granted.");
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Realm realm = Realm.getDefaultInstance();
+        realm.addChangeListener(v -> {
+            Log.d(TAG, "RealmChangeListener");
+            invalidateViews();
+        });
+
+        invalidateViews();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 }

@@ -6,6 +6,13 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -294,6 +301,19 @@ public class Helpers {
         canvas.drawBitmap(input, paddingX, paddingY, null);
 
         return outputBitmap;
+    }
+
+    public static Bitmap getCameraIconBitmap(Context context) {
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_camera_alt_white_24dp);
+        Bitmap originalBitmap = ((BitmapDrawable)drawable).getBitmap();
+        Paint paint = new Paint();
+        ColorFilter filter = new PorterDuffColorFilter(ContextCompat.getColor(context, R.color.gray), PorterDuff.Mode.SRC_IN);
+        paint.setColorFilter(filter);
+        Bitmap cameraIconBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(cameraIconBitmap);
+        canvas.drawBitmap(originalBitmap, -1, 1, paint);
+
+        return Helpers.padBitmap(cameraIconBitmap, 20, 20);
     }
 
     // Get used color set

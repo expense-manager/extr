@@ -420,7 +420,6 @@ public class SyncExpense {
             }
         };
 
-
         String photoName = Helpers.dateToString(new Date(), EApplication.getInstance()
                 .getString(R.string.photo_date_format_string)) + ".jpg";
 
