@@ -2,9 +2,11 @@ package com.expensemanager.app.main;
 
 import android.app.Application;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.expensemanager.app.BuildConfig;
+import com.expensemanager.app.R;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -48,6 +50,16 @@ public class EApplication extends Application {
         typefaceMap = new HashMap<>();
         Typeface defaultTypeface = loadTypeFace(Font.DEFAULT.getName());
         FontHelper.setDefaultFont(defaultTypeface);
+
+        // Instabug
+        new Instabug.Builder(this, BuildConfig.INSTABUG_KEY)
+                .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)
+                .setTrackingUserStepsState(!BuildConfig.DEBUG ? Feature.State.ENABLED : Feature.State.DISABLED)
+                .setCrashReportingState(!BuildConfig.DEBUG ? Feature.State.ENABLED : Feature.State.DISABLED)
+                .setDebugEnabled(true)
+                .build();
+
+        Instabug.setPrimaryColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
     }
 
     public Typeface getTypeface(Font font) {
