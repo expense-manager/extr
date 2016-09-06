@@ -330,25 +330,35 @@ public class MainActivity extends BaseActivity {
 
     private void signOut() {
         new AlertDialog.Builder(this)
-                .setMessage(R.string.sign_out_message)
-                .setPositiveButton(R.string.sign_out, (DialogInterface dialog, int which) -> {
-                    SyncUser.logout();
-                    SharedPreferences sharedPreferences =
-                            getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-                    sharedPreferences.edit().clear().apply();
-                    // Clear data when signout
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.beginTransaction();
-                    realm.deleteAll();
-                    realm.commitTransaction();
-                    realm.close();
-                    // Go to welcome
-                    WelcomeActivity.newInstance(MainActivity.this);
-                    finish();
-                })
-                .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
-                .show();
+            .setMessage(R.string.sign_out_message)
+            .setPositiveButton(R.string.sign_out, (DialogInterface dialog, int which) -> SyncUser.logout().continueWith(logoutOnSuccess))
+            .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
+            .show();
     }
+
+    private Continuation<Void, Void> logoutOnSuccess = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, task.getError().toString());
+                return null;
+            }
+
+            SharedPreferences sharedPreferences =
+                getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+            sharedPreferences.edit().clear().apply();
+            // Clear data when signout
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.deleteAll();
+            realm.commitTransaction();
+            realm.close();
+            // Go to welcome
+            WelcomeActivity.newInstance(MainActivity.this);
+            finish();
+            return null;
+        }
+    };
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
