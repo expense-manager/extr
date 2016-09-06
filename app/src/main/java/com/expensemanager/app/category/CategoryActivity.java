@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Group;
@@ -21,6 +22,7 @@ import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +36,8 @@ public class CategoryActivity extends BaseActivity {
     private boolean isFiltered;
     private CategoryAdapter categoryAdapter;
     private String groupId;
+    private long syncTimeInMillis;
+    private String syncTimeKey;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -58,6 +62,8 @@ public class CategoryActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         String loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
 
         categories = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(this, categories);
@@ -69,7 +75,11 @@ public class CategoryActivity extends BaseActivity {
         });
 
         invalidateViews();
-        SyncCategory.getAllCategoriesByGroupId(groupId);
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncCategory.getAllCategoriesByGroupId(groupId);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void invalidateViews() {

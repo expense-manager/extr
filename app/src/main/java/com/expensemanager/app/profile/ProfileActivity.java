@@ -1,5 +1,17 @@
 package com.expensemanager.app.profile;
 
+import com.bumptech.glide.Glide;
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.PermissionsManager;
+import com.expensemanager.app.service.ProfileBuilder;
+import com.expensemanager.app.service.SyncUser;
+
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,17 +39,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.main.BaseActivity;
-import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.PermissionsManager;
-import com.expensemanager.app.service.ProfileBuilder;
-import com.expensemanager.app.service.SyncUser;
-
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import bolts.Continuation;
@@ -79,6 +81,8 @@ public class ProfileActivity extends BaseActivity {
     private boolean isEditable = false;
     private String userId;
     private String loginUserId;
+    private long syncTimeInMillis;
+    private String syncTimeKey;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -114,7 +118,10 @@ public class ProfileActivity extends BaseActivity {
         Log.d(TAG, "token: uriPath=" + uriPath);
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
 
         userId = getIntent().getStringExtra(USER_ID);
         isEditable = getIntent().getBooleanExtra(IS_EDITABLE, false);
@@ -141,7 +148,11 @@ public class ProfileActivity extends BaseActivity {
         invalidateViews();
         setupEditableViews(isEditable);
         // todo: update user by id
-        SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void invalidateViews() {

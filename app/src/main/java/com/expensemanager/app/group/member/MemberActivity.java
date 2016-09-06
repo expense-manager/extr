@@ -3,6 +3,7 @@ package com.expensemanager.app.group.member;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,14 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.group.GroupActivity;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncMember;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +37,8 @@ public class MemberActivity extends AppCompatActivity {
     private ArrayList<Member> members;
     private MemberAdapter memberAdapter;
     private String groupId;
+    private long syncTimeInMillis;
+    private String syncTimeKey;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -54,6 +61,9 @@ public class MemberActivity extends AppCompatActivity {
 
         setupToolbar();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
         groupId = getIntent().getStringExtra(GROUP_ID);
 
         members = new ArrayList<>();
@@ -62,7 +72,11 @@ public class MemberActivity extends AppCompatActivity {
 
         invalidateViews();
         // Sync all members of current group
-        SyncMember.getMembersByGroupId(groupId);
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncMember.getMembersByGroupId(groupId);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void invalidateViews() {

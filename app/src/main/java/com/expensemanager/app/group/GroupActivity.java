@@ -3,6 +3,7 @@ package com.expensemanager.app.group;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -22,6 +23,7 @@ import com.expensemanager.app.service.SyncGroup;
 import com.expensemanager.app.service.SyncMember;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +36,8 @@ public class GroupActivity extends AppCompatActivity {
     private ArrayList<Group> groups;
     private GroupAdapter groupAdapter;
     private String loginUserId;
+    private long syncTimeInMillis;
+    private String syncTimeKey;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -54,6 +58,12 @@ public class GroupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setupToolbar();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+
         loginUserId = Helpers.getLoginUserId();
 
         groups = new ArrayList<>();
@@ -66,9 +76,11 @@ public class GroupActivity extends AppCompatActivity {
         });
 
         invalidateViews();
-        SyncGroup.getGroupByUserId(loginUserId);
-        SyncMember.getMembersByUserId(loginUserId);
-        SyncMember.getMembersByGroupId("YDf9fuLGze");
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncMember.getMembersByUserId(loginUserId);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void invalidateViews() {

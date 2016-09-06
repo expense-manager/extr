@@ -13,6 +13,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -581,5 +582,24 @@ public class Helpers {
         if (inputMethodManager != null && view != null){
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public static @Nullable String getSyncTimeKey(String classTag, String groupId) {
+        if (classTag == null || groupId == null) {
+            return null;
+        }
+        return classTag + groupId;
+    }
+
+    public static final long DAY_IN_MILLIS = 86400000L;
+    public static boolean needToSync(long lastTimeInMillis) {
+        long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
+        return currentTimeInMillis - lastTimeInMillis >= DAY_IN_MILLIS;
+    }
+
+    public static void saveSyncTime(Activity activity, String syncTimeKey, long syncTimeInMillis) {
+        SharedPreferences.Editor sharedPreferencesEditor = activity.getSharedPreferences(activity.getString(R.string.shared_preferences_session_key),
+            Context.MODE_PRIVATE).edit();
+        sharedPreferencesEditor.putLong(syncTimeKey, syncTimeInMillis).apply();
     }
 }

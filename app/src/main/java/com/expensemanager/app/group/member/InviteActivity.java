@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
@@ -40,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Set;
 
 import bolts.Continuation;
@@ -54,6 +56,8 @@ public class InviteActivity extends BaseActivity {
 
     public static final String GROUP_ID = "groupId";
     private String groupId;
+    private long syncTimeInMillis;
+    private String syncTimeKey;
     private String loginUserId;
     private ArrayList<User> users;
     private InviteAdapter inviteAdapter;
@@ -84,6 +88,8 @@ public class InviteActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
 
         users = new ArrayList<>();
         inviteAdapter = new InviteAdapter(this, users, loginUserId, groupId);
@@ -91,7 +97,11 @@ public class InviteActivity extends BaseActivity {
 
         invalidateViews();
         // Sync all members of current group
-        SyncMember.getMembersByGroupId(groupId);
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncMember.getMembersByGroupId(groupId);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void setupRecyclerView() {

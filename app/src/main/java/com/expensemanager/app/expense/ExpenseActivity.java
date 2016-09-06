@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.filter.CategoryFilterFragment;
 import com.expensemanager.app.expense.filter.DateFilterFragment;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
@@ -27,6 +28,7 @@ import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncExpense;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -51,6 +53,8 @@ public class ExpenseActivity extends BaseActivity
     private Date endDate;
     private boolean isDateFiltered;
     private String groupId;
+    private long syncTimeInMillis;
+    private String syncTimeKey;
 
     private ExpenseAdapter expenseAdapter;
 
@@ -102,6 +106,8 @@ public class ExpenseActivity extends BaseActivity
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -127,7 +133,12 @@ public class ExpenseActivity extends BaseActivity
         });
 
         invalidateViews();
-        SyncExpense.getAllExpensesByGroupId(groupId);
+
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncExpense.getAllExpensesByGroupId(groupId);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     @Override

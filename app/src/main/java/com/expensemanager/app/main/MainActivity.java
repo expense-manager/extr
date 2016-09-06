@@ -26,6 +26,7 @@ import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
 import com.expensemanager.app.group.NewGroupActivity;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.Group;
@@ -66,6 +67,8 @@ public class MainActivity extends BaseActivity {
     private ArrayList<Member> members;
     private String loginUserId;
     private String groupId;
+    private long syncTimeInMillis;
+    private String syncTimeKey;
     private OverviewFragment overviewFragment;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
@@ -87,6 +90,8 @@ public class MainActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
 
         if (loginUserId == null || groupId == null) {
             Log.i(TAG, "Error getting login user id or group id.");
@@ -127,7 +132,11 @@ public class MainActivity extends BaseActivity {
 
         //SettingsActivity.loadSetting(this);
 
-        SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
 
         if (BuildConfig.DEBUG) {
             checkExternalStoragePermission();
@@ -260,6 +269,16 @@ public class MainActivity extends BaseActivity {
                     groupId = member.getGroupId();
                     drawerLayout.closeDrawers();
                     saveGroupId();
+
+                    // Check to sync new selected group
+                    SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+                    syncTimeKey = Helpers.getSyncTimeKey(MainActivity.TAG, groupId);
+                    syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+                    if (Helpers.needToSync(syncTimeInMillis)) {
+                        SyncGroup.getGroupById(groupId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
+                        syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+                        Helpers.saveSyncTime(MainActivity.this, syncTimeKey, syncTimeInMillis);
+                    }
                     overviewFragment.invalidateViews();
                 } else if (position == members.size() + 2) {
                     NewGroupActivity.newInstance(MainActivity.this);
@@ -313,15 +332,13 @@ public class MainActivity extends BaseActivity {
                 Log.e(TAG, "Error:", task.getError());
             }
 
-            for (Group group : Group.getAllGroups()) {
-                if (group != null) {
-                    // Sync all categories of current group
-                    SyncCategory.getAllCategoriesByGroupId(group.getId());
-                    // Sync all expenses of current group
-                    SyncExpense.getAllExpensesByGroupId(group.getId());
-                    // Sync all members of current group
-                    SyncMember.getMembersByGroupId(group.getId());
-                }
+            if (groupId != null) {
+                // Sync all categories of current group
+                SyncCategory.getAllCategoriesByGroupId(groupId);
+                // Sync all expenses of current group
+                SyncExpense.getAllExpensesByGroupId(groupId);
+                // Sync all members of current group
+                SyncMember.getMembersByGroupId(groupId);
             }
 
             return null;
