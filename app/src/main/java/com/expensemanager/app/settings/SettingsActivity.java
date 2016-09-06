@@ -81,34 +81,29 @@ public class SettingsActivity extends BaseActivity {
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
-        if (groupId != null) {
-            weeklyNotificationSwitch.setOnCheckedChangeListener(
-                (compoundButton, b) -> {
-                    setWeekly = b;
-                    saveSettings();
-                    if (b) {
-                        SettingsActivity.setWeeklyNotification(this, groupId);
-                    }
-                });
+        weeklyNotificationSwitch.setOnCheckedChangeListener(
+            (compoundButton, b) -> {
+                setWeekly = b;
+                saveSettings();
+                if (b && groupId != null) {
+                    SettingsActivity.setWeeklyNotification(this, groupId);
+                } else if (groupId == null) {
+                    weeklyNotificationSwitch.setChecked(false);
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            monthlyNotificationSwitch.setOnCheckedChangeListener(
-                (compoundButton, b) -> {
-                    setMonthly = b;
-                    saveSettings();
-                    if (b) {
-                        SettingsActivity.setMonthlyNotification(this, groupId);
-                    }
-                });
-        } else {
-            weeklyNotificationSwitch.setEnabled(false);
-            weeklyNotificationSwitch.setOnClickListener(v ->
-                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show()
-            );
-            monthlyNotificationSwitch.setEnabled(false);
-            monthlyNotificationSwitch.setOnClickListener(v ->
-                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show()
-            );
-        }
+        monthlyNotificationSwitch.setOnCheckedChangeListener(
+            (compoundButton, b) -> {
+                setMonthly = b;
+                saveSettings();
+                if (b && groupId != null) {
+                    SettingsActivity.setMonthlyNotification(this, groupId);
+                } else if (groupId == null) {
+                    monthlyNotificationSwitch.setChecked(false);
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
+            });
 
         signoutTextView.setOnClickListener(v -> signOut());
 
