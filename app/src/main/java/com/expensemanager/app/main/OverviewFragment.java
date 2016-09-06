@@ -1,15 +1,19 @@
 package com.expensemanager.app.main;
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
@@ -38,6 +42,10 @@ import io.realm.RealmResults;
 public class OverviewFragment extends Fragment {
     private static final String TAG = OverviewFragment.class.getSimpleName();
 
+    private int progress = 80;
+    private int status = 0;
+    private Handler handler = new Handler();
+
     private ArrayList<Expense> expenses;
     private OverviewAdapter overviewAdapter;
     private String groupId;
@@ -50,6 +58,9 @@ public class OverviewFragment extends Fragment {
     @BindView(R.id.overview_fragment_monthly_average_text_view_id) TextView monthlyAverageTextView;
     @BindView(R.id.overview_fragment_recycler_view_id) RecyclerView recyclerView;
     @BindView(R.id.overview_fragment_fab_id) FloatingActionButton fab;
+    @BindView(R.id.circular_progressbar) ProgressBar circularProgress;
+    @BindView(R.id.circular_progress_text) TextView progressTextView;
+
 
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
@@ -80,6 +91,50 @@ public class OverviewFragment extends Fragment {
         });
 
         invalidateViews();
+        setupProgress();
+    }
+
+    private void setupProgress() {
+        Drawable circularDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.circular);
+        circularProgress.setProgress(0);
+        circularProgress.setSecondaryProgress(100);
+        circularProgress.setMax(100);
+        circularProgress.setProgressDrawable(circularDrawable);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (status < progress) {
+                    status += 1;
+
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            circularProgress.setProgress(status);
+                            progressTextView.setText(status + "%");
+
+                        }
+                    });
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+//        if(android.os.Build.VERSION.SDK_INT >= 11){
+//            // will update the "progress" propriety of seekbar until it reaches progress
+//
+//            ObjectAnimator animation2 = ObjectAnimator.ofInt(circularProgress, "progress", 80);
+//            animation2.setDuration(1500); // 0.5 second
+//            animation2.setInterpolator(new DecelerateInterpolator());
+//            animation2.start();
+//        } else {
+//            seekBar.setProgress(80);
+//        }
     }
 
     public void invalidateViews() {
