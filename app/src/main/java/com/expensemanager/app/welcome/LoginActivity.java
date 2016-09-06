@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.service.SyncUser;
@@ -72,7 +73,7 @@ public class LoginActivity extends BaseActivity {
 
     public void login(View v) {
         progressBar.setVisibility(View.VISIBLE);
-        closeSoftKeyboard();
+        Helpers.closeSoftKeyboard(this);
         SyncUser.login(email, password).onSuccess(onLoginSuccess, Task.UI_THREAD_EXECUTOR);
     }
 
@@ -90,7 +91,7 @@ public class LoginActivity extends BaseActivity {
                 // Show error messasge
                 errorMessageTextView.setText(task.getResult().getString("error"));
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
-                closeSoftKeyboard();
+                Helpers.closeSoftKeyboard(LoginActivity.this);
             } else {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 // Make sure main activity at the top on stack, no other activity in the backstack.

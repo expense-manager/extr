@@ -1,5 +1,6 @@
 package com.expensemanager.app.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -8,6 +9,8 @@ import android.graphics.Canvas;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -549,5 +552,14 @@ public class Helpers {
             .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 180, 0))
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view);
+    }
+
+    public static void closeSoftKeyboard(Context context) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        View view = ((Activity) context).getCurrentFocus();
+        if (inputMethodManager != null && view != null){
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

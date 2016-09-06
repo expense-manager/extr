@@ -135,7 +135,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     private void setStepTwo() {
-        closeSoftKeyboard();
+        Helpers.closeSoftKeyboard(this);
         titleTextView.setText(R.string.sign_up_title_step_two);
         stepOneRelativeLayout.setVisibility(View.GONE);
         stepTwoRelativeLayout.setVisibility(View.VISIBLE);
@@ -152,7 +152,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     private void setStepOne() {
-        closeSoftKeyboard();
+        Helpers.closeSoftKeyboard(this);
         titleTextView.setText(R.string.sign_up_title_step_one);
         stepTwoRelativeLayout.setVisibility(View.GONE);
         stepOneRelativeLayout.setVisibility(View.VISIBLE);

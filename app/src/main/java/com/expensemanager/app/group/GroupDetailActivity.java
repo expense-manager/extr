@@ -195,7 +195,7 @@ public class GroupDetailActivity extends BaseActivity {
         progressBar.setVisibility(View.VISIBLE);
         SyncGroup.update(group).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
 
-        closeSoftKeyboard();
+        Helpers.closeSoftKeyboard(this);
         isEditable = false;
         invalidateViews();
     }
