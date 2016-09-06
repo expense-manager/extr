@@ -37,6 +37,9 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - [Crashlytics for Android](https://fabric.io/kits/android/crashlytics) - The most powerful, yet lightest weight crash reporting solution.
 - [Firebase Analytics](https://firebase.google.com/docs/analytics/) - Firebase Analytics is a free app measurement solution that provides insight on app usage and user engagement.
 - [LeakCanary](https://github.com/square/leakcanary) - A memory leak detection library for Android and Java.
+- [Mixpanel](http://mixpanel.com/android-analytics/)- An Android library for Mixpanel Analytics
+- [Instabug](https://instabug.com/) - Instabug is providing in-app feedback and bug reporting to mobile apps.
+
 
 ## License
 

@@ -39,6 +39,7 @@ android {
             buildConfigField "String", "APP_ID", secrets.getProperty('APP_ID')
             buildConfigField "String", "MASTER_KEY", secrets.getProperty('MASTER_KEY')
             buildConfigField "String", "INSTABUG_KEY", secrets.getProperty('INSTABUG_KEY')
+            buildConfigField "String", "MIXPANEL_API_TOKEN", secrets.getProperty('MIXPANEL_API_TOKEN')
 
             manifestPlaceholders = [manifestApplicationId: "${applicationId}",
                                     onesignal_app_id: secrets.getProperty('ONESIGNAL_APP_ID'),
@@ -128,6 +129,9 @@ dependencies {
     // Firebase
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
+
+    // Mixpanel 
+    compile "com.mixpanel.android:mixpanel-android:4.9.2"
 
     // InstaBug
     compile 'com.instabug.library:instabug:2+'

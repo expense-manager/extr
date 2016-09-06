@@ -4,19 +4,14 @@ import android.app.Application;
 import android.graphics.Typeface;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
-import com.instabug.library.Feature;
-import com.instabug.library.IBGInvocationEvent;
-import com.instabug.library.Instabug;
-import com.squareup.leakcanary.LeakCanary;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -30,17 +25,16 @@ public class EApplication extends Application {
     private static final String FONTS_DIR = "fonts/";
 
     private static EApplication application;
+    private MixpanelAPI mixpanelAPI;
     private static Map<String, Typeface> typefaceMap;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
         application = this;
 
-        if (BuildConfig.DEBUG) {
-            LeakCanary.install(this);
-        }
+        Analytics.init(this);
+        mixpanelAPI = MixpanelAPI.getInstance(application, BuildConfig.MIXPANEL_API_TOKEN);
 
         // Configure Realm
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build();
@@ -54,15 +48,6 @@ public class EApplication extends Application {
         typefaceMap = new HashMap<>();
         Typeface defaultTypeface = loadTypeFace(Font.DEFAULT.getName());
         FontHelper.setDefaultFont(defaultTypeface);
-
-        // Instabug
-        new Instabug.Builder(this, BuildConfig.INSTABUG_KEY)
-                .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)
-                .setTrackingUserStepsState(!BuildConfig.DEBUG ? Feature.State.ENABLED : Feature.State.DISABLED)
-                .setCrashReportingState(!BuildConfig.DEBUG ? Feature.State.ENABLED : Feature.State.DISABLED)
-                .setDebugEnabled(true)
-                .build();
-
     }
 
     public Typeface getTypeface(Font font) {
@@ -83,6 +68,10 @@ public class EApplication extends Application {
         }
 
         return typefaceMap.get(Font.DEFAULT.getName());
+    }
+
+    public MixpanelAPI getMixpanelAPI() {
+        return this.mixpanelAPI;
     }
 
     public static EApplication getInstance() {

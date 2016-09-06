@@ -165,4 +165,7 @@
     <string name="title_activity_new_group">New Group</string>
     <string name="title_activity_invitation_email">InvitationEmailActivity</string>
 
+    <!-- Event tracking -->
+    <string name="event_expense_date_filter_clicked">Expense date filter clicked</string>
+
 </resources>

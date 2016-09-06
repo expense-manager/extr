@@ -21,12 +21,12 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.expense.filter.CategoryFilterFragment;
 import com.expensemanager.app.expense.filter.DateFilterFragment;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.Analytics;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
-import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncExpense;
 
 import java.util.ArrayList;
@@ -254,6 +254,8 @@ public class ExpenseActivity extends BaseActivity
         dateFilterFragment.setListener(this);
         dateFilterFragment.setFilterParams(startDate, endDate);
         dateFilterFragment.show(getSupportFragmentManager(), DATE_FRAGMENT);
+
+        Analytics.track(getString(R.string.event_expense_date_filter_clicked));
     }
 
     private void setupCategory() {
