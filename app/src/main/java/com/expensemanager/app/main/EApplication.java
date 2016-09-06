@@ -8,6 +8,9 @@ import com.crashlytics.android.Crashlytics;
 import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
+import com.instabug.library.Feature;
+import com.instabug.library.IBGInvocationEvent;
+import com.instabug.library.Instabug;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.HashMap;
@@ -51,6 +54,15 @@ public class EApplication extends Application {
         typefaceMap = new HashMap<>();
         Typeface defaultTypeface = loadTypeFace(Font.DEFAULT.getName());
         FontHelper.setDefaultFont(defaultTypeface);
+
+        // Instabug
+        new Instabug.Builder(this, BuildConfig.INSTABUG_KEY)
+                .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)
+                .setTrackingUserStepsState(!BuildConfig.DEBUG ? Feature.State.ENABLED : Feature.State.DISABLED)
+                .setCrashReportingState(!BuildConfig.DEBUG ? Feature.State.ENABLED : Feature.State.DISABLED)
+                .setDebugEnabled(true)
+                .build();
+
     }
 
     public Typeface getTypeface(Font font) {

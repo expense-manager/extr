@@ -38,6 +38,7 @@ android {
 
             buildConfigField "String", "APP_ID", secrets.getProperty('APP_ID')
             buildConfigField "String", "MASTER_KEY", secrets.getProperty('MASTER_KEY')
+            buildConfigField "String", "INSTABUG_KEY", secrets.getProperty('INSTABUG_KEY')
 
             manifestPlaceholders = [manifestApplicationId: "${applicationId}",
                                     onesignal_app_id: secrets.getProperty('ONESIGNAL_APP_ID'),
@@ -127,6 +128,9 @@ dependencies {
     // Firebase
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
+
+    // InstaBug
+    compile 'com.instabug.library:instabug:2+'
 
     // LeakCanary
     debugCompile 'com.squareup.haha:haha:2.0.3'
