@@ -2,10 +2,12 @@ package com.expensemanager.app.main;
 
 import android.app.Application;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.expensemanager.app.BuildConfig;
+import com.expensemanager.app.R;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
 import com.instabug.library.Feature;
@@ -63,6 +65,7 @@ public class EApplication extends Application {
                 .setDebugEnabled(true)
                 .build();
 
+        Instabug.setPrimaryColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
     }
 
     public Typeface getTypeface(Font font) {
