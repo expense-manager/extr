@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
@@ -34,6 +34,7 @@ import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.NotificationsActivity;
 import com.expensemanager.app.report.ReportActivity;
+import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncGroup;
@@ -54,7 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ActionBarDrawerToggle drawerToggle;
@@ -127,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
         SettingsActivity.loadSetting(this);
 
         SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
+
+        if (BuildConfig.DEBUG) {
+            checkExternalStoragePermission();
+        }
     }
 
     private void setupDrawerListItems() {
@@ -403,5 +408,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    private void checkExternalStoragePermission() {
+        PermissionsManager.verifyExternalStoragePermissionGranted(this, (boolean isGranted) -> {
+            if (isGranted) {
+                // Nothing to do
+            } else {
+                Log.d(TAG, "Permission is not granted.");
+            }
+        });
     }
 }

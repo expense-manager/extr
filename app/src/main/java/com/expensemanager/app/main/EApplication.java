@@ -5,8 +5,10 @@ import android.graphics.Typeface;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,10 @@ public class EApplication extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         application = this;
+
+        if (BuildConfig.DEBUG) {
+            LeakCanary.install(this);
+        }
 
         // Configure Realm
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build();

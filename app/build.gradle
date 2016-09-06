@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId "com.expensemanager.app"
         minSdkVersion 19
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -122,6 +122,12 @@ dependencies {
     // Firebase
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
+
+    // LeakCanary
+    debugCompile 'com.squareup.haha:haha:2.0.3'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
     // Retrolambda, make sure to apply this line last.
     apply plugin: 'me.tatarka.retrolambda'

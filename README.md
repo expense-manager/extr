@@ -19,14 +19,14 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - user can receive a weekly and monthly report notification
 
 ## Optional
-- user can create a groupname
-- user can invite people to a groupname
-- user can switch groupname to check out expenses in different groupname
-- members can create and update expense in the groupname
+- user can create a group
+- user can invite people to a group
+- user can switch group to check out expenses in different group
+- members can create and update expense in the group
 - admin or members can have difference permission to handle expense items or check out different expense report based on the role.
 
 
-## Libraries used
+## Libraries and tools used
 - [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications.
 - [Bolts](http://boltsframework.github.io/Bolts-Android/) - Bolts is a collection of low-level libraries designed to make developing mobile apps easier.
 - [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling.
@@ -36,6 +36,7 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - [OneSignal](https://onesignal.com) - OneSignal is a free push notification service for mobile apps.
 - [Crashlytics for Android](https://fabric.io/kits/android/crashlytics) - The most powerful, yet lightest weight crash reporting solution.
 - [Firebase Analytics](https://firebase.google.com/docs/analytics/) - Firebase Analytics is a free app measurement solution that provides insight on app usage and user engagement.
+- [LeakCanary](https://github.com/square/leakcanary) - A memory leak detection library for Android and Java.
 
 ## License
 
