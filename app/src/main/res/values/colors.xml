@@ -15,6 +15,7 @@
     <color name="green">#00ff7f</color>
     <color name="gray_really_light">#F3F3F3</color>
     <color name="gray_light">#BDBDBD</color>
+    <color name="gray_light_alpha_88">#88BDBDBD</color>
     <color name="dark_blue">#1976D2</color>
     <color name="transparent_gray">#269E9E9E</color>
     <color name="teal">#009688</color>

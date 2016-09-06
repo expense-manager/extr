@@ -1,9 +1,11 @@
 package com.expensemanager.app.settings;
 
+import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.welcome.WelcomeActivity;
@@ -33,6 +35,7 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 public class SettingsActivity extends BaseActivity {
@@ -46,15 +49,17 @@ public class SettingsActivity extends BaseActivity {
     public static boolean setWeekly;
     public static boolean setMonthly;
 
+    private String loginUserId;
+    private String groupId;
+
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.setting_activity_profile_photo_image_view_id) CircleImageView photoImageView;
+    @BindView(R.id.setting_activity_edit_profile_text_view_id) TextView editProfileTextView;
     @BindView(R.id.setting_activity_weekly_notification_switch_id) Switch weeklyNotificationSwitch;
-    @BindView(R.id.setting_activity_weekly_notification_time_label_text_view_id) TextView weeklyTimeLabelTextView;
-    @BindView(R.id.setting_activity_weekly_notification_time_text_view_id) TextView weeklyTimeTextView;
     @BindView(R.id.setting_activity_monthly_notification_switch_id) Switch monthlyNotificationSwitch;
-    @BindView(R.id.setting_activity_monthly_notification_time_label_text_view_id) TextView monthlyTimeLabelTextView;
-    @BindView(R.id.setting_activity_monthly_notification_time_text_view_id) TextView monthlyTimeTextView;
+    @BindView(R.id.setting_activity_signout_text_view_id) TextView signoutTextView;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -70,63 +75,66 @@ public class SettingsActivity extends BaseActivity {
 
         setupToolbar();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), MODE_PRIVATE);
+        loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
         weeklyNotificationSwitch.setOnCheckedChangeListener(
             (compoundButton, b) -> {
                 setWeekly = b;
-                setupTimeSetting(b, weeklyTimeLabelTextView, weeklyTimeTextView);
                 saveSettings();
+                if (b) {
+                    SettingsActivity.setWeeklyNotification(this, groupId);
+                }
             });
 
         monthlyNotificationSwitch.setOnCheckedChangeListener(
             (compoundButton, b) -> {
                 setMonthly = b;
-                setupTimeSetting(b, monthlyTimeLabelTextView, monthlyTimeTextView);
                 saveSettings();
+                if (b) {
+                    SettingsActivity.setMonthlyNotification(this, groupId);
+                }
             });
+
+        signoutTextView.setOnClickListener(v -> signOut());
 
         setupViews();
     }
 
     public static void loadSetting(Activity activity) {
         SharedPreferences sharedPreferences = activity.getSharedPreferences(activity.getString(R.string.shared_preferences_session_key), MODE_PRIVATE);
+        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
         SettingsActivity.setWeekly = sharedPreferences.getBoolean(SET_WEEKLY, true);
         SettingsActivity.setMonthly = sharedPreferences.getBoolean(SET_MONTHLY, true);
 
-        for (Group group : Group.getAllGroups()) {
-            setNotification(activity, group.getId());
+        if (groupId != null) {
+            setWeeklyNotification(activity, groupId);
+            setMonthlyNotification(activity, groupId);
         }
     }
 
-    public static void setNotification(Activity activity, String groupId) {
+    public static void setWeeklyNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
-        // todo:set notification fime according to setting millis
-        calendar.setTimeInMillis(getDefaultWeeklyNotification());
+        calendar.add(Calendar.SECOND, 15);
         RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.weekly_report), activity.getString(R.string.weekly_report_message), groupId, false, RNotification.WEEKLY, calendar.getTime());
-        calendar.setTimeInMillis(getDefaultMonthlyNotification());
+    }
+
+    public static void setMonthlyNotification(Activity activity, String groupId) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, 15);
         RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.monthly_report), activity.getString(R.string.monthly_report_message), groupId, false, RNotification.MONTHLY, calendar.getTime());
     }
 
-    private void setupTimeSetting(boolean isCheck, TextView timeLabel, TextView time) {
-        int gray = ContextCompat.getColor(this, R.color.gray);
-        int black = ContextCompat.getColor(this, R.color.black);
-        if (isCheck) {
-            timeLabel.setTextColor(black);
-            time.setTextColor(black);
-        } else {
-            timeLabel.setTextColor(gray);
-            time.setTextColor(gray);
-        }
-    }
-
     private void setupViews() {
+        User user = User.getUserById(loginUserId);
+        if (user != null) {
+            Glide.with(this).load(user.getPhotoUrl()).into(photoImageView);
+        }
+        editProfileTextView.setOnClickListener(v -> ProfileActivity.newInstance(this, null, true));
+
         weeklyNotificationSwitch.setChecked(setWeekly);
         monthlyNotificationSwitch.setChecked(setMonthly);
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
-
-        weeklyTimeTextView.setText(timeFormat.format(calendar.getTime()));
-
-        monthlyTimeTextView.setText(timeFormat.format(calendar.getTime()));
     }
 
     private void saveSettings() {
@@ -188,27 +196,6 @@ public class SettingsActivity extends BaseActivity {
         backImageView.setOnClickListener(v -> close());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_edit_account_id:
-                // todo: go to ProfileActivity in edit mode
-                ProfileActivity.newInstance(this, null);
-                return true;
-            case R.id.menu_item_sign_out_id:
-                signOut();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void signOut() {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.sign_out_message)
@@ -228,6 +215,13 @@ public class SettingsActivity extends BaseActivity {
             SharedPreferences sharedPreferences =
                     getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
             sharedPreferences.edit().clear().apply();
+            // Clear data when signout
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.deleteAll();
+            realm.commitTransaction();
+            realm.close();
+            // Go to welcome
             WelcomeActivity.newInstance(SettingsActivity.this);
             finish();
             return null;

@@ -55,14 +55,11 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
-/**
- * Created by Zhaolong Zhong on 8/22/16.
- */
-
 public class ProfileActivity extends BaseActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
 
     private static final String USER_ID = "userId";
+    private static final String IS_EDITABLE = "isEditable";
     public static final String NEW_PHOTO = "Take a photo";
     public static final String LIBRARY_PHOTO = "Choose from library";
     private static final int TAKE_PHOTO_CODE = 1;
@@ -96,8 +93,13 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.profile_activity_progress_bar_id) ProgressBar progressBar;
 
     public static void newInstance(Context context, String userId) {
+        ProfileActivity.newInstance(context, userId, false);
+    }
+
+    public static void newInstance(Context context, String userId, boolean isEditable) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra(USER_ID, userId);
+        intent.putExtra(IS_EDITABLE, isEditable);
         context.startActivity(intent);
         ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
@@ -115,9 +117,14 @@ public class ProfileActivity extends BaseActivity {
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
         userId = getIntent().getStringExtra(USER_ID);
+        isEditable = getIntent().getBooleanExtra(IS_EDITABLE, false);
 
         if (userId == null || userId.isEmpty()) {
             userId = loginUserId;
+        }
+
+        if (isEditable && !userId.equals(loginUserId)) {
+            isEditable = false;
         }
 
         currentUser = User.getUserById(userId);
@@ -132,7 +139,7 @@ public class ProfileActivity extends BaseActivity {
         setupToolbar();
 
         invalidateViews();
-        setupEditableViews(false);
+        setupEditableViews(isEditable);
         // todo: update user by id
         SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
     }

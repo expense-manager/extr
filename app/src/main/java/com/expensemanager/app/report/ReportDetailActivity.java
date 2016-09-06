@@ -575,9 +575,8 @@ public class ReportDetailActivity extends BaseActivity {
         Realm realm = Realm.getDefaultInstance();
         // Listen to database updates
         realm.addChangeListener(v -> reportPagerAdapter.updateFragments());
-        // Sync for updates
-        SyncCategory.getAllCategoriesByGroupId(groupId);
-        SyncExpense.getAllExpensesByGroupId(groupId);
+
+        reportPagerAdapter.updateFragments();
     }
 
     @Override

@@ -14,9 +14,11 @@ import android.util.Log;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.settings.SettingsActivity;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -48,6 +50,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String title = rNotification.getTitle();
         String message = rNotification.getMessage();
         String groupId = rNotification.getGroupId();
+        Group group = Group.getGroupById(groupId);
         Date lastWeek = Helpers.getLastWeekOfYear(rNotification.getCreatedAt());
         Date[] startEnd = null;
         if (rNotification.getType() == RNotification.WEEKLY) {
@@ -67,7 +70,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        message += " $" + amount;
+        message += " in " + group.getName() + " is $" + new DecimalFormat("##").format(amount);
 
         // Save to realm
         Realm realm = Realm.getDefaultInstance();

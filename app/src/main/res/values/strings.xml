@@ -33,8 +33,12 @@
     <string name="no_category">No Category</string>
     <string name="expense_date">Expense Date</string>
     <string name="start_expense_date">Start Expense Date</string>
+    <string name="notification">Notifications</string>
     <string name="weekly_notification">Weekly report</string>
     <string name="select_a_group">Select a group</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="help_center">Help center</string>
+    <string name="privacy_and_licenses">Privacy &amp; licenses</string>
     <string name="monthly_notification">Monthly report</string>
     <string name="notification_date">Notification date</string>
     <string name="notification_time">Notification time</string>
@@ -48,7 +52,9 @@
     <string name="mark_all_read">Mark All Read</string>
     <string name="settings">Settings</string>
     <string name="edit_account">Edit Account</string>
+    <string name="edit_profile">Edit profile</string>
     <string name="sign_out">Sign Out</string>
+    <string name="sign_out_string">Sign out</string>
     <string name="title_activity_expense_detail">Expense detail</string>
     <string name="title_activity_category_detail">Category detail</string>
     <string name="title_activity_new_expense">New Expense</string>
@@ -77,9 +83,9 @@
     <string name="photo_select_source">Select source</string>
     <string name="unsaved_changes">Unsaved Changes</string>
     <string name="weekly_report">Weekly Report</string>
-    <string name="weekly_report_message">Your total expense for last week is</string>
+    <string name="weekly_report_message">Your total expense for last week</string>
     <string name="monthly_report">Monthly Report</string>
-    <string name="monthly_report_message">Your total expense for last month is</string>
+    <string name="monthly_report_message">Your total expense for last month</string>
     <string name="delete_profile_image">Delete Profile Image</string>
     <string name="unsaved_changes_message">Are you sure you want to discard your unsaved changes?
     </string>
@@ -97,7 +103,9 @@
     <string name="delete_profile_image_message">Are you sure to delete profile image?</string>
     <string name="no_notifications">YOU HAVE NO NOTIFICATIONS</string>
     <string name="no_expense_hint">NO EXPENSE DATA AVAILABLE</string>
+    <string name="version_hint">Version 1.0.1</string>
     <string name="profile">Profile</string>
+    <string name="general">General</string>
     <string name="choose_a_category">Choose a category</string>
     <string name="sign_out_message">Are you sure you want to sign out?</string>
     <string name="total">total</string>

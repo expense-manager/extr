@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity {
                     .commit();
         }
 
-        SettingsActivity.loadSetting(this);
+        //SettingsActivity.loadSetting(this);
 
         SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
 
@@ -237,7 +237,7 @@ public class MainActivity extends BaseActivity {
                         break;
                 }
                 if (position != 0) {
-                    drawerLayout.closeDrawer(drawRecyclerView);
+                    drawerLayout.closeDrawers();
                 }
             }
         });
@@ -258,12 +258,12 @@ public class MainActivity extends BaseActivity {
                         return;
                     }
                     groupId = member.getGroupId();
-                    drawerLayout.closeDrawer(drawRecyclerView);
+                    drawerLayout.closeDrawers();
                     saveGroupId();
                     overviewFragment.invalidateViews();
                 } else if (position == members.size() + 2) {
                     NewGroupActivity.newInstance(MainActivity.this);
-                    drawerLayout.closeDrawer(drawRecyclerView);
+                    drawerLayout.closeDrawers();
                 }
             }
         });
@@ -273,15 +273,6 @@ public class MainActivity extends BaseActivity {
         SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0).edit();
         sharedPreferencesEditor.putString(Group.ID_KEY, groupId);
         sharedPreferencesEditor.apply();
-    }
-
-    private void testNotifications() {
-        Calendar calendar = Calendar.getInstance();
-        // todo:set notification fime according to setting millis
-        calendar.add(Calendar.MINUTE, 1);
-        RNotification.setupOrUpdateNotifications(this, getString(R.string.weekly_report), getString(R.string.weekly_report_message), groupId, false, RNotification.WEEKLY, calendar.getTime());
-        calendar.add(Calendar.MINUTE, 1);
-        RNotification.setupOrUpdateNotifications(this, getString(R.string.monthly_report), getString(R.string.monthly_report_message), groupId, false, RNotification.MONTHLY, calendar.getTime());
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -304,8 +295,7 @@ public class MainActivity extends BaseActivity {
 
             User currentUser = User.getUserById(loginUserId);
             if (currentUser != null) {
-                // Sync all groups after getting current user
-                SyncGroup.getGroupByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
+                // Sync all members after getting current user
                 SyncMember.getMembersByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
 
                 drawerAdapter.loadUser(currentUser);
@@ -325,7 +315,6 @@ public class MainActivity extends BaseActivity {
 
             for (Group group : Group.getAllGroups()) {
                 if (group != null) {
-                    Log.i(TAG, "group id: " + group.getId());
                     // Sync all categories of current group
                     SyncCategory.getAllCategoriesByGroupId(group.getId());
                     // Sync all expenses of current group
@@ -393,9 +382,8 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> setupGroupListItems());
-        // Sync all groups after getting current user
-        SyncGroup.getGroupByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
-        SyncMember.getMembersByUserId(loginUserId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
+
+        setupGroupListItems();
     }
 
     @Override

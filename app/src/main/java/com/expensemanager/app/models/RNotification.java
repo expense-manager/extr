@@ -210,7 +210,7 @@ public class RNotification implements RealmModel {
         realm.commitTransaction();
         realm.close();
 
-        if (isNew) {
+        //if (isNew) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(createdAt);
 
@@ -223,7 +223,7 @@ public class RNotification implements RealmModel {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, groupId.hashCode() + type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        }
+        //}
     }
 }
 

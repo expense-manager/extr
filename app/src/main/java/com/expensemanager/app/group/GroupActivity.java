@@ -104,6 +104,7 @@ public class GroupActivity extends AppCompatActivity {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
+
         invalidateViews();
     }
 

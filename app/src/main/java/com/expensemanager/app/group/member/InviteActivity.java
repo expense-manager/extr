@@ -208,8 +208,8 @@ public class InviteActivity extends BaseActivity {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
-        // Sync all members of current group
-        SyncMember.getMembersByGroupId(groupId);
+
+        invalidateViews();
     }
 
     @Override

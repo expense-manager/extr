@@ -8,171 +8,259 @@
 
     <include layout="@layout/toolbar" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_id">
+
     <RelativeLayout
         android:id="@+id/setting_activity_weekly_notification_relative_layout_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_id"
+        android:layout_height="wrap_content">
 
-        android:background="@drawable/background_top_bottom_line_gray_dark_fill_white">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/setting_activity_profile_photo_image_view_id"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/space_large"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/setting_activity_profile_card_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setting_activity_profile_photo_image_view_id"
+            android:layout_marginLeft="@dimen/space_medium_small"
+            android:layout_marginRight="@dimen/space_medium_small"
+            android:layout_marginTop="@dimen/space_really_small"
+            android:layout_marginBottom="@dimen/space_really_small"
+
+            android:elevation="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Profile label -->
+                <TextView
+                    android:id="@+id/setting_activity_profile_label_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:paddingEnd="@dimen/space_medium_large"
+                    android:paddingTop="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/profile"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_really_small"/>
+
+                <!-- Edit profile -->
+                <TextView
+                    android:id="@+id/setting_activity_edit_profile_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/setting_activity_profile_label_text_view_id"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/edit_profile"
+                    android:textSize="@dimen/text_small"/>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/setting_activity_notification_card_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setting_activity_profile_card_view_id"
+            android:layout_marginLeft="@dimen/space_medium_small"
+            android:layout_marginRight="@dimen/space_medium_small"
+            android:layout_marginTop="@dimen/space_really_small"
+            android:layout_marginBottom="@dimen/space_really_small"
+
+            android:elevation="3dp">
 
         <RelativeLayout
-            android:id="@+id/setting_activity_weekly_notification_enable_relative_layout_id"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content">
 
-            android:paddingLeft="@dimen/space_medium_large"
-            android:paddingRight="@dimen/space_medium_large">
+            <!-- Notification label -->
+            <TextView
+                android:id="@+id/setting_activity_notification_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:paddingStart="@dimen/space_medium_large"
+                android:paddingEnd="@dimen/space_medium_large"
+                android:paddingTop="@dimen/space_medium_large"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:text="@string/notification"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_really_small"/>
 
             <!-- Start date switch -->
             <Switch
                 android:id="@+id/setting_activity_weekly_notification_switch_id"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"/>
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/setting_activity_notification_label_text_view_id"
+
+                android:padding="@dimen/space_medium_large"
+                android:background="@drawable/background_bottom_line_gray_light"/>
 
             <!-- Weekly notification label -->
             <TextView
                 android:id="@+id/setting_activity_weekly_notification_label_text_view_id"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/space_medium_large"
                 android:layout_toLeftOf="@+id/setting_activity_weekly_notification_switch_id"
+                android:layout_alignTop="@+id/setting_activity_weekly_notification_switch_id"
+                android:layout_alignBottom="@+id/setting_activity_weekly_notification_switch_id"
 
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
+                android:paddingStart="@dimen/space_medium_large"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
                 android:text="@string/weekly_notification"
-                android:textSize="@dimen/text_small"/>
-
-        </RelativeLayout>
-
-        <!-- Weekly notification time -->
-        <RelativeLayout
-            android:id="@+id/setting_activity_weekly_notification_time_relative_layout_id"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/setting_activity_weekly_notification_enable_relative_layout_id"
-
-            android:paddingLeft="@dimen/space_medium_large"
-            android:paddingRight="@dimen/space_medium_large"
-            android:visibility="gone">
-
-            <!-- Time -->
-            <TextView
-                android:id="@+id/setting_activity_weekly_notification_time_text_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-
-                android:gravity="center"
-                android:padding="@dimen/space_medium_small"
                 android:textSize="@dimen/text_small"
-                android:textColor="@color/black"
-                android:background="@drawable/background_round_corner_border_gray"
-                tools:text="00:00 AM"/>
-
-            <!-- Weekly notification date label -->
-            <TextView
-                android:id="@+id/setting_activity_weekly_notification_time_label_text_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_toLeftOf="@+id/setting_activity_weekly_notification_time_text_view_id"
-
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
-                android:gravity="center_vertical"
-                android:text="@string/notification_time"
-                android:textSize="@dimen/text_small"/>
-
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/setting_activity_monthly_notification_relative_layout_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/setting_activity_weekly_notification_relative_layout_id"
-        android:layout_marginTop="@dimen/space_medium_large"
-
-        android:background="@drawable/background_top_bottom_line_gray_dark_fill_white">
-
-        <RelativeLayout
-            android:id="@+id/setting_activity_monthly_notification_enable_relative_layout_id"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-
-            android:paddingLeft="@dimen/space_medium_large"
-            android:paddingRight="@dimen/space_medium_large">
+                android:background="@drawable/background_bottom_line_gray_light"/>
 
             <!-- Start date switch -->
             <Switch
                 android:id="@+id/setting_activity_monthly_notification_switch_id"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"/>
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/setting_activity_weekly_notification_switch_id"
+
+                android:padding="@dimen/space_medium_large"/>
 
             <!-- Weekly notification label -->
             <TextView
                 android:id="@+id/setting_activity_monthly_notification_label_text_view_id"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/space_medium_large"
                 android:layout_toLeftOf="@+id/setting_activity_monthly_notification_switch_id"
+                android:layout_alignTop="@+id/setting_activity_monthly_notification_switch_id"
+                android:layout_alignBottom="@+id/setting_activity_monthly_notification_switch_id"
 
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
+                android:paddingStart="@dimen/space_medium_large"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
                 android:text="@string/monthly_notification"
                 android:textSize="@dimen/text_small"/>
 
         </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
-        <!-- Monthly notification time -->
-        <RelativeLayout
-            android:id="@+id/setting_activity_monthly_notification_time_relative_layout_id"
+        <android.support.v7.widget.CardView
+            android:id="@+id/setting_activity_general_card_view_id"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/setting_activity_monthly_notification_enable_relative_layout_id"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setting_activity_notification_card_view_id"
+            android:layout_marginLeft="@dimen/space_medium_small"
+            android:layout_marginRight="@dimen/space_medium_small"
+            android:layout_marginTop="@dimen/space_really_small"
+            android:layout_marginBottom="@dimen/space_really_small"
 
-            android:paddingLeft="@dimen/space_medium_large"
-            android:paddingRight="@dimen/space_medium_large"
-            android:visibility="gone">
+            android:elevation="3dp">
 
-            <!-- Monthly notification time -->
-            <TextView
-                android:id="@+id/setting_activity_monthly_notification_time_text_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-
-                android:gravity="center"
-                android:padding="@dimen/space_medium_small"
-                android:textSize="@dimen/text_small"
-                android:textColor="@color/black"
-                android:background="@drawable/background_round_corner_border_gray"
-                tools:text="00:00 AM"/>
-
-            <!-- Monthly notification time label -->
-            <TextView
-                android:id="@+id/setting_activity_monthly_notification_time_label_text_view_id"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_toLeftOf="@+id/setting_activity_monthly_notification_time_text_view_id"
+                android:layout_height="wrap_content">
 
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
-                android:gravity="center_vertical"
-                android:text="@string/notification_time"
-                android:textSize="@dimen/text_small"/>
+                <!-- General label -->
+                <TextView
+                    android:id="@+id/setting_activity_general_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-        </RelativeLayout>
+                    android:paddingTop="@dimen/space_medium_large"
+                    android:paddingLeft="@dimen/space_medium_large"
+                    android:paddingRight="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/general"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_really_small"/>
+
+                <!-- Send feedback -->
+                <TextView
+                    android:id="@+id/setting_activity_weekly_send_feedback_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/setting_activity_general_text_view_id"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:paddingEnd="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/send_feedback"
+                    android:textSize="@dimen/text_small"
+                    android:background="@drawable/background_bottom_line_gray_light"/>
+
+                <!-- Help center -->
+                <TextView
+                    android:id="@+id/setting_activity_help_center_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/setting_activity_weekly_send_feedback_text_view_id"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:paddingEnd="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/help_center"
+                    android:textSize="@dimen/text_small"
+                    android:background="@drawable/background_bottom_line_gray_light"/>
+
+                <!-- Privacy & licenses -->
+                <TextView
+                    android:id="@+id/setting_activity_privacy_and_licenses_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/setting_activity_help_center_text_view_id"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:paddingEnd="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/privacy_and_licenses"
+                    android:textSize="@dimen/text_small"
+                    android:background="@drawable/background_bottom_line_gray_light"/>
+
+                <!-- Signout -->
+                <TextView
+                    android:id="@+id/setting_activity_signout_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/setting_activity_privacy_and_licenses_text_view_id"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:paddingEnd="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/soft_red"
+                    android:text="@string/sign_out_string"
+                    android:textSize="@dimen/text_small"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/setting_activity_version_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setting_activity_general_card_view_id"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/space_medium_large"
+
+            android:text="@string/version_hint"
+            android:textSize="@dimen/text_really_small"/>
     </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
