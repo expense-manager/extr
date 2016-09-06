@@ -562,7 +562,8 @@ public class Helpers {
     public static void loadIconPhoto(ImageView view, String url) {
         Glide.with(view.getContext())
             .load(url)
-            .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 90, 0))
+            .fitCenter()
+            .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 100, 0))
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view);
     }
@@ -570,7 +571,18 @@ public class Helpers {
     public static void loadProfilePhoto(ImageView view, String url) {
         Glide.with(view.getContext())
             .load(url)
-            .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 180, 0))
+            .fitCenter()
+            .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 200, 0))
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(view);
+    }
+
+    public static void loadProfilePhoto(ImageView view, String url, Drawable placeholder) {
+        Glide.with(view.getContext())
+            .load(url)
+            .placeholder(placeholder)
+            .fitCenter()
+            .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 200, 0))
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view);
     }

@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/setting_activity_profile_photo_image_view_id"
             android:layout_width="80dp"
             android:layout_height="80dp"

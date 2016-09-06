@@ -87,7 +87,8 @@
     <string name="monthly_report">Monthly Report</string>
     <string name="monthly_report_message">Your total expense for last month</string>
     <string name="delete_profile_image">Delete Profile Image</string>
-    <string name="unsaved_changes_message">Are you sure you want to discard your unsaved changes?
+    <string name="select_group_hint">You need to select a group first</string>
+    <string name="unsaved_changes_message">Are you sure to discard your unsaved changes?
     </string>
     <string name="read_all_notification">Read all notifications</string>
     <string name="read_all_notification_message">Are you sure to mark all notifications as read?

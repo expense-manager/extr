@@ -26,6 +26,7 @@ import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncGroup;
 import com.expensemanager.app.service.font.Font;
 
@@ -57,11 +58,12 @@ public class GroupDetailActivity extends BaseActivity {
     @BindView(R.id.group_detail_activity_about_edit_text_id) EditText aboutEditText;
     @BindView(R.id.group_detail_activity_delete_button_id) Button deleteButton;
     @BindView(R.id.group_detail_activity_member_relative_layout_id) RelativeLayout memberRelativeLayout;
-    @BindView(R.id.group_detail_activity_created_by_photo_image_view_id) CircleImageView createdByPhotoImageView;
+    @BindView(R.id.group_detail_activity_created_by_photo_image_view_id) ImageView createdByPhotoImageView;
     @BindView(R.id.group_detail_activity_created_by_name_text_view_id) TextView createdByNameTextView;
     @BindView(R.id.group_detail_activity_created_by_email_text_view_id) TextView createdByEmailTextView;
     @BindView(R.id.group_detail_activity_created_at_text_view_id) TextView createdAtTextView;
     @BindView(R.id.group_detail_activity_progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.group_detail_activity_created_by_relative_layout_id) RelativeLayout createdByRelativeLayout;
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, GroupDetailActivity.class);
@@ -120,14 +122,10 @@ public class GroupDetailActivity extends BaseActivity {
 
         createdBy = User.getUserById(group.getUserId());
         if (createdBy != null) {
-            Glide.with(this)
-                .load(createdBy.getPhotoUrl())
-                .placeholder(R.drawable.profile_place_holder_image)
-                .dontAnimate()
-                .into(createdByPhotoImageView);
-
+            Helpers.loadIconPhoto(createdByPhotoImageView, createdBy.getPhotoUrl());
             createdByNameTextView.setText(createdBy.getFullname());
             createdByEmailTextView.setText(createdBy.getEmail());
+            createdByRelativeLayout.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
         }
 
         if (group.getUserId().equals(loginUserId)) {

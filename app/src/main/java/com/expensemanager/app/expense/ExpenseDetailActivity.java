@@ -58,6 +58,7 @@ import com.expensemanager.app.models.ExpensePhoto;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.ExpenseBuilder;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncExpense;
@@ -138,7 +139,7 @@ public class ExpenseDetailActivity extends BaseActivity {
     @BindView(R.id.expense_detail_activity_expense_date_text_view_id) TextView expenseDateTextView;
     @BindView(R.id.expense_detail_activity_expense_time_text_view_id) TextView expenseTimeTextView;
     @BindView(R.id.expense_detail_activity_created_by_relative_layout_id) RelativeLayout createdByRelativeLayout;
-    @BindView(R.id.expense_detail_activity_created_by_photo_image_view_id) CircleImageView createdByPhotoImageView;
+    @BindView(R.id.expense_detail_activity_created_by_photo_image_view_id) ImageView createdByPhotoImageView;
     @BindView(R.id.expense_detail_activity_created_by_name_text_view_id) TextView createdByNameTextView;
     @BindView(R.id.expense_detail_activity_created_by_email_text_view_id) TextView createdByEmailTextView;
 
@@ -185,13 +186,10 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         User createdBy = User.getUserById(expense.getUserId());
         if (createdBy != null && Member.getAllMembersByGroupId(groupId).size() > 1) {
-            Glide.with(this)
-                .load(createdBy.getPhotoUrl())
-                .placeholder(R.drawable.profile_place_holder_image)
-                .into(createdByPhotoImageView);
-
+            Helpers.loadIconPhoto(createdByPhotoImageView, createdBy.getPhotoUrl());
             createdByNameTextView.setText(createdBy.getFullname());
             createdByEmailTextView.setText(createdBy.getEmail());
+            createdByRelativeLayout.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
         } else {
             createdByRelativeLayout.setVisibility(View.GONE);
         }

@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.R;
@@ -118,8 +119,12 @@ public class MainActivity extends BaseActivity {
         drawRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         fab.setOnClickListener(v -> {
-            NewExpenseActivity.newInstance(this);
-            overridePendingTransition(R.anim.right_in, R.anim.stay);
+            if (groupId != null) {
+                NewExpenseActivity.newInstance(this);
+                overridePendingTransition(R.anim.right_in, R.anim.stay);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+            }
         });
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
@@ -187,10 +192,9 @@ public class MainActivity extends BaseActivity {
 
         if (groupId == null && newMembers.size() > 0) {
             int index = getFirstAcceptedGroup(newMembers, 0, newMembers.size() - 1);
-            if (index == -1) {
-                return; // maybe throw an exception?
+            if (index != -1) {
+                groupId = newMembers.get(index).getGroupId();
             }
-            groupId = newMembers.get(index).getGroupId();
             saveGroupId();
         }
 
@@ -227,16 +231,32 @@ public class MainActivity extends BaseActivity {
                         setupGroupList();
                         break;
                     case 1:
-                        ExpenseActivity.newInstance(MainActivity.this);
+                        if (groupId != null) {
+                            ExpenseActivity.newInstance(MainActivity.this);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case 2:
-                        ReportActivity.newInstance(MainActivity.this);
+                        if (groupId != null) {
+                            ReportActivity.newInstance(MainActivity.this);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case 3:
-                        CategoryActivity.newInstance(MainActivity.this);
+                        if (groupId != null) {
+                            CategoryActivity.newInstance(MainActivity.this);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case 4:
-                        GroupDetailActivity.newInstance(MainActivity.this, groupId);
+                        if (groupId != null) {
+                            GroupDetailActivity.newInstance(MainActivity.this, groupId);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                        }
                         // todo: remove group list activity
                         break;
                     case 5:
