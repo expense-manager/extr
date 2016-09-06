@@ -9,7 +9,7 @@
 
     <!-- Welcome, Login and Sign up-->
     <string name="welcome">Welcome</string>
-    <string name="welcome_title">Welcome to Expense Manager</string>
+    <string name="welcome_title">Welcome to Extr</string>
     <string name="welcome_sub_title">An easy and fast way to manage your expense</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
