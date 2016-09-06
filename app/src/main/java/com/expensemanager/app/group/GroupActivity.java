@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,8 @@ import com.expensemanager.app.service.SyncMember;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import bolts.Continuation;
+import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -44,6 +47,7 @@ public class GroupActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.group_activity_recycler_view_id) RecyclerView recyclerView;
     @BindView(R.id.group_activity_fab_id) FloatingActionButton fab;
+    @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, GroupActivity.class);
@@ -81,7 +85,32 @@ public class GroupActivity extends AppCompatActivity {
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncMember.getMembersByUserId(loginUserId).continueWith(onGetMemberFinished, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
+
+    private Continuation<Void, Void> onGetMemberFinished = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error:", task.getError());
+            }
+
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
+            }
+
+            return null;
+        }
+    };
 
     private void invalidateViews() {
         groupAdapter.clear();

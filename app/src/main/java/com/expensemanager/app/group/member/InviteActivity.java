@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -70,6 +71,7 @@ public class InviteActivity extends BaseActivity {
     @BindView(R.id.toolbar_save_text_view_id) TextView saveTextView;
     @BindView(R.id.invite_activity_recycler_view_id) RecyclerView recyclerView;
     @BindView(R.id.invite_activity_progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, InviteActivity.class);
@@ -102,7 +104,32 @@ public class InviteActivity extends BaseActivity {
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncMember.getMembersByGroupId(groupId).continueWith(onGetMemberFinished, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
+
+    private Continuation<Void, Void> onGetMemberFinished = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error:", task.getError());
+            }
+
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
+            }
+
+            return null;
+        }
+    };
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

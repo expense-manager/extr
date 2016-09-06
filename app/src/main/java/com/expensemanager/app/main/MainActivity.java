@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,6 +76,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
     @BindView(R.id.main_activity_drawer_recycler_view_id) RecyclerView drawRecyclerView;
     @BindView(R.id.main_activity_fab_id) FloatingActionButton fab;
+    @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -137,6 +139,16 @@ public class MainActivity extends BaseActivity {
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
 
         if (BuildConfig.DEBUG) {
             checkExternalStoragePermission();
@@ -330,6 +342,10 @@ public class MainActivity extends BaseActivity {
         public Void then(Task<Void> task) throws Exception {
             if (task.isFaulted()) {
                 Log.e(TAG, "Error:", task.getError());
+            }
+
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
             }
 
             if (groupId != null) {

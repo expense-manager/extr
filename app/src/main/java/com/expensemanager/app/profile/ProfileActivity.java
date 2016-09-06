@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -95,6 +96,7 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.profile_activity_email_edit_text_id) EditText emailEditText;
     @BindView(R.id.profile_activity_mobile_edit_text_id) EditText mobileEditText;
     @BindView(R.id.profile_activity_progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
 
     public static void newInstance(Context context, String userId) {
         ProfileActivity.newInstance(context, userId, false);
@@ -153,6 +155,16 @@ public class ProfileActivity extends BaseActivity {
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
 
     private void invalidateViews() {
@@ -535,6 +547,10 @@ public class ProfileActivity extends BaseActivity {
             if (task.isFaulted()) {
                 Log.e(TAG, task.getError().toString());
                 return null;
+            }
+
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
             }
             // Update profile page
             invalidateViews();
