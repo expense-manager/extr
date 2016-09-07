@@ -1,10 +1,5 @@
 package com.expensemanager.app.report;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.Group;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,12 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.Group;
+
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.realm.Realm;
 
 public class ReportBarChartFragment extends Fragment {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
@@ -104,6 +105,23 @@ public class ReportBarChartFragment extends Fragment {
         if (expenses != null) {
             reportExpenseAdapter.addAll(expenses, requestCode);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Realm realm = Realm.getDefaultInstance();
+        // Listen to database updates
+        realm.addChangeListener(v -> invalidateViews());
+
+        invalidateViews();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 
     @Override
