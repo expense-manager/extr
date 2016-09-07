@@ -53,7 +53,6 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
                     android:text="@string/profile"
-                    android:textStyle="bold"
                     android:textSize="@dimen/text_really_small"/>
 
                 <!-- Edit profile -->
@@ -100,7 +99,6 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
                 android:text="@string/notification"
-                android:textStyle="bold"
                 android:textSize="@dimen/text_really_small"/>
 
             <!-- Start date switch -->
@@ -176,7 +174,7 @@
 
                 <!-- General label -->
                 <TextView
-                    android:id="@+id/setting_activity_general_text_view_id"
+                    android:id="@+id/setting_activity_general_label_text_view_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -186,7 +184,6 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
                     android:text="@string/general"
-                    android:textStyle="bold"
                     android:textSize="@dimen/text_really_small"/>
 
                 <!-- Send feedback -->
@@ -194,7 +191,7 @@
                     android:id="@+id/setting_activity_weekly_send_feedback_text_view_id"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_below="@+id/setting_activity_general_text_view_id"
+                    android:layout_below="@+id/setting_activity_general_label_text_view_id"
 
                     android:paddingStart="@dimen/space_medium_large"
                     android:paddingEnd="@dimen/space_medium_large"

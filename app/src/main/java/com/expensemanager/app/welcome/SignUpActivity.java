@@ -149,6 +149,7 @@ public class SignUpActivity extends BaseActivity {
         firstNameEditText.setText("");
         lastNameEditText.setText("");
         setButton();
+        mismatchImageView.setVisibility(View.INVISIBLE);
     }
 
     private void setStepOne() {
@@ -266,8 +267,19 @@ public class SignUpActivity extends BaseActivity {
     };
 
     private void setMismatchSign() {
-        mismatchImageView.setVisibility(confirmPassword != null && password.length() == confirmPassword.length() ? View.VISIBLE : View.GONE);
-        mismatchImageView.setImageResource(password.equals(confirmPassword) ? R.drawable.ic_check : R.drawable.ic_alert_circle_outline);
+        if (confirmPassword == null || confirmPassword.length() == 0) {
+            mismatchImageView.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        if (confirmPassword.length() <= password.length() && password.indexOf(confirmPassword) != 0 || confirmPassword.length() > password.length()) {
+            mismatchImageView.setVisibility(View.VISIBLE);
+            mismatchImageView.setImageResource(R.drawable.ic_alert_circle_outline);
+            return;
+        } else if (confirmPassword.equals(password)) {
+            mismatchImageView.setVisibility(View.VISIBLE);
+            mismatchImageView.setImageResource(R.drawable.ic_check);
+        }
     }
 
     private TextWatcher firstNameTextWatcher = new TextWatcher() {

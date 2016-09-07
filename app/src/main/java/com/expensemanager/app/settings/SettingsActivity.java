@@ -1,9 +1,25 @@
 package com.expensemanager.app.settings;
 
-import com.bumptech.glide.Glide;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.expensemanager.app.main.EApplication;
+import com.expensemanager.app.service.font.Font;
+import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
@@ -11,33 +27,12 @@ import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.welcome.WelcomeActivity;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 public class SettingsActivity extends BaseActivity {
@@ -62,6 +57,9 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.setting_activity_weekly_notification_switch_id) Switch weeklyNotificationSwitch;
     @BindView(R.id.setting_activity_monthly_notification_switch_id) Switch monthlyNotificationSwitch;
     @BindView(R.id.setting_activity_signout_text_view_id) TextView signoutTextView;
+    @BindView(R.id.setting_activity_profile_label_text_view_id) TextView profileLabelTextView;
+    @BindView(R.id.setting_activity_notification_label_text_view_id) TextView notificationLabelTextView;
+    @BindView(R.id.setting_activity_general_label_text_view_id) TextView generalLabelTextView;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -143,6 +141,10 @@ public class SettingsActivity extends BaseActivity {
 
         weeklyNotificationSwitch.setChecked(setWeekly);
         monthlyNotificationSwitch.setChecked(setMonthly);
+
+        profileLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
+        notificationLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
+        generalLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
     }
 
     private void saveSettings() {

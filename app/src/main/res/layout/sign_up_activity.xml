@@ -54,31 +54,35 @@
                 android:layout_width="@dimen/login_sign_up_widget_width"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_activity_username_title_text_view_id"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/space_medium"
+                android:background="@color/gray_really_light">
 
+                <!-- Password -->
                 <EditText
                     android:id="@+id/sign_up_activity_email_or_phone_number_edit_text_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@+id/sign_up_activity_clear_email_image_view_id"
-                    android:layout_marginBottom="@dimen/space_really_large"
 
                     android:padding="@dimen/space_medium"
                     android:textSize="@dimen/text_really_small"
-                    android:gravity="center_vertical"
-                    android:background="@color/gray_really_light" />
+                    android:maxLines="1"
+                    android:background="@color/gray_really_light"/>
 
                 <!-- Clear -->
                 <ImageView
                     android:id="@+id/sign_up_activity_clear_email_image_view_id"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/button_height"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
 
-                    android:visibility="gone"
                     android:padding="@dimen/space_small"
                     android:src="@drawable/ic_window_close"
-                    android:background="@color/gray_really_light"/>
+                    android:background="@color/gray_really_light"
+                    android:visibility="gone"/>
+
             </RelativeLayout>
 
 

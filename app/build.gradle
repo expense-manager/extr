@@ -135,7 +135,7 @@ dependencies {
     compile "com.mixpanel.android:mixpanel-android:4.9.2"
 
     // InstaBug
-    compile 'com.instabug.library:instabug:2+'
+    compile 'com.instabug.library:instabug:2.6.1'
 
     // LeakCanary
     debugCompile 'com.squareup.haha:haha:2.0.3'
