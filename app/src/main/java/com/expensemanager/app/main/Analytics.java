@@ -8,7 +8,6 @@ import com.instabug.library.Feature;
 import com.instabug.library.IBGInvocationEvent;
 import com.instabug.library.Instabug;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.squareup.leakcanary.LeakCanary;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -31,9 +30,9 @@ public class Analytics {
                 .setDebugEnabled(true)
                 .build();
 
-        if (BuildConfig.DEBUG) {
-            LeakCanary.install(application);
-        }
+//        if (BuildConfig.DEBUG) {
+//            LeakCanary.install(application);
+//        }
     }
 
     public static void track(String eventName) {

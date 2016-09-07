@@ -15,17 +15,18 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.expensemanager.app.main.EApplication;
-import com.expensemanager.app.service.font.Font;
-import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncUser;
+import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.welcome.WelcomeActivity;
+import com.instabug.library.Instabug;
 
 import java.util.Calendar;
 
@@ -60,6 +61,7 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.setting_activity_profile_label_text_view_id) TextView profileLabelTextView;
     @BindView(R.id.setting_activity_notification_label_text_view_id) TextView notificationLabelTextView;
     @BindView(R.id.setting_activity_general_label_text_view_id) TextView generalLabelTextView;
+    @BindView(R.id.setting_activity_weekly_send_feedback_text_view_id) TextView sendFeedbackTextView;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -122,13 +124,13 @@ public class SettingsActivity extends BaseActivity {
 
     public static void setWeeklyNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, 15);
+        calendar.add(Calendar.SECOND, 5);
         RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.weekly_report), activity.getString(R.string.weekly_report_message), groupId, false, RNotification.WEEKLY, calendar.getTime());
     }
 
     public static void setMonthlyNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, 15);
+        calendar.add(Calendar.SECOND, 5);
         RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.monthly_report), activity.getString(R.string.monthly_report_message), groupId, false, RNotification.MONTHLY, calendar.getTime());
     }
 
@@ -145,6 +147,8 @@ public class SettingsActivity extends BaseActivity {
         profileLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
         notificationLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
         generalLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
+
+        sendFeedbackTextView.setOnClickListener(v -> Instabug.invoke());
     }
 
     private void saveSettings() {

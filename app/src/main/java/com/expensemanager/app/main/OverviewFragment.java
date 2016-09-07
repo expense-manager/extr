@@ -90,7 +90,6 @@ public class OverviewFragment extends Fragment {
         invalidateViews();
     }
 
-
     public void invalidateViews() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
@@ -119,6 +118,16 @@ public class OverviewFragment extends Fragment {
     }
 
     private void invalidateProgressBars() {
+        if (weeklyExpense == 0) {
+            weeklyProgressBar.setProgress(0);
+            weeklyTextView.setText("0%");
+        }
+
+        if (monthlyExpense == 0) {
+            monthlyProgressBar.setProgress(0);
+            monthlyTextView.setText("0%");
+        }
+
         if (oldWeeklyExpense == weeklyExpense && groupId.equals(oldGroupId)) {
             return;
         }
@@ -172,7 +181,16 @@ public class OverviewFragment extends Fragment {
 
                             if (totalStatus + finalStep >= totalProgress) {
                                 if (totalProgress >1000) {
-                                    totalTextView.setText("$" + (int) totalProgress);
+                                    String totalString = Helpers.doubleToCurrency(totalProgress);
+                                    int lastDotIndex = totalString.lastIndexOf(".");
+                                    String totalResult;
+                                    if (lastDotIndex != -1) {
+                                        totalResult = totalString.substring(0, lastDotIndex);
+                                    } else {
+                                        totalResult = totalString;
+                                    }
+
+                                    totalTextView.setText(totalResult);
                                 } else {
                                     totalTextView.setText(Helpers.doubleToCurrency(totalProgress));
                                 }

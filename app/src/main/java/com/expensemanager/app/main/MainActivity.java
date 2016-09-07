@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
@@ -142,9 +141,10 @@ public class MainActivity extends BaseActivity {
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
 
-        if (BuildConfig.DEBUG) {
-            checkExternalStoragePermission();
-        }
+//        // Enable storage permission for LeakCanery
+//        if (BuildConfig.DEBUG) {
+//            checkExternalStoragePermission();
+//        }
     }
 
     private void setupDrawerListItems() {

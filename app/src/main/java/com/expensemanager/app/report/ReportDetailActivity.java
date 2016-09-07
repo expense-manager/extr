@@ -420,7 +420,7 @@ public class ReportDetailActivity extends BaseActivity {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex,
                 ViewPortHandler viewPortHandler) {
-                return value != 0 ? "$" + value : "";
+                return value != 0 ? Helpers.doubleToCurrency(value) : "";
             }
         });
 
