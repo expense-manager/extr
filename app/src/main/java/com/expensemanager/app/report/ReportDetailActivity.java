@@ -446,7 +446,7 @@ public class ReportDetailActivity extends BaseActivity {
                 } else {
                     latestPosition = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
                 }
-                barChart.moveViewToX(Math.max(latestPosition - 6, 0));
+                barChart.moveViewToX(Math.max(latestPosition - 5, 0));
                 break;
             case YEARLY:
                 // Limit view port to smaller data set
@@ -488,7 +488,7 @@ public class ReportDetailActivity extends BaseActivity {
                 // Move to default position
                 switch(requestCode) {
                     case MONTHLY:
-                        barChart.moveViewToX(Math.max(latestPosition - 6, 0));
+                        barChart.moveViewToX(Math.max(latestPosition - 5, 0));
                         break;
                     case YEARLY:
                         barChart.moveViewToX(Math.max(latestPosition - 6, 0));

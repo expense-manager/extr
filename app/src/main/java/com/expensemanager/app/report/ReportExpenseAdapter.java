@@ -12,9 +12,12 @@ import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,16 +94,22 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
         double amount = amounts[getItemCount() - position - 1];
         int pos = getItemCount() - position;
         String slotName = null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startEnd[0]);
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.US);
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.US);
+        String monthString = ", " + monthFormat.format(calendar.getTime());
+        String yearString = ", " + yearFormat.format(calendar.getTime());
 
         switch(requestCode) {
             case WEEKLY:
                 slotName = Helpers.getDayOfWeekString(pos);
                 break;
             case MONTHLY:
-                slotName = Helpers.getDayOfMonthString(pos);
+                slotName = Helpers.getDayOfMonthString(pos) + monthString;
                 break;
             case YEARLY:
-                slotName = Helpers.getMonthOfYearString(pos);
+                slotName = Helpers.getMonthOfYearString(pos) + yearString;
                 break;
         }
 
@@ -114,8 +123,6 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
         // Item click listener
         viewHolder.itemView.setOnClickListener(v -> {
             Date[] clickedStartEnd = null;
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(startEnd[0]);
 
             switch(requestCode) {
                 case WEEKLY:

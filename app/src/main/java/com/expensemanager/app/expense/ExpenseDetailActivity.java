@@ -185,7 +185,7 @@ public class ExpenseDetailActivity extends BaseActivity {
         createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
 
         User createdBy = User.getUserById(expense.getUserId());
-        if (createdBy != null && Member.getAllMembersByGroupId(groupId).size() > 1) {
+        if (createdBy != null && Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             Helpers.loadIconPhoto(createdByPhotoImageView, createdBy.getPhotoUrl());
             createdByNameTextView.setText(createdBy.getFullname());
             createdByEmailTextView.setText(createdBy.getEmail());
