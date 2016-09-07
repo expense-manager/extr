@@ -36,7 +36,7 @@ import io.realm.RealmResults;
 public class OverviewFragment extends Fragment {
     private static final String TAG = OverviewFragment.class.getSimpleName();
 
-    private static final int SLEEP_LENGTH = 1600;
+    private static final int SLEEP_LENGTH = 1200;
 
     private Handler handler = new Handler();
     private int totalStatus = 0;
@@ -128,7 +128,7 @@ public class OverviewFragment extends Fragment {
             monthlyTextView.setText("0%");
         }
 
-        if (oldWeeklyExpense == weeklyExpense && groupId.equals(oldGroupId)) {
+        if (oldWeeklyExpense == weeklyExpense && groupId != null && groupId.equals(oldGroupId)) {
             return;
         }
 
@@ -201,7 +201,7 @@ public class OverviewFragment extends Fragment {
                         }
                     });
                     try {
-                        Thread.sleep(30);
+                        Thread.sleep(15);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
