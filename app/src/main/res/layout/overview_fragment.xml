@@ -12,12 +12,13 @@
         <!-- Total expense -->
         <RelativeLayout
             android:id="@+id/overview_fragment_total_relative_layout_id"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/space_medium"
+            android:layout_marginTop="@dimen/space_medium"
 
-            android:gravity="center">
+            android:gravity="center"
+            android:background="@color/white">
 
             <!-- Total of progress bar -->
             <RelativeLayout
@@ -71,11 +72,13 @@
 
         <LinearLayout
             android:id="@+id/overview_fragment_weekly_monthly_linear_layout_id"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_below="@+id/overview_fragment_total_relative_layout_id"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:background="@color/white"
+            android:gravity="center">
 
             <!-- Weekly expense -->
             <LinearLayout
@@ -231,12 +234,12 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/overview_fragment_recycler_view_id"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="320dp"
             android:layout_below="@+id/overview_fragment_weekly_monthly_linear_layout_id"
-            android:layout_marginBottom="@dimen/space_medium"
+            android:layout_marginBottom="@dimen/space_medium_large"
 
             android:paddingTop="@dimen/space_really_small"
-            android:paddingBottom="@dimen/space_really_small"
+            android:paddingBottom="@dimen/space_medium_large"
             android:focusable="false"/>
 
     </RelativeLayout>

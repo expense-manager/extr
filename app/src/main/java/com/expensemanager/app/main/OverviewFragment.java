@@ -51,6 +51,7 @@ public class OverviewFragment extends Fragment {
     private double weeklyAve = 0.0;
     private double monthlyExpense = 0.0;
     private double monthlyAve = 0.0;
+    private double oldWeeklyExpense = 0.0;
 
     @BindView(R.id.overview_fragment_scroll_view_id) ScrollView scrollView;
     @BindView(R.id.overview_fragment_total_text_view_id) TextView totalTextView;
@@ -115,9 +116,16 @@ public class OverviewFragment extends Fragment {
         int weeklyProgress = (int)(weeklyExpense/weeklyAve * 100);
         int monthlyProgress = (int)(monthlyExpense/monthlyAve * 100);
 
-        setupTotalProgress(totalExpense);
-        setupWeeklyProgress(weeklyProgress);
-        setupMonthlyProgress(monthlyProgress);
+        totalStatus = 0;
+        weeklyStatus = 0;
+        monthlyStatus = 0;
+
+        if (weeklyProgress >= 0 && weeklyProgress != oldWeeklyExpense) {
+            setupTotalProgress(totalExpense);
+            setupWeeklyProgress(weeklyProgress);
+            setupMonthlyProgress(monthlyProgress);
+            oldWeeklyExpense = weeklyProgress;
+        }
     }
 
     private void setupTotalProgress(final double totalProgress) {
