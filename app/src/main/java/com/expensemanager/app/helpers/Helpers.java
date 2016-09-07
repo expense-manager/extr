@@ -614,4 +614,8 @@ public class Helpers {
             Context.MODE_PRIVATE).edit();
         sharedPreferencesEditor.putLong(syncTimeKey, syncTimeInMillis).apply();
     }
+
+    public static String doubleToCurrency(double amount) {
+        return String.format("$%,.2f", amount);
+    }
 }

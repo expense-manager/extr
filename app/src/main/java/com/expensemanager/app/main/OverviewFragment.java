@@ -20,7 +20,6 @@ import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +45,7 @@ public class OverviewFragment extends Fragment {
     private ArrayList<Expense> expenses;
     private OverviewAdapter overviewAdapter;
     private String groupId;
+    private String oldGroupId;
     private double totalExpense = 0.0;
     private double weeklyExpense = 0.0;
     private double weeklyAve = 0.0;
@@ -101,31 +101,48 @@ public class OverviewFragment extends Fragment {
         monthlyExpense = getMonthlyExpense();
         monthlyAve = getMonthlyAverage();
 
-        weeklyTextView.setText("$" + new DecimalFormat("##.##").format(weeklyExpense));
-        monthlyTextView.setText("$" + new DecimalFormat("##.##").format(monthlyExpense));
+        weeklyTextView.setText(Helpers.doubleToCurrency(weeklyExpense));
+        monthlyTextView.setText(Helpers.doubleToCurrency(monthlyExpense));
 
         overviewAdapter.clear();
+
         if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             overviewAdapter.setShowMember(true);
         } else {
             overviewAdapter.setShowMember(false);
         }
+
         overviewAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
         scrollView.fullScroll(ScrollView.FOCUS_UP);
 
-        int weeklyProgress = (int)(weeklyExpense/weeklyAve * 100);
-        int monthlyProgress = (int)(monthlyExpense/monthlyAve * 100);
+        invalidateProgressBars();
+    }
+
+    private void invalidateProgressBars() {
+        if (oldWeeklyExpense == weeklyExpense && groupId.equals(oldGroupId)) {
+            return;
+        }
 
         totalStatus = 0;
         weeklyStatus = 0;
         monthlyStatus = 0;
 
-        if (weeklyProgress >= 0 && weeklyProgress != oldWeeklyExpense) {
-            setupTotalProgress(totalExpense);
-            setupWeeklyProgress(weeklyProgress);
-            setupMonthlyProgress(monthlyProgress);
-            oldWeeklyExpense = weeklyProgress;
+        int weeklyProgress = 0;
+        int monthlyProgress = 0;
+
+        if (weeklyAve != 0) {
+            weeklyProgress = (int)(weeklyExpense/weeklyAve * 100);
         }
+
+        if (monthlyAve != 0) {
+            monthlyProgress = (int) (monthlyExpense / monthlyAve * 100);
+        }
+
+        setupTotalProgress(totalExpense);
+        setupWeeklyProgress(weeklyProgress);
+        setupMonthlyProgress(monthlyProgress);
+        oldWeeklyExpense = weeklyExpense;
+        oldGroupId = groupId;
     }
 
     private void setupTotalProgress(final double totalProgress) {
@@ -154,7 +171,11 @@ public class OverviewFragment extends Fragment {
                             totalProgressBar.setProgress(totalStatus);
 
                             if (totalStatus + finalStep >= totalProgress) {
-                                totalTextView.setText("$" + (int)totalProgress);
+                                if (totalProgress >1000) {
+                                    totalTextView.setText("$" + (int) totalProgress);
+                                } else {
+                                    totalTextView.setText(Helpers.doubleToCurrency(totalProgress));
+                                }
                                 totalProgressBar.setProgress((int)totalProgress);
                             } else {
                                 totalTextView.setText("$" + totalStatus);

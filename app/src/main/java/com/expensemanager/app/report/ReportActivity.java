@@ -75,7 +75,7 @@ public class ReportActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.report_menu, menu);
+//        getMenuInflater().inflate(R.menu.report_menu, menu);
         return true;
     }
 

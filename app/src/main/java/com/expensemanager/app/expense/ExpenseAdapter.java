@@ -5,15 +5,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
@@ -95,7 +92,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Category category = expense.getCategory();
 
         viewHolder.spentAtTextView.setText(Helpers.formatCreateAt(expense.getExpenseDate()));
-        viewHolder.amountTextView.setText("$" + expense.getAmount());
+        viewHolder.amountTextView.setText(Helpers.doubleToCurrency(expense.getAmount()));
 
         // Load category data or hide
         if (category != null) {

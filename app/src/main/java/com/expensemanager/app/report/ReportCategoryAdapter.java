@@ -97,7 +97,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
         viewHolder.colorImageView.setImageDrawable(colorDrawable);
         viewHolder.nameTextView.setText(category.getName());
-        viewHolder.amountTextView.setText("$" + Helpers.formatNumToDouble(amount));
+        viewHolder.amountTextView.setText(Helpers.doubleToCurrency(amount));
 
         // Item click listener
         viewHolder.itemView.setOnClickListener(v -> {

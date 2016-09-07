@@ -12,7 +12,6 @@ import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -110,7 +109,7 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         viewHolder.timeSlotTextView.setText(slotName);
-        viewHolder.amountTextView.setText("$" + new DecimalFormat("##.##").format(amount));
+        viewHolder.amountTextView.setText(Helpers.doubleToCurrency(amount));
 
         // Item click listener
         viewHolder.itemView.setOnClickListener(v -> {
