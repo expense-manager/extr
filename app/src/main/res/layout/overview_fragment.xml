@@ -1,84 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overview_fragment_scroll_view_id"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <!-- Total expense -->
     <RelativeLayout
-        android:id="@+id/overview_fragment_total_relative_layout_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/space_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        android:gravity="center">
-
-        <!-- Total of progress bar -->
+        <!-- Total expense -->
         <RelativeLayout
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:visibility="visible">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_circle_solid_white"
-                android:layout_centerInParent="true"/>
-
-            <!-- Percentage -->
-            <TextView
-                android:id="@+id/overview_fragment_total_text_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-
-                android:text="0%"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp"
-                android:gravity="center"/>
-
-            <!-- Total label -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/overview_fragment_total_text_view_id"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
-
-                android:text="@string/total"/>
-
-            <ProgressBar
-                android:id="@+id/overview_total_progressBar"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-
-                android:indeterminate="false"
-                android:progressDrawable="@drawable/circular_progress_bar"
-                android:background="@drawable/circle_shape"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:max="100"
-                android:progress="0" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/overview_fragment_weekly_monthly_linear_layout_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/overview_fragment_total_relative_layout_id"
-        android:layout_centerHorizontal="true">
-
-        <!-- Weekly expense -->
-        <LinearLayout
+            android:id="@+id/overview_fragment_total_relative_layout_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/space_small">
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/space_medium"
 
-            <!-- Weekly of progress bar -->
+            android:gravity="center">
+
+            <!-- Total of progress bar -->
             <RelativeLayout
                 android:layout_width="140dp"
                 android:layout_height="140dp"
@@ -92,7 +33,7 @@
 
                 <!-- Percentage -->
                 <TextView
-                    android:id="@+id/weekly_circular_progress_text"
+                    android:id="@+id/overview_fragment_total_text_view_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -102,80 +43,18 @@
                     android:textSize="20sp"
                     android:gravity="center"/>
 
+                <!-- Total label -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/weekly_circular_progress_text"
+                    android:layout_below="@+id/overview_fragment_total_text_view_id"
                     android:layout_centerHorizontal="true"
                     android:layout_centerInParent="true"
-                    android:text="weekly ave"/>
+
+                    android:text="@string/total"/>
 
                 <ProgressBar
-                    android:id="@+id/overview_weekly_progressBar"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-
-                    android:indeterminate="false"
-                    android:progressDrawable="@drawable/circular_progress_bar"
-                    android:background="@drawable/circle_shape"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:max="100"
-                    android:progress="0"/>
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/overview_fragment_weekly_total_text_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/space_really_small"
-
-                android:text="$0"/>
-
-        </LinearLayout>
-
-        <!-- Monthly expense -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/space_small">
-
-            <!-- Example of progress bar -->
-            <RelativeLayout
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/background_circle_solid_white"
-                    android:layout_centerInParent="true"/>
-
-                <!-- Percentage -->
-                <TextView
-                    android:id="@+id/monthly_circular_progress_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-
-                    android:text="0%"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20sp"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/monthly_circular_progress_text"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerInParent="true"
-                    android:text="monthly ave"/>
-
-                <ProgressBar
-                    android:id="@+id/overview_monthly_progressBar"
+                    android:id="@+id/overview_total_progressBar"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
 
@@ -188,114 +67,178 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/overview_fragment_monthly_total_text_view_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/space_really_small"
+        </RelativeLayout>
 
-                android:text="$427"/>
-
-        </LinearLayout>
-
-        <!-- Weekly average expense -->
         <LinearLayout
+            android:id="@+id/overview_fragment_weekly_monthly_linear_layout_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/space_small"
-            android:visibility="gone">
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_fragment_total_relative_layout_id"
+            android:layout_centerHorizontal="true">
 
-            <RelativeLayout
-                android:id="@+id/overview_fragment_weekly_average_relative_layout_id"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_margin="@dimen/space_really_small"
-
-                android:background="@drawable/background_circle_border_cyan">
-
-                <!-- Weekly average label -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:paddingTop="@dimen/space_small"
-
-                    android:text="weekly ave"
-                    android:gravity="center"/>
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/overview_fragment_weekly_average_text_view_id"
+            <!-- Weekly expense -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/space_really_small"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/space_small">
 
-                android:text="$395"/>
+                <!-- Weekly of progress bar -->
+                <RelativeLayout
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:visibility="visible">
 
-        </LinearLayout>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/background_circle_solid_white"
+                        android:layout_centerInParent="true"/>
 
-        <!-- Monthly average expense -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/space_small"
-            android:visibility="gone">
+                    <!-- Percentage -->
+                    <TextView
+                        android:id="@+id/weekly_circular_progress_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
 
-            <RelativeLayout
-                android:id="@+id/overview_fragment_monthly_average_relative_layout_id"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_margin="@dimen/space_really_small"
+                        android:text="0%"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20sp"
+                        android:gravity="center"/>
 
-                android:background="@drawable/background_circle_border_cyan">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/weekly_circular_progress_text"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerInParent="true"
+                        android:text="weekly ave"/>
 
-                <!-- Month average label -->
+                    <ProgressBar
+                        android:id="@+id/overview_weekly_progressBar"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+
+                        android:indeterminate="false"
+                        android:progressDrawable="@drawable/circular_progress_bar"
+                        android:background="@drawable/circle_shape"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="100"
+                        android:progress="0"/>
+
+                </RelativeLayout>
+
                 <TextView
+                    android:id="@+id/overview_fragment_weekly_total_text_view_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:paddingTop="@dimen/space_small"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/space_really_small"
 
-                    android:text="monthly ave"
+                    android:text="$0"
+                    android:textColor="@color/black"
                     android:gravity="center"/>
 
-            </RelativeLayout>
+                <TextView
+                    android:id="@+id/overview_fragment_weekly_label_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
 
-            <TextView
-                android:id="@+id/overview_fragment_monthly_average_text_view_id"
+                    android:text="week"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <!-- Monthly expense -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/space_really_small"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/space_small">
 
-                android:text="$1608"/>
+                <!-- Example of progress bar -->
+                <RelativeLayout
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:visibility="visible">
 
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/background_circle_solid_white"
+                        android:layout_centerInParent="true"/>
+
+                    <!-- Percentage -->
+                    <TextView
+                        android:id="@+id/monthly_circular_progress_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+
+                        android:text="0%"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20sp"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/monthly_circular_progress_text"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerInParent="true"
+                        android:text="monthly ave"/>
+
+                    <ProgressBar
+                        android:id="@+id/overview_monthly_progressBar"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+
+                        android:indeterminate="false"
+                        android:progressDrawable="@drawable/circular_progress_bar"
+                        android:background="@drawable/circle_shape"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="100"
+                        android:progress="0" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/overview_fragment_monthly_total_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/space_really_small"
+
+                    android:text="$0"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/overview_fragment_monthly_label_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    android:text="month"
+                    android:gravity="center"/>
+
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/overview_fragment_recycler_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/overview_fragment_weekly_monthly_linear_layout_id"
+            android:layout_marginBottom="@dimen/space_medium"
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/overview_fragment_recycler_view_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/overview_fragment_weekly_monthly_linear_layout_id"
+            android:paddingTop="@dimen/space_really_small"
+            android:paddingBottom="@dimen/space_really_small"
+            android:focusable="false"/>
 
-        android:paddingTop="@dimen/space_really_small"
-        android:paddingBottom="@dimen/space_really_small"/>
+    </RelativeLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/overview_fragment_fab_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/fab_margin"
-
-        android:src="@drawable/ic_add_white_24dp"/>
-
-</RelativeLayout>
+</ScrollView>

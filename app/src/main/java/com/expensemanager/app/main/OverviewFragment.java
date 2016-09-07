@@ -4,19 +4,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
@@ -39,6 +37,8 @@ import io.realm.RealmResults;
 public class OverviewFragment extends Fragment {
     private static final String TAG = OverviewFragment.class.getSimpleName();
 
+    private static final int SLEEP_LENGTH = 1600;
+
     private Handler handler = new Handler();
     private int totalStatus = 0;
     private int weeklyStatus = 0;
@@ -52,13 +52,11 @@ public class OverviewFragment extends Fragment {
     private double monthlyExpense = 0.0;
     private double monthlyAve = 0.0;
 
+    @BindView(R.id.overview_fragment_scroll_view_id) ScrollView scrollView;
     @BindView(R.id.overview_fragment_total_text_view_id) TextView totalTextView;
     @BindView(R.id.overview_fragment_weekly_total_text_view_id) TextView weeklyTextView;
     @BindView(R.id.overview_fragment_monthly_total_text_view_id) TextView monthlyTextView;
-    @BindView(R.id.overview_fragment_weekly_average_text_view_id) TextView weeklyAverageTextView;
-    @BindView(R.id.overview_fragment_monthly_average_text_view_id) TextView monthlyAverageTextView;
     @BindView(R.id.overview_fragment_recycler_view_id) RecyclerView recyclerView;
-    @BindView(R.id.overview_fragment_fab_id) FloatingActionButton fab;
     @BindView(R.id.weekly_circular_progress_text) TextView weeklyProgressTextView;
     @BindView(R.id.monthly_circular_progress_text) TextView monthlyProgressTextView;
     @BindView(R.id.overview_total_progressBar) ProgressBar totalProgressBar;
@@ -88,11 +86,6 @@ public class OverviewFragment extends Fragment {
         overviewAdapter = new OverviewAdapter(getActivity(), expenses);
         setupRecyclerView();
 
-        fab.setOnClickListener(v -> {
-            NewExpenseActivity.newInstance(getActivity());
-            getActivity().overridePendingTransition(R.anim.right_in, R.anim.stay);
-        });
-
         invalidateViews();
     }
 
@@ -107,11 +100,8 @@ public class OverviewFragment extends Fragment {
         monthlyExpense = getMonthlyExpense();
         monthlyAve = getMonthlyAverage();
 
-//        totalTextView.setText("$" + new DecimalFormat("##").format(getTotalExpense()));
         weeklyTextView.setText("$" + new DecimalFormat("##.##").format(weeklyExpense));
         monthlyTextView.setText("$" + new DecimalFormat("##.##").format(monthlyExpense));
-        weeklyAverageTextView.setText("$" + new DecimalFormat("##.##").format(weeklyAve));
-        monthlyAverageTextView.setText("$" + new DecimalFormat("##.##").format(monthlyAve));
 
         overviewAdapter.clear();
         if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
@@ -120,11 +110,8 @@ public class OverviewFragment extends Fragment {
             overviewAdapter.setShowMember(false);
         }
         overviewAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
+        scrollView.fullScroll(ScrollView.FOCUS_UP);
 
-        Log.d(TAG, "zhaox: weeklyExpense: " + weeklyExpense);
-        Log.d(TAG, "zhaox: weeklyAve: " + weeklyAve);
-
-        int totalProgress = 100;
         int weeklyProgress = (int)(weeklyExpense/weeklyAve * 100);
         int monthlyProgress = (int)(monthlyExpense/monthlyAve * 100);
 
@@ -140,7 +127,7 @@ public class OverviewFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1600);
+                    Thread.sleep(SLEEP_LENGTH);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -159,7 +146,8 @@ public class OverviewFragment extends Fragment {
                             totalProgressBar.setProgress(totalStatus);
 
                             if (totalStatus + finalStep >= totalProgress) {
-                                totalTextView.setText("$" + totalProgress);
+                                totalTextView.setText("$" + (int)totalProgress);
+                                totalProgressBar.setProgress((int)totalProgress);
                             } else {
                                 totalTextView.setText("$" + totalStatus);
                             }
@@ -176,14 +164,11 @@ public class OverviewFragment extends Fragment {
     }
 
     private void setupWeeklyProgress(int weeklyProgress) {
-
-        Log.d(TAG, "zhaox: weeklyProcess: " + weeklyProgress);
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1600);
+                    Thread.sleep(SLEEP_LENGTH);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -204,28 +189,14 @@ public class OverviewFragment extends Fragment {
                 }
             }
         }).start();
-
-//        if(android.os.Build.VERSION.SDK_INT >= 11){
-//            // will update the "progress" propriety of seekbar until it reaches progress
-//
-//            ObjectAnimator animation2 = ObjectAnimator.ofInt(circularProgress, "progress", 80);
-//            animation2.setDuration(1500); // 0.5 second
-//            animation2.setInterpolator(new DecelerateInterpolator());
-//            animation2.start();
-//        } else {
-//            seekBar.setProgress(80);
-//        }
     }
 
     private void setupMonthlyProgress(int monthlyProgress) {
-
-        Log.d(TAG, "zhaox: monthlyProgress: " + monthlyProgress);
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1600);
+                    Thread.sleep(SLEEP_LENGTH);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -247,37 +218,17 @@ public class OverviewFragment extends Fragment {
                 }
             }
         }).start();
-
-//        if(android.os.Build.VERSION.SDK_INT >= 11){
-//            // will update the "progress" propriety of seekbar until it reaches progress
-//
-//            ObjectAnimator animation2 = ObjectAnimator.ofInt(circularProgress, "progress", 80);
-//            animation2.setDuration(1500); // 0.5 second
-//            animation2.setInterpolator(new DecelerateInterpolator());
-//            animation2.start();
-//        } else {
-//            seekBar.setProgress(80);
-//        }
-    }
-
-    private int getWeeklyProcess() {
-        if (weeklyAve > 1) {
-            return (int)(weeklyExpense / weeklyAve);
-        }
-
-        return 0;
-    }
-
-    private int getMonthlyProcess() {
-//        if (getMonthlyAverage() > 1) {
-//            return (int)(getMonthlyExpense() / getMonthlyAverage());
-//        }
-
-        return 0;
     }
 
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        recyclerView.setFocusable(false);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(overviewAdapter);
     }
 
@@ -291,7 +242,7 @@ public class OverviewFragment extends Fragment {
             weeklyTotal += expense.getAmount();
         }
 
-        return weeklyTotal;
+        return Math.round(weeklyTotal * 100.0) / 100.0;
     }
 
     private double getMonthlyExpense() {
@@ -304,7 +255,7 @@ public class OverviewFragment extends Fragment {
             monthlyTotal += expense.getAmount();
         }
 
-        return monthlyTotal;
+        return Math.round(monthlyTotal * 100.0) / 100.0;
     }
 
     private double getWeeklyAverage() {
@@ -336,7 +287,7 @@ public class OverviewFragment extends Fragment {
             total += expense.getAmount();
         }
 
-        return total;
+        return (double) Math.round(total * 100) / 100;
     }
 
     @Override
