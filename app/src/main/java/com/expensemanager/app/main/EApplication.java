@@ -9,6 +9,9 @@ import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.R;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
+import com.instabug.library.Feature;
+import com.instabug.library.IBGInvocationEvent;
+import com.instabug.library.Instabug;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.HashMap;
