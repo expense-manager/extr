@@ -142,6 +142,8 @@ public class ExpenseDetailActivity extends BaseActivity {
     @BindView(R.id.expense_detail_activity_created_by_photo_image_view_id) ImageView createdByPhotoImageView;
     @BindView(R.id.expense_detail_activity_created_by_name_text_view_id) TextView createdByNameTextView;
     @BindView(R.id.expense_detail_activity_created_by_email_text_view_id) TextView createdByEmailTextView;
+    @BindView(R.id.expense_detail_activity_created_by_label_text_view_id) TextView createdByLabel;
+
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, ExpenseDetailActivity.class);
@@ -192,6 +194,7 @@ public class ExpenseDetailActivity extends BaseActivity {
             createdByRelativeLayout.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
         } else {
             createdByRelativeLayout.setVisibility(View.GONE);
+            createdByLabel.setVisibility(View.GONE);
         }
 
         deleteButton.setOnClickListener(v -> delete());

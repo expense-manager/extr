@@ -25,6 +25,7 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncGroup;
@@ -64,6 +65,7 @@ public class GroupDetailActivity extends BaseActivity {
     @BindView(R.id.group_detail_activity_created_at_text_view_id) TextView createdAtTextView;
     @BindView(R.id.group_detail_activity_progress_bar_id) ProgressBar progressBar;
     @BindView(R.id.group_detail_activity_created_by_relative_layout_id) RelativeLayout createdByRelativeLayout;
+    @BindView(R.id.group_detail_activity_created_by_label_text_view_id) TextView createdByLabel;
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, GroupDetailActivity.class);
@@ -121,11 +123,14 @@ public class GroupDetailActivity extends BaseActivity {
         createdAtTextView.setText(Helpers.formatCreateAt(group.getCreatedAt()));
 
         createdBy = User.getUserById(group.getUserId());
-        if (createdBy != null) {
+        if (createdBy != null && Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             Helpers.loadIconPhoto(createdByPhotoImageView, createdBy.getPhotoUrl());
             createdByNameTextView.setText(createdBy.getFullname());
             createdByEmailTextView.setText(createdBy.getEmail());
             createdByRelativeLayout.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
+        } else {
+            createdByRelativeLayout.setVisibility(View.GONE);
+            createdByLabel.setVisibility(View.GONE);
         }
 
         if (group.getUserId().equals(loginUserId)) {
