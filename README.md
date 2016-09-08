@@ -27,10 +27,10 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 
 
 ##Screenshots
-![Image](/screenshots/screenshots_1.jpg)
-![Image](/screenshots/screenshots_2.jpg)
-![Image](/screenshots/screenshots_3.jpg)
-![Image](/screenshots/screenshots_4.jpg)
+![Image](/screenshots/screenshots_1.png)
+![Image](/screenshots/screenshots_2.png)
+![Image](/screenshots/screenshots_3.png)
+![Image](/screenshots/screenshots_4.png)
 
 ## Libraries and tools used
 - [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications.
