@@ -1,5 +1,10 @@
 # Extr
 
+<p align="center">
+  <img src="https://github.com/expense-manager/expense-manager/blob/master/logo.png?raw=true" alt="Extr"/>
+</p>
+
+
 An easy way to manage and categorize your personal and business expenses.
 
 Extr is an group based expense tracking and analysis android app that helps a person, a family, a team and a company to manage their expenses better with contribution from all member users within the group. Extr is a fast and easy way to manage your daily expense. All you need to do is just snap a photo of your paper or electronic receipts, bills or other expenses and confirm the details, Extr will do the rest for you. For example, it will allow you to check out your weekly and monthly expense report for personal or your business, check out expense in your personalized category such as grocery and transportation. Extr can also simplify your business accounting by providing you with business audit-proof and help to manage your budget wisely by providing you with detailed expense analysis report.
