@@ -36,7 +36,7 @@ import io.realm.RealmResults;
 public class OverviewFragment extends Fragment {
     private static final String TAG = OverviewFragment.class.getSimpleName();
 
-    private static final int SLEEP_LENGTH = 1200;
+    public static int SLEEP_LENGTH = 1200;
 
     private Handler handler = new Handler();
     private int totalStatus = 0;

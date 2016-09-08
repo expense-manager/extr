@@ -298,6 +298,7 @@ public class MainActivity extends BaseActivity {
                         syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
                         Helpers.saveSyncTime(MainActivity.this, syncTimeKey, syncTimeInMillis);
                     }
+                    OverviewFragment.SLEEP_LENGTH = 400;
                     overviewFragment.invalidateViews();
                 } else if (position == members.size() + 2) {
                     NewGroupActivity.newInstance(MainActivity.this);

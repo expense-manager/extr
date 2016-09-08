@@ -26,6 +26,12 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - admin or members can have difference permission to handle expense items or check out different expense report based on the role.
 
 
+##Screenshots
+![Image](screenshots/screenshots_1.jpg)
+![Image](screenshots/screenshots_2.jpg)
+![Image](screenshots/screenshots_3.jpg)
+![Image](screenshots/screenshots_4.jpg)
+
 ## Libraries and tools used
 - [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications.
 - [Bolts](http://boltsframework.github.io/Bolts-Android/) - Bolts is a collection of low-level libraries designed to make developing mobile apps easier.
