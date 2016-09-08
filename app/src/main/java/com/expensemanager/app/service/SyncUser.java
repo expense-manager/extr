@@ -50,6 +50,7 @@ public class SyncUser {
                 }
 
                 String sessionToken = result.optString(User.SESSION_TOKEN);
+                Log.d(TAG, "login sessionToken:" + sessionToken);
                 String userId = result.optString(User.OBJECT_ID_JSON_KEY);
 
                 if (!TextUtils.isEmpty(sessionToken)) {

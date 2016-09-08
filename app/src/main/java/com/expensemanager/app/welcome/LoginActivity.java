@@ -20,6 +20,13 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.service.SyncUser;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONObject;
 
@@ -33,6 +40,7 @@ public class LoginActivity extends BaseActivity {
 
     private String email;
     private String password;
+    CallbackManager callbackManager;
 
     @BindView(R.id.login_activity_login_button_id) Button loginButton;
     @BindView(R.id.login_activity_email_edit_text_id) EditText emailEditText;
@@ -42,6 +50,7 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.login_activity_error_text_view_id) TextView errorMessageTextView;
     @BindView(R.id.login_activity_sign_up_linear_layout_id) LinearLayout signUpLinearLayout;
     @BindView(R.id.progress_bar_id) ProgressBar progressBar;
+    @BindView(R.id.login_activity_facebook_login_button_id) LoginButton facebookLoginButton;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -52,9 +61,48 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        AppEventsLogger.activateApp(this);
+
         ButterKnife.bind(this);
 
+        Log.d(TAG, "isFacebookLogin:" + isLoggedIn());
+
+        callbackManager = CallbackManager.Factory.create();
+
+        facebookLoginButton.setReadPermissions("email");
+
+        // Callback registration
+        facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                Log.d(TAG, "facebook accessToken: " + loginResult.getAccessToken().getToken());
+                Log.d(TAG, "facebook id:" + loginResult.getAccessToken().getUserId());
+                Log.d(TAG, "facebook expirationDate:" + loginResult.getAccessToken().getExpires());
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Log.d(TAG, "onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.e(TAG, "onError: " + exception.toString());
+            }
+        });
+
         invalidateViews();
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult:" + resultCode);
     }
 
     private void invalidateViews() {
@@ -164,5 +212,10 @@ public class LoginActivity extends BaseActivity {
     private void getLoginInfo() {
         email = emailEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 }

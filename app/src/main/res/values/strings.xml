@@ -169,4 +169,5 @@
     <!-- Event tracking -->
     <string name="event_expense_date_filter_clicked">Expense date filter clicked</string>
 
+    <string name="facebook_app_id">305552616470274</string>
 </resources>

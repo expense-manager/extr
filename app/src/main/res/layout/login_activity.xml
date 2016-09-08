@@ -7,7 +7,7 @@
     android:fillViewport="true">
 
     <RelativeLayout
-        android:id="@+id/category_activity"
+        android:id="@+id/login_activity_relative_layout_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="120dp"
@@ -95,6 +95,24 @@
                     android:textStyle="bold"/>
 
             </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/login_activity_facebook_login_details_relative_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_activity_forget_login_details_relative_layout_id"
+
+            android:gravity="center"
+            android:visibility="gone">
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_activity_facebook_login_button_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"/>
 
         </RelativeLayout>
 

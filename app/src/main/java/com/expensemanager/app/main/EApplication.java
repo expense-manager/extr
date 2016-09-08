@@ -9,6 +9,7 @@ import com.expensemanager.app.BuildConfig;
 import com.expensemanager.app.R;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.service.font.FontHelper;
+import com.facebook.FacebookSdk;
 import com.instabug.library.Feature;
 import com.instabug.library.IBGInvocationEvent;
 import com.instabug.library.Instabug;
@@ -63,6 +64,8 @@ public class EApplication extends Application {
                 .build();
 
         Instabug.setPrimaryColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     public Typeface getTypeface(Font font) {

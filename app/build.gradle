@@ -143,6 +143,9 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
+    // Facebook
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+
     // Retrolambda, make sure to apply this line last.
     apply plugin: 'me.tatarka.retrolambda'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') {
