@@ -1,8 +1,8 @@
-# Expense Manager
+# Extr
 
-Easy way to manage and categorize your expenses.
+An easy way to manage and categorize your personal and business expenses.
 
-Expense Manager is a fast and easy way to manage your daily expense. All you need to do is just snap a photo of your paper or electronic receipts, bills or other expenses and confirm the details, Expense Manager will do the rest for you. For example, it will allow you to check out your weekly and monthly expense report, check out expense in specified category such as grocery and transportation. You can also track expense in a project. Expense Manager can also simplify your business accounting by providing you with business audit-proof and help to manage your budget by providing you with detailed expense analysis report.
+Extr is an group based expense tracking and analysis android app that helps a person, a family, a team and a company to manage their expenses better with contribution from all member users within the group. Extr is a fast and easy way to manage your daily expense. All you need to do is just snap a photo of your paper or electronic receipts, bills or other expenses and confirm the details, Extr will do the rest for you. For example, it will allow you to check out your weekly and monthly expense report for personal or your business, check out expense in your personalized category such as grocery and transportation. Extr can also simplify your business accounting by providing you with business audit-proof and help to manage your budget wisely by providing you with detailed expense analysis report.
 
 ## User Stories
 
@@ -17,22 +17,45 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - user can search expense by date range
 - user can search expense by category
 - user can receive a weekly and monthly report notification
-
-## Optional
 - user can create a group
 - user can invite people to a group
 - user can switch group to check out expenses in different group
 - members can create and update expense in the group
 - admin or members can have difference permission to handle expense items or check out different expense report based on the role.
+- user can send feedback
 
 
 ##Screenshots
+
 ![Image](/screenshots/screenshots_1.png)
 ![Image](/screenshots/screenshots_2.png)
 ![Image](/screenshots/screenshots_3.png)
 ![Image](/screenshots/screenshots_4.png)
 
+# Analytics, Feedback, Bug Report, Push Notification
+
+## OneSignal
+![Image](/analytics/one_signal.png)
+
+
+## Instabug
+![Image](/analytics/instabug.png)
+
+
+## Crashlytics
+![Image](/analytics/crashlytics.png)
+
+
+## Mixpanel
+![Image](/analytics/mixpanel.png)
+
+## Firebase Analytics
+![Image](/analytics/firebase_1.png)
+![Image](/analytics/firebase_2.png)
+
+
 ## Libraries and tools used
+
 - [OkHttp](http://square.github.io/okhttp/) - An HTTP & HTTP/2 client for Android and Java applications.
 - [Bolts](http://boltsframework.github.io/Bolts-Android/) - Bolts is a collection of low-level libraries designed to make developing mobile apps easier.
 - [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling.
@@ -45,6 +68,9 @@ Expense Manager is a fast and easy way to manage your daily expense. All you nee
 - [LeakCanary](https://github.com/square/leakcanary) - A memory leak detection library for Android and Java.
 - [Mixpanel](http://mixpanel.com/android-analytics/)- An Android library for Mixpanel Analytics
 - [Instabug](https://instabug.com/) - Instabug is providing in-app feedback and bug reporting to mobile apps.
+
+## Backend
+Extr's backend is powered by Parse Server on Heroku‎. Extr is using Parse Server Rest API.
 
 
 ## License
