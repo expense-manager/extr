@@ -152,7 +152,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             super(itemView);
 
             if(viewType == TYPE_HEADER){
-                accountPhotoImageView = (ImageView) itemView.findViewById(R.id.drawer_account_header_acount_photo_id);
+                accountPhotoImageView = (ImageView) itemView.findViewById(R.id.drawer_account_header_account_photo_id);
                 accountNameTextView = (TextView) itemView.findViewById(R.id.drawer_header_name_id);
                 accountEmailTextView = (TextView) itemView.findViewById(R.id.drawer_header_email_id);
                 groupSwitcherTextView = (TextView) itemView.findViewById(R.id.drawer_header_group_switcher_text_view_id);
