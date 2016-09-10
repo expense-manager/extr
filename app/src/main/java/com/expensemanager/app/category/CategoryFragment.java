@@ -50,7 +50,6 @@ public class CategoryFragment extends Fragment {
 //    @BindView(R.id.toolbar_title_text_view_id)
 //    TextView titleTextView;
     @BindView(R.id.category_activity_recycler_view_id) RecyclerView recyclerView;
-    @BindView(R.id.category_activity_fab_id) FloatingActionButton fab;
     @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
 
     public static CategoryFragment newInstance() {
@@ -79,11 +78,6 @@ public class CategoryFragment extends Fragment {
         categories = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(getActivity(), categories);
         setupRecyclerView();
-
-        fab.setOnClickListener(v -> {
-            NewCategoryActivity.newInstance(getActivity());
-            getActivity().overridePendingTransition(R.anim.right_in, R.anim.stay);
-        });
 
         invalidateViews();
         if (Helpers.needToSync(syncTimeInMillis)) {
@@ -118,7 +112,7 @@ public class CategoryFragment extends Fragment {
         }
     };
 
-    private void invalidateViews() {
+    public void invalidateViews() {
         categoryAdapter.clear();
         categoryAdapter.addAll(Category.getAllCategoriesByGroupId(groupId));
     }

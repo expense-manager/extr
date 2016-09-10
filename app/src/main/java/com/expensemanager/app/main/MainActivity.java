@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,7 +22,10 @@ import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryFragment;
+import com.expensemanager.app.category.NewCategoryActivity;
 import com.expensemanager.app.expense.ExpenseActivity;
+import com.expensemanager.app.expense.ExpenseFragment;
+import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
 import com.expensemanager.app.group.NewGroupActivity;
 import com.expensemanager.app.helpers.Helpers;
@@ -56,6 +60,9 @@ import io.realm.Realm;
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    public static final int NEW_EXPENSE = 0;
+    public static final int NEW_CATEGORY = 1;
+
     private ActionBarDrawerToggle drawerToggle;
     private DrawerAdapter drawerAdapter;
     private GroupDrawerAdapter groupDrawerAdapter;
@@ -72,6 +79,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
     @BindView(R.id.main_activity_drawer_recycler_view_id) RecyclerView drawRecyclerView;
+    @BindView(R.id.main_activity_fab_id) FloatingActionButton fab;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -130,10 +138,31 @@ public class MainActivity extends BaseActivity {
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
 
+        fab.setOnClickListener(v -> setupFab(NEW_EXPENSE));
 //        // Enable storage permission for LeakCanery
 //        if (BuildConfig.DEBUG) {
 //            checkExternalStoragePermission();
 //        }
+    }
+
+    private void setupFab(int fabType) {
+        fab.setVisibility(View.VISIBLE);
+
+        if (groupId == null) {
+            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        switch (fabType) {
+            case NEW_EXPENSE:
+                NewExpenseActivity.newInstance(this);
+                overridePendingTransition(R.anim.right_in, R.anim.stay);
+                break;
+            case NEW_CATEGORY:
+                NewCategoryActivity.newInstance(this);
+                overridePendingTransition(R.anim.right_in, R.anim.stay);
+                break;
+        }
     }
 
     private void setupDrawerListItems() {
@@ -206,6 +235,7 @@ public class MainActivity extends BaseActivity {
                 switch(position) {
                     case 0:
                         setupGroupList();
+                        fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                         break;
                     case 1:
                         if (currentPosition == position) {
@@ -222,13 +252,27 @@ public class MainActivity extends BaseActivity {
                                     .addToBackStack(OverviewFragment.class.getName())
                                     .commit();
                             setTitle(getString(R.string.app_name));
+                            fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 2:
+                        if (currentPosition == position) {
+                            drawerLayout.closeDrawers();
+                            return;
+                        } else {
+                            currentPosition = position;
+                        }
+
                         if (groupId != null) {
-                            ExpenseActivity.newInstance(MainActivity.this);
+                            getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                                .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
+                                .addToBackStack(ExpenseFragment.class.getName())
+                                .commit();
+                            setTitle(getString(R.string.expense));
+                            fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
@@ -248,6 +292,7 @@ public class MainActivity extends BaseActivity {
                                     .addToBackStack(ReportMainFragment.class.getName())
                                     .commit();
                             setTitle(getString(R.string.report));
+                            fab.setVisibility(View.INVISIBLE);
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
@@ -267,6 +312,7 @@ public class MainActivity extends BaseActivity {
                                     .addToBackStack(CategoryFragment.class.getName())
                                     .commit();
                             setTitle(getString(R.string.category));
+                            fab.setOnClickListener(va -> setupFab(NEW_CATEGORY));
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
@@ -274,6 +320,7 @@ public class MainActivity extends BaseActivity {
                     case 5:
                         if (groupId != null) {
                             GroupDetailActivity.newInstance(MainActivity.this, groupId);
+                            fab.setVisibility(View.INVISIBLE);
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
@@ -292,6 +339,7 @@ public class MainActivity extends BaseActivity {
                                 .addToBackStack(NotificationFragment.class.getName())
                                 .commit();
                         setTitle(getString(R.string.notification));
+                        fab.setVisibility(View.INVISIBLE);
                         break;
                     case 7:
                         // help
@@ -310,6 +358,7 @@ public class MainActivity extends BaseActivity {
                                 .addToBackStack(NotificationFragment.class.getName())
                                 .commit();
                         setTitle(getString(R.string.settings));
+                        fab.setVisibility(View.INVISIBLE);
                         break;
                     case 10:
                         signOut();
@@ -354,14 +403,30 @@ public class MainActivity extends BaseActivity {
                         syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
                         Helpers.saveSyncTime(MainActivity.this, syncTimeKey, syncTimeInMillis);
                     }
-                    OverviewFragment.SLEEP_LENGTH = 400;
-                    overviewFragment.invalidateViews();
+
+                    invalidateFragment();
                 } else if (position == members.size() + 2) {
                     NewGroupActivity.newInstance(MainActivity.this);
                     drawerLayout.closeDrawers();
                 }
             }
         });
+    }
+
+    private void invalidateFragment() {
+        currentPosition = 1;
+
+        if (groupId != null) {
+            getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
+                .addToBackStack(OverviewFragment.class.getName())
+                .commit();
+            setTitle(getString(R.string.app_name));
+            fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void saveGroupId() {

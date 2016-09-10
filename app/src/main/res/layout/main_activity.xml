@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -28,7 +28,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="6dp">>
+            android:layout_below="@+id/main_activity_toolbar_id"
+            android:elevation="6dp">
 
             <FrameLayout
                 android:id="@+id/main_activity_frame_layout_id"
@@ -37,7 +38,18 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+        <!-- New -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/main_activity_fab_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/fab_margin"
+
+            android:src="@drawable/ic_add_white_24dp"/>
+
+    </RelativeLayout>
 
     <!-- Navigation Drawer-->
     <android.support.v7.widget.RecyclerView

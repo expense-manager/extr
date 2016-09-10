@@ -243,16 +243,6 @@
             android:paddingBottom="@dimen/space_medium_large"
             android:focusable="false"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/main_activity_fab_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/fab_margin"
-
-            android:src="@drawable/ic_add_white_24dp"/>
-
     </RelativeLayout>
 
 </ScrollView>

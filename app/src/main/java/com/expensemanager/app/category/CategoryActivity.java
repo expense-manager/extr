@@ -47,7 +47,6 @@ public class CategoryActivity extends BaseActivity {
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.category_activity_recycler_view_id) RecyclerView recyclerView;
-    @BindView(R.id.category_activity_fab_id) FloatingActionButton fab;
     @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
 
     public static void newInstance(Context context) {
@@ -73,11 +72,6 @@ public class CategoryActivity extends BaseActivity {
         categories = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(this, categories);
         setupRecyclerView();
-
-        fab.setOnClickListener(v -> {
-            NewCategoryActivity.newInstance(this);
-            overridePendingTransition(R.anim.right_in, R.anim.stay);
-        });
 
         invalidateViews();
         if (Helpers.needToSync(syncTimeInMillis)) {

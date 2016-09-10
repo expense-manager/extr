@@ -68,7 +68,6 @@ public class OverviewFragment extends Fragment {
     @BindView(R.id.overview_total_progressBar) ProgressBar totalProgressBar;
     @BindView(R.id.overview_weekly_progressBar) ProgressBar weeklyProgressBar;
     @BindView(R.id.overview_monthly_progressBar) ProgressBar monthlyProgressBar;
-    @BindView(R.id.main_activity_fab_id) FloatingActionButton fab;
 
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
@@ -121,15 +120,6 @@ public class OverviewFragment extends Fragment {
         scrollView.fullScroll(ScrollView.FOCUS_UP);
 
         invalidateProgressBars();
-
-        fab.setOnClickListener(v -> {
-            if (groupId != null) {
-                NewExpenseActivity.newInstance(getActivity());
-                getActivity().overridePendingTransition(R.anim.right_in, R.anim.stay);
-            } else {
-                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void invalidateProgressBars() {
