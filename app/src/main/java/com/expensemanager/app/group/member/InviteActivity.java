@@ -62,7 +62,7 @@ public class InviteActivity extends BaseActivity {
     private String loginUserId;
     private ArrayList<User> users;
     private InviteAdapter inviteAdapter;
-    private String userFullName;
+    private String query;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -161,7 +161,7 @@ public class InviteActivity extends BaseActivity {
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         // Add hint
-        searchView.setQueryHint("Search full name...");
+        searchView.setQueryHint(getString(R.string.search_hint));
         // Expande search view
         searchItem.expandActionView();
         // add actionbar search listener
@@ -173,7 +173,8 @@ public class InviteActivity extends BaseActivity {
                 // perform query here
                 // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
                 // see https://code.google.com/p/android/issues/detail?id=24599
-                searchUserFullName(query.trim());
+                query = query.trim();
+                searchUserQuery(query);
                 searchView.clearFocus();
                 return true;
             }
@@ -187,19 +188,50 @@ public class InviteActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void searchUserFullName(final String userFullName) {
-        this.userFullName = userFullName;
+    public void searchUserQuery(String query) {
+        this.query = query;
         inviteAdapter.clear();
+
+        if (query.contains(" ")) {
+            searchUserFullName(query);
+        } else if (query.contains("@")) {
+            searchUserEmail(query);
+        } else {
+            searchUserPhoneNumber(query);
+        }
+    }
+
+    private void searchUserFullName(final String userFullName) {
         if (userFullName == null || userFullName.isEmpty()) {
             return;
         }
 
         progressBar.setVisibility(View.VISIBLE);
         // Sync user by full name input
-        SyncUser.getAllUsersByUserFullName(userFullName).continueWith(onQueryFullNameFinished, Task.UI_THREAD_EXECUTOR);
+        SyncUser.getAllUsersByUserFullName(userFullName).continueWith(onQueryUserFinished, Task.UI_THREAD_EXECUTOR);
     }
 
-    Continuation<JSONObject, Void> onQueryFullNameFinished = new Continuation<JSONObject, Void>() {
+    private void searchUserEmail(final String userEmail) {
+        if (userEmail == null || userEmail.isEmpty()) {
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        // Sync user by full name input
+        SyncUser.getAllUsersByUserEmail(userEmail).continueWith(onQueryUserFinished, Task.UI_THREAD_EXECUTOR);
+    }
+
+    private void searchUserPhoneNumber(final String userPhoneNumber) {
+        if (userPhoneNumber == null || userPhoneNumber.isEmpty()) {
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        // Sync user by full name input
+        SyncUser.getAllUsersByUserPhoneNumber(userPhoneNumber).continueWith(onQueryUserFinished, Task.UI_THREAD_EXECUTOR);
+    }
+
+    Continuation<JSONObject, Void> onQueryUserFinished = new Continuation<JSONObject, Void>() {
         @Override
         public Void then(Task<JSONObject> task) throws Exception {
             if (task.isFaulted()) {

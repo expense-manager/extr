@@ -465,6 +465,71 @@ public class RequestTemplateCreator {
         return new RequestTemplate(GET, url, params);
     }
 
+
+    public static RequestTemplate getAllUsersByUserEmail(String userEmail) {
+        if (userEmail == null) {
+            return null;
+        }
+
+        String url = BASE_URL + "users";
+        Map<String, String> params = new HashMap<>();
+
+        JSONObject userNameObj=new JSONObject();
+
+        try {
+            userNameObj.put(User.EMAIL_JSON_KEY, userEmail);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating user email object for where in getAllUsersByUserEmail", e);
+        }
+
+        params.put(WHERE, Helpers.encodeURIComponent(userNameObj.toString()));
+
+        return new RequestTemplate(GET, url, params);
+    }
+
+
+    public static RequestTemplate getAllUsersByUserPhoneNumber(String userPhoneNumber) {
+        if (userPhoneNumber == null) {
+            return null;
+        }
+
+        String url = BASE_URL + "users";
+        Map<String, String> params = new HashMap<>();
+
+        JSONObject userNameObj=new JSONObject();
+
+        try {
+            userNameObj.put(User.PHONE_JSON_KEY, userPhoneNumber);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating user phone object for where in getAllUsersByUserPhoneNumber", e);
+        }
+
+        params.put(WHERE, Helpers.encodeURIComponent(userNameObj.toString()));
+
+        return new RequestTemplate(GET, url, params);
+    }
+
+    public static RequestTemplate getUserByUsername(String username) {
+        if (username == null) {
+            return null;
+        }
+
+        String url = BASE_URL + "users";
+        Map<String, String> params = new HashMap<>();
+
+        JSONObject userNameObj=new JSONObject();
+
+        try {
+            userNameObj.put(User.USERNAME_JSON_KEY, username);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating username object for where in getUserByUsername", e);
+        }
+
+        params.put(WHERE, Helpers.encodeURIComponent(userNameObj.toString()));
+
+        return new RequestTemplate(GET, url, params);
+    }
+
     public static RequestTemplate deleteFileByName(String fileName) {
         String url = BASE_URL + "files/" + fileName;
 

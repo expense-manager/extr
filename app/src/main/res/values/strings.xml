@@ -72,6 +72,7 @@
     <string name="invite">Invite</string>
     <string name="sent">Sent</string>
     <string name="search">Search</string>
+    <string name="search_hint">Search full name, email or phone...</string>
     <string name="accepted">Accepted</string>
     <string name="accept">Accept</string>
     <string name="invite_new">New invitation</string>

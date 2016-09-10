@@ -194,7 +194,34 @@ public class SyncUser {
         RequestTemplate requestTemplate = RequestTemplateCreator.getAllUsersByUserFullName(userFullName);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
-        Log.d(TAG, "Start downloading Expenses");
+        Log.d(TAG, "Start downloading users by user fullname");
+        return networkRequest.send();
+    }
+
+    public static Task<JSONObject> getAllUsersByUserEmail(String userEmail) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getAllUsersByUserEmail(userEmail);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Log.d(TAG, "Start downloading users by user email");
+        return networkRequest.send();
+    }
+
+    public static Task<JSONObject> getAllUsersByUserPhoneNumber(String userPhoneNumber) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getAllUsersByUserPhoneNumber(userPhoneNumber);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Log.d(TAG, "Start downloading users by user phone number");
+        return networkRequest.send();
+    }
+
+    public static Task<JSONObject> getUserByUsername(String username) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.getUserByUsername(username);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        Log.d(TAG, "Start downloading user by username");
         return networkRequest.send();
     }
 

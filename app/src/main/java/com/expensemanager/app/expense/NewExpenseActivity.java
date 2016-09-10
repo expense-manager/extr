@@ -76,7 +76,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class NewExpenseActivity extends BaseActivity {
-    private static final String TAG = NewExpenseActivity.class.getSimpleName();
+    public static final String TAG = NewExpenseActivity.class.getSimpleName();
 
     public static final String DATE_PICKER = "date_picker";
     public static final String TIME_PICKER = "time_picker";
