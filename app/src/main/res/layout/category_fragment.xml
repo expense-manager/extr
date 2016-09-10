@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/category_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer_id"
+        android:layout_below="@+id/toolbar_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/category_activity_recycler_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!-- New -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/category_activity_fab_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+
+        android:src="@drawable/ic_add_white_24dp"/>
+
+</RelativeLayout>

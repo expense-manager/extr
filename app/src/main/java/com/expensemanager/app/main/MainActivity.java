@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.category.CategoryActivity;
+import com.expensemanager.app.category.CategoryFragment;
 import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity {
 
         if (fragment == null) {
             overviewFragment = OverviewFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .replace(R.id.main_activity_frame_layout_id, overviewFragment)
                     .addToBackStack(OverviewFragment.class.getName())
                     .commit();
@@ -233,7 +233,13 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 3:
                         if (groupId != null) {
-                            CategoryActivity.newInstance(MainActivity.this);
+//                            CategoryActivity.newInstance(MainActivity.this);
+                            getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                                    .replace(R.id.main_activity_frame_layout_id, CategoryFragment.newInstance())
+                                    .addToBackStack(CategoryFragment.class.getName())
+                                    .commit();
+
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
@@ -251,6 +257,12 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 6:
                         // help
+                        // todo: add overview menu
+                        getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                                .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
+                                .addToBackStack(CategoryFragment.class.getName())
+                                .commit();
                         break;
                     case 7:
                         SettingsActivity.newInstance(MainActivity.this);

@@ -39,8 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class ExpenseActivity extends BaseActivity
-    implements CategoryFilterFragment.CategoryFilterListener, DateFilterFragment.DateFilterListener {
+public class ExpenseActivity extends BaseActivity {
 
     private static final String TAG = ExpenseActivity.class.getSimpleName();
 
@@ -172,24 +171,7 @@ public class ExpenseActivity extends BaseActivity
         }
     };
 
-    @Override
-    public void onFinishCategoryFilterDialog(Category category) {
-        if (!isCategoryFiltered ||
-            ((this.category == null && category == null) || (this.category != null
-                && category != null && this.category.getId().equals(category.getId())))) {
-            isCategoryFiltered = !isCategoryFiltered;
-        }
-        this.category = category;
-        invalidateViews();
-    }
 
-    @Override
-    public void onFinishDateFilterDialog(Date startDate, Date endDate) {
-        this.isDateFiltered = startDate != null || endDate != null;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        invalidateViews();
-    }
 
     private void invalidateViews() {
         expenseAdapter.clear();
@@ -251,7 +233,7 @@ public class ExpenseActivity extends BaseActivity
 
     private void setupDate() {
         DateFilterFragment dateFilterFragment = DateFilterFragment.newInstance();
-        dateFilterFragment.setListener(this);
+        dateFilterFragment.setListener(dateFilterListener);
         dateFilterFragment.setFilterParams(startDate, endDate);
         dateFilterFragment.show(getSupportFragmentManager(), DATE_FRAGMENT);
 
@@ -260,10 +242,33 @@ public class ExpenseActivity extends BaseActivity
 
     private void setupCategory() {
         CategoryFilterFragment categoryFilterFragment = CategoryFilterFragment.newInstance();
-        categoryFilterFragment.setListener(this);
+        categoryFilterFragment.setListener(categoryFilterListener);
         categoryFilterFragment.setFilterParams(isCategoryFiltered, category);
         categoryFilterFragment.show(getSupportFragmentManager(), CATEGORY_FRAGMENT);
     }
+
+    private DateFilterFragment.DateFilterListener dateFilterListener = new DateFilterFragment.DateFilterListener() {
+        @Override
+        public void onFinishDateFilterDialog(Date startDate, Date endDate) {
+            isDateFiltered = startDate != null || endDate != null;
+            ExpenseActivity.this.startDate = startDate;
+            ExpenseActivity.this.endDate = endDate;
+            invalidateViews();
+        }
+    };
+
+    private CategoryFilterFragment.CategoryFilterListener categoryFilterListener = new CategoryFilterFragment.CategoryFilterListener() {
+        @Override
+        public void onFinishCategoryFilterDialog(Category category) {
+            if (!isCategoryFiltered ||
+                    ((ExpenseActivity.this.category == null && category == null) || (ExpenseActivity.this.category != null
+                            && category != null && ExpenseActivity.this.category.getId().equals(category.getId())))) {
+                isCategoryFiltered = !isCategoryFiltered;
+            }
+            ExpenseActivity.this.category = category;
+            invalidateViews();
+        }
+    };
 
     @Override
     public void onResume() {
