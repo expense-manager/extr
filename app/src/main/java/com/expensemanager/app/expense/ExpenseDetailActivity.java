@@ -115,6 +115,7 @@ public class ExpenseDetailActivity extends BaseActivity {
     private boolean isEditable = false;
     private long lastPhotoClickTime = 0;
     private String groupId;
+    private String loginUserId;
 
     private ArrayList<ExpensePhoto> expensePhotos;
     private ExpensePhotoAdapter expensePhotoAdapter;
@@ -161,6 +162,7 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
         expenseId = getIntent().getStringExtra(EXPENSE_ID);
         expense = Expense.getExpenseById(expenseId);
@@ -187,6 +189,8 @@ public class ExpenseDetailActivity extends BaseActivity {
         createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
 
         User createdBy = User.getUserById(expense.getUserId());
+        Group group = Group.getGroupById(groupId);
+
         if (createdBy != null && Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             Helpers.loadIconPhoto(createdByPhotoImageView, createdBy.getPhotoUrl());
             createdByNameTextView.setText(createdBy.getFullname());
@@ -199,7 +203,12 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         deleteButton.setOnClickListener(v -> delete());
 
-        editTextView.setVisibility(isEditable ? View.GONE : View.VISIBLE);
+        if (loginUserId.equals(expense.getUserId()) || loginUserId.equals(group.getUserId())) {
+            editTextView.setVisibility(isEditable ? View.GONE : View.VISIBLE);
+        } else {
+            editTextView.setVisibility(View.GONE);
+        }
+
         saveTextView.setVisibility(isEditable ? View.VISIBLE : View.GONE);
         deleteButton.setVisibility(isEditable ? View.VISIBLE : View.GONE);
         // If set GONE, newPhotoGridView would not show up after click edit again
