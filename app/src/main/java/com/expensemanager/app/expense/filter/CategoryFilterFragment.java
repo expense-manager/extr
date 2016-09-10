@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class CategoryFilterFragment extends DialogFragment {
     private CategoryFilterAdapter adapter;
     private String groupId;
 
+    @BindView(R.id.expense_category_fragment_relative_layout_id) RelativeLayout categoryRelativeLayout;
     @BindView(R.id.expense_category_fragment_recycler_view_id) RecyclerView categoryRecyclerView;
 
     public CategoryFilterFragment() {}
@@ -71,6 +73,8 @@ public class CategoryFilterFragment extends DialogFragment {
 
         categories = new ArrayList<>();
         adapter = new CategoryFilterAdapter(getActivity(), categories, isCategoryFiltered, category);
+
+        categoryRelativeLayout.setOnClickListener(v -> dismiss());
 
         setupRecyclerView();
         invalidateViews();

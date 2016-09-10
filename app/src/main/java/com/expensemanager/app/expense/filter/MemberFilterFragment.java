@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ public class MemberFilterFragment extends DialogFragment {
     private MemberFilterAdapter adapter;
     private String groupId;
 
+    @BindView(R.id.expense_member_fragment_relative_layout_id) RelativeLayout memberRelativeLayout;
     @BindView(R.id.expense_member_fragment_recycler_view_id) RecyclerView memberRecyclerView;
 
     public MemberFilterFragment() {}
@@ -72,6 +74,8 @@ public class MemberFilterFragment extends DialogFragment {
 
         members = new ArrayList<>();
         adapter = new MemberFilterAdapter(getActivity(), members, isMemberFiltered, member);
+
+        memberRelativeLayout.setOnClickListener(v -> dismiss());
 
         setupRecyclerView();
         invalidateViews();
