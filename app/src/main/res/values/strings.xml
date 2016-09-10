@@ -118,6 +118,7 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="mobile">Mobile</string>
+    <string name="report_average">Average: $</string>
 
     <!-- Color -->
     <string name="soft_default">Default</string>

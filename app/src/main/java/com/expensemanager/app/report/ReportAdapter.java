@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.font.Font;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,19 +95,9 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case VIEW_TYPE_HEADER:
                 Log.i(TAG, "header");
                 ViewHolderDefault viewHolderHeader = (ViewHolderDefault) viewHolder;
-                String averageString = null;
-                switch (requestCode) {
-                    case WEEKLY:
-                        averageString = "Weekly ave: ";
-                        break;
-                    case MONTHLY:
-                        averageString = "Monthly ave: ";
-                        break;
-                    case YEARLY:
-                        averageString = "Yearly ave: ";
-                        break;
-                }
+                String averageString = getContext().getString(R.string.report_average);
                 viewHolderHeader.averageTextView.setText(averageString + Helpers.formatNumToDouble(averageExpense));
+                viewHolderHeader.averageTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
                 break;
             case VIEW_TYPE_DEFAULT:
                 Log.i(TAG, "default");
