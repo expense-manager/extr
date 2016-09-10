@@ -417,6 +417,8 @@ public class MainActivity extends BaseActivity {
         currentPosition = 1;
 
         if (groupId != null) {
+            OverviewFragment.SLEEP_LENGTH = 300;
+
             getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
                 .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
