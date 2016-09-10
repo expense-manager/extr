@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/space_medium"
+    android:layout_marginRight="@dimen/space_medium"
+    android:layout_marginTop="@dimen/space_medium_small"
+    android:layout_marginBottom="@dimen/space_medium_small"
+
+    android:padding="@dimen/space_medium_small"
+    android:elevation="2dp"
+    android:background="@drawable/background_round_corner_white">
+
+    <!-- Photo -->
+    <ImageView
+        android:id="@+id/member_item_filter_photo_image_view_id"
+        android:layout_width="@dimen/category_color_width_small"
+        android:layout_height="@dimen/category_color_width_small"
+        android:layout_marginEnd="@dimen/space_medium"/>
+
+    <!-- Selec -->
+    <ImageView
+        android:id="@+id/member_item_filter_select_image_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+
+        android:src="@drawable/ic_check"/>
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/member_item_filter_name_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/member_item_filter_photo_image_view_id"
+        android:layout_alignTop="@+id/member_item_filter_photo_image_view_id"
+        android:layout_alignBottom="@+id/member_item_filter_photo_image_view_id"
+
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_really_small"
+        android:gravity="center_vertical"
+        tools:text="name"/>
+
+</RelativeLayout>

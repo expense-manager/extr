@@ -29,6 +29,7 @@
 
     <string name="select_color">Select color</string>
     <string name="category">Category</string>
+    <string name="user">User</string>
     <string name="date">Date</string>
     <string name="no_category">No Category</string>
     <string name="expense_date">Expense Date</string>

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.filter.CategoryFilterFragment;
 import com.expensemanager.app.expense.filter.DateFilterFragment;
+import com.expensemanager.app.expense.filter.MemberFilterFragment;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.Analytics;
 import com.expensemanager.app.main.BaseActivity;
@@ -47,9 +48,12 @@ public class ExpenseActivity extends BaseActivity {
     public static final String START_END_DATE = "startEnd";
     public static final String IS_CATEGORY_FILTERED = "is_category_filtered";
     public static final String CATEGORY_FRAGMENT = "Category_Fragment";
-    public static final String DATE_FRAGMENT = "Dater_Fragment";
+    public static final String DATE_FRAGMENT = "Date_Fragment";
+    public static final String USER_FRAGMENT = "User_Fragment";
 
     private ArrayList<Expense> expenses;
+    private Member member;
+    private boolean isMemberFiltered;
     private Category category;
     private boolean isCategoryFiltered;
     private Date startDate;
@@ -171,8 +175,6 @@ public class ExpenseActivity extends BaseActivity {
         }
     };
 
-
-
     private void invalidateViews() {
         expenseAdapter.clear();
 
@@ -183,8 +185,16 @@ public class ExpenseActivity extends BaseActivity {
             expenseAdapter.setShowMember(false);
         }
 
-        if (isCategoryFiltered && isDateFiltered) {
-            expenseAdapter.addAll(Expense.getAllExpensesByDateAndCategoryAndGrouopId(startDate, endDate, category, groupId));
+        if (isMemberFiltered && isCategoryFiltered && isDateFiltered) {
+            expenseAdapter.addAll(Expense.getAllExpensesByMemberAndDateAndCategoryAndGroupId(member, startDate, endDate, category, groupId));
+        } else if (isMemberFiltered && isDateFiltered) {
+            expenseAdapter.addAll(Expense.getAllExpensesByMemberAndDateAndGroupId(member, startDate, endDate, groupId));
+        } else if (isMemberFiltered && isCategoryFiltered) {
+            expenseAdapter.addAll(Expense.getAllExpensesByMemberAndCategoryAndGroupId(member, category, groupId));
+        } else if (isCategoryFiltered && isDateFiltered) {
+            expenseAdapter.addAll(Expense.getAllExpensesByDateAndCategoryAndGroupId(startDate, endDate, category, groupId));
+        } else if (isMemberFiltered) {
+            expenseAdapter.addAll(Expense.getAllExpensesByMemberAndGroupId(member, groupId));
         } else if (isCategoryFiltered) {
             expenseAdapter.addAll(Expense.getAllExpensesByCategoryAndGroupId(category, groupId));
         } else if (isDateFiltered) {
@@ -212,6 +222,18 @@ public class ExpenseActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        if (Member.getAllAcceptedMembersByGroupId(groupId).size() < 2) {
+            Log.i(TAG, "accepted member count: " + Member.getAllAcceptedMembersByGroupId(groupId).size());
+            menu.getItem(0).setVisible(false);
+            menu.getItem(0).setEnabled(false);
+            // You can also use something like:
+            // menu.findItem(R.id.example_foobar).setEnabled(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.expense_menu, menu);
         return true;
@@ -220,6 +242,9 @@ public class ExpenseActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_item_user_fragment_id:
+                setupMember();
+                break;
             case R.id.menu_item_category_fragment_id:
                 setupCategory();
                 break;
@@ -229,6 +254,15 @@ public class ExpenseActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    private void setupMember() {
+        MemberFilterFragment memberFilterFragment = MemberFilterFragment.newInstance();
+        memberFilterFragment.setListener(memberFilterListener);
+        memberFilterFragment.setFilterParams(isMemberFiltered, member);
+        memberFilterFragment.show(getSupportFragmentManager(), USER_FRAGMENT);
+
+        Analytics.track(getString(R.string.event_expense_date_filter_clicked));
     }
 
     private void setupDate() {
@@ -246,6 +280,18 @@ public class ExpenseActivity extends BaseActivity {
         categoryFilterFragment.setFilterParams(isCategoryFiltered, category);
         categoryFilterFragment.show(getSupportFragmentManager(), CATEGORY_FRAGMENT);
     }
+
+    private MemberFilterFragment.MemberFilterListener memberFilterListener = new MemberFilterFragment.MemberFilterListener() {
+        @Override
+        public void onFinishMemberFilterDialog(Member member) {
+            if (!isMemberFiltered ||
+                (ExpenseActivity.this.member != null && member != null && ExpenseActivity.this.member.getId().equals(member.getId()))) {
+                isMemberFiltered = !isMemberFiltered;
+            }
+            ExpenseActivity.this.member = member;
+            invalidateViews();
+        }
+    };
 
     private DateFilterFragment.DateFilterListener dateFilterListener = new DateFilterFragment.DateFilterListener() {
         @Override

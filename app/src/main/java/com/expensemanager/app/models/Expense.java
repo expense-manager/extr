@@ -219,6 +219,22 @@ public class Expense implements RealmModel {
     /**
      * @return all expenses by category
      */
+    public static RealmResults<Expense> getAllExpensesByMemberAndGroupId(Member member, String groupId) {
+        if (member == null) {
+            return null;
+        }
+
+        String userId = member.getUserId();
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = realm.where(Expense.class).equalTo(USER_JSON_KEY, userId).equalTo(GROUP_KEY, groupId).findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        realm.close();
+
+        return expenses;
+    }
+
+    /**
+     * @return all expenses by category
+     */
     public static RealmResults<Expense> getAllExpensesByCategoryAndGroupId(Category category, String groupId) {
         String categoryId = category != null ? category.getId() : null;
         Realm realm = Realm.getDefaultInstance();
@@ -265,7 +281,7 @@ public class Expense implements RealmModel {
     /**
      * @return all expenses by category and start date and/or end date
      */
-    public static RealmResults<Expense> getAllExpensesByDateAndCategoryAndGrouopId(Date startDate, Date endDate, Category category, String groupId) {
+    public static RealmResults<Expense> getAllExpensesByDateAndCategoryAndGroupId(Date startDate, Date endDate, Category category, String groupId) {
         if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0) {
             return null;
         }
@@ -291,6 +307,110 @@ public class Expense implements RealmModel {
             expenses = realm.where(Expense.class)
                 .equalTo(GROUP_KEY, groupId)
                 .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .equalTo(CATEGORY_ID_KEY, categoryId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        }
+
+        realm.close();
+
+        return expenses;
+    }
+
+    /**
+     * @return all expenses by member and category
+     */
+    public static RealmResults<Expense> getAllExpensesByMemberAndCategoryAndGroupId(Member member, Category category, String groupId) {
+        if (member == null) {
+            return null;
+        }
+
+        String categoryId = category != null ? category.getId() : null;
+        String userId = member.getUserId();
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = null;
+
+        expenses = realm.where(Expense.class)
+            .equalTo(GROUP_KEY, groupId)
+            .equalTo(USER_JSON_KEY, userId)
+            .equalTo(CATEGORY_ID_KEY, categoryId)
+            .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+
+        realm.close();
+
+        return expenses;
+    }
+
+    /**
+     * @return all expenses by member and start date and/or end date
+     */
+    public static RealmResults<Expense> getAllExpensesByMemberAndDateAndGroupId(Member member, Date startDate, Date endDate, String groupId) {
+        if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0 || member == null) {
+            return null;
+        }
+
+        String userId = member.getUserId();
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = null;
+
+        if (startDate != null && endDate != null) {
+            expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .equalTo(USER_JSON_KEY, userId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (startDate != null) {
+            expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .equalTo(USER_JSON_KEY, userId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (endDate != null) {
+            expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .equalTo(USER_JSON_KEY, userId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        }
+
+        realm.close();
+
+        return expenses;
+    }
+
+    /**
+     * @return all expenses by member and category and start date and/or end date
+     */
+    public static RealmResults<Expense> getAllExpensesByMemberAndDateAndCategoryAndGroupId(Member member, Date startDate, Date endDate, Category category, String groupId) {
+        if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0 || member == null) {
+            return null;
+        }
+
+        String categoryId = category != null ? category.getId() : null;
+        String userId = member.getUserId();
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Expense> expenses = null;
+
+        if (startDate != null && endDate != null) {
+            expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .equalTo(USER_JSON_KEY, userId)
+                .equalTo(CATEGORY_ID_KEY, categoryId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (startDate != null) {
+            expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
+                .greaterThanOrEqualTo(EXPENSE_DATE_KEY, startDate)
+                .equalTo(USER_JSON_KEY, userId)
+                .equalTo(CATEGORY_ID_KEY, categoryId)
+                .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
+        } else if (endDate != null) {
+            expenses = realm.where(Expense.class)
+                .equalTo(GROUP_KEY, groupId)
+                .lessThanOrEqualTo(EXPENSE_DATE_KEY, endDate)
+                .equalTo(USER_JSON_KEY, userId)
                 .equalTo(CATEGORY_ID_KEY, categoryId)
                 .findAllSorted(EXPENSE_DATE_KEY, Sort.DESCENDING);
         }
