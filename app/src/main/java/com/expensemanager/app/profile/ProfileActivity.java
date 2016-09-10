@@ -1,17 +1,5 @@
 package com.expensemanager.app.profile;
 
-import com.bumptech.glide.Glide;
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.main.BaseActivity;
-import com.expensemanager.app.models.Group;
-import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.PermissionsManager;
-import com.expensemanager.app.service.ProfileBuilder;
-import com.expensemanager.app.service.SyncUser;
-
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,12 +21,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.helpers.PhotoSourceAdapter;
+import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.PhotoSource;
+import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.Constant;
+import com.expensemanager.app.service.PermissionsManager;
+import com.expensemanager.app.service.ProfileBuilder;
+import com.expensemanager.app.service.SyncUser;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -59,18 +60,13 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
+import static com.expensemanager.app.service.Constant.TAKE_PHOTO_CODE;
+
 public class ProfileActivity extends BaseActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
 
     private static final String USER_ID = "userId";
     private static final String IS_EDITABLE = "isEditable";
-    public static final String NEW_PHOTO = "Take a photo";
-    public static final String LIBRARY_PHOTO = "Choose from library";
-    private static final int TAKE_PHOTO_CODE = 1;
-    private static final int PICK_PHOTO_CODE = 2;
-    private static final int CROP_PHOTO_CODE = 3;
-    private static final int POST_PHOTO_CODE = 4;
-
 
     private boolean isPlaceholder;
     private ArrayList<byte[]> photoList;
@@ -225,25 +221,22 @@ public class ProfileActivity extends BaseActivity {
     private void setPhotoSourcePicker() {
         choosePhotoSource = new AlertDialog.Builder(this);
 
-        final ArrayAdapter<String> photoSourceAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_1);
-        photoSourceAdapter.add(NEW_PHOTO);
-        photoSourceAdapter.add(LIBRARY_PHOTO);
+        PhotoSourceAdapter photoSourceAdapter = Helpers.getPhotoSourceAdapter(this);
 
         choosePhotoSource.setAdapter(photoSourceAdapter, (DialogInterface dialog, int which) -> {
-            String photoSource = photoSourceAdapter.getItem(which);
+            PhotoSource photoSource = photoSourceAdapter.getItem(which);
             if (photoSource == null) {
                 checkCameraPermission();
                 return;
             }
 
-            switch (photoSource) {
-                case NEW_PHOTO:
+            switch (photoSource.getTitle()) {
+                case Constant.TAKE_PHOTO:
                     Log.d(TAG, "Take a photo");
                     checkCameraPermission();
                     break;
-                case LIBRARY_PHOTO:
-                    Log.d(TAG, "Choose photo from library");
+                case Constant.PICK_PHOTO:
+                    Log.d(TAG, "Choose from library");
                     checkExternalStoragePermission();
                     break;
             }
@@ -271,19 +264,19 @@ public class ProfileActivity extends BaseActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
 
         if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, PICK_PHOTO_CODE);
+            startActivityForResult(intent, Constant.PICK_PHOTO_CODE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == TAKE_PHOTO_CODE) {
+            if (requestCode == Constant.TAKE_PHOTO_CODE) {
                 Log.d(TAG, "TAKE_PHOTO_CODE");
 
                 outputFileUri = getPhotoFileUri(photoFileName);
                 cropPhoto(outputFileUri);
-            } else if (requestCode == PICK_PHOTO_CODE) {
+            } else if (requestCode == Constant.PICK_PHOTO_CODE) {
                 Log.d(TAG, "PICK_PHOTO_CODE");
 
                 Uri photoUri = data.getData();
@@ -309,7 +302,7 @@ public class ProfileActivity extends BaseActivity {
                 } catch (IOException e) {
                     Log.e(TAG, "Error in getting photo data.", e);
                 }
-            } else if (requestCode == CROP_PHOTO_CODE) {
+            } else if (requestCode == Constant.CROP_PHOTO_CODE) {
                 Log.d(TAG, "CROP_PHOTO_CODE");
 
                 Uri photoUri = data.getData();
@@ -338,7 +331,7 @@ public class ProfileActivity extends BaseActivity {
                     Toast.makeText(this, "Cannot get cropped photo data!", Toast.LENGTH_SHORT).show();
                 }
 
-            } else if (requestCode == POST_PHOTO_CODE) {
+            } else if (requestCode == Constant.POST_PHOTO_CODE) {
                 Log.d(TAG, "POST_PHOTO_CODE");
             }
         }
@@ -362,7 +355,7 @@ public class ProfileActivity extends BaseActivity {
         cropIntent.putExtra("return-data", true);
 
         //start the activity - we handle returning in onActivityResult
-        startActivityForResult(cropIntent, CROP_PHOTO_CODE);
+        startActivityForResult(cropIntent, Constant.CROP_PHOTO_CODE);
     }
 
     // Returns the Uri for a photo stored on disk given the fileName

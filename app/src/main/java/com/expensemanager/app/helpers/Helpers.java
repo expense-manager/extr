@@ -12,8 +12,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -27,6 +27,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.PhotoSource;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.EColor;
 
@@ -46,6 +47,9 @@ import java.util.Random;
 import java.util.Set;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+import static com.expensemanager.app.service.Constant.PICK_PHOTO;
+import static com.expensemanager.app.service.Constant.TAKE_PHOTO;
 
 /**
  * Created by Zhaolong Zhong on 8/19/16.
@@ -617,5 +621,22 @@ public class Helpers {
 
     public static String doubleToCurrency(double amount) {
         return String.format("$%,.2f", amount);
+    }
+
+    public static PhotoSourceAdapter getPhotoSourceAdapter(Context context) {
+        ArrayList<PhotoSource> photoSources = new ArrayList<>();
+
+        PhotoSource takePhoto = new PhotoSource();
+        takePhoto.setIconResId(R.drawable.ic_camera_alt_white_24dp);
+        takePhoto.setTitle(TAKE_PHOTO);
+
+        PhotoSource pickPhoto = new PhotoSource();
+        pickPhoto.setIconResId(R.drawable.ic_photo_white_24dp);
+        pickPhoto.setTitle(PICK_PHOTO);
+
+        photoSources.add(takePhoto);
+        photoSources.add(pickPhoto);
+
+        return new PhotoSourceAdapter(context, photoSources);
     }
 }

@@ -29,7 +29,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -44,12 +43,15 @@ import com.expensemanager.app.expense.category_picker.CategoryPickerFragment;
 import com.expensemanager.app.expense.photo.ExpensePhotoAdapter;
 import com.expensemanager.app.helpers.DatePickerFragment;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.helpers.PhotoSourceAdapter;
 import com.expensemanager.app.helpers.TimePickerFragment;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.PhotoSource;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.Constant;
 import com.expensemanager.app.service.ExpenseBuilder;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncExpense;
@@ -75,17 +77,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.expensemanager.app.service.Constant.CROP_PHOTO_CODE;
+import static com.expensemanager.app.service.Constant.PICK_PHOTO_CODE;
+import static com.expensemanager.app.service.Constant.TAKE_PHOTO_CODE;
+
 public class NewExpenseActivity extends BaseActivity {
     public static final String TAG = NewExpenseActivity.class.getSimpleName();
 
     public static final String DATE_PICKER = "date_picker";
     public static final String TIME_PICKER = "time_picker";
-    public static final String NEW_PHOTO = "Take a photo";
-    public static final String LIBRARY_PHOTO = "Choose from library";
-    private static final int TAKE_PHOTO_CODE = 1;
-    private static final int PICK_PHOTO_CODE = 2;
-    private static final int CROP_PHOTO_CODE = 3;
-    private static final int POST_PHOTO_CODE = 4;
 
     private ArrayList<byte[]> photoList;
     private ExpensePhotoAdapter expensePhotoAdapter;
@@ -267,24 +267,21 @@ public class NewExpenseActivity extends BaseActivity {
     private void setPhotoSourcePicker() {
         choosePhotoSource = new AlertDialog.Builder(this);
 
-        final ArrayAdapter<String> photoSourceAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_1);
-        photoSourceAdapter.add(NEW_PHOTO);
-        photoSourceAdapter.add(LIBRARY_PHOTO);
+        PhotoSourceAdapter photoSourceAdapter = Helpers.getPhotoSourceAdapter(this);
 
         choosePhotoSource.setAdapter(photoSourceAdapter, (DialogInterface dialog, int which) -> {
-            String photoSource = photoSourceAdapter.getItem(which);
+            PhotoSource photoSource = photoSourceAdapter.getItem(which);
             if (photoSource == null) {
                 checkCameraPermission();
                 return;
             }
 
-            switch (photoSource) {
-                case NEW_PHOTO:
+            switch (photoSource.getTitle()) {
+                case Constant.TAKE_PHOTO:
                     Log.d(TAG, "Take a photo");
                     checkCameraPermission();
                     break;
-                case LIBRARY_PHOTO:
+                case Constant.PICK_PHOTO:
                     Log.d(TAG, "Choose photo from library");
                     checkExternalStoragePermission();
                     break;
@@ -313,14 +310,14 @@ public class NewExpenseActivity extends BaseActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
 
         if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, PICK_PHOTO_CODE);
+            startActivityForResult(intent, Constant.PICK_PHOTO_CODE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == TAKE_PHOTO_CODE) {
+            if (requestCode == Constant.TAKE_PHOTO_CODE) {
                 Log.d(TAG, "TAKE_PHOTO_CODE");
 
                 outputFileUri = getPhotoFileUri(photoFileName);
@@ -381,7 +378,7 @@ public class NewExpenseActivity extends BaseActivity {
                     Toast.makeText(this, "Cannot get cropped photo data!", Toast.LENGTH_SHORT).show();
                 }
 
-            } else if (requestCode == POST_PHOTO_CODE) {
+            } else if (requestCode == Constant.POST_PHOTO_CODE) {
                 Log.d(TAG, "POST_PHOTO_CODE");
             }
         }
@@ -418,7 +415,7 @@ public class NewExpenseActivity extends BaseActivity {
         cropIntent.putExtra("return-data", true);
 
         //start the activity - we handle returning in onActivityResult
-        startActivityForResult(cropIntent, CROP_PHOTO_CODE);
+        startActivityForResult(cropIntent, Constant.CROP_PHOTO_CODE);
     }
 
     // Returns the Uri for a photo stored on disk given the fileName
