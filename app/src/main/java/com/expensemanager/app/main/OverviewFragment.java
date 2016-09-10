@@ -1,10 +1,11 @@
 package com.expensemanager.app.main;
 
+import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
@@ -28,6 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Zhaolong Zhong on 8/27/16.
@@ -63,6 +68,7 @@ public class OverviewFragment extends Fragment {
     @BindView(R.id.overview_total_progressBar) ProgressBar totalProgressBar;
     @BindView(R.id.overview_weekly_progressBar) ProgressBar weeklyProgressBar;
     @BindView(R.id.overview_monthly_progressBar) ProgressBar monthlyProgressBar;
+    @BindView(R.id.main_activity_fab_id) FloatingActionButton fab;
 
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
@@ -115,6 +121,15 @@ public class OverviewFragment extends Fragment {
         scrollView.fullScroll(ScrollView.FOCUS_UP);
 
         invalidateProgressBars();
+
+        fab.setOnClickListener(v -> {
+            if (groupId != null) {
+                NewExpenseActivity.newInstance(getActivity());
+                getActivity().overridePendingTransition(R.anim.right_in, R.anim.stay);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void invalidateProgressBars() {

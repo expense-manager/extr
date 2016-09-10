@@ -61,7 +61,7 @@ public class ReportActivity extends BaseActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ReportFragmentAdapter adapter = new ReportFragmentAdapter(getSupportFragmentManager());
+        ReportFragmentAdapter adapter = new ReportFragmentAdapter(getFragmentManager());
 
         adapter.addFragment(ReportFragment.newInstance(ReportFragment.WEEKLY), "Weekly");
         adapter.addFragment(ReportFragment.newInstance(ReportFragment.MONTHLY), "Monthly");

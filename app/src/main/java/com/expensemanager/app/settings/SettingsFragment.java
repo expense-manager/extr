@@ -1,15 +1,16 @@
 package com.expensemanager.app.settings;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
@@ -36,8 +36,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class SettingsActivity extends BaseActivity {
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+import static android.content.Context.MODE_PRIVATE;
+
+/**
+ * Created by Zhaolong Zhong on 9/10/16.
+ */
+
+public class SettingsFragment extends Fragment {
+    private static final String TAG = SettingsFragment.class.getSimpleName();
 
     public static final String TIME_PICKER = "time_picker";
     public static final String SET_WEEKLY = "set_weekly";
@@ -49,62 +55,60 @@ public class SettingsActivity extends BaseActivity {
     private String loginUserId;
     private String groupId;
 
-    @BindView(R.id.toolbar_id) Toolbar toolbar;
-    @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
-    @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.setting_activity_profile_photo_image_view_id) ImageView photoImageView;
     @BindView(R.id.setting_activity_edit_profile_text_view_id) TextView editProfileTextView;
     @BindView(R.id.setting_activity_weekly_notification_switch_id) Switch weeklyNotificationSwitch;
     @BindView(R.id.setting_activity_monthly_notification_switch_id) Switch monthlyNotificationSwitch;
-    @BindView(R.id.setting_activity_signout_text_view_id) TextView signoutTextView;
+    @BindView(R.id.setting_activity_signout_text_view_id) TextView signOutTextView;
     @BindView(R.id.setting_activity_profile_label_text_view_id) TextView profileLabelTextView;
     @BindView(R.id.setting_activity_notification_label_text_view_id) TextView notificationLabelTextView;
     @BindView(R.id.setting_activity_general_label_text_view_id) TextView generalLabelTextView;
     @BindView(R.id.setting_activity_weekly_send_feedback_text_view_id) TextView sendFeedbackTextView;
 
-    public static void newInstance(Context context) {
-        Intent intent = new Intent(context, SettingsActivity.class);
-        context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    public static Fragment newInstance() {
+        return new SettingsFragment();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.settings_activity, container, false);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
-        ButterKnife.bind(this);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), MODE_PRIVATE);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
 
         weeklyNotificationSwitch.setOnCheckedChangeListener(
-            (compoundButton, b) -> {
-                setWeekly = b;
-                saveSettings();
-                if (b && groupId != null) {
-                    SettingsActivity.setWeeklyNotification(this, groupId);
-                } else if (groupId == null) {
-                    weeklyNotificationSwitch.setChecked(false);
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
-            });
+                (compoundButton, b) -> {
+                    setWeekly = b;
+                    saveSettings();
+                    if (b && groupId != null) {
+                        SettingsFragment.setWeeklyNotification(getActivity(), groupId);
+                    } else if (groupId == null) {
+                        weeklyNotificationSwitch.setChecked(false);
+                        Toast.makeText(getActivity(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         monthlyNotificationSwitch.setOnCheckedChangeListener(
-            (compoundButton, b) -> {
-                setMonthly = b;
-                saveSettings();
-                if (b && groupId != null) {
-                    SettingsActivity.setMonthlyNotification(this, groupId);
-                } else if (groupId == null) {
-                    monthlyNotificationSwitch.setChecked(false);
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
-            });
+                (compoundButton, b) -> {
+                    setMonthly = b;
+                    saveSettings();
+                    if (b && groupId != null) {
+                        SettingsFragment.setMonthlyNotification(getActivity(), groupId);
+                    } else if (groupId == null) {
+                        monthlyNotificationSwitch.setChecked(false);
+                        Toast.makeText(getActivity(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-        signoutTextView.setOnClickListener(v -> signOut());
+        signOutTextView.setOnClickListener(v -> signOut());
 
         setupViews();
     }
@@ -138,7 +142,7 @@ public class SettingsActivity extends BaseActivity {
         if (user != null) {
             Helpers.loadProfilePhoto(photoImageView, user.getPhotoUrl());
         }
-        editProfileTextView.setOnClickListener(v -> ProfileActivity.newInstance(this, null, true));
+        editProfileTextView.setOnClickListener(v -> ProfileActivity.newInstance(getActivity(), null, true));
 
         weeklyNotificationSwitch.setChecked(setWeekly);
         monthlyNotificationSwitch.setChecked(setMonthly);
@@ -151,7 +155,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void saveSettings() {
-        SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(getString(R.string.shared_preferences_session_key), MODE_PRIVATE).edit();
+        SharedPreferences.Editor sharedPreferencesEditor = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), MODE_PRIVATE).edit();
         sharedPreferencesEditor.putBoolean(SET_WEEKLY, setWeekly);
         sharedPreferencesEditor.putBoolean(SET_MONTHLY, setMonthly);
         sharedPreferencesEditor.apply();
@@ -162,7 +166,7 @@ public class SettingsActivity extends BaseActivity {
         // Check if pass the notification already
         // todo: change daily week notification to weekly
         if (calendar.get(Calendar.HOUR_OF_DAY) > 10
-            || calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0) {
+                || calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0) {
             // Go to next week
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
@@ -181,7 +185,7 @@ public class SettingsActivity extends BaseActivity {
         // Check if pass the notification already
         // todo: change daily month notification to monthly
         if (calendar.get(Calendar.HOUR_OF_DAY) > 10
-            || calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0) {
+                || calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0) {
             // Go to next month
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
@@ -195,22 +199,8 @@ public class SettingsActivity extends BaseActivity {
         return calendar.getTimeInMillis();
     }
 
-    private void setupToolbar() {
-        toolbar.setContentInsetsAbsolute(0,0);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-
-        titleTextView.setText(getString(R.string.settings));
-        titleTextView.setOnClickListener(v -> close());
-        backImageView.setOnClickListener(v -> close());
-    }
-
     private void signOut() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.sign_out_message)
                 .setPositiveButton(R.string.sign_out, (DialogInterface dialog, int which) -> SyncUser.logout().continueWith(logoutOnSuccess))
                 .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
@@ -226,7 +216,7 @@ public class SettingsActivity extends BaseActivity {
             }
 
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+                    getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
             sharedPreferences.edit().clear().apply();
             // Clear data when signout
             Realm realm = Realm.getDefaultInstance();
@@ -235,8 +225,8 @@ public class SettingsActivity extends BaseActivity {
             realm.commitTransaction();
             realm.close();
             // Go to welcome
-            WelcomeActivity.newInstance(SettingsActivity.this);
-            finish();
+            WelcomeActivity.newInstance(getActivity());
+            getActivity().finish();
             return null;
         }
     };

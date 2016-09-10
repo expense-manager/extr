@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_activity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.expensemanager.app.settings.SettingsActivity">
 
-    <include layout="@layout/toolbar" />
-
-    <ScrollView
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_id">
@@ -258,6 +252,4 @@
             android:text="@string/version_hint"
             android:textSize="@dimen/text_really_small"/>
     </RelativeLayout>
-    </ScrollView>
-
-</RelativeLayout>
+</ScrollView>

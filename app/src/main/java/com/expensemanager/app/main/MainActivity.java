@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryFragment;
 import com.expensemanager.app.expense.ExpenseActivity;
-import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
 import com.expensemanager.app.group.NewGroupActivity;
 import com.expensemanager.app.helpers.Helpers;
@@ -32,15 +30,15 @@ import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
-import com.expensemanager.app.notifications.NotificationsActivity;
-import com.expensemanager.app.report.ReportActivity;
+import com.expensemanager.app.notifications.NotificationFragment;
+import com.expensemanager.app.report.ReportMainFragment;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncGroup;
 import com.expensemanager.app.service.SyncMember;
 import com.expensemanager.app.service.SyncUser;
-import com.expensemanager.app.settings.SettingsActivity;
+import com.expensemanager.app.settings.SettingsFragment;
 import com.expensemanager.app.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
@@ -69,11 +67,11 @@ public class MainActivity extends BaseActivity {
     private long syncTimeInMillis;
     private String syncTimeKey;
     private OverviewFragment overviewFragment;
+    private int currentPosition = 1;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
     @BindView(R.id.main_activity_drawer_recycler_view_id) RecyclerView drawRecyclerView;
-    @BindView(R.id.main_activity_fab_id) FloatingActionButton fab;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -114,15 +112,6 @@ public class MainActivity extends BaseActivity {
 
         drawRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        fab.setOnClickListener(v -> {
-            if (groupId != null) {
-                NewExpenseActivity.newInstance(this);
-                overridePendingTransition(R.anim.right_in, R.anim.stay);
-            } else {
-                Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-            }
-        });
-
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
 
         if (fragment == null) {
@@ -148,6 +137,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupDrawerListItems() {
+        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_home).setTitle(getString(R.string.nav_overview)));
         drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
         drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
         drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_buffer).setTitle(getString(R.string.nav_category)));
@@ -218,59 +208,113 @@ public class MainActivity extends BaseActivity {
                         setupGroupList();
                         break;
                     case 1:
+                        if (currentPosition == position) {
+                            drawerLayout.closeDrawers();
+                            return;
+                        } else {
+                            currentPosition = position;
+                        }
+
                         if (groupId != null) {
-                            ExpenseActivity.newInstance(MainActivity.this);
+                            getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                                    .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
+                                    .addToBackStack(OverviewFragment.class.getName())
+                                    .commit();
+                            setTitle(getString(R.string.app_name));
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 2:
                         if (groupId != null) {
-                            ReportActivity.newInstance(MainActivity.this);
+                            ExpenseActivity.newInstance(MainActivity.this);
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 3:
+                        if (currentPosition == position) {
+                            drawerLayout.closeDrawers();
+                            return;
+                        } else {
+                            currentPosition = position;
+                        }
+
                         if (groupId != null) {
-//                            CategoryActivity.newInstance(MainActivity.this);
                             getFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                    .replace(R.id.main_activity_frame_layout_id, CategoryFragment.newInstance())
-                                    .addToBackStack(CategoryFragment.class.getName())
+                                    .replace(R.id.main_activity_frame_layout_id, ReportMainFragment.newInstance())
+                                    .addToBackStack(ReportMainFragment.class.getName())
                                     .commit();
-
+                            setTitle(getString(R.string.report));
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 4:
+                        if (currentPosition == position) {
+                            drawerLayout.closeDrawers();
+                            return;
+                        } else {
+                            currentPosition = position;
+                        }
+
+                        if (groupId != null) {
+                            getFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                                    .replace(R.id.main_activity_frame_layout_id, CategoryFragment.newInstance())
+                                    .addToBackStack(CategoryFragment.class.getName())
+                                    .commit();
+                            setTitle(getString(R.string.category));
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case 5:
                         if (groupId != null) {
                             GroupDetailActivity.newInstance(MainActivity.this, groupId);
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                         }
-                        // todo: remove group list activity
-                        break;
-                    case 5:
-                        NotificationsActivity.newInstance(MainActivity.this);
                         break;
                     case 6:
-                        // help
-                        // todo: add overview menu
+                        if (currentPosition == position) {
+                            drawerLayout.closeDrawers();
+                            return;
+                        } else {
+                            currentPosition = position;
+                        }
+
                         getFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
-                                .addToBackStack(CategoryFragment.class.getName())
+                                .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
+                                .addToBackStack(NotificationFragment.class.getName())
                                 .commit();
+                        setTitle(getString(R.string.notification));
                         break;
                     case 7:
-                        SettingsActivity.newInstance(MainActivity.this);
+                        // help
                         break;
-                    case 9:
-                        signOut();
+                    case 8:
+                        if (currentPosition == position) {
+                            drawerLayout.closeDrawers();
+                            return;
+                        } else {
+                            currentPosition = position;
+                        }
+
+                        getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                                .replace(R.id.main_activity_frame_layout_id, SettingsFragment.newInstance())
+                                .addToBackStack(NotificationFragment.class.getName())
+                                .commit();
+                        setTitle(getString(R.string.settings));
                         break;
                     case 10:
+                        signOut();
+                        break;
+                    case 11:
                         // About
                         break;
                     default:
@@ -423,6 +467,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
@@ -430,10 +475,15 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
+            Log.d(TAG, "drawerToggle.onOptionsItemSelected(item) true!");
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        Log.d(TAG, "zhaox: super.onOptionsItemSelected(item)");
+
+//        return super.onOptionsItemSelected(item);
+
+        return false;
     }
 
     @Override

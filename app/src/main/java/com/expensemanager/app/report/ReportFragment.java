@@ -3,7 +3,7 @@ package com.expensemanager.app.report;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -98,6 +98,4 @@ public class ReportFragment extends Fragment {
             }
         }, Task.UI_THREAD_EXECUTOR);
     }
-
-
 }
