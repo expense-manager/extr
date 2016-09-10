@@ -29,6 +29,8 @@ import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.service.SyncExpense;
+import com.twotoasters.jazzylistview.effects.SlideInEffect;
+import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -207,6 +209,10 @@ public class ExpenseActivity extends BaseActivity {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(expenseAdapter);
+        // Add JazzyListView scroll effect
+        JazzyRecyclerViewScrollListener jazzyScrollListener = new JazzyRecyclerViewScrollListener();
+        recyclerView.addOnScrollListener(jazzyScrollListener);
+        jazzyScrollListener.setTransitionEffect(new SlideInEffect());
     }
 
     private void setupToolbar() {
