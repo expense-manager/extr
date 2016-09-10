@@ -1,13 +1,5 @@
 package com.expensemanager.app.main;
 
-import com.bumptech.glide.Glide;
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.DrawerItem;
-import com.expensemanager.app.models.DrawerSubItem;
-import com.expensemanager.app.models.User;
-import com.expensemanager.app.profile.ProfileActivity;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewCompat;
@@ -18,9 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.DrawerItem;
+import com.expensemanager.app.models.DrawerSubItem;
+import com.expensemanager.app.models.User;
+import com.expensemanager.app.profile.ProfileActivity;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import java.util.ArrayList;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerViewHolder> {
 
@@ -83,8 +80,13 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 ProfileActivity.newInstance(context, null);
             });
         } else if (type == TYPE_MENU) {
-            holder.titleTextView.setText(drawerMenuList.get(position - 1).getTitle());
+            String menuTitle = drawerMenuList.get(position - 1).getTitle();
+            holder.titleTextView.setText(menuTitle);
             holder.iconImageView.setImageResource(drawerMenuList.get(position - 1).getIcon());
+            if (menuTitle.equals("Notifications")) {
+                holder.badgeTextView.setVisibility(View.VISIBLE);
+                // todo: check unread notification and set unread number
+            }
         } else if (type == TYPE_SUBMENU) {
             holder.titleTextView.setText(drawerSubMenuList.get(position - drawerMenuList.size() - 2).getTitle());
         }
@@ -144,6 +146,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         // DrawerItem
         TextView titleTextView;
         ImageView iconImageView;
+        TextView badgeTextView;
 
         public DrawerViewHolder(View itemView, int viewType) {
             super(itemView);
@@ -156,6 +159,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             } else if(viewType == TYPE_MENU){
                 titleTextView = (TextView) itemView.findViewById(R.id.drawer_name_text_view_id);
                 iconImageView = (ImageView) itemView.findViewById(R.id.drawer_icon_image_view_id);
+                badgeTextView = (TextView) itemView.findViewById(R.id.drawer_badge_text_view_id);
             } else if (viewType == TYPE_SUBMENU) {
                 titleTextView = (TextView) itemView.findViewById(R.id.drawer_name_text_view_id);
             }
@@ -168,7 +172,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 @Override
                 public void onClick(View view) {
                     mListener.onItemSelected(view, getAdapterPosition());
-
                 }
             });
         }

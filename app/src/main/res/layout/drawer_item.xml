@@ -21,23 +21,40 @@
         android:paddingStart="0dp"
         android:paddingTop="@dimen/drawer_item_primary_icon_padding" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical|start"
-        android:orientation="vertical">
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/drawer_name_text_view_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+
+            android:textDirection="anyRtl"
+            android:textSize="@dimen/drawer_item_primary_text"
             android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical|start"
             android:lines="1"
-            android:singleLine="true"
-            android:textDirection="anyRtl"
-            android:textSize="@dimen/drawer_item_primary_text"
+            android:maxLines="1"
             tools:text="Some drawer text" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/drawer_badge_text_view_id"
+            android:layout_width="26dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="@dimen/space_small"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_centerVertical="true"
+
+            android:paddingTop="2dp"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="@color/white"
+            android:textSize="@dimen/space_medium"
+            android:background="@drawable/notification_badge_background"
+            android:visibility="gone"/>
+    </RelativeLayout>
 </LinearLayout>
