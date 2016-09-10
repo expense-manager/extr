@@ -1,6 +1,7 @@
 package com.expensemanager.app.report;
 
 import android.app.Fragment;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -8,11 +9,16 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.main.EApplication;
+import com.expensemanager.app.service.font.Font;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+;
 
 /**
  * Created by Zhaolong Zhong on 9/10/16.
@@ -50,7 +56,25 @@ public class ReportMainFragment extends Fragment {
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
+        changeTabsFont();
 
         viewPager.setCurrentItem(ReportFragment.MONTHLY);
+    }
+
+    private void changeTabsFont() {
+        Typeface typeface = EApplication.getInstance().getTypeface(Font.REGULAR);
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(typeface, Typeface.NORMAL);
+                }
+            }
+        }
     }
 }

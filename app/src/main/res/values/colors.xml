@@ -40,4 +40,7 @@
     <color name="soft_yellow">#F7B314</color>
 
     <color name="notification_red">#E84F5F</color>
+    <color name="report_tab_text_default_color">#C5EDFC</color>
+    <!--<color name="report_tab_text_default_color">#B2E7FA</color>-->
+    <!--<color name="report_tab_text_default_color">#A3E2F9</color>-->
 </resources>
