@@ -9,14 +9,12 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
-import com.expensemanager.app.settings.SettingsActivity;
 
 import java.text.DecimalFormat;
 import java.util.Date;

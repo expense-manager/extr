@@ -125,6 +125,20 @@ public class RNotification implements RealmModel {
         return notifications;
     }
 
+    public static RealmResults<RNotification> getAllUnReadNotifications() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<RNotification> notifications = realm.where(RNotification.class)
+                .equalTo(IS_CHECKED, false)
+                .findAllSorted(CREATED_AT_KEY, Sort.DESCENDING);
+        realm.close();
+
+        return notifications;
+    }
+
+    public static int getUnReadNotificationCount() {
+        return getAllUnReadNotifications().size();
+    }
+
     /**
      * @param id notification id
      * @return RNotification object if exist, otherwise return null.

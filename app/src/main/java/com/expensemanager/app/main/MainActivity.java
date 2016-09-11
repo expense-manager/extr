@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -75,6 +76,10 @@ public class MainActivity extends BaseActivity {
     private OverviewFragment overviewFragment;
     private int currentPosition = 1;
 
+    private User currentUser;
+    private Runnable pendingRunnable;
+    private Handler handler;
+
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
     @BindView(R.id.main_activity_drawer_recycler_view_id) RecyclerView drawRecyclerView;
@@ -104,19 +109,21 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
 
-        User currentUser = User.getUserById(loginUserId);
+        currentUser = User.getUserById(loginUserId);
+        handler = new Handler();
         drawerItems = new ArrayList<>();
         drawerSubItems = new ArrayList<>();
         members = new ArrayList<>();
-        drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
-        groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
-        setupDrawerListItems();
-        setupGroupListItems();
-        setupDrawerList();
+        setupDrawerListItems(); // Get drawer menus and sub menus
+
+//        drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
+//        groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
+//        setupDrawerListItems(drawerAdapter);
+//        setupGroupListItems(groupDrawerAdapter);
+//        setupDrawerList(drawerAdapter);
 
         drawerToggle = setupDrawerToggle();
         drawerLayout.addDrawerListener(drawerToggle);
-
         drawRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
@@ -129,8 +136,6 @@ public class MainActivity extends BaseActivity {
                     .commit();
         }
 
-        //SettingsActivity.loadSetting(this);
-
         if (Helpers.needToSync(syncTimeInMillis)) {
             SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
@@ -142,6 +147,196 @@ public class MainActivity extends BaseActivity {
 //        if (BuildConfig.DEBUG) {
 //            checkExternalStoragePermission();
 //        }
+
+        invalidateViews();
+    }
+
+    private void invalidateViews() {
+        Log.d(TAG, "zhaox invalidateViews");
+        drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
+        setupDrawerList(drawerAdapter);
+        drawerAdapter.invalidate();
+
+        groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
+        setupGroupListItems(groupDrawerAdapter);
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                // Reset to drawer menu list at close
+//                setupDrawerList();
+                Log.d(TAG, "setupDrawerToggle - onDrawerClosed");
+            }
+        };
+    }
+
+    private void setupDrawerList(DrawerAdapter drawerAdapter) {
+        drawRecyclerView.setAdapter(drawerAdapter);
+
+        drawerAdapter.setOnItemClickLister(new DrawerAdapter.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(View v, int position) {
+                Log.d(TAG, "onItemSelected");
+                pendingRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        selectItem(position);
+                    }
+                };
+
+                if (position != 0) {
+                    drawerLayout.closeDrawers();
+                }
+
+                if (pendingRunnable != null) {
+                    handler.postDelayed(pendingRunnable, 0);
+                    pendingRunnable = null;
+                }
+            }
+        });
+    }
+
+    private void selectItem(int position) {
+        switch(position) {
+            case 0:
+                setupGroupList();
+                fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+                break;
+            case 1:
+                if (currentPosition == position) {
+                    drawerLayout.closeDrawers();
+                    return;
+                } else {
+                    currentPosition = position;
+                }
+
+                if (groupId != null) {
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
+                            .addToBackStack(OverviewFragment.class.getName())
+                            .commit();
+                    setTitle(getString(R.string.app_name));
+                    fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 2:
+                if (currentPosition == position) {
+                    drawerLayout.closeDrawers();
+                    return;
+                } else {
+                    currentPosition = position;
+                }
+
+                if (groupId != null) {
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
+                            .addToBackStack(ExpenseFragment.class.getName())
+                            .commit();
+                    setTitle(getString(R.string.expense));
+                    fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 3:
+                if (currentPosition == position) {
+                    drawerLayout.closeDrawers();
+                    return;
+                } else {
+                    currentPosition = position;
+                }
+
+                if (groupId != null) {
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .replace(R.id.main_activity_frame_layout_id, ReportMainFragment.newInstance())
+                            .addToBackStack(ReportMainFragment.class.getName())
+                            .commit();
+                    setTitle(getString(R.string.report));
+                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 4:
+                if (currentPosition == position) {
+                    drawerLayout.closeDrawers();
+                    return;
+                } else {
+                    currentPosition = position;
+                }
+
+                if (groupId != null) {
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .replace(R.id.main_activity_frame_layout_id, CategoryFragment.newInstance())
+                            .addToBackStack(CategoryFragment.class.getName())
+                            .commit();
+                    setTitle(getString(R.string.category));
+                    fab.setOnClickListener(va -> setupFab(NEW_CATEGORY));
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 5:
+                if (groupId != null) {
+                    GroupDetailActivity.newInstance(MainActivity.this, groupId);
+                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 6:
+                if (currentPosition == position) {
+                    drawerLayout.closeDrawers();
+                    return;
+                } else {
+                    currentPosition = position;
+                }
+
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                        .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
+                        .addToBackStack(NotificationFragment.class.getName())
+                        .commit();
+                setTitle(getString(R.string.notification));
+                fab.setVisibility(View.INVISIBLE);
+                break;
+            case 7:
+                // help
+                break;
+            case 8:
+                if (currentPosition == position) {
+                    drawerLayout.closeDrawers();
+                    return;
+                } else {
+                    currentPosition = position;
+                }
+
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                        .replace(R.id.main_activity_frame_layout_id, SettingsFragment.newInstance())
+                        .addToBackStack(NotificationFragment.class.getName())
+                        .commit();
+                setTitle(getString(R.string.settings));
+                fab.setVisibility(View.INVISIBLE);
+                break;
+            case 10:
+                signOut();
+                break;
+            case 11:
+                // About
+                break;
+            default:
+                break;
+        }
     }
 
     private void setupFab(int fabType) {
@@ -165,22 +360,22 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupDrawerListItems() {
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_home).setTitle(getString(R.string.nav_overview)));
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_buffer).setTitle(getString(R.string.nav_category)));
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_bell).setTitle(getString(R.string.nav_notifications)));
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_help_circle).setTitle(getString(R.string.nav_help)));
-        drawerAdapter.add(new DrawerItem().setIcon(R.drawable.ic_settings).setTitle(getString(R.string.nav_settings)));
+        drawerItems.clear();
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_home).setTitle(getString(R.string.nav_overview)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_buffer).setTitle(getString(R.string.nav_category)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_bell).setTitle(getString(R.string.nav_notifications)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_help_circle).setTitle(getString(R.string.nav_help)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_settings).setTitle(getString(R.string.nav_settings)));
 
-        DrawerSubItem drawerSubItem = new DrawerSubItem().setTitle(getString(R.string.sign_out));
-        drawerAdapter.add(drawerSubItem);
-        drawerSubItem = new DrawerSubItem().setTitle(getString(R.string.nav_about));
-        drawerAdapter.add(drawerSubItem);
+        drawerSubItems.clear();
+        drawerSubItems.add(new DrawerSubItem().setTitle(getString(R.string.sign_out)));
+        drawerSubItems.add(new DrawerSubItem().setTitle(getString(R.string.nav_about)));
     }
 
-    private void setupGroupListItems() {
+    private void setupGroupListItems(GroupDrawerAdapter groupDrawerAdapter) {
         groupDrawerAdapter.clear();
         List<Member> newMembers = Member.getAllMembersByUserId(loginUserId);
 
@@ -225,165 +420,15 @@ public class MainActivity extends BaseActivity {
         return -1;
     }
 
-    private void setupDrawerList() {
-        drawRecyclerView.setAdapter(drawerAdapter);
-
-        drawerAdapter.setOnItemClickLister(new DrawerAdapter.OnItemSelecteListener() {
-            @Override
-            public void onItemSelected(View v, int position) {
-                switch(position) {
-                    case 0:
-                        setupGroupList();
-                        fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
-                        break;
-                    case 1:
-                        if (currentPosition == position) {
-                            drawerLayout.closeDrawers();
-                            return;
-                        } else {
-                            currentPosition = position;
-                        }
-
-                        if (groupId != null) {
-                            getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                    .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
-                                    .addToBackStack(OverviewFragment.class.getName())
-                                    .commit();
-                            setTitle(getString(R.string.app_name));
-                            fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case 2:
-                        if (currentPosition == position) {
-                            drawerLayout.closeDrawers();
-                            return;
-                        } else {
-                            currentPosition = position;
-                        }
-
-                        if (groupId != null) {
-                            getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
-                                .addToBackStack(ExpenseFragment.class.getName())
-                                .commit();
-                            setTitle(getString(R.string.expense));
-                            fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case 3:
-                        if (currentPosition == position) {
-                            drawerLayout.closeDrawers();
-                            return;
-                        } else {
-                            currentPosition = position;
-                        }
-
-                        if (groupId != null) {
-                            getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                    .replace(R.id.main_activity_frame_layout_id, ReportMainFragment.newInstance())
-                                    .addToBackStack(ReportMainFragment.class.getName())
-                                    .commit();
-                            setTitle(getString(R.string.report));
-                            fab.setVisibility(View.INVISIBLE);
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case 4:
-                        if (currentPosition == position) {
-                            drawerLayout.closeDrawers();
-                            return;
-                        } else {
-                            currentPosition = position;
-                        }
-
-                        if (groupId != null) {
-                            getFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                    .replace(R.id.main_activity_frame_layout_id, CategoryFragment.newInstance())
-                                    .addToBackStack(CategoryFragment.class.getName())
-                                    .commit();
-                            setTitle(getString(R.string.category));
-                            fab.setOnClickListener(va -> setupFab(NEW_CATEGORY));
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case 5:
-                        if (groupId != null) {
-                            GroupDetailActivity.newInstance(MainActivity.this, groupId);
-                            fab.setVisibility(View.INVISIBLE);
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case 6:
-                        if (currentPosition == position) {
-                            drawerLayout.closeDrawers();
-                            return;
-                        } else {
-                            currentPosition = position;
-                        }
-
-                        getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
-                                .addToBackStack(NotificationFragment.class.getName())
-                                .commit();
-                        setTitle(getString(R.string.notification));
-                        fab.setVisibility(View.INVISIBLE);
-                        break;
-                    case 7:
-                        // help
-                        break;
-                    case 8:
-                        if (currentPosition == position) {
-                            drawerLayout.closeDrawers();
-                            return;
-                        } else {
-                            currentPosition = position;
-                        }
-
-                        getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                                .replace(R.id.main_activity_frame_layout_id, SettingsFragment.newInstance())
-                                .addToBackStack(NotificationFragment.class.getName())
-                                .commit();
-                        setTitle(getString(R.string.settings));
-                        fab.setVisibility(View.INVISIBLE);
-                        break;
-                    case 10:
-                        signOut();
-                        break;
-                    case 11:
-                        // About
-                        break;
-                    default:
-                        break;
-                }
-                if (position != 0) {
-                    drawerLayout.closeDrawers();
-                }
-            }
-        });
-    }
-
     private void setupGroupList() {
-        setupGroupListItems();
+        setupGroupListItems(groupDrawerAdapter);
         drawRecyclerView.setAdapter(groupDrawerAdapter);
 
         groupDrawerAdapter.setOnItemClickLister(new GroupDrawerAdapter.OnItemSelecteListener() {
             @Override
             public void onItemSelected(View v, int position) {
                 if (position == 0) {
-                    setupDrawerList();
+                    setupDrawerList(drawerAdapter);
                 } else if (position <= members.size() + 1) {
                     Member member = members.get(position - 2);
                     if (!member.isAccepted()) {
@@ -434,17 +479,6 @@ public class MainActivity extends BaseActivity {
         SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0).edit();
         sharedPreferencesEditor.putString(Group.ID_KEY, groupId);
         sharedPreferencesEditor.apply();
-    }
-
-    private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close) {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                // Reset to drawer menu list at close
-                setupDrawerList();
-            }
-        };
     }
 
     private Continuation<Void, Void> onGetLoginUserFinished = new Continuation<Void, Void>() {
@@ -551,15 +585,17 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "zhaox onResume");
         Realm realm = Realm.getDefaultInstance();
-        realm.addChangeListener(v -> setupGroupListItems());
+        realm.addChangeListener(v -> invalidateViews());
 
-        setupGroupListItems();
+        invalidateViews();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "zhaox onPause");
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
     }

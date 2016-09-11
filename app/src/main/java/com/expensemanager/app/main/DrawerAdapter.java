@@ -14,12 +14,14 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
+import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
 
 import java.util.ArrayList;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerViewHolder> {
+    private static final String TAG = DrawerAdapter.class.getSimpleName();
 
     public final static int TYPE_HEADER = 0;
     public final static int TYPE_MENU = 1;
@@ -31,8 +33,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     private ArrayList<DrawerSubItem> drawerSubMenuList;
     private User user;
     private DrawerViewHolder headerHolder;
+    private int notificationCount = 0;
 
-    private OnItemSelecteListener mListener;
+    private OnItemSelectedListener onItemSelectedListener;
 
     public DrawerAdapter(Context context, ArrayList<DrawerItem> drawerMenuList, ArrayList<DrawerSubItem> drawerSubMenuList, User user) {
         this.context = context;
@@ -84,8 +87,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             holder.titleTextView.setText(menuTitle);
             holder.iconImageView.setImageResource(drawerMenuList.get(position - 1).getIcon());
             if (menuTitle.equals("Notifications")) {
-                holder.badgeTextView.setVisibility(View.VISIBLE);
-                // todo: check unread notification and set unread number
+                if (notificationCount > 0) {
+                    holder.badgeTextView.setVisibility(View.VISIBLE);
+                    holder.badgeTextView.setText(String.valueOf(notificationCount));
+                }
             }
         } else if (type == TYPE_SUBMENU) {
             holder.titleTextView.setText(drawerSubMenuList.get(position - drawerMenuList.size() - 2).getTitle());
@@ -126,14 +131,21 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         }
     }
 
-    public void add(DrawerItem drawerItem) {
-        drawerMenuList.add(drawerItem);
+    public void add(ArrayList<DrawerItem> drawerItems) {
+        drawerMenuList.clear();
+        drawerMenuList.addAll(drawerItems);
         notifyItemChanged(drawerMenuList.size());
     }
 
     public void add(DrawerSubItem drawerSubItem) {
+        drawerSubMenuList.clear();
         drawerSubMenuList.add(drawerSubItem);
         notifyItemChanged(drawerMenuList.size() + 1);
+    }
+
+    public void invalidate() {
+        notificationCount = RNotification.getUnReadNotificationCount();
+        notifyDataSetChanged();
     }
 
     class DrawerViewHolder extends RecyclerView.ViewHolder{
@@ -171,19 +183,18 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mListener.onItemSelected(view, getAdapterPosition());
+                    onItemSelectedListener.onItemSelected(view, getAdapterPosition());
                 }
             });
         }
 
     }
 
-    public void setOnItemClickLister(OnItemSelecteListener mListener) {
-        this.mListener = mListener;
+    public void setOnItemClickLister(OnItemSelectedListener onItemSelectedListener) {
+        this.onItemSelectedListener = onItemSelectedListener;
     }
 
-    public interface OnItemSelecteListener{
+    public interface OnItemSelectedListener {
         public void onItemSelected(View v, int position);
     }
-
 }
