@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryFragment;
 import com.expensemanager.app.category.NewCategoryActivity;
-import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.expense.ExpenseFragment;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
@@ -545,10 +544,6 @@ public class MainActivity extends BaseActivity {
             Log.d(TAG, "drawerToggle.onOptionsItemSelected(item) true!");
             return true;
         }
-
-        Log.d(TAG, "zhaox: super.onOptionsItemSelected(item)");
-
-//        return super.onOptionsItemSelected(item);
 
         return false;
     }

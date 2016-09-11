@@ -147,15 +147,15 @@ dependencies {
     // Facebook
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 
+    // JazzyListView
+    compile 'com.twotoasters.jazzylistview:library:1.2.1'
+    compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'
+
     // Retrolambda, make sure to apply this line last.
     apply plugin: 'me.tatarka.retrolambda'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') {
         transitive = true;
     }
-
-    // JazzyListView
-    compile 'com.twotoasters.jazzylistview:library:1.2.1'
-    compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'
 }
 
 // ADD THIS AT THE BOTTOM
