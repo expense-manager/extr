@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/space_medium_small"
+    android:layout_marginRight="@dimen/space_medium_small">
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/member_item_char_name_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/space_medium"
+        android:layout_marginTop="@dimen/space_medium"
+
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium_small"
+        tools:text="A"/>
+
+</RelativeLayout>

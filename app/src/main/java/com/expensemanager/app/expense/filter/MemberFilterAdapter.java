@@ -20,7 +20,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +34,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MemberFilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= MemberFilterAdapter.class.getSimpleName();
 
-    private static final int VIEW_TYPE_DEFAULT = 0;
+    private static final int VIEW_TYPE_CHAR = 0;
+    private static final int VIEW_TYPE_DEFAULT = 1;
 
     private ArrayList<Member> members;
     private Member member;
@@ -62,11 +68,10 @@ public class MemberFilterAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view;
 
         switch (viewType) {
             case VIEW_TYPE_DEFAULT:
-                view = inflater.inflate(R.layout.member_item_filter, parent, false);
+                View view = inflater.inflate(R.layout.member_item_filter, parent, false);
                 viewHolder = new ViewHolderDefault(view);
                 break;
 
