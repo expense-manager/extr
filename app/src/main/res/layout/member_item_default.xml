@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/space_medium"
     android:layout_marginRight="@dimen/space_medium"
-    android:layout_marginTop="@dimen/space_medium_small"
     android:layout_marginBottom="@dimen/space_medium_small"
 
     android:padding="@dimen/space_medium_small"
