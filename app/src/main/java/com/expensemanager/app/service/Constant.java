@@ -16,4 +16,6 @@ public class Constant {
     public static final int PICK_PHOTO_CODE = 2;
     public static final int CROP_PHOTO_CODE = 3;
     public static final int POST_PHOTO_CODE = 4;
+
+    public static final String NOTIFICATION_BROADCAST_INTENT = "NOTIFICATION_BROADCAST_INTENT";
 }

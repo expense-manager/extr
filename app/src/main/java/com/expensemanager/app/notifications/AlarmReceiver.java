@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
+import com.expensemanager.app.service.Constant;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -95,5 +97,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(rNotification.getId().hashCode(), notification);
+
+        Intent broadcastIntent = new Intent(Constant.NOTIFICATION_BROADCAST_INTENT);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
     }
 }

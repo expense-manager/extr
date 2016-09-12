@@ -1,14 +1,17 @@
 package com.expensemanager.app.main;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -34,8 +37,10 @@ import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.notifications.AlarmReceiver;
 import com.expensemanager.app.notifications.NotificationFragment;
 import com.expensemanager.app.report.ReportMainFragment;
+import com.expensemanager.app.service.Constant;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
@@ -79,6 +84,8 @@ public class MainActivity extends BaseActivity {
     private User currentUser;
     private Runnable pendingRunnable;
     private Handler handler;
+    private BroadcastReceiver broadcastReceiver;
+    private boolean isReceiverRegistered;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
@@ -149,10 +156,17 @@ public class MainActivity extends BaseActivity {
 //        }
 
         invalidateViews();
+
+        isReceiverRegistered = false;
+        broadcastReceiver = new AlarmReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                invalidateViews();
+            }
+        };
     }
 
     private void invalidateViews() {
-        Log.d(TAG, "zhaox invalidateViews");
         drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
         setupDrawerList(drawerAdapter);
         drawerAdapter.invalidate();
@@ -585,19 +599,28 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "zhaox onResume");
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
 
         invalidateViews();
+
+        if (!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                    new IntentFilter(Constant.NOTIFICATION_BROADCAST_INTENT));
+            isReceiverRegistered = true;
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "zhaox onPause");
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
+
+        if (isReceiverRegistered && broadcastReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+            isReceiverRegistered = false;
+        }
     }
 
     @Override
