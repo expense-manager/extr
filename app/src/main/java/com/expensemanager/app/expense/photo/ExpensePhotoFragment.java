@@ -27,7 +27,7 @@ public class ExpensePhotoFragment extends DialogFragment {
     private int position;
     private Unbinder unbinder;
     private ArrayList<ExpensePhoto> expensePhotos;
-    private ExpensePhotoPagerAdapter adapter;
+    private ExpensePhotoPagerAdapter expensePhotoPagerAdapter;
 
     @BindView(R.id.expense_photo_fragment_view_pager_id) ViewPager viewPager;
 
@@ -65,9 +65,9 @@ public class ExpensePhotoFragment extends DialogFragment {
         expenseId = bundle.getString(EXPENSE_ID);
         position = bundle.getInt(POSITION);
         expensePhotos = new ArrayList<>(ExpensePhoto.getExpensePhotoByExpenseId(expenseId));
-        adapter = new ExpensePhotoPagerAdapter(getActivity(), expensePhotos);
+        expensePhotoPagerAdapter = new ExpensePhotoPagerAdapter(getActivity(), expensePhotos);
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(expensePhotoPagerAdapter);
         viewPager.setCurrentItem(position);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setClipChildren(false);

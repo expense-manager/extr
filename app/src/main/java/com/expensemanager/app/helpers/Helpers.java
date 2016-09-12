@@ -27,6 +27,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.PhotoSource;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.EColor;
@@ -607,6 +608,13 @@ public class Helpers {
         return classTag + groupId;
     }
 
+    public static long getSyncTimeInMillis(String syncTimeKey) {
+        Context context = EApplication.getInstance();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.shared_preferences_session_key), 0);
+
+        return sharedPreferences.getLong(syncTimeKey, 0);
+    }
+
     public static final long DAY_IN_MILLIS = 86400000L;
     public static boolean needToSync(long lastTimeInMillis) {
         long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
@@ -638,5 +646,12 @@ public class Helpers {
         photoSources.add(pickPhoto);
 
         return new PhotoSourceAdapter(context, photoSources);
+    }
+
+    public static String getCurrentGroupId() {
+        Context context = EApplication.getInstance();
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(context.getString(R.string.shared_preferences_session_key), 0);
+        return sharedPreferences.getString(Group.ID_KEY, null);
     }
 }

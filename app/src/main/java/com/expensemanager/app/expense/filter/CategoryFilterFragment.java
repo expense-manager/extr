@@ -1,11 +1,5 @@
 package com.expensemanager.app.expense.filter;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.ItemClickSupport;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Group;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -15,6 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.helpers.ItemClickSupport;
+import com.expensemanager.app.models.Category;
 
 import java.util.ArrayList;
 
@@ -55,8 +54,7 @@ public class CategoryFilterFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.CategoryColorDialogStyle);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
     }
 
     @Override
@@ -73,7 +71,6 @@ public class CategoryFilterFragment extends DialogFragment {
 
         categories = new ArrayList<>();
         adapter = new CategoryFilterAdapter(getActivity(), categories, isCategoryFiltered, category);
-
         categoryRelativeLayout.setOnClickListener(v -> dismiss());
 
         setupRecyclerView();

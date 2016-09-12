@@ -78,7 +78,6 @@ public class MainActivity extends BaseActivity {
     private String groupId;
     private long syncTimeInMillis;
     private String syncTimeKey;
-    private OverviewFragment overviewFragment;
     private int currentPosition = 1;
 
     private User currentUser;
@@ -103,18 +102,12 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        loginUserId = Helpers.getLoginUserId();
+        groupId = Helpers.getCurrentGroupId();
         syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
-        if (loginUserId == null || groupId == null) {
-            Log.i(TAG, "Error getting login user id or group id.");
-        }
-
-        setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(0xFFFFFFFF);
+        setupToolbar();
 
         currentUser = User.getUserById(loginUserId);
         handler = new Handler();
@@ -123,12 +116,6 @@ public class MainActivity extends BaseActivity {
         members = new ArrayList<>();
         setupDrawerListItems(); // Get drawer menus and sub menus
 
-//        drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
-//        groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
-//        setupDrawerListItems(drawerAdapter);
-//        setupGroupListItems(groupDrawerAdapter);
-//        setupDrawerList(drawerAdapter);
-
         drawerToggle = setupDrawerToggle();
         drawerLayout.addDrawerListener(drawerToggle);
         drawRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -136,26 +123,13 @@ public class MainActivity extends BaseActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
 
         if (fragment == null) {
-            overviewFragment = OverviewFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .replace(R.id.main_activity_frame_layout_id, overviewFragment)
+                    .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
                     .addToBackStack(OverviewFragment.class.getName())
-                    .commit();
-        }
-
-        if (Helpers.needToSync(syncTimeInMillis)) {
-            SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
-            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
-            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+            .commit();
         }
 
         fab.setOnClickListener(v -> setupFab(NEW_EXPENSE));
-//        // Enable storage permission for LeakCanery
-//        if (BuildConfig.DEBUG) {
-//            checkExternalStoragePermission();
-//        }
-
-        invalidateViews();
 
         isReceiverRegistered = false;
         broadcastReceiver = new AlarmReceiver() {
@@ -164,6 +138,13 @@ public class MainActivity extends BaseActivity {
                 invalidateViews();
             }
         };
+
+        invalidateViews();
+
+//        // Enable storage permission for LeakCanary
+//        if (BuildConfig.DEBUG) {
+//            checkExternalStoragePermission();
+//        }
     }
 
     private void invalidateViews() {
@@ -173,6 +154,17 @@ public class MainActivity extends BaseActivity {
 
         groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
         setupGroupListItems(groupDrawerAdapter);
+
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncUser.getLoginUser().continueWith(onGetLoginUserFinished, Task.UI_THREAD_EXECUTOR);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(0xFFFFFFFF);
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -182,7 +174,6 @@ public class MainActivity extends BaseActivity {
                 super.onDrawerClosed(drawerView);
                 // Reset to drawer menu list at close
 //                setupDrawerList();
-                Log.d(TAG, "setupDrawerToggle - onDrawerClosed");
             }
         };
     }
@@ -193,7 +184,6 @@ public class MainActivity extends BaseActivity {
         drawerAdapter.setOnItemClickLister(new DrawerAdapter.OnItemSelectedListener() {
             @Override
             public void onItemSelected(View v, int position) {
-                Log.d(TAG, "onItemSelected");
                 pendingRunnable = new Runnable() {
                     @Override
                     public void run() {
@@ -554,7 +544,6 @@ public class MainActivity extends BaseActivity {
             SharedPreferences sharedPreferences =
                 getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
             sharedPreferences.edit().clear().apply();
-            // Clear data when signout
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             realm.deleteAll();
@@ -589,7 +578,6 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
-            Log.d(TAG, "drawerToggle.onOptionsItemSelected(item) true!");
             return true;
         }
 

@@ -198,4 +198,9 @@ public class Group implements RealmModel {
 
         return group;
     }
+
+    public static @Nullable Group getCurrentGroup() {
+        String currentGroupId = Helpers.getCurrentGroupId();
+        return getGroupById(currentGroupId);
+    }
 }

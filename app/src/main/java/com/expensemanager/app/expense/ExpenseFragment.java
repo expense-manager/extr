@@ -1,5 +1,20 @@
 package com.expensemanager.app.expense;
 
+import android.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.filter.CategoryFilterFragment;
 import com.expensemanager.app.expense.filter.DateFilterFragment;
@@ -8,35 +23,10 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.Analytics;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
-import com.expensemanager.app.models.RNotification;
-import com.expensemanager.app.notifications.NotificationAdapter;
 import com.expensemanager.app.service.SyncExpense;
 import com.twotoasters.jazzylistview.effects.SlideInEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
-
-import android.app.Fragment;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -96,67 +86,17 @@ public class ExpenseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
         syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
         expenses = new ArrayList<>();
         expenseAdapter = new ExpenseAdapter(getActivity(), expenses);
         setupRecyclerView();
+        setupSwipeToRefresh();
 
         invalidateViews();
-
-        if (Helpers.needToSync(syncTimeInMillis)) {
-            SyncExpense.getAllExpensesByGroupId(groupId);
-            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
-            Helpers.saveSyncTime(getActivity(), syncTimeKey, syncTimeInMillis);
-        }
-
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                SyncExpense.getAllExpensesByGroupId(groupId).continueWith(onGetExpenseFinished, Task.UI_THREAD_EXECUTOR);
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
-
-    public void loadDate(Date[] startEnd) {
-        if (startEnd == null) {
-            return;
-        }
-
-        isDateFiltered = true;
-        startDate = startEnd[0];
-        endDate = startEnd[1];
-
-        //invalidateViews();
-    }
-
-    public void loadCategory(String categoryId) {
-        isCategoryFiltered = true;
-        category = Category.getCategoryById(categoryId);
-
-        //invalidateViews();
-    }
-
-    private Continuation<Void, Void> onGetExpenseFinished = new Continuation<Void, Void>() {
-        @Override
-        public Void then(Task<Void> task) throws Exception {
-            if (task.isFaulted()) {
-                Log.e(TAG, "Error:", task.getError());
-            }
-
-            if (swipeContainer != null) {
-                swipeContainer.setRefreshing(false);
-            }
-
-            return null;
-        }
-    };
 
     public void invalidateViews() {
         expenseAdapter.clear();
@@ -185,6 +125,12 @@ public class ExpenseFragment extends Fragment {
         } else {
             expenseAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
         }
+
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncExpense.getAllExpensesByGroupId(groupId);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(getActivity(), syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void setupRecyclerView() {
@@ -195,6 +141,32 @@ public class ExpenseFragment extends Fragment {
         recyclerView.addOnScrollListener(jazzyScrollListener);
         jazzyScrollListener.setTransitionEffect(new SlideInEffect());
     }
+
+    private void setupSwipeToRefresh() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncExpense.getAllExpensesByGroupId(groupId).continueWith(onGetExpenseFinished, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
+    }
+
+    private Continuation<Void, Void> onGetExpenseFinished = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error:", task.getError());
+            }
+
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
+            }
+
+            return null;
+        }
+    };
 
     @Override
     public void onPrepareOptionsMenu (Menu menu) {

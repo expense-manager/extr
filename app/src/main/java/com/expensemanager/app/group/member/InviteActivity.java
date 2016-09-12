@@ -3,12 +3,10 @@ package com.expensemanager.app.group.member;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -18,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,16 +23,10 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.Constant;
-import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncMember;
 import com.expensemanager.app.service.SyncUser;
-import com.expensemanager.app.service.email.Mail;
-import com.expensemanager.app.service.email.MailSender;
-import com.expensemanager.app.service.email.Recipient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +34,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Set;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -85,26 +75,50 @@ public class InviteActivity extends BaseActivity {
         setContentView(R.layout.invite_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        loginUserId = Helpers.getLoginUserId();
+        groupId = Helpers.getCurrentGroupId();
         syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
         users = new ArrayList<>();
         inviteAdapter = new InviteAdapter(this, users, loginUserId, groupId);
-        setupRecyclerView();
 
+        setupToolbar();
+        setupRecyclerView();
+        setupSwipeToRefresh();
         invalidateViews();
+    }
+
+    private void invalidateViews() {
+        inviteAdapter.setExistingMembers(Member.getAllMembersByGroupId(groupId));
+
         // Sync all members of current group
         if (Helpers.needToSync(syncTimeInMillis)) {
             SyncMember.getMembersByGroupId(groupId);
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+    }
 
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        titleTextView.setText(getString(R.string.invite_new));
+
+        titleTextView.setOnClickListener(v -> finish());
+        backImageView.setOnClickListener(v -> finish());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(inviteAdapter);
+    }
+
+    private void setupSwipeToRefresh() {
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -130,28 +144,6 @@ public class InviteActivity extends BaseActivity {
             return null;
         }
     };
-
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(inviteAdapter);
-    }
-
-    private void invalidateViews() {
-        inviteAdapter.setExistingMembers(Member.getAllMembersByGroupId(groupId));
-    }
-
-    private void setupToolbar() {
-        toolbar.setContentInsetsAbsolute(0,0);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-        titleTextView.setText(getString(R.string.invite_new));
-
-        titleTextView.setOnClickListener(v -> finish());
-        backImageView.setOnClickListener(v -> finish());
-    }
 
     // Inflate the menu; this adds items to the action bar if it is present.
     @Override
@@ -231,7 +223,7 @@ public class InviteActivity extends BaseActivity {
         SyncUser.getAllUsersByUserPhoneNumber(userPhoneNumber).continueWith(onQueryUserFinished, Task.UI_THREAD_EXECUTOR);
     }
 
-    Continuation<JSONObject, Void> onQueryUserFinished = new Continuation<JSONObject, Void>() {
+    private Continuation<JSONObject, Void> onQueryUserFinished = new Continuation<JSONObject, Void>() {
         @Override
         public Void then(Task<JSONObject> task) throws Exception {
             if (task.isFaulted()) {

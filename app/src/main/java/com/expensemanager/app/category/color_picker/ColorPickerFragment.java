@@ -1,6 +1,5 @@
 package com.expensemanager.app.category.color_picker;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.service.EColor;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public class ColorPickerFragment extends DialogFragment {
 
     Unbinder unbinder;
     private ColorPickerListener listener;
-    private ColorPickerAdapter adapter;
+    private ColorPickerAdapter colorPickerAdapter;
     private Set<String> usedColors;
     private String currentColor;
     private String groupId;
@@ -66,21 +64,20 @@ public class ColorPickerFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
 
         colors = EColor.getAllColors();
         currentColor = getArguments().getString(CURRENT_COLOR);
         usedColors = Helpers.getUsedColorSet(groupId);
 
-        adapter = new ColorPickerAdapter(getActivity(), listener, this, currentColor, colors, usedColors);
+        colorPickerAdapter = new ColorPickerAdapter(getActivity(), listener, this, currentColor, colors, usedColors);
         setupRecyclerView();
     }
 
     private void setupRecyclerView() {
         categoryColorRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), COLUMNS,
             GridLayoutManager.VERTICAL, false));
-        categoryColorRecyclerView.setAdapter(adapter);
+        categoryColorRecyclerView.setAdapter(colorPickerAdapter);
     }
 
     @Override

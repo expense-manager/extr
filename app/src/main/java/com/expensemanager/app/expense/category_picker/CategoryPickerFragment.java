@@ -27,7 +27,7 @@ public class CategoryPickerFragment extends DialogFragment {
     private Unbinder unbinder;
     private CategoryPickerListener categoryPickerListener;
     private ArrayList<Category> categories;
-    private CategoryPickerAdapter adapter;
+    private CategoryPickerAdapter categoryPickerAdapter;
     private String groupId;
 
     @BindView(R.id.expense_category_fragment_recycler_view_id) RecyclerView categoryRecyclerView;
@@ -63,23 +63,23 @@ public class CategoryPickerFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         categories = new ArrayList<>();
-        adapter = new CategoryPickerAdapter(getActivity(), categories);
+        categoryPickerAdapter = new CategoryPickerAdapter(getActivity(), categories);
 
         setupRecyclerView();
         invalidateViews();
     }
 
     private void invalidateViews() {
-        adapter.clear();
+        categoryPickerAdapter.clear();
         // Add no category option
-        adapter.add(null);
+        categoryPickerAdapter.add(null);
         // Add all categories
-        adapter.addAll(Category.getAllCategoriesByGroupId(groupId));
+        categoryPickerAdapter.addAll(Category.getAllCategoriesByGroupId(groupId));
     }
 
     private void setupRecyclerView() {
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        categoryRecyclerView.setAdapter(adapter);
+        categoryRecyclerView.setAdapter(categoryPickerAdapter);
         ItemClickSupport.addTo(categoryRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {

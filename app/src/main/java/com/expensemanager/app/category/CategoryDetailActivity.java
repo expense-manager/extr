@@ -35,8 +35,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
-public class CategoryDetailActivity extends AppCompatActivity
-    implements ColorPickerFragment.ColorPickerListener {
+public class CategoryDetailActivity extends AppCompatActivity {
     private static final String TAG = CategoryDetailActivity.class.getSimpleName();
 
     private static final String CATEGORY_ID = "CATEGORY_ID";
@@ -69,31 +68,13 @@ public class CategoryDetailActivity extends AppCompatActivity
         setContentView(R.layout.category_detail_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
-
+        groupId = Helpers.getCurrentGroupId();
         String categoryId = getIntent().getStringExtra(CATEGORY_ID);
         category = Category.getCategoryById(categoryId);
-
         usedColors = Helpers.getUsedColorSet(groupId);
 
+        setupToolbar();
         invalidateViews();
-    }
-
-    private void setupToolbar() {
-        toolbar.setContentInsetsAbsolute(0,0);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-        titleTextView.setText(getString(R.string.title_activity_category_detail));
-        titleTextView.setOnClickListener(v -> close());
-        backImageView.setOnClickListener(v -> close());
-        editTextView.setOnClickListener(v -> setEditMode(true));
-        saveTextView.setOnClickListener(v -> save());
     }
 
     private void invalidateViews() {
@@ -112,23 +93,38 @@ public class CategoryDetailActivity extends AppCompatActivity
         setupEditableViews(isEditable);
     }
 
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        titleTextView.setText(getString(R.string.title_activity_category_detail));
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
+        editTextView.setOnClickListener(v -> setEditMode(true));
+        saveTextView.setOnClickListener(v -> save());
+    }
+
     private void selectColor() {
         if (isEditable) {
             ColorPickerFragment colorPickerFragment = ColorPickerFragment
                 .newInstance(currentColor);
-            // Pass listener
-            colorPickerFragment.setListener(this);
+            colorPickerFragment.setListener(colorPickerListener);
             colorPickerFragment.show(getSupportFragmentManager(), ColorPickerFragment.class.getSimpleName());
         }
     }
 
-    @Override
-    public void onFinishCategoryColorDialog(String color) {
-        usedColors.remove(currentColor);
-        usedColors.add(color);
-        currentColor = color;
-        colorImageView.setBackgroundColor(Color.parseColor(color));
-    }
+    private ColorPickerFragment.ColorPickerListener colorPickerListener = new ColorPickerFragment.ColorPickerListener() {
+        @Override
+        public void onFinishCategoryColorDialog(String color) {
+            usedColors.remove(currentColor);
+            usedColors.add(color);
+            currentColor = color;
+            colorImageView.setBackgroundColor(Color.parseColor(color));
+        }
+    };
 
     private void setupEditableViews(boolean isEditable) {
         nameEditText.setFocusable(isEditable);

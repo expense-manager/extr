@@ -3,7 +3,6 @@ package com.expensemanager.app.group;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.expensemanager.app.R;
 import com.expensemanager.app.group.member.MemberActivity;
 import com.expensemanager.app.helpers.Helpers;
@@ -35,7 +33,6 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 public class GroupDetailActivity extends BaseActivity {
@@ -80,35 +77,15 @@ public class GroupDetailActivity extends BaseActivity {
         setContentView(R.layout.group_detail_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        loginUserId = sharedPreferences.getString(User.USER_ID, null);
-
+        loginUserId = Helpers.getLoginUserId();
         groupId = getIntent().getStringExtra(GROUP_ID);
 
         memberRelativeLayout.setOnClickListener(v -> {
             MemberActivity.newInstance(this, groupId);
         });
 
+        setupToolbar();
         invalidateViews();
-    }
-
-    private void setupToolbar() {
-        toolbar.setContentInsetsAbsolute(0,0);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-        titleTextView.setText(getString(R.string.title_activity_group_detail));
-        titleTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
-        titleTextView.setOnClickListener(v -> close());
-        backImageView.setOnClickListener(v -> close());
-        editTextView.setOnClickListener(v -> setEditMode(true));
-        saveTextView.setOnClickListener(v -> save());
-        editTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
-        saveTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
     }
 
     private void invalidateViews() {
@@ -145,6 +122,23 @@ public class GroupDetailActivity extends BaseActivity {
         }
 
         setupEditableViews(isEditable);
+    }
+
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        titleTextView.setText(getString(R.string.title_activity_group_detail));
+        titleTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
+        editTextView.setOnClickListener(v -> setEditMode(true));
+        saveTextView.setOnClickListener(v -> save());
+        editTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
+        saveTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
     }
 
     private void setupEditableViews(boolean isEditable) {

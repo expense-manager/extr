@@ -3,7 +3,6 @@ package com.expensemanager.app.group.member;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -19,9 +18,7 @@ import android.widget.TextView;
 import com.expensemanager.app.R;
 import com.expensemanager.app.group.GroupActivity;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
-import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncMember;
 
 import java.util.ArrayList;
@@ -64,59 +61,30 @@ public class MemberActivity extends AppCompatActivity {
         setContentView(R.layout.member_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
         groupId = getIntent().getStringExtra(GROUP_ID);
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
         members = new ArrayList<>();
         memberAdapter = new MemberAdapter(this, members);
+
+        setupToolbar();
         setupRecyclerView();
+        setupSwipeToRefresh();
 
         invalidateViews();
+    }
+
+    private void invalidateViews() {
+        memberAdapter.clear();
+        memberAdapter.addAll(Member.getAllAcceptedMembersByGroupId(groupId));
+
         // Sync all members of current group
         if (Helpers.needToSync(syncTimeInMillis)) {
             SyncMember.getMembersByGroupId(groupId);
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
-
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                SyncMember.getMembersByGroupId(groupId).continueWith(onGetMemberFinished, Task.UI_THREAD_EXECUTOR);
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
-    }
-
-    private Continuation<Void, Void> onGetMemberFinished = new Continuation<Void, Void>() {
-        @Override
-        public Void then(Task<Void> task) throws Exception {
-            if (task.isFaulted()) {
-                Log.e(TAG, "Error:", task.getError());
-            }
-
-            if (swipeContainer != null) {
-                swipeContainer.setRefreshing(false);
-            }
-
-            return null;
-        }
-    };
-
-    private void invalidateViews() {
-        memberAdapter.clear();
-        memberAdapter.addAll(Member.getAllAcceptedMembersByGroupId(groupId));
-    }
-
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(memberAdapter);
     }
 
     private void setupToolbar() {
@@ -136,6 +104,37 @@ public class MemberActivity extends AppCompatActivity {
         backImageView.setOnClickListener(v -> finish());
         inviteTextView.setOnClickListener(v -> InviteActivity.newInstance(this));
     }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(memberAdapter);
+    }
+
+    private void setupSwipeToRefresh() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncMember.getMembersByGroupId(groupId).continueWith(onGetMemberFinished, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
+    }
+
+    private Continuation<Void, Void> onGetMemberFinished = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error:", task.getError());
+            }
+
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
+            }
+
+            return null;
+        }
+    };
 
     @Override
     public void onResume() {

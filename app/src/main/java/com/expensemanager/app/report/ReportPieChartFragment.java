@@ -1,6 +1,5 @@
 package com.expensemanager.app.report;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.Group;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,8 +57,7 @@ public class ReportPieChartFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
 
         categories = new ArrayList<>();
         amounts = new ArrayList<>();
@@ -74,17 +71,15 @@ public class ReportPieChartFragment extends Fragment {
         View v = inflater.inflate(R.layout.report_chart_fragment, parent, false);
         // bind fragment with ButterKnife
         unbinder = ButterKnife.bind(this, v);
-
-        setupRecyclerView();
-
-        invalidateViews();
-
         return v;
     }
 
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(reportCategoryAdapter);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setupRecyclerView();
+        invalidateViews();
     }
 
     public void invalidateViews() {
@@ -112,6 +107,11 @@ public class ReportPieChartFragment extends Fragment {
         if (expenses != null) {
             reportCategoryAdapter.addAll(expenses);
         }
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(reportCategoryAdapter);
     }
 
     @Override

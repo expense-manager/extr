@@ -71,9 +71,7 @@ public class NewCategoryActivity extends AppCompatActivity
         setupToolbar();
 
         category = new Category();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
 
         // Get used color set
         usedColors = Helpers.getUsedColorSet(groupId);

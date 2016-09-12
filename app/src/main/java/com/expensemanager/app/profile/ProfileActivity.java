@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -31,7 +30,6 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.helpers.PhotoSourceAdapter;
 import com.expensemanager.app.main.BaseActivity;
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.PhotoSource;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.Constant;
@@ -113,14 +111,14 @@ public class ProfileActivity extends BaseActivity {
         setContentView(R.layout.profile_activity);
         ButterKnife.bind(this);
 
+        // todo: handle redirect back from email
         String uriPath = getIntent().getDataString();
         Log.d(TAG, "token: uriPath=" + uriPath);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
-        loginUserId = sharedPreferences.getString(User.USER_ID, null);
+        String groupId = Helpers.getCurrentGroupId();
+        loginUserId = Helpers.getLoginUserId();
         syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
         userId = getIntent().getStringExtra(USER_ID);
         isEditable = getIntent().getBooleanExtra(IS_EDITABLE, false);
@@ -135,7 +133,6 @@ public class ProfileActivity extends BaseActivity {
 
         currentUser = User.getUserById(userId);
         photoList = new ArrayList<>();
-        // Convert bitmap to drawable
         cameraIconHolder = new BitmapDrawable(getResources(), Helpers.getCameraIconBitmap(this));
 
         if (currentUser != null) {
@@ -143,25 +140,9 @@ public class ProfileActivity extends BaseActivity {
         }
 
         setupToolbar();
-
+        setupSwipeToRefresh();
         invalidateViews();
         setupEditableViews(isEditable);
-        // todo: update user by id
-        if (Helpers.needToSync(syncTimeInMillis)) {
-            SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
-            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
-            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
-        }
-
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
 
     private void invalidateViews() {
@@ -216,6 +197,44 @@ public class ProfileActivity extends BaseActivity {
         lastNameEditText.setOnClickListener(v -> requestFocus(v));
         emailEditText.setOnClickListener(v -> requestFocus(v));
         mobileEditText.setOnClickListener(v -> requestFocus(v));
+
+        // todo: update user by id
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
+    }
+
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+
+        titleTextView.setText(getString(R.string.profile));
+        editTextView.setText(getString(R.string.edit));
+        if (loginUserId.equals(userId)) {
+            editTextView.setVisibility(View.VISIBLE);
+        } else {
+            editTextView.setVisibility(View.INVISIBLE);
+        }
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
+    }
+
+    private void setupSwipeToRefresh() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncUser.getLoginUser().continueWith(onResponseReturned, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
 
     private void setPhotoSourcePicker() {
@@ -438,26 +457,6 @@ public class ProfileActivity extends BaseActivity {
     private void setEditMode(boolean isEditable) {
         this.isEditable = isEditable;
         invalidateViews();
-    }
-
-    private void setupToolbar() {
-        toolbar.setContentInsetsAbsolute(0,0);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-
-        titleTextView.setText(getString(R.string.profile));
-        editTextView.setText(getString(R.string.edit));
-        if (loginUserId.equals(userId)) {
-            editTextView.setVisibility(View.VISIBLE);
-        } else {
-            editTextView.setVisibility(View.INVISIBLE);
-        }
-        titleTextView.setOnClickListener(v -> close());
-        backImageView.setOnClickListener(v -> close());
     }
 
     @Override

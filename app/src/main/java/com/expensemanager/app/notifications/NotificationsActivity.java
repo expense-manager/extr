@@ -1,9 +1,5 @@
 package com.expensemanager.app.notifications;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.main.BaseActivity;
-import com.expensemanager.app.models.RNotification;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.models.RNotification;
 
 import java.util.ArrayList;
 
@@ -49,18 +49,12 @@ public class NotificationsActivity extends BaseActivity {
         setContentView(R.layout.notifications_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
         notifications = new ArrayList<>();
         notificationAdapter = new NotificationAdapter(this, notifications);
+
+        setupToolbar();
         setupRecyclerView();
-
         invalidateViews();
-    }
-
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(notificationAdapter);
     }
 
     private void invalidateViews() {
@@ -83,6 +77,11 @@ public class NotificationsActivity extends BaseActivity {
         rightTitleTextView.setText(R.string.mark_all_read);
         rightTitleTextView.setVisibility(View.VISIBLE);
         rightTitleTextView.setOnClickListener(v -> markAllRead());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(notificationAdapter);
     }
 
     public void markAllRead() {

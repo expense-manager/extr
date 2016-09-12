@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity {
 
     private String email;
     private String password;
-    CallbackManager callbackManager;
+    private CallbackManager callbackManager;
 
     @BindView(R.id.login_activity_login_button_id) Button loginButton;
     @BindView(R.id.login_activity_email_edit_text_id) EditText emailEditText;

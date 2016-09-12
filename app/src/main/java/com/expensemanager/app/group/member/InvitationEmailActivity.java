@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,10 +29,8 @@ public class InvitationEmailActivity extends AppCompatActivity {
     private String groupId;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
-    @BindView(R.id.toolbar_back_image_view_id)
-    ImageView backImageView;
-    @BindView(R.id.toolbar_title_text_view_id)
-    TextView titleTextView;
+    @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
+    @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.toolbar_right_title_text_view_id) TextView sendTextView;
     @BindView(R.id.invite_activity_email_edit_text_id)
     EditText emailEditText;

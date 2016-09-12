@@ -1,9 +1,8 @@
 package com.expensemanager.app.report;
 
-import android.content.SharedPreferences;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Group;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,9 +61,7 @@ public class ReportFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
-
+        groupId = Helpers.getCurrentGroupId();
         requestCode = getArguments().getInt(DURATION_KEY);
         dates = new ArrayList<>();
         reportAdapter = new ReportAdapter(getActivity(), dates, requestCode);

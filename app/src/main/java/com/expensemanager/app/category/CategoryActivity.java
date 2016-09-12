@@ -3,9 +3,7 @@ package com.expensemanager.app.category;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,8 +17,6 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Group;
-import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 
 import java.util.ArrayList;
@@ -36,8 +32,6 @@ public class CategoryActivity extends BaseActivity {
     private static final String TAG = CategoryActivity.class.getSimpleName();
 
     private ArrayList<Category> categories;
-    private Category category;
-    private boolean isFiltered;
     private CategoryAdapter categoryAdapter;
     private String groupId;
     private long syncTimeInMillis;
@@ -61,33 +55,56 @@ public class CategoryActivity extends BaseActivity {
         setContentView(R.layout.category_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
         syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
         categories = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(this, categories);
+
+        setupToolbar();
         setupRecyclerView();
+        setupSwipeToRefresh();
 
         invalidateViews();
+    }
+
+    private void invalidateViews() {
+        categoryAdapter.clear();
+        categoryAdapter.addAll(Category.getAllCategoriesByGroupId(groupId));
+
         if (Helpers.needToSync(syncTimeInMillis)) {
             SyncCategory.getAllCategoriesByGroupId(groupId);
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+    }
 
-        // Setup refresh listener which triggers new data loading
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        titleTextView.setText(getString(R.string.category));
+        titleTextView.setOnClickListener(v -> close());
+        backImageView.setOnClickListener(v -> close());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(categoryAdapter);
+    }
+
+    private void setupSwipeToRefresh() {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 SyncCategory.getAllCategoriesByGroupId(groupId).continueWith(onGetCategoryFinished, Task.UI_THREAD_EXECUTOR);
             }
         });
-        // Configure the refreshing colors
+
         swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
 
@@ -105,28 +122,6 @@ public class CategoryActivity extends BaseActivity {
             return null;
         }
     };
-
-    private void invalidateViews() {
-        categoryAdapter.clear();
-        categoryAdapter.addAll(Category.getAllCategoriesByGroupId(groupId));
-    }
-
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(categoryAdapter);
-    }
-
-    private void setupToolbar() {
-        toolbar.setContentInsetsAbsolute(0,0);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-        titleTextView.setText(getString(R.string.category));
-        titleTextView.setOnClickListener(v -> close());
-        backImageView.setOnClickListener(v -> close());
-    }
 
     @Override
     public void onResume() {

@@ -66,16 +66,16 @@ public class NotificationFragment extends Fragment {
         invalidateViews();
     }
 
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(notificationAdapter);
-    }
-
     private void invalidateViews() {
         noNotificationTextView.setVisibility(View.VISIBLE);
 
         notificationAdapter.clear();
         notificationAdapter.addAll(RNotification.getAllNotifications());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(notificationAdapter);
     }
 
     public void markAllRead() {

@@ -27,8 +27,6 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -175,33 +173,6 @@ public class ExpenseDetailActivity extends BaseActivity {
         SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
     }
 
-    private void showActionSheet() {
-        ArrayList<EAction> actionsList = new ArrayList<>();
-        actionsList.add(new EAction(R.string.edit, R.mipmap.ic_launcher));
-        actionsList.add(new EAction(R.string.save, R.mipmap.ic_launcher));
-        actionsList.add(new EAction(R.string.add, R.mipmap.ic_launcher));
-        actionsList.add(new EAction(R.string.delete, R.mipmap.ic_launcher));
-
-        ActionSheetAdapter adapter = new ActionSheetAdapter(actionsList);
-        adapter.setOnItemClickListener(new ActionSheetAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(ActionSheetAdapter.ItemHolder item, int position) {
-                Log.d(TAG, "clicked position:" + position);
-                bottomSheetDialog.dismiss();
-            }
-        });
-
-        View view = getLayoutInflater().inflate(R.layout.action_sheet, null);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(view);
-        bottomSheetDialog.show();
-    }
-
     private void invalidateViews() {
         Log.d(TAG, "invalidateViews()");
         expense = Expense.getExpenseById(expenseId);
@@ -243,6 +214,25 @@ public class ExpenseDetailActivity extends BaseActivity {
 
         setupExpensePhoto();
         setupEditableViews(isEditable);
+    }
+
+    private void showActionSheet() {
+        ArrayList<EAction> actionsList = new ArrayList<>();
+        actionsList.add(new EAction(R.string.edit, R.mipmap.ic_launcher));
+        actionsList.add(new EAction(R.string.save, R.mipmap.ic_launcher));
+        actionsList.add(new EAction(R.string.add, R.mipmap.ic_launcher));
+        actionsList.add(new EAction(R.string.delete, R.mipmap.ic_launcher));
+
+        ActionSheetAdapter adapter = new ActionSheetAdapter(actionsList);
+        adapter.setOnItemClickListener(new ActionSheetAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(ActionSheetAdapter.ItemHolder item, int position) {
+                Log.d(TAG, "clicked position:" + position);
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+
     }
 
     private void setupDateAndTime() {

@@ -80,9 +80,8 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), MODE_PRIVATE);
-        loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        loginUserId = Helpers.getLoginUserId();
+        groupId = Helpers.getCurrentGroupId();
 
         weeklyNotificationSwitch.setOnCheckedChangeListener(
                 (compoundButton, b) -> {

@@ -1,11 +1,9 @@
 package com.expensemanager.app.main;
 
 import android.app.Fragment;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,13 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 
 import java.util.ArrayList;
@@ -31,8 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Zhaolong Zhong on 8/27/16.
@@ -57,6 +50,7 @@ public class OverviewFragment extends Fragment {
     private double monthlyExpense = 0.0;
     private double monthlyAve = 0.0;
     private double oldWeeklyExpense = 0.0;
+    private double oldMonthlyExpense = 0.0;
 
     @BindView(R.id.overview_fragment_scroll_view_id) ScrollView scrollView;
     @BindView(R.id.overview_fragment_total_text_view_id) TextView totalTextView;
@@ -96,8 +90,7 @@ public class OverviewFragment extends Fragment {
     }
 
     public void invalidateViews() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
 
         totalExpense = getTotalExpense();
         weeklyExpense = getWeeklyExpense();
@@ -125,15 +118,16 @@ public class OverviewFragment extends Fragment {
     private void invalidateProgressBars() {
         if (weeklyExpense == 0) {
             weeklyProgressBar.setProgress(0);
-            weeklyTextView.setText("0%");
+            weeklyTextView.setText("$0");
         }
 
         if (monthlyExpense == 0) {
             monthlyProgressBar.setProgress(0);
-            monthlyTextView.setText("0%");
+            monthlyTextView.setText("$0");
         }
 
-        if (oldWeeklyExpense == weeklyExpense && groupId != null && groupId.equals(oldGroupId)) {
+        if (oldWeeklyExpense == weeklyExpense && oldMonthlyExpense == monthlyExpense
+                && groupId != null && groupId.equals(oldGroupId)) {
             return;
         }
 

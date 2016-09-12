@@ -3,6 +3,8 @@ package com.expensemanager.app.models;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.expensemanager.app.helpers.Helpers;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -194,6 +196,11 @@ public class User implements RealmModel{
         realm.close();
 
         return user;
+    }
+
+    public static @Nullable User getLoginUser() {
+        String userId = Helpers.getLoginUserId();
+        return getUserById(userId);
     }
 
     /**

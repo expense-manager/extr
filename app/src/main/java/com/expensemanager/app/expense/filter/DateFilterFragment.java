@@ -1,9 +1,5 @@
 package com.expensemanager.app.expense.filter;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.DatePickerFragment;
-import com.expensemanager.app.helpers.TimePickerFragment;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -20,6 +16,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.DatePickerFragment;
+import com.expensemanager.app.helpers.TimePickerFragment;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,8 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class DateFilterFragment extends DialogFragment
-    implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class DateFilterFragment extends DialogFragment {
     private static final String TAG= DateFilterFragment.class.getSimpleName();
 
     public static final int START_DATE_PICKER = 0;
@@ -72,6 +71,17 @@ public class DateFilterFragment extends DialogFragment
         View view = inflater.inflate(R.layout.expense_date_filter_fragment, container);
         unbinder = ButterKnife.bind(this, view);
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        invalidateViews();
+    }
+
+    private void invalidateViews() {
         startCalendar = Calendar.getInstance();
         endCalendar = Calendar.getInstance();
 
@@ -117,7 +127,9 @@ public class DateFilterFragment extends DialogFragment
             setupDateAndTime(b, endDateTextView, endTimeTextView);
         });
 
-        return view;
+
+        formatDateAndTime(startCalendar.getTime(), startDateTextView, startTimeTextView);
+        formatDateAndTime(endCalendar.getTime(), endDateTextView, endTimeTextView);
     }
 
     private void setupDateAndTime(boolean isCheck, TextView dateTextView, TextView timeTextView) {
@@ -132,18 +144,6 @@ public class DateFilterFragment extends DialogFragment
         }
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        invalidateViews();
-    }
-
-    private void invalidateViews() {
-        formatDateAndTime(startCalendar.getTime(), startDateTextView, startTimeTextView);
-        formatDateAndTime(endCalendar.getTime(), endDateTextView, endTimeTextView);
-    }
-
     private void formatDateAndTime(Date date, TextView dateTextView, TextView timeTextView) {
         // Create format
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
@@ -151,38 +151,6 @@ public class DateFilterFragment extends DialogFragment
         // Parse date and set text
         dateTextView.setText(dateFormat.format(date));
         timeTextView.setText(timeFormat.format(date));
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        if (DatePickerFragment.DATE_PICKER == START_DATE_PICKER) {
-            startDateSwitch.setChecked(true);
-
-            startCalendar.set(year, monthOfYear, dayOfMonth);
-            formatDateAndTime(startCalendar.getTime(), startDateTextView, startTimeTextView);
-        } else {
-            endDateSwitch.setChecked(true);
-
-            endCalendar.set(year, monthOfYear, dayOfMonth);
-            formatDateAndTime(endCalendar.getTime(), endDateTextView, endTimeTextView);
-        }
-    }
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        if (TimePickerFragment.TIME_PICKER == START_TIME_PICKER) {
-            startDateSwitch.setChecked(true);
-
-            startCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            startCalendar.set(Calendar.MINUTE, minute);
-            formatDateAndTime(startCalendar.getTime(), startDateTextView, startTimeTextView);
-        } else {
-            endDateSwitch.setChecked(true);
-
-            endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            endCalendar.set(Calendar.MINUTE, minute);
-            formatDateAndTime(endCalendar.getTime(), endDateTextView, endTimeTextView);
-        }
     }
 
     private void setupDatePicker(Calendar calendar, boolean isStartDate) {
@@ -193,9 +161,26 @@ public class DateFilterFragment extends DialogFragment
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         DatePickerFragment datePickerFragment = DatePickerFragment
             .newInstance(year, month, day);
-        datePickerFragment.setListener(this);
+        datePickerFragment.setListener(onDateSetListener);
         datePickerFragment.show(getFragmentManager(), DATE_PICKER);
     }
+
+    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+            if (DatePickerFragment.DATE_PICKER == START_DATE_PICKER) {
+                startDateSwitch.setChecked(true);
+
+                startCalendar.set(year, monthOfYear, dayOfMonth);
+                formatDateAndTime(startCalendar.getTime(), startDateTextView, startTimeTextView);
+            } else {
+                endDateSwitch.setChecked(true);
+
+                endCalendar.set(year, monthOfYear, dayOfMonth);
+                formatDateAndTime(endCalendar.getTime(), endDateTextView, endTimeTextView);
+            }
+        }
+    };
 
     private void setupTimePicker(Calendar calendar, boolean isStartDate) {
         TimePickerFragment.TIME_PICKER = isStartDate ? START_TIME_PICKER : END_TIME_PICKER;
@@ -204,9 +189,28 @@ public class DateFilterFragment extends DialogFragment
         int minute = calendar.get(Calendar.MINUTE);
         TimePickerFragment timePickerFragment = TimePickerFragment
             .newInstance(hour, minute);
-        timePickerFragment.setListener(this);
+        timePickerFragment.setListener(onTimeSetListener);
         timePickerFragment.show(getFragmentManager(), TIME_PICKER);
     }
+
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+            if (TimePickerFragment.TIME_PICKER == START_TIME_PICKER) {
+                startDateSwitch.setChecked(true);
+
+                startCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                startCalendar.set(Calendar.MINUTE, minute);
+                formatDateAndTime(startCalendar.getTime(), startDateTextView, startTimeTextView);
+            } else {
+                endDateSwitch.setChecked(true);
+
+                endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                endCalendar.set(Calendar.MINUTE, minute);
+                formatDateAndTime(endCalendar.getTime(), endDateTextView, endTimeTextView);
+            }
+        }
+    };
 
     public void setFilterParams(Date startDate, Date endDate) {
         this.startDate = startDate;

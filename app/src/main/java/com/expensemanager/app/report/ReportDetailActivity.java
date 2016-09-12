@@ -2,7 +2,6 @@ package com.expensemanager.app.report;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,8 +22,6 @@ import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.Group;
-import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncCategory;
 import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.font.Font;
@@ -115,11 +112,10 @@ public class ReportDetailActivity extends BaseActivity {
         setContentView(R.layout.report_detail_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        loginUserId = sharedPreferences.getString(User.USER_ID, null);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+
+        loginUserId = Helpers.getLoginUserId();
+        groupId = Helpers.getCurrentGroupId();
 
         categories = new ArrayList<>();
         amountsCategory = new ArrayList<>();
@@ -137,6 +133,7 @@ public class ReportDetailActivity extends BaseActivity {
             overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
 
+        setupToolbar();
         invalidateViews();
 
         setUpPieChart();

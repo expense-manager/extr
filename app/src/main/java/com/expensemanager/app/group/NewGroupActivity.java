@@ -18,18 +18,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Group;
-import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncGroup;
-import com.expensemanager.app.service.SyncMember;
-
-import org.json.JSONObject;
 
 import java.util.UUID;
 
-import bolts.Continuation;
-import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -58,15 +53,15 @@ public class NewGroupActivity extends AppCompatActivity {
         setContentView(R.layout.new_group_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        String loginUserId = sharedPreferences.getString(User.USER_ID, null);
-
+        String loginUserId = Helpers.getLoginUserId();
         group = new Group();
         group.setUserId(loginUserId);
-        // Get a random unused color
 
+        setupToolbar();
+        invalidateViews();
+    }
+
+    private void invalidateViews() {
         progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_ATOP);
     }
 

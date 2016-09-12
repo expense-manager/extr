@@ -1,22 +1,19 @@
 package com.expensemanager.app.expense.filter;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.ItemClickSupport;
-import com.expensemanager.app.models.Category;
-import com.expensemanager.app.models.Group;
-import com.expensemanager.app.models.Member;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.helpers.ItemClickSupport;
+import com.expensemanager.app.models.Member;
 
 import java.util.ArrayList;
 
@@ -56,8 +53,7 @@ public class MemberFilterFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.CategoryColorDialogStyle);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
     }
 
     @Override
@@ -74,7 +70,6 @@ public class MemberFilterFragment extends DialogFragment {
 
         members = new ArrayList<>();
         adapter = new MemberFilterAdapter(getActivity(), members, isMemberFiltered, member);
-
         memberRelativeLayout.setOnClickListener(v -> dismiss());
 
         setupRecyclerView();

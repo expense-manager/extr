@@ -3,7 +3,6 @@ package com.expensemanager.app.expense;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +25,6 @@ import com.expensemanager.app.main.Analytics;
 import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 import com.expensemanager.app.service.SyncExpense;
 import com.twotoasters.jazzylistview.effects.SlideInEffect;
@@ -115,10 +112,9 @@ public class ExpenseActivity extends BaseActivity {
 
         setupToolbar();
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
         syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -137,6 +133,7 @@ public class ExpenseActivity extends BaseActivity {
         expenses = new ArrayList<>();
         expenseAdapter = new ExpenseAdapter(this, expenses);
         setupRecyclerView();
+        setupSwipeToRefresh();
 
         fab.setOnClickListener(v -> {
             NewExpenseActivity.newInstance(this);
@@ -144,23 +141,6 @@ public class ExpenseActivity extends BaseActivity {
         });
 
         invalidateViews();
-
-        if (Helpers.needToSync(syncTimeInMillis)) {
-            SyncExpense.getAllExpensesByGroupId(groupId);
-            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
-            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
-        }
-
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                SyncExpense.getAllExpensesByGroupId(groupId).continueWith(onGetExpenseFinished, Task.UI_THREAD_EXECUTOR);
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
-
     }
 
     private Continuation<Void, Void> onGetExpenseFinished = new Continuation<Void, Void>() {
@@ -205,15 +185,12 @@ public class ExpenseActivity extends BaseActivity {
         } else {
             expenseAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
         }
-    }
 
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(expenseAdapter);
-        // Add JazzyListView scroll effect
-        JazzyRecyclerViewScrollListener jazzyScrollListener = new JazzyRecyclerViewScrollListener();
-        recyclerView.addOnScrollListener(jazzyScrollListener);
-        jazzyScrollListener.setTransitionEffect(new SlideInEffect());
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncExpense.getAllExpensesByGroupId(groupId);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void setupToolbar() {
@@ -226,6 +203,26 @@ public class ExpenseActivity extends BaseActivity {
         titleTextView.setText(getString(R.string.expense));
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(expenseAdapter);
+        // Add JazzyListView scroll effect
+        JazzyRecyclerViewScrollListener jazzyScrollListener = new JazzyRecyclerViewScrollListener();
+        recyclerView.addOnScrollListener(jazzyScrollListener);
+        jazzyScrollListener.setTransitionEffect(new SlideInEffect());
+    }
+
+    private void setupSwipeToRefresh() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SyncExpense.getAllExpensesByGroupId(groupId).continueWith(onGetExpenseFinished, Task.UI_THREAD_EXECUTOR);
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
 
     @Override

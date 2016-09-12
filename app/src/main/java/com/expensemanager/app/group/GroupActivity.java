@@ -3,7 +3,6 @@ package com.expensemanager.app.group;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,7 +19,6 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
-import com.expensemanager.app.service.SyncGroup;
 import com.expensemanager.app.service.SyncMember;
 
 import java.util.ArrayList;
@@ -61,39 +59,69 @@ public class GroupActivity extends AppCompatActivity {
         setContentView(R.layout.group_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        String groupId = sharedPreferences.getString(Group.ID_KEY, null);
-        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
-        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
-
         loginUserId = Helpers.getLoginUserId();
+        String groupId = Helpers.getCurrentGroupId();
+        syncTimeKey = Helpers.getSyncTimeKey(TAG, groupId);
+        syncTimeInMillis = Helpers.getSyncTimeInMillis(syncTimeKey);
 
         groups = new ArrayList<>();
         groupAdapter = new GroupAdapter(this, groups);
+
+        setupToolbar();
         setupRecyclerView();
+        setupSwipeToRefresh();
+        invalidateViews();
 
         fab.setOnClickListener(v -> {
             NewGroupActivity.newInstance(this);
             overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
+    }
 
-        invalidateViews();
+    private void invalidateViews() {
+        groupAdapter.clear();
+        groupAdapter.addAll(Group.getAllGroups());
+
+        RealmList<Member> membersByUserId = Member.getAllMembersByUserId(loginUserId);
+        Log.d(TAG, "members size by userId: " + membersByUserId.size());
+
+        RealmList<Member> membersByGroupId = Member.getAllMembersByGroupId("YDf9fuLGze");
+        Log.d(TAG, "members size by groupId: " + membersByGroupId.size());
+
         if (Helpers.needToSync(syncTimeInMillis)) {
             SyncMember.getMembersByUserId(loginUserId);
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+    }
 
-        // Setup refresh listener which triggers new data loading
+    private void setupToolbar() {
+        toolbar.setContentInsetsAbsolute(0,0);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+
+        titleTextView.setText(getString(R.string.group));
+        titleTextView.setOnClickListener(v -> finish());
+        backImageView.setOnClickListener(v -> finish());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(groupAdapter);
+    }
+
+    private void setupSwipeToRefresh() {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 SyncMember.getMembersByUserId(loginUserId).continueWith(onGetMemberFinished, Task.UI_THREAD_EXECUTOR);
             }
         });
-        // Configure the refreshing colors
+
         swipeContainer.setColorSchemeResources(R.color.colorPrimary);
     }
 
@@ -111,34 +139,6 @@ public class GroupActivity extends AppCompatActivity {
             return null;
         }
     };
-
-    private void invalidateViews() {
-        groupAdapter.clear();
-        groupAdapter.addAll(Group.getAllGroups());
-
-        RealmList<Member> membersByUserId = Member.getAllMembersByUserId(loginUserId);
-        Log.d(TAG, "members size by userId: " + membersByUserId.size());
-
-        RealmList<Member> membersByGroupId = Member.getAllMembersByGroupId("YDf9fuLGze");
-        Log.d(TAG, "members size by groupId: " + membersByGroupId.size());
-    }
-
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(groupAdapter);
-    }
-
-    private void setupToolbar() {
-        toolbar.setContentInsetsAbsolute(0,0);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-        titleTextView.setText(getString(R.string.group));
-        titleTextView.setOnClickListener(v -> finish());
-        backImageView.setOnClickListener(v -> finish());
-    }
 
     @Override
     public void onResume() {
