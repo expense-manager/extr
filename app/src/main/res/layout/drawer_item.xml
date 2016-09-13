@@ -19,7 +19,8 @@
         android:paddingLeft="0dp"
         android:paddingRight="@dimen/drawer_item_primary_icon_padding_right"
         android:paddingStart="0dp"
-        android:paddingTop="@dimen/drawer_item_primary_icon_padding" />
+        android:paddingTop="@dimen/drawer_item_primary_icon_padding"
+        android:tint="@color/gray_dark"/>
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -33,6 +34,7 @@
             android:layout_centerVertical="true"
 
             android:textDirection="anyRtl"
+            android:tint="@color/gray_really_dark"
             android:textSize="@dimen/drawer_item_primary_text"
             android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical|start"

@@ -13,70 +13,75 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- Spent At-->
-        <TextView
-            android:id="@+id/expense_item_default_spent_at_text_view_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/space_medium"
-
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium_small"
-            tools:text="createdAt"/>
-
-        <!-- Amount -->
-        <TextView
-            android:id="@+id/expense_item_default_amount_text_view_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/space_medium"
-
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium_small"
-            tools:text="Amount"/>
-
-        <!-- Color -->
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/expense_item_default_category_color_image_view_id"
-            android:layout_width="@dimen/category_color_width_small"
-            android:layout_height="@dimen/category_color_width_small"
-            android:layout_below="@+id/expense_item_default_spent_at_text_view_id"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/space_medium"
-            android:layout_marginBottom="@dimen/space_medium"
-
-            tools:background="@color/black"/>
+        android:layout_height="wrap_content">
 
         <!-- User -->
         <ImageView
             android:id="@+id/expense_item_default_user_photo_image_view_id"
-            android:layout_width="@dimen/category_color_width_small"
-            android:layout_height="@dimen/category_color_width_small"
-            android:layout_below="@+id/expense_item_default_spent_at_text_view_id"
-            android:layout_toLeftOf="@+id/expense_item_default_category_color_image_view_id"
-            android:layout_marginRight="@dimen/space_medium"
-            android:layout_marginBottom="@dimen/space_medium"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/space_medium_small"
+            android:visibility="gone"/>
 
-            tools:background="@color/black"/>
-
-        <!-- Name -->
-        <TextView
-            android:id="@+id/expense_item_default_category_name_text_view_id"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignTop="@+id/expense_item_default_category_color_image_view_id"
-            android:layout_alignBottom="@+id/expense_item_default_category_color_image_view_id"
-            android:layout_marginLeft="@dimen/space_medium"
+            android:layout_toEndOf="@+id/expense_item_default_user_photo_image_view_id">
 
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium_small"
-            android:gravity="center_vertical"
-            tools:text="1234"/>
+            <!-- Spent At-->
+            <TextView
+                android:id="@+id/expense_item_default_spent_at_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_medium"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_small"
+                tools:text="createdAt"/>
+
+            <!-- Amount -->
+            <TextView
+                android:id="@+id/expense_item_default_amount_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/space_medium"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_small"
+                tools:text="Amount"/>
+
+            <!-- Color -->
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/expense_item_default_category_color_image_view_id"
+                android:layout_width="@dimen/category_color_width_small"
+                android:layout_height="@dimen/category_color_width_small"
+                android:layout_below="@+id/expense_item_default_spent_at_text_view_id"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                tools:background="@color/black"/>
+
+            <!-- Category name -->
+            <TextView
+                android:id="@+id/expense_item_default_category_name_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@+id/expense_item_default_category_color_image_view_id"
+                android:layout_alignBottom="@+id/expense_item_default_category_color_image_view_id"
+                android:layout_marginLeft="@dimen/space_medium"
+
+                android:textColor="@color/gray_dark"
+                android:textSize="@dimen/text_small"
+                android:gravity="center_vertical"
+                tools:text="1234"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

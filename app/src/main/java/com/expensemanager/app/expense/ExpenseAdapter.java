@@ -86,7 +86,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         // Reset views
         viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
         viewHolder.categoryNameTextView.setVisibility(View.INVISIBLE);
-        viewHolder.userPhotoImageView.setVisibility(View.INVISIBLE);
+        viewHolder.userPhotoImageView.setVisibility(View.GONE);
 
         Expense expense = expenses.get(position);
         Category category = expense.getCategory();
