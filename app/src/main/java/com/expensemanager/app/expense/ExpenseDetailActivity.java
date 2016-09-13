@@ -21,7 +21,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
@@ -66,6 +65,7 @@ import com.expensemanager.app.service.ExpenseBuilder;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncPhoto;
+import com.jakewharton.rxbinding.widget.RxAdapterView;
 
 import org.json.JSONObject;
 
@@ -81,6 +81,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -89,6 +90,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class ExpenseDetailActivity extends BaseActivity {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
@@ -110,7 +113,6 @@ public class ExpenseDetailActivity extends BaseActivity {
     private Category category;
     private Calendar calendar;
     private boolean isEditable = false;
-    private long lastPhotoClickTime = 0;
     private String groupId;
     private String loginUserId;
 
@@ -318,19 +320,19 @@ public class ExpenseDetailActivity extends BaseActivity {
         expensePhotos.addAll(photos);
         expensePhotoAdapter = new ExpensePhotoAdapter(this, null, expensePhotos);
         photoGridView.setAdapter(expensePhotoAdapter);
-        photoGridView.setOnItemClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
-            Log.d(TAG, "Photo clicked at position: " + position);
-            // Avoid double click
-            if (SystemClock.elapsedRealtime() - lastPhotoClickTime < 1500) {
-                return;
-            }
 
-            lastPhotoClickTime = SystemClock.elapsedRealtime();
-
-            ExpensePhotoFragment expensePhotoFragment = ExpensePhotoFragment
-                    .newInstance(expense.getId(), position);
-            expensePhotoFragment.show(getSupportFragmentManager(), ExpensePhotoFragment.class.getSimpleName());
-        });
+        RxAdapterView.itemClicks(photoGridView)
+                .throttleLast(300, TimeUnit.MICROSECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer integer) {
+                        Log.d(TAG, "Photo clicked at position: " + integer);
+                        ExpensePhotoFragment expensePhotoFragment = ExpensePhotoFragment
+                                .newInstance(expense.getId(), integer);
+                        expensePhotoFragment.show(getSupportFragmentManager(), ExpensePhotoFragment.class.getSimpleName());
+                    }
+                });
 
         photoGridView.setOnItemLongClickListener((AdapterView<?> adapterView, View view, int position, long l) -> {
             Log.d(TAG, "Photo long clicked at position: " + position);

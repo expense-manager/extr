@@ -4,7 +4,8 @@
     android:id="@+id/overview_fragment_scroll_view_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/cyan_deep">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
             android:layout_marginTop="@dimen/space_medium"
 
             android:gravity="center"
-            android:background="@color/white">
+            android:background="@color/cyan_deep">
 
             <!-- Total of progress bar -->
             <RelativeLayout
@@ -78,7 +79,7 @@
             android:orientation="horizontal"
             android:layout_below="@+id/overview_fragment_total_relative_layout_id"
             android:layout_centerHorizontal="true"
-            android:background="@color/white"
+            android:background="@color/cyan_deep"
             android:gravity="center">
 
             <!-- Weekly expense -->
