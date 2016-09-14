@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity {
     private Handler handler;
     private BroadcastReceiver broadcastReceiver;
     private boolean isReceiverRegistered;
+    private boolean isSignOut = false;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
@@ -552,14 +553,7 @@ public class MainActivity extends BaseActivity {
                 return null;
             }
 
-            SharedPreferences sharedPreferences =
-                getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-            sharedPreferences.edit().clear().apply();
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            realm.deleteAll();
-            realm.commitTransaction();
-            realm.close();
+            isSignOut = true;
             // Go to welcome
             WelcomeActivity.newInstance(MainActivity.this);
             finish();
@@ -619,6 +613,22 @@ public class MainActivity extends BaseActivity {
         if (isReceiverRegistered && broadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
             isReceiverRegistered = false;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (isSignOut) {
+            SharedPreferences sharedPreferences =
+                    getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+            sharedPreferences.edit().clear().apply();
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.deleteAll();
+            realm.commitTransaction();
+            realm.close();
         }
     }
 

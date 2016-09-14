@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.ExpenseDetailActivity;
 import com.expensemanager.app.helpers.Helpers;
@@ -89,7 +87,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         // Reset views
         viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
         viewHolder.categoryNameTextView.setVisibility(View.INVISIBLE);
-        viewHolder.userPhotoImageView.setVisibility(View.INVISIBLE);
+        viewHolder.userPhotoImageView.setVisibility(View.GONE);
 
         Expense expense = expenses.get(position);
         Category category = expense.getCategory();
