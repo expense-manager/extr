@@ -1,8 +1,5 @@
 package com.expensemanager.app.category;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.models.Category;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -11,7 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.models.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Category> categories;
     private Context context;
+    private int lastPosition = -1;
 
     public CategoryAdapter(Context context, ArrayList<Category> categories) {
         this.context = context;
@@ -71,6 +76,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case VIEW_TYPE_DEFAULT:
                 ViewHolderDefault viewHolderDefault = (ViewHolderDefault) viewHolder;
                 configureViewHolderDefault(viewHolderDefault, position);
+//                setAnimation(viewHolderDefault.container, position);
+                setScaleAnimation(viewHolderDefault.container);
                 break;
             default:
                 break;
@@ -89,6 +96,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         });
     }
 
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+
+    private void setScaleAnimation(View view) {
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(1000);
+        view.startAnimation(anim);
+    }
+
     public void clear() {
         categories.clear();
         notifyDataSetChanged();
@@ -100,6 +123,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
+        @BindView(R.id.category_item_default_layout_container) FrameLayout container;
         @BindView(R.id.category_item_default_name_text_view_id) TextView nameTextView;
         @BindView(R.id.category_item_default_color_image_view_id) CircleImageView colorImageView;
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
@@ -25,6 +26,7 @@ import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Created by Zhaolong Zhong on 9/9/16.
@@ -67,6 +69,8 @@ public class CategoryFragment extends Fragment {
         setupRecyclerView();
         setupSwipeToRefresh();
         invalidateViews();
+
+        setupWindowAnimations();
     }
 
     public void invalidateViews() {
@@ -83,6 +87,8 @@ public class CategoryFragment extends Fragment {
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(categoryAdapter);
+//        recyclerView.setItemAnimator(new SlideInLeftAnimator());
+        recyclerView.setItemAnimator(new SlideInUpAnimator(new OvershootInterpolator(1f)));
     }
 
     private void setupSwipeToRefresh() {
@@ -110,6 +116,17 @@ public class CategoryFragment extends Fragment {
             return null;
         }
     };
+
+    private void setupWindowAnimations() {
+//        // Re-enter transition is executed when returning to this activity
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            Slide slideTransition = new Slide();
+//            slideTransition.setSlideEdge(Gravity.LEFT);
+//            slideTransition.setDuration(500);
+//            getActivity().getWindow().setReenterTransition(slideTransition);
+//            getActivity().getWindow().setExitTransition(slideTransition);
+//        }
+    }
 
     @Override
     public void onResume() {

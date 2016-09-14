@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.ItemClickSupport;
@@ -30,6 +32,7 @@ public class CategoryPickerFragment extends DialogFragment {
     private CategoryPickerAdapter categoryPickerAdapter;
     private String groupId;
 
+    @BindView(R.id.expense_category_fragment_close_image_view_id) ImageView closeImageView;
     @BindView(R.id.expense_category_fragment_recycler_view_id) RecyclerView categoryRecyclerView;
 
     public CategoryPickerFragment() {}
@@ -59,12 +62,24 @@ public class CategoryPickerFragment extends DialogFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Window window = getDialog().getWindow();
+
+        if (window != null) {
+            window.getAttributes().windowAnimations = R.style.DialogAnimation;
+        }
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         categories = new ArrayList<>();
         categoryPickerAdapter = new CategoryPickerAdapter(getActivity(), categories);
 
+        closeImageView.setOnClickListener(v -> dismiss());
         setupRecyclerView();
         invalidateViews();
     }

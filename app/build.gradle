@@ -159,6 +159,8 @@ dependencies {
     compile 'com.twotoasters.jazzylistview:library:1.2.1'
     compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'
 
+    compile 'jp.wasabeef:recyclerview-animators:2.2.4'
+
     // Retrolambda, make sure to apply this line last.
     apply plugin: 'me.tatarka.retrolambda'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') {
