@@ -3,8 +3,10 @@ package com.expensemanager.app.expense;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +29,7 @@ import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Member;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncExpense;
 import com.twotoasters.jazzylistview.effects.SlideInEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
@@ -67,6 +71,7 @@ public class ExpenseActivity extends BaseActivity {
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
+    @BindView(R.id.toolbar_extra_image_view_id) ImageView extraImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.expense_activity_recycler_view_id) RecyclerView recyclerView;
     @BindView(R.id.expense_activity_fab_id) FloatingActionButton fab;
@@ -140,6 +145,10 @@ public class ExpenseActivity extends BaseActivity {
             overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
 
+        if (isCategoryFiltered && category != null) {
+            ExpenseActivity.this.toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
+        }
+
         invalidateViews();
     }
 
@@ -203,6 +212,7 @@ public class ExpenseActivity extends BaseActivity {
         titleTextView.setText(getString(R.string.expense));
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
+        extraImageView.setVisibility(View.GONE);
     }
 
     private void setupRecyclerView() {
@@ -293,6 +303,15 @@ public class ExpenseActivity extends BaseActivity {
                 isMemberFiltered = !isMemberFiltered;
             }
             ExpenseActivity.this.member = member;
+            User user = member.getUser();
+            if (isMemberFiltered && user != null) {
+                Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
+                extraImageView.setVisibility(View.VISIBLE);
+                titleTextView.setText(user.getFullname());
+            } else {
+                extraImageView.setVisibility(View.GONE);
+                titleTextView.setText(R.string.expense);
+            }
             invalidateViews();
         }
     };
@@ -316,6 +335,13 @@ public class ExpenseActivity extends BaseActivity {
                 isCategoryFiltered = !isCategoryFiltered;
             }
             ExpenseActivity.this.category = category;
+            if (!isCategoryFiltered || category == null) {
+                int background = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
+                ExpenseActivity.this.toolbar.setBackgroundColor(background);
+            } else {
+                ExpenseActivity.this.toolbar
+                    .setBackgroundColor(Color.parseColor(category.getColor()));
+            }
             invalidateViews();
         }
     };

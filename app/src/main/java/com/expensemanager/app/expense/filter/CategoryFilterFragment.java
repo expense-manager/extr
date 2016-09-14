@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.expensemanager.app.R;
@@ -61,7 +62,6 @@ public class CategoryFilterFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.expense_category_filter_fragment, container);
         unbinder = ButterKnife.bind(this, view);
-
         return view;
     }
 

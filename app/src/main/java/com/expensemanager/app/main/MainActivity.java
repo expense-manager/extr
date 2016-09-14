@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
@@ -88,6 +90,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
+    @BindView(R.id.main_activity_toolbar_extra_image_view_id) ImageView extraImageView;
+    @BindView(R.id.main_activity_toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.main_activity_drawer_recycler_view_id) RecyclerView drawRecyclerView;
     @BindView(R.id.main_activity_fab_id) FloatingActionButton fab;
 
@@ -149,7 +153,7 @@ public class MainActivity extends BaseActivity {
 
     private void invalidateViews() {
         drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
-        setupDrawerList(drawerAdapter);
+        setupDrawerList();
         drawerAdapter.invalidate();
 
         groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
@@ -165,6 +169,9 @@ public class MainActivity extends BaseActivity {
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
+
+        extraImageView.setVisibility(View.GONE);
+        titleTextView.setText(R.string.app_name);
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -173,12 +180,12 @@ public class MainActivity extends BaseActivity {
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 // Reset to drawer menu list at close
-//                setupDrawerList();
+                setupDrawerList();
             }
         };
     }
 
-    private void setupDrawerList(DrawerAdapter drawerAdapter) {
+    private void setupDrawerList() {
         drawRecyclerView.setAdapter(drawerAdapter);
 
         drawerAdapter.setOnItemClickLister(new DrawerAdapter.OnItemSelectedListener() {
@@ -238,9 +245,11 @@ public class MainActivity extends BaseActivity {
                 }
 
                 if (groupId != null) {
+                    ExpenseFragment expenseFragment = ExpenseFragment.newInstance();
+                    expenseFragment.addParams(toolbar, extraImageView, titleTextView);
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                            .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
+                            .replace(R.id.main_activity_frame_layout_id, expenseFragment)
                             .addToBackStack(ExpenseFragment.class.getName())
                             .commit();
                     setTitle(getString(R.string.expense));
@@ -432,7 +441,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemSelected(View v, int position) {
                 if (position == 0) {
-                    setupDrawerList(drawerAdapter);
+                    setupDrawerList();
                 } else if (position <= members.size() + 1) {
                     Member member = members.get(position - 2);
                     if (!member.isAccepted()) {
