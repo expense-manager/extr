@@ -214,6 +214,7 @@ public class MainActivity extends BaseActivity {
         switch(position) {
             case 0:
                 setupGroupList();
+                fab.setVisibility(View.VISIBLE);
                 fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                 break;
             case 1:
@@ -231,6 +232,7 @@ public class MainActivity extends BaseActivity {
                             .addToBackStack(OverviewFragment.class.getName())
                             .commit();
                     setTitle(getString(R.string.app_name));
+                    fab.setVisibility(View.VISIBLE);
                     fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
@@ -253,6 +255,7 @@ public class MainActivity extends BaseActivity {
                             .addToBackStack(ExpenseFragment.class.getName())
                             .commit();
                     setTitle(getString(R.string.expense));
+                    fab.setVisibility(View.VISIBLE);
                     fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
@@ -293,6 +296,7 @@ public class MainActivity extends BaseActivity {
                             .addToBackStack(CategoryFragment.class.getName())
                             .commit();
                     setTitle(getString(R.string.category));
+                    fab.setVisibility(View.VISIBLE);
                     fab.setOnClickListener(va -> setupFab(NEW_CATEGORY));
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
@@ -353,8 +357,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupFab(int fabType) {
-        fab.setVisibility(View.VISIBLE);
-
         if (groupId == null) {
             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
             return;
