@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.category.CategoryFragment;
 import com.expensemanager.app.category.NewCategoryActivity;
 import com.expensemanager.app.expense.ExpenseFragment;
 import com.expensemanager.app.expense.NewExpenseActivity;
@@ -232,7 +231,7 @@ public class MainActivity extends BaseActivity {
                             .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
                             .addToBackStack(OverviewFragment.class.getName())
                             .commit();
-                    setTitle(getString(R.string.app_name));
+                    titleTextView.setText(getString(R.string.app_name));
                     fab.setVisibility(View.VISIBLE);
                     fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                 } else {
@@ -255,7 +254,7 @@ public class MainActivity extends BaseActivity {
                             .replace(R.id.main_activity_frame_layout_id, expenseFragment)
                             .addToBackStack(ExpenseFragment.class.getName())
                             .commit();
-                    setTitle(getString(R.string.expense));
+                    titleTextView.setText(getString(R.string.expense));
                     fab.setVisibility(View.VISIBLE);
                     fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
                 } else {
@@ -276,34 +275,13 @@ public class MainActivity extends BaseActivity {
                             .replace(R.id.main_activity_frame_layout_id, ReportMainFragment.newInstance())
                             .addToBackStack(ReportMainFragment.class.getName())
                             .commit();
-                    setTitle(getString(R.string.report));
+                    titleTextView.setText(getString(R.string.report));
                     fab.setVisibility(View.INVISIBLE);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 4:
-                if (currentPosition == position) {
-                    drawerLayout.closeDrawers();
-                    return;
-                } else {
-                    currentPosition = position;
-                }
-
-                if (groupId != null) {
-                    getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                            .replace(R.id.main_activity_frame_layout_id, CategoryFragment.newInstance())
-                            .addToBackStack(CategoryFragment.class.getName())
-                            .commit();
-                    setTitle(getString(R.string.category));
-                    fab.setVisibility(View.VISIBLE);
-                    fab.setOnClickListener(va -> setupFab(NEW_CATEGORY));
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case 5:
                 if (groupId != null) {
                     GroupDetailActivity.newInstance(MainActivity.this, groupId);
                     fab.setVisibility(View.INVISIBLE);
@@ -311,7 +289,7 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 6:
+            case 5:
                 if (currentPosition == position) {
                     drawerLayout.closeDrawers();
                     return;
@@ -324,13 +302,13 @@ public class MainActivity extends BaseActivity {
                         .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
                         .addToBackStack(NotificationFragment.class.getName())
                         .commit();
-                setTitle(getString(R.string.notification));
+                titleTextView.setText(getString(R.string.notification));
                 fab.setVisibility(View.INVISIBLE);
                 break;
-            case 7:
+            case 6:
                 // help
                 break;
-            case 8:
+            case 7:
                 if (currentPosition == position) {
                     drawerLayout.closeDrawers();
                     return;
@@ -343,13 +321,13 @@ public class MainActivity extends BaseActivity {
                         .replace(R.id.main_activity_frame_layout_id, SettingsFragment.newInstance())
                         .addToBackStack(NotificationFragment.class.getName())
                         .commit();
-                setTitle(getString(R.string.settings));
+                titleTextView.setText(getString(R.string.settings));
                 fab.setVisibility(View.INVISIBLE);
                 break;
-            case 10:
+            case 9:
                 signOut();
                 break;
-            case 11:
+            case 10:
                 // About
                 break;
             default:
@@ -380,7 +358,6 @@ public class MainActivity extends BaseActivity {
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_home).setTitle(getString(R.string.nav_overview)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
-        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_buffer).setTitle(getString(R.string.nav_category)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_bell).setTitle(getString(R.string.nav_notifications)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_help_circle).setTitle(getString(R.string.nav_help)));

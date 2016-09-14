@@ -39,7 +39,7 @@
                     tools:src="@drawable/ic_arrow_back_white_24dp"/>
 
                 <!-- Title -->
-                <TextView
+                <com.expensemanager.app.helpers.ETextView
                     android:id="@+id/main_activity_toolbar_title_text_view_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -50,6 +50,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_medium_small"
+                    android:textStyle="bold"
                     tools:text="123"/>
 
             </RelativeLayout>

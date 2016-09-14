@@ -66,10 +66,56 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/setting_activity_notification_card_view_id"
+            android:id="@+id/setting_activity_category_card_view_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/setting_activity_profile_card_view_id"
+            android:layout_marginLeft="@dimen/space_medium_small"
+            android:layout_marginRight="@dimen/space_medium_small"
+            android:layout_marginTop="@dimen/space_really_small"
+            android:layout_marginBottom="@dimen/space_really_small"
+
+            android:elevation="3dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Category label -->
+                <TextView
+                    android:id="@+id/setting_activity_category_label_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:paddingEnd="@dimen/space_medium_large"
+                    android:paddingTop="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/category"
+                    android:textSize="@dimen/text_really_small"/>
+
+                <!-- Category description -->
+                <TextView
+                    android:id="@+id/setting_activity_category_description_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/setting_activity_category_label_text_view_id"
+
+                    android:paddingStart="@dimen/space_medium_large"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/category_description"
+                    android:textSize="@dimen/text_small"/>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/setting_activity_notification_card_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setting_activity_category_card_view_id"
             android:layout_marginLeft="@dimen/space_medium_small"
             android:layout_marginRight="@dimen/space_medium_small"
             android:layout_marginTop="@dimen/space_really_small"

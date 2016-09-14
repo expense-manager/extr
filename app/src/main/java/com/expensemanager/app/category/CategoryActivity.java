@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,6 +43,7 @@ public class CategoryActivity extends BaseActivity {
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.category_activity_recycler_view_id) RecyclerView recyclerView;
     @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.category_activity_fab_id) FloatingActionButton fab;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, CategoryActivity.class);
@@ -67,6 +69,11 @@ public class CategoryActivity extends BaseActivity {
         setupSwipeToRefresh();
 
         invalidateViews();
+
+        fab.setOnClickListener(v -> {
+            NewCategoryActivity.newInstance(this);
+            overridePendingTransition(R.anim.right_in, R.anim.stay);
+        });
     }
 
     private void invalidateViews() {

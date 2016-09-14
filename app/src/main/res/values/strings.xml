@@ -60,6 +60,7 @@
     <string name="title_activity_category_detail">Category detail</string>
     <string name="title_activity_new_expense">New Expense</string>
     <string name="title_activity_new_category">New Category</string>
+    <string name="category_description">Add new or edit existing category</string>
     <string name="title_activity_welcome">Welcome</string>
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="title_activity_login">Login</string>

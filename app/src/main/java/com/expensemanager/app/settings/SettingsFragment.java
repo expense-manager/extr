@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.category.CategoryActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
@@ -54,9 +55,12 @@ public class SettingsFragment extends Fragment {
 
     private String loginUserId;
     private String groupId;
+    private boolean isSignOut = false;
 
     @BindView(R.id.setting_activity_profile_photo_image_view_id) ImageView photoImageView;
     @BindView(R.id.setting_activity_edit_profile_text_view_id) TextView editProfileTextView;
+    @BindView(R.id.setting_activity_category_label_text_view_id) TextView categoryLabelTextView;
+    @BindView(R.id.setting_activity_category_description_text_view_id) TextView editCategoryTextView;
     @BindView(R.id.setting_activity_weekly_notification_switch_id) Switch weeklyNotificationSwitch;
     @BindView(R.id.setting_activity_monthly_notification_switch_id) Switch monthlyNotificationSwitch;
     @BindView(R.id.setting_activity_signout_text_view_id) TextView signOutTextView;
@@ -143,10 +147,12 @@ public class SettingsFragment extends Fragment {
         }
         editProfileTextView.setOnClickListener(v -> ProfileActivity.newInstance(getActivity(), null, true));
 
+        editCategoryTextView.setOnClickListener(v -> CategoryActivity.newInstance(getActivity()));
         weeklyNotificationSwitch.setChecked(setWeekly);
         monthlyNotificationSwitch.setChecked(setMonthly);
 
         profileLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
+        categoryLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
         notificationLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
         generalLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
 
@@ -214,19 +220,28 @@ public class SettingsFragment extends Fragment {
                 return null;
             }
 
-            SharedPreferences sharedPreferences =
-                    getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-            sharedPreferences.edit().clear().apply();
-            // Clear data when signout
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            realm.deleteAll();
-            realm.commitTransaction();
-            realm.close();
+            isSignOut = true;
+
             // Go to welcome
             WelcomeActivity.newInstance(getActivity());
             getActivity().finish();
             return null;
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (isSignOut) {
+            SharedPreferences sharedPreferences =
+                    getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+            sharedPreferences.edit().clear().apply();
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.deleteAll();
+            realm.commitTransaction();
+            realm.close();
+        }
+    }
 }
