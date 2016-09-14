@@ -1,12 +1,15 @@
 package com.expensemanager.app.expense;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.filter.CategoryFilterFragment;
@@ -21,9 +26,11 @@ import com.expensemanager.app.expense.filter.DateFilterFragment;
 import com.expensemanager.app.expense.filter.MemberFilterFragment;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.Analytics;
+import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Member;
+import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.SyncExpense;
 import com.twotoasters.jazzylistview.effects.SlideInEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
@@ -59,6 +66,9 @@ public class ExpenseFragment extends Fragment {
     private String groupId;
     private long syncTimeInMillis;
     private String syncTimeKey;
+    private Toolbar toolbar;
+    private ImageView extraImageView;
+    private TextView titleTextView;
 
     private ExpenseAdapter expenseAdapter;
 
@@ -237,6 +247,15 @@ public class ExpenseFragment extends Fragment {
                 isMemberFiltered = !isMemberFiltered;
             }
             ExpenseFragment.this.member = member;
+            User user = member.getUser();
+            if (isMemberFiltered && user != null) {
+                Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
+                extraImageView.setVisibility(View.VISIBLE);
+                titleTextView.setText(user.getFullname());
+            } else {
+                extraImageView.setVisibility(View.GONE);
+                titleTextView.setText(R.string.app_name);
+            }
             invalidateViews();
         }
     };
@@ -260,9 +279,23 @@ public class ExpenseFragment extends Fragment {
                 isCategoryFiltered = !isCategoryFiltered;
             }
             ExpenseFragment.this.category = category;
+            if (toolbar != null) {
+                if (!isCategoryFiltered || category == null) {
+                    int background = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
+                    toolbar.setBackgroundColor(background);
+                } else {
+                    toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
+                }
+            }
             invalidateViews();
         }
     };
+
+    public void addParams(Toolbar toolbar, ImageView extraImageView, TextView titleTextView) {
+        this.toolbar = toolbar;
+        this.extraImageView = extraImageView;
+        this.titleTextView = titleTextView;
+    }
 
     @Override
     public void onResume() {
@@ -278,5 +311,15 @@ public class ExpenseFragment extends Fragment {
         super.onPause();
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
+        if (toolbar != null) {
+            int background = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
+            toolbar.setBackgroundColor(background);
+        }
+        if (extraImageView != null) {
+            extraImageView.setVisibility(View.GONE);
+        }
+        if (titleTextView != null) {
+            titleTextView.setText(R.string.app_name);
+        }
     }
 }

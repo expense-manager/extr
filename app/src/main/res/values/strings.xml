@@ -119,6 +119,7 @@
     <string name="last_name">Last Name</string>
     <string name="mobile">Mobile</string>
     <string name="report_average">Average: $</string>
+    <string name="transition_category">transition_category</string>
 
     <!-- Color -->
     <string name="soft_default">Default</string>
