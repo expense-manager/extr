@@ -9,7 +9,7 @@
     android:layout_alignParentTop="true"
     android:fitsSystemWindows="true"
 
-    android:background="@color/white"
+    android:background="?attr/android:colorPrimary"
     android:elevation="2dp"
     app:theme="@style/ActionBarLightTheme"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
 
             android:padding="10dp"
-            android:tint="@color/colorPrimary"
+            android:tint="?attr/android:actionMenuTextColor"
             android:src="@drawable/ic_arrow_left_24dp"/>
 
         <!-- Title -->
@@ -38,7 +38,7 @@
             android:layout_toEndOf="@+id/toolbar_back_image_view_id"
             android:layout_centerVertical="true"
 
-            android:textColor="?attr/android:textColorPrimary"
+            android:textColor="?attr/android:actionMenuTextColor"
             android:textSize="@dimen/text_medium_small"
             tools:text="Title"/>
 
@@ -51,7 +51,7 @@
             android:layout_alignBottom="@+id/toolbar_title_text_view_id"
             android:layout_centerVertical="true"
 
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/android:actionMenuTextColor"
             android:textSize="@dimen/text_medium_small"
             android:textStyle="bold"
             android:paddingEnd="10dp"
@@ -67,7 +67,7 @@
             android:layout_alignBottom="@+id/toolbar_title_text_view_id"
             android:layout_centerVertical="true"
 
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/android:actionMenuTextColor"
             android:textSize="@dimen/text_medium_small"
             android:paddingEnd="10dp"
             android:text="@string/save"
@@ -82,7 +82,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/space_medium"
 
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/android:actionMenuTextColor"
             android:textSize="@dimen/text_medium_small"
             android:visibility="gone"/>
 
