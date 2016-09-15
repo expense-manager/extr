@@ -36,7 +36,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".expense.ExpenseActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".expense.NewExpenseActivity"
             android:theme="@style/BaseTheme"/>

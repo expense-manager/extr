@@ -38,8 +38,7 @@
                 android:background="?attr/android:colorPrimary"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.3"
-            >
+                app:layout_collapseParallaxMultiplier="0.3">
 
                 <LinearLayout
                     android:id="@+id/expense_detail_activity_linear_layout_title_id"

@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/category_item_color_relative_layout_id"
     android:layout_width="@dimen/category_color_width"
-    android:layout_height="@dimen/category_color_width">
+    android:layout_height="@dimen/category_color_width"
+    android:layout_marginBottom="@dimen/space_small"
+    android:elevation="6dp">
 
     <!-- Color -->
     <de.hdodenhof.circleimageview.CircleImageView
@@ -18,16 +20,18 @@
         android:id="@+id/color_item_padding_color_image_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="3dp"
+        android:layout_margin="2dp"
 
         tools:background="@color/white"/>
+
     <!-- Color -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/color_item_inner_color_image_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="6dp"
+        android:layout_margin="4dp"
 
+        android:elevation="10dp"
         tools:background="@color/black"/>
 
 </RelativeLayout>

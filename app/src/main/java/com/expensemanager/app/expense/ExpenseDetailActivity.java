@@ -27,6 +27,8 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -298,6 +300,15 @@ public class ExpenseDetailActivity extends BaseActivity
             }
         });
 
+        View view = getLayoutInflater().inflate(R.layout.action_sheet, null);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
     }
 
     private void setupDateAndTime() {
@@ -366,7 +377,7 @@ public class ExpenseDetailActivity extends BaseActivity
         backImageView.setOnClickListener(v -> close());
         editTextView.setOnClickListener(v -> {
             setEditMode(true);
-            showActionSheet();
+//            showActionSheet(); // Example of bottom sheet
         });
         saveTextView.setOnClickListener(v -> save());
     }

@@ -7,9 +7,12 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -20,15 +23,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.category.color_picker.ColorPickerFragment;
+import com.expensemanager.app.category.color_picker.ColorPickerSheetAdapter;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.EColor;
 import com.expensemanager.app.service.SyncCategory;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,14 +44,19 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
-public class NewCategoryActivity extends AppCompatActivity
-    implements ColorPickerFragment.ColorPickerListener {
+import static com.expensemanager.app.R.id.recyclerView;
+
+public class NewCategoryActivity extends AppCompatActivity {
     private static final String TAG = NewCategoryActivity.class.getSimpleName();
+
+    private static final int COLUMN = 6;
 
     private Category category;
     private Set<String> usedColors;
     private String currentColor;
     private String groupId;
+    private BottomSheetDialog colorSheetDialog;
+    private List<String> colors;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -67,7 +77,7 @@ public class NewCategoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_category_activity);
         ButterKnife.bind(this);
-        // Setup toolbar
+
         setupToolbar();
 
         category = new Category();
@@ -77,6 +87,8 @@ public class NewCategoryActivity extends AppCompatActivity
         usedColors = Helpers.getUsedColorSet(groupId);
         // Get a random unused color
         currentColor = Helpers.getRandomColor(usedColors);
+        colors = EColor.getAllColors();
+
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(currentColor));
         colorImageView.setImageDrawable(colorDrawable);
 
@@ -88,9 +100,11 @@ public class NewCategoryActivity extends AppCompatActivity
         toolbar.setContentInsetsAbsolute(0,0);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+
         titleTextView.setText(getString(R.string.title_activity_new_category));
         saveTextView.setVisibility(View.VISIBLE);
         backImageView.setImageResource(R.drawable.ic_window_close);
@@ -102,20 +116,39 @@ public class NewCategoryActivity extends AppCompatActivity
     }
 
     private void selectColor() {
-        ColorPickerFragment colorPickerFragment = ColorPickerFragment.newInstance(currentColor);
-        // Pass listener
-        colorPickerFragment.setListener(this);
-        colorPickerFragment.show(getSupportFragmentManager(), ColorPickerFragment.class.getSimpleName());
+        closeSoftKeyboard();
+        showColorSheet();
     }
 
-    @Override
-    public void onFinishCategoryColorDialog(String color) {
-        usedColors.remove(currentColor);
-        usedColors.add(color);
-        currentColor = color;
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(currentColor));
-        colorImageView.setImageDrawable(colorDrawable);
+    private void showColorSheet() {
+        ColorPickerSheetAdapter colorPickerSheetAdapter = new ColorPickerSheetAdapter(this, currentColor, colors, usedColors);
+        colorPickerSheetAdapter.setOnItemClickListener(onColorClickListener);
+
+        View colorSheetView = getLayoutInflater().inflate(R.layout.color_sheet, null);
+        RecyclerView colorRecyclerView = (RecyclerView) colorSheetView.findViewById(recyclerView);
+        colorRecyclerView.setHasFixedSize(true);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, COLUMN);
+        colorRecyclerView.setLayoutManager(gridLayoutManager);
+        colorRecyclerView.setAdapter(colorPickerSheetAdapter);
+
+        colorSheetDialog = new BottomSheetDialog(this);
+        colorSheetDialog.setContentView(colorSheetView);
+        colorSheetDialog.show();
     }
+
+    private ColorPickerSheetAdapter.OnItemClickListener onColorClickListener = new ColorPickerSheetAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(ColorPickerSheetAdapter.ViewHolder item, int position) {
+            colorSheetDialog.dismiss();
+
+            usedColors.remove(currentColor);
+            usedColors.add(colors.get(position));
+            currentColor = colors.get(position);
+            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(currentColor));
+            colorImageView.setImageDrawable(colorDrawable);
+        }
+    };
 
     private void save() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);

@@ -98,16 +98,6 @@ public class CategoryFilterFragment extends DialogFragment {
 
     private void setupRecyclerView() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), COLUMN);
-//        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//            @Override
-//            public int getSpanSize(int position) {
-//                if (position == 1) {
-//                    return 2; // the item in position now takes up 4 spans
-//                }
-//                return 1;
-//            }
-//        });
-
         categoryRecyclerView.setLayoutManager(gridLayoutManager);
         categoryRecyclerView.setAdapter(adapter);
         ItemClickSupport.addTo(categoryRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
