@@ -71,5 +71,6 @@
         android:singleLine="true"
         android:textDirection="anyRtl"
         android:textSize="@dimen/drawer_item_primary_text"
+        android:textColor="@color/gray_dark"
         tools:text="Some drawer text"/>
 </RelativeLayout>

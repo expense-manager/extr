@@ -144,8 +144,8 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
-        TextView titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
+        this.toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
+        this.titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         this.extraImageView = (ImageView) toolbar.findViewById(R.id.main_activity_toolbar_extra_image_view_id);
         titleTextView.setText(getString(R.string.expense));
     }
@@ -261,7 +261,7 @@ public class ExpenseFragment extends Fragment {
                 titleTextView.setText(user.getFullname());
             } else {
                 extraImageView.setVisibility(View.GONE);
-                titleTextView.setText(R.string.app_name);
+                titleTextView.setText(R.string.expense);
             }
             invalidateViews();
         }
@@ -320,7 +320,7 @@ public class ExpenseFragment extends Fragment {
             extraImageView.setVisibility(View.GONE);
         }
         if (titleTextView != null) {
-            titleTextView.setText(R.string.app_name);
+            titleTextView.setText(R.string.expense);
         }
     }
 }
