@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -29,6 +30,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -36,6 +38,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -93,9 +96,13 @@ import io.realm.RealmResults;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public class ExpenseDetailActivity extends BaseActivity {
+public class ExpenseDetailActivity extends BaseActivity
+    implements AppBarLayout.OnOffsetChangedListener {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
 
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION              = 200;
     public static final String DATE_PICKER = "date_picker";
     public static final String TIME_PICKER = "time_picker";
     private static final String EXPENSE_ID = "EXPENSE_ID";
@@ -108,6 +115,8 @@ public class ExpenseDetailActivity extends BaseActivity {
     private String photoFileName;
     private AlertDialog.Builder choosePhotoSource;
 
+    private boolean mIsTheTitleVisible          = false;
+    private boolean mIsTheTitleContainerVisible = true;
     private String expenseId;
     private Expense expense;
     private Category category;
@@ -115,20 +124,27 @@ public class ExpenseDetailActivity extends BaseActivity {
     private boolean isEditable = false;
     private String groupId;
     private String loginUserId;
+    private Group group;
+    private User createdBy;
 
     private ArrayList<ExpensePhoto> expensePhotos;
     private ExpensePhotoAdapter expensePhotoAdapter;
 
     private BottomSheetDialog bottomSheetDialog;
 
+    @BindView(R.id.expense_detail_activity_user_photo_id) ImageView userPhotoImageView;
+    @BindView(R.id.expense_detail_activity_linear_layout_title_id) LinearLayout titleLinearLayout;
+    @BindView(R.id.expense_detail_activity_appbar_id) AppBarLayout appBarLayout;
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
+    @BindView(R.id.toolbar_extra_image_view_id) ImageView extraImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.toolbar_edit_text_view_id) TextView editTextView;
     @BindView(R.id.toolbar_save_text_view_id) TextView saveTextView;
+    @BindView(R.id.expense_detail_activity_fullname_text_view_id) TextView fullNameTextView;
+    @BindView(R.id.expense_detail_activity_email_text_view_id) TextView emailTextView;
     @BindView(R.id.expense_detail_activity_amount_text_view_id) EditText amountTextView;
     @BindView(R.id.expense_detail_activity_note_text_view_id) EditText noteTextView;
-    @BindView(R.id.expense_detail_activity_created_at_text_view_id) TextView createdAtTextView;
     @BindView(R.id.expense_detail_activity_grid_view_id) GridView photoGridView;
     @BindView(R.id.expense_detail_activity_new_photo_grid_view_id) GridView newPhotoGridView;
     @BindView(R.id.expense_detail_activity_delete_button_id) Button deleteButton;
@@ -140,11 +156,6 @@ public class ExpenseDetailActivity extends BaseActivity {
     @BindView(R.id.expense_detail_activity_category_amount_text_view_id) TextView categoryAmountTextView;
     @BindView(R.id.expense_detail_activity_expense_date_text_view_id) TextView expenseDateTextView;
     @BindView(R.id.expense_detail_activity_expense_time_text_view_id) TextView expenseTimeTextView;
-    @BindView(R.id.expense_detail_activity_created_by_relative_layout_id) RelativeLayout createdByRelativeLayout;
-    @BindView(R.id.expense_detail_activity_created_by_photo_image_view_id) ImageView createdByPhotoImageView;
-    @BindView(R.id.expense_detail_activity_created_by_name_text_view_id) TextView createdByNameTextView;
-    @BindView(R.id.expense_detail_activity_created_by_email_text_view_id) TextView createdByEmailTextView;
-    @BindView(R.id.expense_detail_activity_created_by_label_text_view_id) TextView createdByLabel;
 
     public static void newInstance(Context context, String id) {
         Intent intent = new Intent(context, ExpenseDetailActivity.class);
@@ -159,14 +170,21 @@ public class ExpenseDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setupToolbar();
+        appBarLayout.addOnOffsetChangedListener(this);
+        startAlphaAnimation(titleTextView, 0, View.INVISIBLE);
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
 
+        group = Group.getGroupById(groupId);
+
         expenseId = getIntent().getStringExtra(EXPENSE_ID);
         expense = Expense.getExpenseById(expenseId);
-        category = Category.getCategoryById(expense.getCategoryId());
+        if (expense != null) {
+            createdBy = User.getUserById(expense.getUserId());
+            category = Category.getCategoryById(expense.getCategoryId());
+        }
 
         invalidateViews();
         setupDateAndTime();
@@ -175,9 +193,61 @@ public class ExpenseDetailActivity extends BaseActivity {
         SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
     }
 
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
+    }
+
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+
+            if(!mIsTheTitleVisible) {
+                startAlphaAnimation(titleTextView, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+            }
+
+        } else {
+
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(titleTextView, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
+
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if(mIsTheTitleContainerVisible) {
+                extraImageView.setVisibility(View.INVISIBLE);
+                startAlphaAnimation(titleLinearLayout, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+            }
+
+        } else {
+            if (!mIsTheTitleContainerVisible) {
+                extraImageView.setVisibility(View.VISIBLE);
+                startAlphaAnimation(titleLinearLayout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation (View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+            ? new AlphaAnimation(0f, 1f)
+            : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
+    }
+
     private void invalidateViews() {
         Log.d(TAG, "invalidateViews()");
-        expense = Expense.getExpenseById(expenseId);
 
         if (expense == null) {
             return;
@@ -186,19 +256,13 @@ public class ExpenseDetailActivity extends BaseActivity {
         amountTextView.setText(String.valueOf(expense.getAmount()));
         setupCategory();
         noteTextView.setText(String.valueOf(expense.getNote()));
-        createdAtTextView.setText(Helpers.formatCreateAt(expense.getCreatedAt()));
-
-        User createdBy = User.getUserById(expense.getUserId());
-        Group group = Group.getGroupById(groupId);
 
         if (createdBy != null && Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
-            Helpers.loadIconPhoto(createdByPhotoImageView, createdBy.getPhotoUrl());
-            createdByNameTextView.setText(createdBy.getFullname());
-            createdByEmailTextView.setText(createdBy.getEmail());
-            createdByRelativeLayout.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
-        } else {
-            createdByRelativeLayout.setVisibility(View.GONE);
-            createdByLabel.setVisibility(View.GONE);
+            Helpers.loadProfilePhoto(userPhotoImageView, createdBy.getPhotoUrl());
+            titleTextView.setText(createdBy.getFullname());
+            fullNameTextView.setText(createdBy.getFullname());
+            emailTextView.setText(createdBy.getEmail());
+            userPhotoImageView.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
         }
 
         deleteButton.setOnClickListener(v -> delete());
@@ -233,7 +297,6 @@ public class ExpenseDetailActivity extends BaseActivity {
                 bottomSheetDialog.dismiss();
             }
         });
-
 
     }
 
@@ -299,7 +362,7 @@ public class ExpenseDetailActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
         titleTextView.setText(getString(R.string.title_activity_expense_detail));
-        titleTextView.setOnClickListener(v -> close());
+     //   titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
         editTextView.setOnClickListener(v -> {
             setEditMode(true);

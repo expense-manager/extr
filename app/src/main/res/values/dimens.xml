@@ -47,6 +47,8 @@
 
     <dimen name="drawer_vertical_padding">16dp</dimen>
 
+    <dimen name="profile_image_size_large">80dp</dimen>
+
     <!-- Definition for the primary item -->
     <dimen name="drawer_item_primary">48dp</dimen>
     <dimen name="drawer_item_primary_icon">56dp</dimen>

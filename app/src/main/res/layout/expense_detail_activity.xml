@@ -1,20 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/expense_detail_activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
     android:background="@color/white"
     tools:context="com.expensemanager.app.expense.ExpenseDetailActivity">
 
-    <include layout="@layout/toolbar_light" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/expense_detail_activity_appbar_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <ScrollView
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/expense_detail_activity_collapsing_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <ImageView
+                android:id="@+id/expense_detail_activity_placeholder_id"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:tint="#11000000"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.9"/>
+
+            <FrameLayout
+                android:id="@+id/expense_detail_activity_framelayout_title_id"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:background="?attr/android:colorPrimary"
+                android:orientation="vertical"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.3"
+            >
+
+                <LinearLayout
+                    android:id="@+id/expense_detail_activity_linear_layout_title_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/expense_detail_activity_fullname_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_gravity="center_horizontal"
+
+                        android:gravity="bottom|center"
+                        tools:text="name"
+                        android:textColor="@android:color/white"
+                        android:textSize="30sp"/>
+
+                    <TextView
+                        android:id="@+id/expense_detail_activity_email_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+
+                        tools:text="name"
+                        android:textColor="@android:color/white"
+                    />
+
+                </LinearLayout>
+            </FrameLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_id">
+        android:scrollbars="none"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -221,105 +287,12 @@
                 android:textSize="@dimen/text_medium_small"
                 android:background="@drawable/background_bottom_line_gray"/>
 
-            <!-- Created by label -->
-            <TextView
-                android:id="@+id/expense_detail_activity_created_by_label_text_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/expense_detail_activity_note_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium_large"
-                android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_marginTop="@dimen/space_medium_large"
-                android:layout_marginBottom="@dimen/space_medium"
-
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
-                android:text="@string/created_by"
-                android:textSize="@dimen/text_small"/>
-
-            <!-- Created by info -->
-            <RelativeLayout
-                android:id="@+id/expense_detail_activity_created_by_relative_layout_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/space_medium_large"
-                android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_below="@+id/expense_detail_activity_created_by_label_text_view_id"
-
-                android:padding="@dimen/space_medium"
-                android:background="@drawable/background_round_corner_border_gray">
-
-                <!-- Color -->
-                <ImageView
-                    android:id="@+id/expense_detail_activity_created_by_photo_image_view_id"
-                    android:layout_width="@dimen/category_color_width_small"
-                    android:layout_height="@dimen/category_color_width_small"
-                    android:layout_marginEnd="@dimen/space_medium"/>
-
-                <!-- Name -->
-                <TextView
-                    android:id="@+id/expense_detail_activity_created_by_name_text_view_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/expense_detail_activity_created_by_photo_image_view_id"
-                    android:layout_alignTop="@+id/expense_detail_activity_created_by_photo_image_view_id"
-
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_small"
-                    android:gravity="center_vertical"
-                    tools:text="name"/>
-
-                <!-- Email -->
-                <TextView
-                    android:id="@+id/expense_detail_activity_created_by_email_text_view_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/expense_detail_activity_created_by_name_text_view_id"
-                    android:layout_alignLeft="@+id/expense_detail_activity_created_by_name_text_view_id"
-
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_really_small"
-                    android:gravity="center_vertical"
-                    tools:text="1234"/>
-
-            </RelativeLayout>
-
-            <!-- Created At label -->
-            <TextView
-                android:id="@+id/expense_detail_activity_created_at_label_text_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/expense_detail_activity_created_by_relative_layout_id"
-                android:layout_marginLeft="@dimen/space_medium_large"
-                android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_marginTop="@dimen/space_medium_large"
-                android:layout_marginBottom="@dimen/space_medium"
-
-                android:paddingLeft="@dimen/space_really_small"
-                android:paddingRight="@dimen/space_really_small"
-                android:text="@string/created_at"
-                android:textSize="@dimen/text_small"/>
-
-            <!-- Created At -->
-            <TextView
-                android:id="@+id/expense_detail_activity_created_at_text_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/expense_detail_activity_created_at_label_text_view_id"
-                android:layout_marginLeft="@dimen/space_medium_large"
-                android:layout_marginRight="@dimen/space_medium_large"
-
-                android:padding="@dimen/space_really_small"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_medium_small"
-                android:background="@drawable/background_bottom_line_gray"/>
-
             <!-- Expense photo -->
             <LinearLayout
                 android:id="@+id/expense_detail_activity_linear_layout_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/expense_detail_activity_created_at_text_view_id"
+                android:layout_below="@id/expense_detail_activity_note_text_view_id"
                 android:layout_marginLeft="@dimen/space_medium_large"
                 android:layout_marginRight="@dimen/space_medium_large"
                 android:layout_marginTop="@dimen/space_medium_large">
@@ -372,7 +345,117 @@
                 android:background="@drawable/button_background_gray"/>
 
         </RelativeLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_id"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/android:colorPrimary"
+        app:layout_anchor="@id/expense_detail_activity_framelayout_title_id"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:title="">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Back -->
+            <ImageView
+                android:id="@+id/toolbar_back_image_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+
+                android:padding="10dp"
+                android:tint="?attr/android:actionMenuTextColor"
+                android:src="@drawable/ic_arrow_left_24dp"/>
+
+            <!-- Extra image -->
+            <ImageView
+                android:id="@+id/toolbar_extra_image_view_id"
+                android:layout_width="@dimen/category_color_width_small"
+                android:layout_height="@dimen/category_color_width_small"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/toolbar_back_image_view_id"
+                android:layout_marginEnd="10dp"
+
+                android:visibility="gone"
+                tools:src="@drawable/ic_arrow_back_white_24dp"/>
+
+            <!-- Title -->
+            <com.expensemanager.app.helpers.ETextView
+                android:id="@+id/toolbar_title_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/toolbar_extra_image_view_id"
+                android:layout_centerVertical="true"
+
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_medium_small"/>
+
+            <!-- Edit -->
+            <com.expensemanager.app.helpers.ETextView
+                android:id="@+id/toolbar_edit_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/toolbar_title_text_view_id"
+                android:layout_centerVertical="true"
+
+                android:textColor="?attr/android:actionMenuTextColor"
+                android:textSize="@dimen/text_medium_small"
+                android:textStyle="bold"
+                android:paddingEnd="10dp"
+                android:text="@string/edit"
+                android:visibility="invisible"/>
+
+            <!-- Save -->
+            <com.expensemanager.app.helpers.ETextView
+                android:id="@+id/toolbar_save_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/toolbar_title_text_view_id"
+                android:layout_centerVertical="true"
+
+                android:textColor="?attr/android:actionMenuTextColor"
+                android:textSize="@dimen/text_medium_small"
+                android:paddingEnd="10dp"
+                android:text="@string/save"
+                android:visibility="invisible"/>
+
+            <!-- Right title -->
+            <com.expensemanager.app.helpers.ETextView
+                android:id="@+id/toolbar_right_title_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/space_medium"
+
+                android:textColor="?attr/android:actionMenuTextColor"
+                android:textSize="@dimen/text_medium_small"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/expense_detail_activity_user_photo_id"
+        android:layout_width="@dimen/profile_image_size_large"
+        android:layout_height="@dimen/profile_image_size_large"
+        android:layout_gravity="center_horizontal"
+
+        app:border_color="@android:color/white"
+        app:border_width="2dp"
+        app:finalHeight="@dimen/category_color_width_small"
+        app:finalYPosition="2dp"
+        app:layout_behavior="com.expensemanager.app.expense.UserPhotoBehavior"
+        app:startHeight="2dp"
+        app:startToolbarPosition="2dp"
+        app:startXPosition="2dp"/>
 
     <ProgressBar
         android:id="@+id/expense_detail_activity_progress_bar_id"
@@ -383,5 +466,5 @@
         android:visibility="gone"
         style="?android:attr/progressBarStyleLarge"/>
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
 
