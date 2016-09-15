@@ -26,7 +26,6 @@ import com.expensemanager.app.expense.filter.DateFilterFragment;
 import com.expensemanager.app.expense.filter.MemberFilterFragment;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.Analytics;
-import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Member;
@@ -102,6 +101,7 @@ public class ExpenseFragment extends Fragment {
 
         expenses = new ArrayList<>();
         expenseAdapter = new ExpenseAdapter(getActivity(), expenses);
+        setupToolbar();
         setupRecyclerView();
         setupSwipeToRefresh();
 
@@ -141,6 +141,13 @@ public class ExpenseFragment extends Fragment {
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(getActivity(), syncTimeKey, syncTimeInMillis);
         }
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
+        TextView titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
+        this.extraImageView = (ImageView) toolbar.findViewById(R.id.main_activity_toolbar_extra_image_view_id);
+        titleTextView.setText(getString(R.string.expense));
     }
 
     private void setupRecyclerView() {
@@ -290,12 +297,6 @@ public class ExpenseFragment extends Fragment {
             invalidateViews();
         }
     };
-
-    public void addParams(Toolbar toolbar, ImageView extraImageView, TextView titleTextView) {
-        this.toolbar = toolbar;
-        this.extraImageView = extraImageView;
-        this.titleTextView = titleTextView;
-    }
 
     @Override
     public void onResume() {

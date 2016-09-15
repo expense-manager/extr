@@ -67,11 +67,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
 
-                            android:paddingTop="@dimen/space_small"
-                            android:paddingBottom="@dimen/space_small"
+                            android:paddingLeft="@dimen/space_small"
                             android:text="@string/first_name"
+                            android:textColor="@color/gray"
                             android:textSize="@dimen/text_really_small"
-                            android:textAllCaps="true"/>
+                            android:textAllCaps="false"/>
 
                         <EditText
                             android:id="@+id/profile_activity_first_name_edit_text_id"
@@ -97,11 +97,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
-                            android:paddingTop="@dimen/space_small"
-                            android:paddingBottom="@dimen/space_small"
+                            android:paddingLeft="@dimen/space_small"
                             android:text="@string/last_name"
+                            android:textColor="@color/gray"
                             android:textSize="@dimen/text_really_small"
-                            android:textAllCaps="true"/>
+                            android:textAllCaps="false"/>
 
                         <EditText
                             android:id="@+id/profile_activity_last_name_edit_text_id"
@@ -134,11 +134,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
+                        android:paddingLeft="@dimen/space_small"
                         android:paddingTop="@dimen/space_small"
-                        android:paddingBottom="@dimen/space_small"
                         android:text="@string/email"
+                        android:textColor="@color/gray"
                         android:textSize="@dimen/text_really_small"
-                        android:textAllCaps="true"/>
+                        android:textAllCaps="false"/>
 
                     <EditText
                         android:id="@+id/profile_activity_email_edit_text_id"
@@ -169,11 +170,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
+                        android:paddingLeft="@dimen/space_small"
                         android:paddingTop="@dimen/space_small"
-                        android:paddingBottom="@dimen/space_small"
                         android:text="@string/mobile"
+                        android:textColor="@color/gray"
                         android:textSize="@dimen/text_really_small"
-                        android:textAllCaps="true"/>
+                        android:textAllCaps="false"/>
 
                     <EditText
                         android:id="@+id/profile_activity_mobile_edit_text_id"

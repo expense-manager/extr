@@ -2,81 +2,91 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/category_color_width_very_large"
-    android:layout_height="@dimen/category_color_width_very_large"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_medium_small"
+    android:layout_gravity="center"
 
-    android:background="@color/white">
+    android:padding="@dimen/space_ultra_small"
+    android:gravity="center">
 
-    <!-- Frame Outer Color -->
-    <ImageView
-        android:id="@+id/category_item_frame_outer_color_image_view_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:layout_width="@dimen/category_color_width_very_large"
+        android:layout_height="@dimen/category_color_width_very_large">
 
-        tools:background="@color/black"/>
+        <!-- Frame Outer Color -->
+        <ImageView
+            android:id="@+id/category_item_frame_outer_color_image_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-    <!-- Frame Padding Color -->
-    <ImageView
-        android:id="@+id/category_item_frame_padding_color_image_view_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="1dp"
+            tools:background="@color/black"/>
 
-        android:background="@color/white"/>
+        <!-- Frame Padding Color -->
+        <ImageView
+            android:id="@+id/category_item_frame_padding_color_image_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
 
-    <!-- Outer Color -->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/color_item_outer_color_image_view_id"
-        android:layout_width="@dimen/category_color_width_large"
-        android:layout_height="@dimen/category_color_width_large"
-        android:layout_marginTop="@dimen/space_medium_large"
-        android:layout_centerHorizontal="true"
+            android:background="@color/white"/>
 
-        tools:background="@color/black"/>
+        <!-- Outer Color -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/color_item_outer_color_image_view_id"
+            android:layout_width="@dimen/category_color_width_large"
+            android:layout_height="@dimen/category_color_width_large"
+            android:layout_marginTop="@dimen/space_medium_large"
+            android:layout_centerHorizontal="true"
 
-    <!-- Padding Color -->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/color_item_padding_color_image_view_id"
-        android:layout_width="@dimen/category_color_width_large"
-        android:layout_height="@dimen/category_color_width_large"
-        android:layout_alignTop="@id/color_item_outer_color_image_view_id"
-        android:layout_alignLeft="@id/color_item_outer_color_image_view_id"
-        android:layout_alignRight="@id/color_item_outer_color_image_view_id"
-        android:layout_alignBottom="@id/color_item_outer_color_image_view_id"
-        android:layout_margin="3dp"
+            tools:background="@color/black"/>
 
-        tools:background="@color/white"
-        android:background="#00000000"/>
+        <!-- Padding Color -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/color_item_padding_color_image_view_id"
+            android:layout_width="@dimen/category_color_width_large"
+            android:layout_height="@dimen/category_color_width_large"
+            android:layout_alignTop="@id/color_item_outer_color_image_view_id"
+            android:layout_alignLeft="@id/color_item_outer_color_image_view_id"
+            android:layout_alignRight="@id/color_item_outer_color_image_view_id"
+            android:layout_alignBottom="@id/color_item_outer_color_image_view_id"
+            android:layout_margin="3dp"
 
-    <!-- Inner Color -->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/color_item_inner_color_image_view_id"
-        android:layout_width="@dimen/category_color_width_large"
-        android:layout_height="@dimen/category_color_width_large"
-        android:layout_alignTop="@id/color_item_outer_color_image_view_id"
-        android:layout_alignLeft="@id/color_item_outer_color_image_view_id"
-        android:layout_alignRight="@id/color_item_outer_color_image_view_id"
-        android:layout_alignBottom="@id/color_item_outer_color_image_view_id"
-        android:layout_margin="6dp"
+            tools:background="@color/white"
+            android:background="#00000000"/>
 
-        tools:background="@color/black"
-        android:background="#00000000"/>
+        <!-- Inner Color -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/color_item_inner_color_image_view_id"
+            android:layout_width="@dimen/category_color_width_large"
+            android:layout_height="@dimen/category_color_width_large"
+            android:layout_alignTop="@id/color_item_outer_color_image_view_id"
+            android:layout_alignLeft="@id/color_item_outer_color_image_view_id"
+            android:layout_alignRight="@id/color_item_outer_color_image_view_id"
+            android:layout_alignBottom="@id/color_item_outer_color_image_view_id"
+            android:layout_margin="6dp"
 
-    <!-- Name -->
-    <TextView
-        android:id="@+id/category_item_name_text_view_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_small"
-        android:layout_below="@+id/color_item_outer_color_image_view_id"
+            tools:background="@color/black"
+            android:background="#00000000"/>
 
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_ultra_small"
-        android:gravity="center"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_centerHorizontal="true"
-        tools:text="name"/>
+        <!-- Name -->
+        <TextView
+            android:id="@+id/category_item_name_text_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_ultra_small"
+            android:layout_marginLeft="@dimen/space_ultra_small"
+            android:layout_marginRight="@dimen/space_ultra_small"
+            android:layout_below="@+id/color_item_outer_color_image_view_id"
+
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_ultra_small"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_centerHorizontal="true"
+            tools:text="name"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

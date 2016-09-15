@@ -20,6 +20,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -95,6 +96,8 @@ public class NewExpenseActivity extends BaseActivity {
     private Calendar calendar;
     private Expense expense;
     private Category category;
+    private Runnable pendingRunnable;
+    private Handler handler;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -123,10 +126,10 @@ public class NewExpenseActivity extends BaseActivity {
         setContentView(R.layout.new_expense_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-
+        handler = new Handler();
         expense = new Expense();
         progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_ATOP);
+        setupToolbar();
         setupCategory();
         setupDateAndTime();
         setupPhoto();
@@ -532,8 +535,19 @@ public class NewExpenseActivity extends BaseActivity {
 
     @Override
     protected void close() {
-        finish();
-        overridePendingTransition(0, R.anim.right_out);
+        closeSoftKeyboard();
+
+        pendingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                finish();
+                overridePendingTransition(0, R.anim.right_out);
+            }
+        };
+
+        // Wait soft keyboard to close
+        handler.postDelayed(pendingRunnable, 50);
+        pendingRunnable = null;
     }
 
     @Override

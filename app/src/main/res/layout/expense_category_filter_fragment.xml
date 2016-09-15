@@ -11,12 +11,10 @@
         android:id="@+id/expense_category_fragment_recycler_view_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:paddingTop="@dimen/space_large_large"
-        android:paddingBottom="@dimen/space_large_large"
-        android:paddingLeft="@dimen/space_large_large"
         android:layout_centerVertical="true"
 
+        android:padding="@dimen/space_large"
+        android:gravity="center_horizontal"
         android:background="#00000000"/>
 
 </RelativeLayout>

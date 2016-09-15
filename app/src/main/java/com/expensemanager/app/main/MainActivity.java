@@ -22,12 +22,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.expensemanager.app.R;
-import com.expensemanager.app.category.NewCategoryActivity;
 import com.expensemanager.app.expense.ExpenseFragment;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupDetailActivity;
@@ -66,9 +64,6 @@ import io.realm.Realm;
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final int NEW_EXPENSE = 0;
-    public static final int NEW_CATEGORY = 1;
-
     private ActionBarDrawerToggle drawerToggle;
     private DrawerAdapter drawerAdapter;
     private GroupDrawerAdapter groupDrawerAdapter;
@@ -90,7 +85,6 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
-    @BindView(R.id.main_activity_toolbar_extra_image_view_id) ImageView extraImageView;
     @BindView(R.id.main_activity_toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.main_activity_drawer_recycler_view_id) RecyclerView drawRecyclerView;
     @BindView(R.id.main_activity_fab_id) FloatingActionButton fab;
@@ -133,7 +127,7 @@ public class MainActivity extends BaseActivity {
             .commit();
         }
 
-        fab.setOnClickListener(v -> setupFab(NEW_EXPENSE));
+        fab.setOnClickListener(v -> setupFab());
 
         isReceiverRegistered = false;
         broadcastReceiver = new AlarmReceiver() {
@@ -169,8 +163,6 @@ public class MainActivity extends BaseActivity {
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(0xFFFFFFFF);
-
-        extraImageView.setVisibility(View.GONE);
         titleTextView.setText(R.string.app_name);
     }
 
@@ -203,7 +195,7 @@ public class MainActivity extends BaseActivity {
                 }
 
                 if (pendingRunnable != null) {
-                    handler.postDelayed(pendingRunnable, 0);
+                    handler.postDelayed(pendingRunnable, 50);
                     pendingRunnable = null;
                 }
             }
@@ -215,7 +207,7 @@ public class MainActivity extends BaseActivity {
             case 0:
                 setupGroupList();
                 fab.setVisibility(View.VISIBLE);
-                fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+                fab.setOnClickListener(v -> setupFab());
                 break;
             case 1:
                 if (currentPosition == position) {
@@ -231,9 +223,8 @@ public class MainActivity extends BaseActivity {
                             .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
                             .addToBackStack(OverviewFragment.class.getName())
                             .commit();
-                    titleTextView.setText(getString(R.string.app_name));
                     fab.setVisibility(View.VISIBLE);
-                    fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+                    fab.setOnClickListener(va -> setupFab());
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
@@ -248,15 +239,13 @@ public class MainActivity extends BaseActivity {
 
                 if (groupId != null) {
                     ExpenseFragment expenseFragment = ExpenseFragment.newInstance();
-                    expenseFragment.addParams(toolbar, extraImageView, titleTextView);
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
                             .replace(R.id.main_activity_frame_layout_id, expenseFragment)
                             .addToBackStack(ExpenseFragment.class.getName())
                             .commit();
-                    titleTextView.setText(getString(R.string.expense));
                     fab.setVisibility(View.VISIBLE);
-                    fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+                    fab.setOnClickListener(v -> setupFab());
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
@@ -306,9 +295,6 @@ public class MainActivity extends BaseActivity {
                 fab.setVisibility(View.INVISIBLE);
                 break;
             case 6:
-                // help
-                break;
-            case 7:
                 if (currentPosition == position) {
                     drawerLayout.closeDrawers();
                     return;
@@ -324,10 +310,10 @@ public class MainActivity extends BaseActivity {
                 titleTextView.setText(getString(R.string.settings));
                 fab.setVisibility(View.INVISIBLE);
                 break;
-            case 9:
+            case 8:
                 signOut();
                 break;
-            case 10:
+            case 9:
                 // About
                 break;
             default:
@@ -335,22 +321,14 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void setupFab(int fabType) {
+    private void setupFab() {
         if (groupId == null) {
             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        switch (fabType) {
-            case NEW_EXPENSE:
-                NewExpenseActivity.newInstance(this);
-                overridePendingTransition(R.anim.right_in, R.anim.stay);
-                break;
-            case NEW_CATEGORY:
-                NewCategoryActivity.newInstance(this);
-                overridePendingTransition(R.anim.right_in, R.anim.stay);
-                break;
-        }
+        NewExpenseActivity.newInstance(this);
+        overridePendingTransition(R.anim.right_in, R.anim.stay);
     }
 
     private void setupDrawerListItems() {
@@ -360,7 +338,6 @@ public class MainActivity extends BaseActivity {
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_bell).setTitle(getString(R.string.nav_notifications)));
-        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_help_circle).setTitle(getString(R.string.nav_help)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_settings).setTitle(getString(R.string.nav_settings)));
 
         drawerSubItems.clear();
@@ -461,8 +438,7 @@ public class MainActivity extends BaseActivity {
                 .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
                 .addToBackStack(OverviewFragment.class.getName())
                 .commit();
-            setTitle(getString(R.string.app_name));
-            fab.setOnClickListener(va -> setupFab(NEW_EXPENSE));
+            fab.setOnClickListener(v -> setupFab());
         } else {
             Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
         }

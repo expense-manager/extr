@@ -36,6 +36,7 @@
             android:textDirection="anyRtl"
             android:tint="@color/gray_really_dark"
             android:textSize="@dimen/drawer_item_primary_text"
+            android:textColor="@color/gray_really_dark"
             android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical|start"
             android:lines="1"

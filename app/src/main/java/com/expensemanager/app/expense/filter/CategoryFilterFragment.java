@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.Window;
 import android.widget.RelativeLayout;
 
 import com.expensemanager.app.R;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class CategoryFilterFragment extends DialogFragment {
-    private static final String TAG= CategoryFilterFragment.class.getSimpleName();
+    private static final String TAG = CategoryFilterFragment.class.getSimpleName();
 
     public static final int COLUMN = 3;
     public static final String NO_CATEGORY_ID = "No Category";
@@ -66,6 +66,17 @@ public class CategoryFilterFragment extends DialogFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Window window = getDialog().getWindow();
+
+        if (window != null) {
+            window.getAttributes().windowAnimations = R.style.DialogAnimation;
+        }
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -86,7 +97,18 @@ public class CategoryFilterFragment extends DialogFragment {
     }
 
     private void setupRecyclerView() {
-        categoryRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), COLUMN));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), COLUMN);
+//        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                if (position == 1) {
+//                    return 2; // the item in position now takes up 4 spans
+//                }
+//                return 1;
+//            }
+//        });
+
+        categoryRecyclerView.setLayoutManager(gridLayoutManager);
         categoryRecyclerView.setAdapter(adapter);
         ItemClickSupport.addTo(categoryRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override

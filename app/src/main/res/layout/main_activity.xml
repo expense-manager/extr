@@ -36,6 +36,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="10dp"
 
+                    android:visibility="gone"
                     tools:src="@drawable/ic_arrow_back_white_24dp"/>
 
                 <!-- Title -->
@@ -101,25 +102,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/main_activity_toolbar_id"
+
             android:elevation="6dp">
 
             <FrameLayout
                 android:id="@+id/main_activity_frame_layout_id"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
+            <!-- New -->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/main_activity_fab_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/fab_margin"
+
+                android:src="@drawable/ic_add_white_24dp"/>
         </RelativeLayout>
-
-        <!-- New -->
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/main_activity_fab_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/fab_margin"
-
-            android:src="@drawable/ic_add_white_24dp"/>
 
     </RelativeLayout>
 

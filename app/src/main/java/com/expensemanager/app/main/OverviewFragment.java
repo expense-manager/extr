@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,8 +85,8 @@ public class OverviewFragment extends Fragment {
 
         expenses = new ArrayList<>();
         overviewAdapter = new OverviewAdapter(getActivity(), expenses);
+        setupToolbar();
         setupRecyclerView();
-
         invalidateViews();
     }
 
@@ -115,6 +116,12 @@ public class OverviewFragment extends Fragment {
         invalidateProgressBars();
     }
 
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
+        TextView titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
+        titleTextView.setText(getString(R.string.app_name));
+    }
+
     private void invalidateProgressBars() {
         if (weeklyExpense == 0) {
             weeklyProgressBar.setProgress(0);
@@ -139,7 +146,7 @@ public class OverviewFragment extends Fragment {
         int monthlyProgress = 0;
 
         if (weeklyAve != 0) {
-            weeklyProgress = (int)(weeklyExpense/weeklyAve * 100);
+            weeklyProgress = (int)(weeklyExpense / weeklyAve * 100);
         }
 
         if (monthlyAve != 0) {

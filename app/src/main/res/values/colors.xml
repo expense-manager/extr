@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/cyan</color>
     <color name="colorPrimaryDark">@color/cyan_deep</color>
-    <color name="colorAccent">@color/cyan</color>
+    <color name="colorAccent">@color/yellow</color>
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -24,6 +24,8 @@
     <!--<color name="cyan_deep">#28BEEC</color>-->
     <color name="cyan_deep">#01A4BD</color>
     <color name="blue_a_400">#00B0FF</color>
+
+    <color name="yellow">#F1D42D</color>
 
     <!-- Custom color-->
     <color name="soft_default">@color/colorPrimary</color>
