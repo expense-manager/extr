@@ -1,5 +1,6 @@
 package com.expensemanager.app.main;
 
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +11,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         drawRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
 
         if (fragment == null) {
             getFragmentManager().beginTransaction()
@@ -587,7 +587,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (getFragmentManager().getBackStackEntryCount() <= 1) {
+            finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 
     private void checkExternalStoragePermission() {

@@ -1,5 +1,6 @@
 package com.expensemanager.app.expense;
 
+import android.animation.Animator;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -246,6 +248,23 @@ public class ExpenseFragment extends Fragment {
         categoryFilterFragment.show(((FragmentActivity) getActivity()).getSupportFragmentManager(), CATEGORY_FRAGMENT);
     }
 
+    private void enterReveal() {
+        // get the center for the clipping circle
+        int cx = toolbar.getMeasuredWidth() / 2;
+        int cy = toolbar.getMeasuredHeight() / 2;
+
+        // get the final radius for the clipping circle
+        int finalRadius = Math.max(toolbar.getWidth(), toolbar.getHeight()) / 2;
+
+        // create the animator for this view (the start radius is zero)
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(toolbar, cx, cy, 0, finalRadius);
+
+        // make the view visible and start the animation
+        toolbar.setVisibility(View.VISIBLE);
+        anim.start();
+    }
+
     private MemberFilterFragment.MemberFilterListener memberFilterListener = new MemberFilterFragment.MemberFilterListener() {
         @Override
         public void onFinishMemberFilterDialog(Member member) {
@@ -253,8 +272,10 @@ public class ExpenseFragment extends Fragment {
                 (ExpenseFragment.this.member != null && member != null && ExpenseFragment.this.member.getId().equals(member.getId()))) {
                 isMemberFiltered = !isMemberFiltered;
             }
+
             ExpenseFragment.this.member = member;
             User user = member.getUser();
+
             if (isMemberFiltered && user != null) {
                 Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
                 extraImageView.setVisibility(View.VISIBLE);
@@ -263,6 +284,7 @@ public class ExpenseFragment extends Fragment {
                 extraImageView.setVisibility(View.GONE);
                 titleTextView.setText(R.string.expense);
             }
+
             invalidateViews();
         }
     };
@@ -293,7 +315,10 @@ public class ExpenseFragment extends Fragment {
                 } else {
                     toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
                 }
+
+                enterReveal();
             }
+
             invalidateViews();
         }
     };
