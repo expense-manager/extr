@@ -6,6 +6,7 @@
     android:id="@+id/toolbar_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
     android:layout_alignParentTop="true"
     android:fitsSystemWindows="true"
 

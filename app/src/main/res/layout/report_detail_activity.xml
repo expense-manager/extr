@@ -1,91 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/report_activity"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/toolbar_light" />
+<android.support.design.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:layout_below="@+id/toolbar_id"
+    android:elevation="6dp"
     tools:context=".report.ReportDetailActivity">
 
-    <!--<com.astuetz.PagerSlidingTabStrip-->
-        <!--android:id="@+id/report_activity_tabs_id"-->
-        <!--app:pstsShouldExpand="true"-->
-        <!--app:pstsTextAllCaps="true"-->
-        <!--android:textColor="@color/blue"-->
-        <!--android:background="@color/white"-->
-        <!--app:pstsDividerColor="@color/white"-->
-        <!--app:pstsIndicatorColor="@color/blue"-->
-        <!--app:pstsUnderlineColor="@color/gray_really_light"-->
-        <!--app:pstsUnderlineHeight="1dp"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize" />-->
-
-    <include layout="@layout/toolbar_light" />
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/report_detail_activity_tabs_id"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_id"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        android:background="@color/white"
-        android:backgroundTint="@color/colorPrimary"
-        android:elevation="6dp"
-        app:tabMaxWidth="0dp"
-        app:tabGravity="fill"
-        app:tabMode="fixed"
-        app:tabIndicatorHeight="2dp"
-        app:tabIndicatorColor="@color/white"
-        style="@style/CustomTabLayoutStyle"/>
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|snap">
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/report_detail_activity_pie_chart_id"
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+            <RelativeLayout
+                android:id="@+id/report_activity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:background="@color/white"
+                android:elevation="6dp"
+                app:layout_scrollFlags="scroll|snap">
+
+                <!--<com.astuetz.PagerSlidingTabStrip-->
+                    <!--android:id="@+id/report_activity_tabs_id"-->
+                    <!--app:pstsShouldExpand="true"-->
+                    <!--app:pstsTextAllCaps="true"-->
+                    <!--android:textColor="@color/blue"-->
+                    <!--android:background="@color/white"-->
+                    <!--app:pstsDividerColor="@color/white"-->
+                    <!--app:pstsIndicatorColor="@color/blue"-->
+                    <!--app:pstsUnderlineColor="@color/gray_really_light"-->
+                    <!--app:pstsUnderlineHeight="1dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="?attr/actionBarSize" />-->
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/report_detail_activity_pie_chart_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/chart_height"
+                    android:layout_margin="@dimen/space_medium_small"
+
+                    android:padding="@dimen/space_really_small"/>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/report_detail_activity_bar_chart_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/chart_height"
+                    android:layout_margin="@dimen/space_medium_small"
+
+                    android:padding="@dimen/space_really_small"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/report_detail_activity_tabs_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar_id"
+
+            android:background="@color/white"
+            android:backgroundTint="@color/colorPrimary"
+            app:tabMaxWidth="0dp"
+            android:elevation="6dp"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            app:tabIndicatorHeight="2dp"
+            app:tabIndicatorColor="@color/white"
+            style="@style/CustomTabLayoutStyle"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chart_height"
-        android:layout_margin="@dimen/space_medium_small"
-        android:layout_below="@+id/report_detail_activity_tabs_id"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        android:padding="@dimen/space_really_small"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/report_detail_activity_viewpager_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white" />
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/report_detail_activity_bar_chart_id"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/chart_height"
-        android:layout_margin="@dimen/space_medium_small"
-        android:layout_below="@+id/report_detail_activity_tabs_id"
+        <TextView
+            android:id="@+id/report_detail_activity_no_expense_hint_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/space_medium_large"
 
-        android:padding="@dimen/space_really_small"
-        android:visibility="invisible"/>
+            android:text="@string/no_expense_hint"
+            android:visibility="gone"/>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/report_detail_activity_viewpager_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/report_detail_activity_pie_chart_id"
-        android:background="@android:color/white" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/report_detail_activity_no_expense_hint_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/space_medium_large"
-
-        android:text="@string/no_expense_hint"
-        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/report_detail_activity_fab_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
 
-        android:src="@drawable/ic_add_white_24dp"/>
+        android:src="@drawable/ic_add_white_24dp"
+        app:layout_behavior="com.expensemanager.app.report.ScrollAwareFABBehavior"/>
+
+</android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>

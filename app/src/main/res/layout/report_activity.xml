@@ -14,13 +14,13 @@
 
         android:background="@color/white"
         android:backgroundTint="@color/colorPrimary"
-        android:elevation="6dp"
         app:tabMaxWidth="0dp"
         app:tabGravity="fill"
         app:tabMode="fixed"
         app:tabIndicatorHeight="2dp"
         app:tabIndicatorColor="@color/white"
-        style="@style/CustomTabLayoutStyle"/>
+        style="@style/CustomTabLayoutStyle"
+        android:elevation="6dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/report_activity_view_pager_id"
