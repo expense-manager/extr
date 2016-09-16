@@ -48,6 +48,8 @@
     <string name="group">Group</string>
     <string name="name">Name</string>
     <string name="filter">Filter</string>
+    <string name="all">All</string>
+    <string name="filter_me">Me</string>
     <string name="report">Report</string>
     <string name="notifications">Notifications</string>
     <string name="mark_all_read">Mark All Read</string>

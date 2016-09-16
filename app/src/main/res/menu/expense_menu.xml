@@ -2,19 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_item_user_fragment_id"
-          android:title="@string/user"
-          android:icon="@drawable/ic_account"
-          app:showAsAction="always"/>
-
-    <item android:id="@+id/menu_item_date_fragment_id"
-          android:title="@string/date"
-          android:icon="@drawable/ic_calendar_text"
-          app:showAsAction="always"/>
-
-    <item android:id="@+id/menu_item_category_fragment_id"
-          android:title="@string/category"
-          android:icon="@drawable/ic_format_list_type"
-          app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_filter"
+        android:title="@string/filter"
+        android:icon="@drawable/ic_filter_list"
+        app:showAsAction="always" />
+    <!--<item-->
+        <!--android:id="@+id/menu_me"-->
+        <!--android:title="@string/filter_me"-->
+        <!--app:showAsAction="never" />-->
 
 </menu>

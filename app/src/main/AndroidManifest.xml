@@ -33,10 +33,11 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.OverlapSystemBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".expense.ExpenseActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.OverlapSystemBar"/>
         <activity
             android:name=".expense.NewExpenseActivity"
             android:theme="@style/BaseTheme"/>

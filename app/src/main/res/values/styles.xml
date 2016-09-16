@@ -1,11 +1,19 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="Base.AppTheme"  parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <!--<item name="android:textColorPrimary">@color/white</item>-->
+    </style>
+
+    <style name="AppTheme" parent="Base.AppTheme">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionMenuTextAppearance">@style/MenuTextAppearance</item>
     </style>
@@ -46,10 +54,6 @@
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
-    </style>
-
-    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColorPrimary">@color/white</item>
     </style>
 
     <style name="ActionBarLightTheme" parent="ThemeOverlay.AppCompat.ActionBar">

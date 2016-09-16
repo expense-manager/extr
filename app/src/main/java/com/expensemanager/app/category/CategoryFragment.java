@@ -15,7 +15,6 @@ import android.view.animation.OvershootInterpolator;
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
-import com.expensemanager.app.report.ReportFragment;
 import com.expensemanager.app.service.SyncCategory;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
  */
 
 public class CategoryFragment extends Fragment {
-    private static final String TAG = ReportFragment.class.getSimpleName();
+    private static final String TAG = CategoryFragment.class.getSimpleName();
 
     private ArrayList<Category> categories;
     private CategoryAdapter categoryAdapter;

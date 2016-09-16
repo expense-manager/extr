@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -28,7 +29,7 @@ import android.widget.Toast;
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.ExpenseFragment;
 import com.expensemanager.app.expense.NewExpenseActivity;
-import com.expensemanager.app.group.GroupDetailActivity;
+import com.expensemanager.app.group.GroupFragment;
 import com.expensemanager.app.group.NewGroupActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.DrawerItem;
@@ -117,6 +118,9 @@ public class MainActivity extends BaseActivity {
         drawerToggle = setupDrawerToggle();
         drawerLayout.addDrawerListener(drawerToggle);
         drawRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        drawRecyclerView.setFitsSystemWindows(true);
+
+//        drawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, R.color.cyan_deep));
 
         Fragment fragment = getFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
 
@@ -271,9 +275,24 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case 4:
+                if (currentPosition == position) {
+                    drawerLayout.closeDrawers();
+                    return;
+                } else {
+                    currentPosition = position;
+                }
+
                 if (groupId != null) {
-                    GroupDetailActivity.newInstance(MainActivity.this, groupId);
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .replace(R.id.main_activity_frame_layout_id, GroupFragment.newInstance())
+                            .addToBackStack(ReportMainFragment.class.getName())
+                            .commit();
+                    titleTextView.setText(getString(R.string.group));
                     fab.setVisibility(View.INVISIBLE);
+
+//                    GroupDetailActivity.newInstance(MainActivity.this, groupId);
+//                    fab.setVisibility(View.INVISIBLE);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
@@ -585,9 +604,17 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void closeDrawer() {
+        if (drawerLayout != null) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() <= 1) {
+        if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+            closeDrawer();
+        } else if (getFragmentManager().getBackStackEntryCount() <= 1) {
             finish();
         } else {
             getFragmentManager().popBackStack();

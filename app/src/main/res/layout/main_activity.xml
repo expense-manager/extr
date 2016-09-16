@@ -5,57 +5,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_drawer_layout_id"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    tools:context=".main.MainActivity"
+    tools:openDrawer="start">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/main_activity_toolbar_id"
-            android:layout_height="wrap_content"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:fitsSystemWindows="true"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ActionBarTheme"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:background="?attr/colorPrimary"
-            android:elevation="6dp">
-            <RelativeLayout
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/main_activity_toolbar_id"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:fitsSystemWindows="true"
+                android:minHeight="?attr/actionBarSize"
+                app:theme="@style/Toolbar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:background="?attr/colorPrimary"
+                android:elevation="6dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <!-- Extra image -->
-                <ImageView
-                    android:id="@+id/main_activity_toolbar_extra_image_view_id"
-                    android:layout_width="@dimen/category_color_width_small"
-                    android:layout_height="@dimen/category_color_width_small"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
+                    <!-- Extra image -->
+                    <ImageView
+                        android:id="@+id/main_activity_toolbar_extra_image_view_id"
+                        android:layout_width="@dimen/category_color_width_small"
+                        android:layout_height="@dimen/category_color_width_small"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
 
-                    android:visibility="gone"
-                    tools:src="@drawable/ic_arrow_back_white_24dp"/>
+                        android:visibility="gone"
+                        tools:src="@drawable/ic_arrow_back_white_24dp"/>
 
-                <!-- Title -->
-                <com.expensemanager.app.helpers.ETextView
-                    android:id="@+id/main_activity_toolbar_title_text_view_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/main_activity_toolbar_extra_image_view_id"
-                    android:layout_centerVertical="true"
+                    <!-- Title -->
+                    <com.expensemanager.app.helpers.ETextView
+                        android:id="@+id/main_activity_toolbar_title_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/main_activity_toolbar_extra_image_view_id"
+                        android:layout_centerVertical="true"
 
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_medium_small"
-                    android:textStyle="bold"
-                    tools:text="123"/>
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_medium_small"
+                        android:textStyle="bold"
+                        tools:text="123"/>
 
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
+                    <com.expensemanager.app.helpers.ETextView
+                        android:id="@+id/main_activity_toolbar_right_title_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_medium_small"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        tools:text="123"/>
+
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -63,7 +85,8 @@
 
             android:padding="@dimen/space_medium_small"
             android:elevation="2dp"
-            android:background="@drawable/background_round_corner_white">
+            android:background="@drawable/background_round_corner_white"
+            android:visibility="gone">
 
             <!-- Photo -->
             <ImageView
@@ -72,7 +95,7 @@
                 android:layout_height="@dimen/category_color_width_small"
                 android:layout_marginEnd="@dimen/space_medium"/>
 
-            <!-- Selec -->
+            <!-- Select -->
             <ImageView
                 android:id="@+id/member_item_filter_select_image_view_id"
                 android:layout_width="wrap_content"
@@ -98,17 +121,17 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/main_activity_toolbar_id"
-
-            android:elevation="6dp">
+            android:fitsSystemWindows="true">
 
             <FrameLayout
                 android:id="@+id/main_activity_frame_layout_id"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"/>
 
             <!-- New -->
             <android.support.design.widget.FloatingActionButton
@@ -119,17 +142,21 @@
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/fab_margin"
 
-                android:src="@drawable/ic_add_white_24dp"/>
-        </RelativeLayout>
+                android:src="@drawable/ic_add_white_24dp"
+                app:fabSize="normal"
+                app:layout_anchor="@id/main_activity_frame_layout_id"
+                app:layout_anchorGravity="bottom|right|end"/>
 
-    </RelativeLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
-    <!-- Navigation Drawer-->
+    </LinearLayout>
+
+    <!-- Navigation drawer-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_activity_drawer_recycler_view_id"
-        android:layout_width="300dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:fitsSystemWindows="true"
 
         android:elevation="10dp"

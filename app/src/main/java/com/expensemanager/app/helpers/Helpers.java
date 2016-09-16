@@ -1,5 +1,6 @@
 package com.expensemanager.app.helpers;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
@@ -653,5 +655,22 @@ public class Helpers {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(context.getString(R.string.shared_preferences_session_key), 0);
         return sharedPreferences.getString(Group.ID_KEY, null);
+    }
+
+    public static  void centerRevealEnter(View view) {
+        // get the center for the clipping circle
+        int cx = view.getMeasuredWidth() / 2;
+        int cy = view.getMeasuredHeight() / 2;
+
+        // get the final radius for the clipping circle
+        int finalRadius = Math.max(view.getWidth(), view.getHeight()) / 2;
+
+        // create the animator for this view (the start radius is zero)
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
+
+        // make the view visible and start the animation
+        view.setVisibility(View.VISIBLE);
+        anim.start();
     }
 }

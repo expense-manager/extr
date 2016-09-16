@@ -1,6 +1,5 @@
 package com.expensemanager.app.expense;
 
-import android.animation.Animator;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -149,7 +148,7 @@ public class ExpenseFragment extends Fragment {
         this.toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
         this.titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         this.extraImageView = (ImageView) toolbar.findViewById(R.id.main_activity_toolbar_extra_image_view_id);
-        titleTextView.setText(getString(R.string.expense));
+        this.titleTextView.setText(getString(R.string.expense));
     }
 
     private void setupRecyclerView() {
@@ -209,18 +208,57 @@ public class ExpenseFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_user_fragment_id:
-                setupMember();
+            case R.id.menu_filter:
+                showFilteringPopUpMenu();
                 return true;
-            case R.id.menu_item_category_fragment_id:
-                setupCategory();
-                return true;
-            case R.id.menu_item_date_fragment_id:
-                setupDate();
-                return true;
+//            case R.id.menu_me:
+//                setupMemberFilter(User.getLoginUser());
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showFilteringPopUpMenu() {
+        PopupMenu popup = new PopupMenu(getActivity(), getActivity().findViewById(R.id.menu_filter));
+        popup.getMenuInflater().inflate(R.menu.filter_expenses, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_item_all:
+                        setupAllFilter();
+                        break;
+                    case R.id.menu_item_user_fragment_id:
+                        setupMember();
+                        return true;
+                    case R.id.menu_item_category_fragment_id:
+                        setupCategory();
+                        return true;
+                    case R.id.menu_item_date_fragment_id:
+                        setupDate();
+                        return true;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    private void setupAllFilter() {
+        if (isCategoryFiltered) {
+            int background = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
+            toolbar.setBackgroundColor(background);
+        }
+
+        isCategoryFiltered = false;
+        isDateFiltered = false;
+        isMemberFiltered = false;
+
+        invalidateViews();
     }
 
     private void setupMember() {
@@ -248,23 +286,6 @@ public class ExpenseFragment extends Fragment {
         categoryFilterFragment.show(((FragmentActivity) getActivity()).getSupportFragmentManager(), CATEGORY_FRAGMENT);
     }
 
-    private void enterReveal() {
-        // get the center for the clipping circle
-        int cx = toolbar.getMeasuredWidth() / 2;
-        int cy = toolbar.getMeasuredHeight() / 2;
-
-        // get the final radius for the clipping circle
-        int finalRadius = Math.max(toolbar.getWidth(), toolbar.getHeight()) / 2;
-
-        // create the animator for this view (the start radius is zero)
-        Animator anim =
-                ViewAnimationUtils.createCircularReveal(toolbar, cx, cy, 0, finalRadius);
-
-        // make the view visible and start the animation
-        toolbar.setVisibility(View.VISIBLE);
-        anim.start();
-    }
-
     private MemberFilterFragment.MemberFilterListener memberFilterListener = new MemberFilterFragment.MemberFilterListener() {
         @Override
         public void onFinishMemberFilterDialog(Member member) {
@@ -275,19 +296,22 @@ public class ExpenseFragment extends Fragment {
 
             ExpenseFragment.this.member = member;
             User user = member.getUser();
-
-            if (isMemberFiltered && user != null) {
-                Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
-                extraImageView.setVisibility(View.VISIBLE);
-                titleTextView.setText(user.getFullname());
-            } else {
-                extraImageView.setVisibility(View.GONE);
-                titleTextView.setText(R.string.expense);
-            }
+            setupMemberFilter(user);
 
             invalidateViews();
         }
     };
+
+    private void setupMemberFilter(User user) {
+        if (isMemberFiltered && user != null) {
+            Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
+            extraImageView.setVisibility(View.VISIBLE);
+            titleTextView.setText(user.getFullname());
+        } else {
+            extraImageView.setVisibility(View.GONE);
+            titleTextView.setText(R.string.expense);
+        }
+    }
 
     private DateFilterFragment.DateFilterListener dateFilterListener = new DateFilterFragment.DateFilterListener() {
         @Override
@@ -315,8 +339,6 @@ public class ExpenseFragment extends Fragment {
                 } else {
                     toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
                 }
-
-                enterReveal();
             }
 
             invalidateViews();

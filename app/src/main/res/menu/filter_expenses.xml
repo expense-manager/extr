@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_all"
+        android:title="@string/all"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/menu_item_category_fragment_id"
+        android:title="@string/category"
+        android:icon="@drawable/ic_format_list_type"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/menu_item_date_fragment_id"
+        android:title="@string/date"
+        android:icon="@drawable/ic_calendar_text"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/menu_item_user_fragment_id"
+        android:title="@string/member"
+        android:icon="@drawable/ic_account"
+        app:showAsAction="never"/>
+
+</menu>
