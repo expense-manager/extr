@@ -31,10 +31,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar_id"
 
+        android:background="@color/white"
+        android:backgroundTint="@color/colorPrimary"
+        android:elevation="6dp"
         app:tabMaxWidth="0dp"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        android:background="@color/white"/>
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorColor="@color/white"
+        style="@style/CustomTabLayoutStyle"/>
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/report_detail_activity_pie_chart_id"
