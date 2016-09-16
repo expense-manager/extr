@@ -143,7 +143,7 @@ public class Helpers {
         Calendar weekEnd = (Calendar) weekStart.clone();
         weekEnd.add(Calendar.DAY_OF_YEAR, 6);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
 
         return simpleDateFormat.format(weekStart.getTime()) + " - " + simpleDateFormat.format(weekEnd.getTime());
     }
