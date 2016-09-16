@@ -135,6 +135,11 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         viewHolder.categoryRecyclerView.setFocusable(false);
         viewHolder.categoryRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         viewHolder.categoryRecyclerView.setAdapter(new CategoryListAdapter(categoryLists.get(position)));
+        if (categoryLists.get(position).size() == 0) {
+            viewHolder.categoryRecyclerView.setVisibility(View.GONE);
+        } else {
+            viewHolder.categoryRecyclerView.setVisibility(View.VISIBLE);
+        }
 
         String name = null;
         switch(requestCode) {
@@ -207,7 +212,7 @@ public class ReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             if (categorySumMap.size() == 0) {
                 sumLists.add(0D);
-                categoryLists.add(null);
+                categoryLists.add(new ArrayList<>());
                 continue;
             }
 
