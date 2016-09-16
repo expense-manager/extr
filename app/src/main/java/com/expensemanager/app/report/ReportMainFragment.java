@@ -5,7 +5,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,8 @@ public class ReportMainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
+        ViewCompat.setElevation(toolbar, 10);
         setupViewPager(viewPager);
     }
 

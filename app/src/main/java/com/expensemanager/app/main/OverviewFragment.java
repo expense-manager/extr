@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -120,6 +121,7 @@ public class OverviewFragment extends Fragment {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
         TextView titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         titleTextView.setText(getString(R.string.app_name));
+        ViewCompat.setElevation(toolbar, 20);
     }
 
     private void invalidateProgressBars() {

@@ -3,6 +3,7 @@ package com.expensemanager.app.group;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -140,6 +141,7 @@ public class GroupFragment extends Fragment {
     }
     private void setupToolbar() {
         this.toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
+        ViewCompat.setElevation(toolbar, 20);
         this.titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         this.titleTextView.setText(getString(R.string.group));
         this.saveTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_right_title_text_view_id);
@@ -261,4 +263,10 @@ public class GroupFragment extends Fragment {
             return null;
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveTextView.setVisibility(View.GONE);
+    }
 }
