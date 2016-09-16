@@ -5,8 +5,6 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent">
 
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/expense_category_fragment_recycler_view_id"
         android:layout_width="match_parent"
@@ -25,7 +23,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
 
-        android:padding="@dimen/space_medium"
+        android:paddingLeft="10dp"
+        android:paddingTop="@dimen/space_medium_large"
         android:src="@drawable/ic_window_close"
         android:tint="@color/colorPrimary"
         android:background="@android:color/transparent"/>

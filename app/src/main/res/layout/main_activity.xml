@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
             <android.support.v7.widget.Toolbar
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -117,6 +116,11 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="6dp">
+
             <FrameLayout
                 android:id="@+id/main_activity_frame_layout_id"
                 android:layout_width="match_parent"
@@ -132,11 +136,12 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/fab_margin"
+                android:elevation="12dp"
 
                 android:src="@drawable/ic_add_white_24dp"
-                app:fabSize="normal"
-                app:layout_anchor="@id/main_activity_frame_layout_id"
-                app:layout_anchorGravity="bottom|right|end"/>
+                app:fabSize="normal"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
