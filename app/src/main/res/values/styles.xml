@@ -7,6 +7,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:alertDialogTheme">@style/MyAlertDialogTheme</item>
+        <item name="alertDialogTheme">@style/MyAlertDialogTheme</item>
+    </style>
+
+    <style name="MyAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
@@ -35,6 +41,7 @@
         <item name="android:textColorSecondary">@color/black</item>
 
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:alertDialogTheme">@style/MyPickerDialogTheme</item>
     </style>
 
     <style name="BaseThemeDetail" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -42,6 +49,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="android:datePickerDialogTheme">@style/MyPickerDialogTheme</item>
+        <item name="android:timePickerDialogTheme">@style/MyPickerDialogTheme</item>
+    </style>
+
+    <style name="MyPickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

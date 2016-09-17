@@ -358,7 +358,7 @@ public class ExpenseDetailActivity extends BaseActivity
 
     private void formatDateAndTime(Date date) {
         // Create format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd yyyy", Locale.US);
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
         // Parse date and set text
         expenseDateTextView.setText(dateFormat.format(date));

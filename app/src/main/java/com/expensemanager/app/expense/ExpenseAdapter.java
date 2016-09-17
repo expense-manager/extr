@@ -86,7 +86,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         // Reset views
         viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
         viewHolder.categoryNameTextView.setVisibility(View.INVISIBLE);
+        viewHolder.userFullnameTextView.setVisibility(View.GONE);
         viewHolder.userPhotoImageView.setVisibility(View.GONE);
+        viewHolder.dividerView.setVisibility(View.GONE);
 
         Expense expense = expenses.get(position);
         Category category = expense.getCategory();
@@ -108,7 +110,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (showMember && user != null) {
             Helpers.loadIconPhoto(viewHolder.userPhotoImageView, user.getPhotoUrl());
 
+            viewHolder.userFullnameTextView.setText(user.getFullname());
+            viewHolder.userFullnameTextView.setVisibility(View.VISIBLE);
             viewHolder.userPhotoImageView.setVisibility(View.VISIBLE);
+            viewHolder.dividerView.setVisibility(View.VISIBLE);
         }
 
         // Set item click listener
@@ -138,6 +143,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.expense_item_default_amount_text_view_id) TextView amountTextView;
         @BindView(R.id.expense_item_default_category_color_image_view_id) CircleImageView categoryColorImageView;
         @BindView(R.id.expense_item_default_user_photo_image_view_id) ImageView userPhotoImageView;
+        @BindView(R.id.expense_item_default_name_text_view_id) TextView userFullnameTextView;
+        @BindView(R.id.expense_item_default_view_id) View dividerView;
         @BindView(R.id.expense_item_default_category_name_text_view_id) TextView categoryNameTextView;
 
         private View itemView;

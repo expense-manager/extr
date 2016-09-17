@@ -282,20 +282,13 @@ public class MainActivity extends BaseActivity {
                     currentPosition = position;
                 }
 
-                if (groupId != null) {
-                    getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                            .replace(R.id.main_activity_frame_layout_id, GroupFragment.newInstance())
-                            .addToBackStack(ReportMainFragment.class.getName())
-                            .commit();
-                    titleTextView.setText(getString(R.string.group));
-                    fab.setVisibility(View.INVISIBLE);
-
-//                    GroupDetailActivity.newInstance(MainActivity.this, groupId);
-//                    fab.setVisibility(View.INVISIBLE);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
+                getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                    .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
+                    .addToBackStack(NotificationFragment.class.getName())
+                    .commit();
+                titleTextView.setText(getString(R.string.notification));
+                fab.setVisibility(View.INVISIBLE);
                 break;
             case 5:
                 if (currentPosition == position) {
@@ -305,13 +298,20 @@ public class MainActivity extends BaseActivity {
                     currentPosition = position;
                 }
 
-                getFragmentManager().beginTransaction()
+                if (groupId != null) {
+                    getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                        .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
-                        .addToBackStack(NotificationFragment.class.getName())
+                        .replace(R.id.main_activity_frame_layout_id, GroupFragment.newInstance())
+                        .addToBackStack(ReportMainFragment.class.getName())
                         .commit();
-                titleTextView.setText(getString(R.string.notification));
-                fab.setVisibility(View.INVISIBLE);
+                    titleTextView.setText(getString(R.string.group));
+                    fab.setVisibility(View.INVISIBLE);
+
+//                    GroupDetailActivity.newInstance(MainActivity.this, groupId);
+//                    fab.setVisibility(View.INVISIBLE);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 6:
                 if (currentPosition == position) {
@@ -355,8 +355,8 @@ public class MainActivity extends BaseActivity {
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_home).setTitle(getString(R.string.nav_overview)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
-        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_bell).setTitle(getString(R.string.nav_notifications)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_settings).setTitle(getString(R.string.nav_settings)));
 
         drawerSubItems.clear();
