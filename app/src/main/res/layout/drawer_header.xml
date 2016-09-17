@@ -35,7 +35,7 @@
             android:layout_toStartOf="@+id/drawer_header_group_switcher_text_view_id"
             android:layout_centerVertical="true">
 
-            <com.expensemanager.app.helpers.ETextView
+            <TextView
                 android:id="@+id/drawer_header_name_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                 android:ellipsize="end"
                 tools:text="name"/>
 
-            <com.expensemanager.app.helpers.ETextView
+            <TextView
                 android:id="@+id/drawer_header_email_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

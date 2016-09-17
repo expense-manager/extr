@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +63,9 @@ public class SettingsFragment extends Fragment {
     @BindView(R.id.setting_activity_edit_profile_text_view_id) TextView editProfileTextView;
     @BindView(R.id.setting_activity_category_label_text_view_id) TextView categoryLabelTextView;
     @BindView(R.id.setting_activity_category_description_text_view_id) TextView editCategoryTextView;
+    @BindView(R.id.setting_activity_budget_label_text_view_id) TextView budgetTextView;
+    @BindView(R.id.setting_activity_weekly_budget_relative_layout_id) RelativeLayout weeklyBudgetRelativeLayout;
+    @BindView(R.id.setting_activity_monthly_budget_relative_layout_id) RelativeLayout monthlyBudgetRelativeLayout;
     @BindView(R.id.setting_activity_weekly_notification_switch_id) Switch weeklyNotificationSwitch;
     @BindView(R.id.setting_activity_monthly_notification_switch_id) Switch monthlyNotificationSwitch;
     @BindView(R.id.setting_activity_signout_text_view_id) TextView signOutTextView;
@@ -151,10 +156,12 @@ public class SettingsFragment extends Fragment {
         weeklyNotificationSwitch.setChecked(setWeekly);
         monthlyNotificationSwitch.setChecked(setMonthly);
 
-        profileLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
-        categoryLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
-        notificationLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
-        generalLabelTextView.setTypeface(EApplication.getInstance().getTypeface(Font.BOLD));
+        Typeface boldTypeface = EApplication.getInstance().getTypeface(Font.BOLD);
+        budgetTextView.setTypeface(boldTypeface);
+        profileLabelTextView.setTypeface(boldTypeface);
+        categoryLabelTextView.setTypeface(boldTypeface);
+        notificationLabelTextView.setTypeface(boldTypeface);
+        generalLabelTextView.setTypeface(boldTypeface);
 
         sendFeedbackTextView.setOnClickListener(v -> Instabug.invoke());
     }

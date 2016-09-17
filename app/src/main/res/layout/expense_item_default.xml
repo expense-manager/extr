@@ -24,7 +24,7 @@
             android:visibility="visible"/>
 
         <!-- Name-->
-        <com.expensemanager.app.helpers.ETextView
+        <TextView
             android:id="@+id/expense_item_default_name_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
