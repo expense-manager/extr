@@ -137,6 +137,8 @@
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
+                android:hint="@string/monthly_budget_optional"
+                android:textColorHint="@color/gray_light"
                 android:background="@drawable/background_bottom_line_gray"/>
 
             <!-- Weekly budget label -->
@@ -168,6 +170,8 @@
                 android:padding="@dimen/space_really_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium_small"
+                android:hint="@string/weekly_budget_optional"
+                android:textColorHint="@color/gray_light"
                 android:background="@drawable/background_bottom_line_gray"/>
 
         </RelativeLayout>

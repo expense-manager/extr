@@ -123,6 +123,8 @@
     <string name="transition_category">transition_category</string>
     <string name="weekly_budget">Weekly Budget</string>
     <string name="monthly_budget">Monthly Budget</string>
+    <string name="weekly_budget_optional">(optional) e.g. $800</string>
+    <string name="monthly_budget_optional">(optional) e.g. $2600</string>
 
     <!-- Color -->
     <string name="soft_default">Default</string>

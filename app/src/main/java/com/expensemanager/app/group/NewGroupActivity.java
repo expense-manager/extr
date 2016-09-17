@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
@@ -32,6 +34,8 @@ public class NewGroupActivity extends AppCompatActivity {
     private static final String TAG = NewGroupActivity.class.getSimpleName();
 
     private Group group;
+    private String monthlyBudget;
+    private String weeklyBudget;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -40,6 +44,8 @@ public class NewGroupActivity extends AppCompatActivity {
     @BindView(R.id.new_group_activity_name_edit_text_id) EditText nameEditText;
     @BindView(R.id.new_group_activity_group_edit_text_id) EditText groupEditText;
     @BindView(R.id.new_group_activity_about_edit_text_id) EditText aboutEditText;
+    @BindView(R.id.new_group_activity_monthly_budget_edit_text_id) EditText monthlyBudgetEditText;
+    @BindView(R.id.new_group_activity_weekly_budget_edit_text_id) EditText weeklyBudgetEditText;
     @BindView(R.id.progress_bar_id) ProgressBar progressBar;
 
     public static void newInstance(Context context) {
@@ -83,6 +89,10 @@ public class NewGroupActivity extends AppCompatActivity {
     }
 
     private void save() {
+        if (!isValidateInput()) {
+            return;
+        }
+
         closeSoftKeyboard();
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
@@ -98,10 +108,57 @@ public class NewGroupActivity extends AppCompatActivity {
         group.setGroupname(groupEditText.getText().toString().toLowerCase());
         group.setAbout(aboutEditText.getText().toString());
 
+        if (!TextUtils.isEmpty(monthlyBudget)) {
+            group.setMonthlyBudget(monthlyBudget);
+        }
+
+        if (!TextUtils.isEmpty(weeklyBudget)) {
+            group.setWeeklyBudget(weeklyBudget);
+        }
+
         progressBar.setVisibility(View.VISIBLE);
         SyncGroup.create(group);
         closeSoftKeyboard();
         close();
+    }
+
+    private boolean isValidateInput() {
+        String monthlyBudgetString = monthlyBudgetEditText.getText().toString();
+        String weeklyBudgetString = weeklyBudgetEditText.getText().toString();
+
+        if (monthlyBudgetString.length() > 0) {
+
+            if (monthlyBudgetEditText.getText().charAt(0) == '$') {
+                monthlyBudgetString = monthlyBudgetString.substring(1);
+            }
+
+            try {
+                double monthlyNumber = Double.parseDouble(monthlyBudgetString);
+                monthlyBudget = String.valueOf(monthlyNumber);
+            } catch (NumberFormatException e) {
+                Log.d(TAG, "Incorrect monthly input.");
+                Toast.makeText(this, "Incorrect monthly number.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        if (weeklyBudgetString.length() > 0) {
+
+            if (weeklyBudgetString.charAt(0) == '$') {
+                weeklyBudgetString = weeklyBudgetString.substring(1);
+            }
+
+            try {
+                double weeklyBudgetNumber = Double.parseDouble(weeklyBudgetString);
+                weeklyBudget = String.valueOf(weeklyBudgetNumber);
+            } catch (NumberFormatException e) {
+                Log.d(TAG, "Incorrect weekly budget number.");
+                Toast.makeText(this, "Incorrect weekly budget number.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void closeSoftKeyboard() {
