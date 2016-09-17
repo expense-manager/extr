@@ -109,6 +109,67 @@
                 android:textSize="@dimen/text_medium_small"
                 android:background="@drawable/background_bottom_line_gray"/>
 
+            <!-- Monthly budget label -->
+            <TextView
+                android:id="@+id/new_group_activity_monthly_budget_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/new_group_activity_about_edit_text_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/monthly_budget"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Monthly budget -->
+            <EditText
+                android:id="@+id/new_group_activity_monthly_budget_edit_text_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/new_group_activity_monthly_budget_label_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+
+                android:padding="@dimen/space_really_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"
+                android:background="@drawable/background_bottom_line_gray"/>
+
+            <!-- Weekly budget label -->
+            <TextView
+                android:id="@+id/new_group_activity_weekly_budget_label_text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/new_group_activity_monthly_budget_edit_text_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginTop="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium"
+
+                android:paddingLeft="@dimen/space_really_small"
+                android:paddingRight="@dimen/space_really_small"
+                android:text="@string/weekly_budget"
+                android:textSize="@dimen/text_small"/>
+
+            <!-- Weekly budget -->
+            <EditText
+                android:id="@+id/new_group_activity_weekly_budget_edit_text_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/new_group_activity_weekly_budget_label_text_view_id"
+                android:layout_marginLeft="@dimen/space_medium_large"
+                android:layout_marginRight="@dimen/space_medium_large"
+                android:layout_marginBottom="@dimen/space_medium_large"
+
+                android:padding="@dimen/space_really_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"
+                android:background="@drawable/background_bottom_line_gray"/>
+
         </RelativeLayout>
     </ScrollView>
 

@@ -76,7 +76,7 @@
     <string name="invite">Invite</string>
     <string name="sent">Sent</string>
     <string name="search">Search</string>
-    <string name="search_hint">Search full name, email or phone...</string>
+    <string name="search_hint">Search fullname, email or phone...</string>
     <string name="accepted">Accepted</string>
     <string name="accept">Accept</string>
     <string name="invite_new">New invitation</string>
@@ -93,14 +93,12 @@
     <string name="monthly_report_message">Your total expense for last month</string>
     <string name="delete_profile_image">Delete Profile Image</string>
     <string name="select_group_hint">You need to select a group first</string>
-    <string name="unsaved_changes_message">Are you sure to discard your unsaved changes?
-    </string>
+    <string name="unsaved_changes_message">Are you sure to discard your unsaved changes?</string>
     <string name="read_all_notification">Read all notifications</string>
     <string name="read_all_notification_message">Are you sure to mark all notifications as read?
     </string>
     <string name="no_unread_notification">No unread notification</string>
-    <string name="no_unread_notification_message">You do not have any unread notification right
-        now.
+    <string name="no_unread_notification_message">You do not have any unread notification right now.
     </string>
     <string name="delete_notification">Delete notification</string>
     <string name="delete_notification_message">Are you sure to delete this notification?</string>
@@ -123,6 +121,8 @@
     <string name="mobile">Mobile</string>
     <string name="report_average">Average: $</string>
     <string name="transition_category">transition_category</string>
+    <string name="weekly_budget">Weekly Budget</string>
+    <string name="monthly_budget">Monthly Budget</string>
 
     <!-- Color -->
     <string name="soft_default">Default</string>

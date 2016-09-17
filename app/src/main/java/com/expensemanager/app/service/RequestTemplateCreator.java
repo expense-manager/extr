@@ -648,8 +648,17 @@ public class RequestTemplateCreator {
         if (!TextUtils.isEmpty(group.getName())) {
             params.put(Group.NAME_JSON_KEY, group.getName());
         }
+
         if (!TextUtils.isEmpty(group.getAbout())) {
             params.put(Group.ABOUT_JSON_KEY, group.getAbout());
+        }
+
+        if (!TextUtils.isEmpty(group.getWeeklyBudget())) {
+            params.put(Group.WEEKLY_BUDGET_JSON_KEY, group.getWeeklyBudget());
+        }
+
+        if (!TextUtils.isEmpty(group.getMonthlyBudget())) {
+            params.put(Group.MONTHLY_BUDGET_JSON_KEY, group.getMonthlyBudget());
         }
 
         JSONObject userIdObj=new JSONObject();
@@ -671,10 +680,21 @@ public class RequestTemplateCreator {
         Map<String, String> params = new HashMap<>();
 
         params.put(Group.GROUPNAME_JSON_KEY, group.getGroupname());
-        params.put(Group.NAME_JSON_KEY, group.getName());
+
+        if (!TextUtils.isEmpty(group.getName())) {
+            params.put(Group.ABOUT_JSON_KEY, group.getName());
+        }
 
         if (!TextUtils.isEmpty(group.getAbout())) {
             params.put(Group.ABOUT_JSON_KEY, group.getAbout());
+        }
+
+        if (!TextUtils.isEmpty(group.getWeeklyBudget())) {
+            params.put(Group.WEEKLY_BUDGET_JSON_KEY, group.getWeeklyBudget());
+        }
+
+        if (!TextUtils.isEmpty(group.getMonthlyBudget())) {
+            params.put(Group.MONTHLY_BUDGET_JSON_KEY, group.getMonthlyBudget());
         }
 
         return new RequestTemplate(PUT, url, params);

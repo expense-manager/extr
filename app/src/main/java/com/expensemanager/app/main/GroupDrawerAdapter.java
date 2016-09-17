@@ -1,17 +1,5 @@
 package com.expensemanager.app.main;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.Group;
-import com.expensemanager.app.models.Member;
-import com.expensemanager.app.models.User;
-import com.expensemanager.app.profile.ProfileActivity;
-import com.expensemanager.app.service.SyncCategory;
-import com.expensemanager.app.service.SyncExpense;
-import com.expensemanager.app.service.SyncMember;
-
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -28,6 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Group;
+import com.expensemanager.app.models.Member;
+import com.expensemanager.app.models.User;
+import com.expensemanager.app.profile.ProfileActivity;
+import com.expensemanager.app.service.SyncCategory;
+import com.expensemanager.app.service.SyncExpense;
+import com.expensemanager.app.service.SyncMember;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

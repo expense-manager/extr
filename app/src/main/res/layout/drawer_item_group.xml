@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingEnd="@dimen/drawer_vertical_padding"
-    android:paddingLeft="@dimen/drawer_vertical_padding"
-    android:paddingRight="@dimen/drawer_vertical_padding"
+    android:paddingEnd="@dimen/space_medium"
     android:paddingStart="@dimen/drawer_vertical_padding">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -15,7 +13,7 @@
         android:layout_height="@dimen/drawer_item_primary"
         android:layout_marginTop="@dimen/space_small"
         android:layout_marginBottom="@dimen/space_small"
-        android:layout_marginRight="@dimen/drawer_vertical_padding"
+        android:layout_marginRight="8dp"
 
         android:layout_gravity="center_vertical"/>
 
@@ -34,6 +32,25 @@
         android:textColor="@color/white"
         tools:text="S"/>
 
+    <TextView
+        android:id="@+id/drawer_name_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/drawer_icon_image_view_id"
+        android:layout_toLeftOf="@+id/drawer_join_text_view_id"
+        android:layout_alignTop="@+id/drawer_icon_image_view_id"
+        android:layout_alignBottom="@+id/drawer_icon_image_view_id"
+
+        android:paddingRight="@dimen/space_really_small"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical|start"
+        android:lines="1"
+        android:maxLines="1"
+        android:textDirection="anyRtl"
+        android:textSize="@dimen/drawer_item_primary_text"
+        android:textColor="@color/gray_dark"
+        tools:text="Some drawer text"/>
+
     <ImageView
         android:id="@+id/drawer_icon_select_image_view_id"
         android:layout_width="wrap_content"
@@ -44,7 +61,7 @@
     <!-- Join -->
     <TextView
         android:id="@+id/drawer_join_text_view_id"
-        android:layout_width="@dimen/button_width"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -54,23 +71,6 @@
         android:textColor="@color/gray"
         android:textSize="@dimen/text_really_small"
         android:text="@string/join"
-        android:gravity="center"/>
+        android:gravity="center" />
 
-    <TextView
-        android:id="@+id/drawer_name_text_view_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/drawer_icon_image_view_id"
-        android:layout_toLeftOf="@+id/drawer_join_text_view_id"
-        android:layout_alignTop="@+id/drawer_icon_image_view_id"
-        android:layout_alignBottom="@+id/drawer_icon_image_view_id"
-
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center_vertical|start"
-        android:lines="1"
-        android:singleLine="true"
-        android:textDirection="anyRtl"
-        android:textSize="@dimen/drawer_item_primary_text"
-        android:textColor="@color/gray_dark"
-        tools:text="Some drawer text"/>
 </RelativeLayout>

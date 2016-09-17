@@ -51,7 +51,7 @@
 
     <!-- Definition for the primary item -->
     <dimen name="drawer_item_primary">48dp</dimen>
-    <dimen name="drawer_item_primary_icon">56dp</dimen>
+    <dimen name="drawer_item_primary_icon">50dp</dimen>
     <dimen name="drawer_item_primary_icon_padding">12dp</dimen>
     <dimen name="drawer_item_primary_icon_padding_right">32dp</dimen>
     <dimen name="drawer_item_primary_text">14sp</dimen>
