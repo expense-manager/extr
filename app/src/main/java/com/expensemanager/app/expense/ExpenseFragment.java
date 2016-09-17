@@ -112,6 +112,9 @@ public class ExpenseFragment extends Fragment {
 
     public void invalidateViews() {
         expenseAdapter.clear();
+        expenseAdapter.setIsBackgroundPrimary(!isCategoryFiltered);
+        recyclerView.setBackgroundColor(ContextCompat.getColor(getActivity(), isCategoryFiltered? R.color.white : R.color.colorPrimaryDark));
+
 
         // Check size of group members
         if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {

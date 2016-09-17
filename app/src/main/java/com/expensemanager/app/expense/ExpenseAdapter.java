@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private ArrayList<Expense> expenses;
     private Context context;
     private boolean showMember;
+    private boolean isBackgroundPrimary = true;
 
     public ExpenseAdapter(Context context, ArrayList<Expense> expenses) {
         this.context = context;
@@ -112,6 +114,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             viewHolder.userFullnameTextView.setText(user.getFullname());
             viewHolder.userFullnameTextView.setVisibility(View.VISIBLE);
+            viewHolder.userFullnameTextView.setTextColor(ContextCompat.getColor(getContext(), isBackgroundPrimary? R.color.white : R.color.black));
             viewHolder.userPhotoImageView.setVisibility(View.VISIBLE);
             viewHolder.dividerView.setVisibility(View.VISIBLE);
         }
@@ -126,6 +129,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void setShowMember(boolean showMember) {
         this.showMember = showMember;
         notifyDataSetChanged();
+    }
+
+    public void setIsBackgroundPrimary(boolean isBackgroundPrimary) {
+        this.isBackgroundPrimary = isBackgroundPrimary;
     }
 
     public void clear() {
