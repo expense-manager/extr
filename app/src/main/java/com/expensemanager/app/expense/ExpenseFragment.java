@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -149,6 +150,7 @@ public class ExpenseFragment extends Fragment {
         this.titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         this.extraImageView = (ImageView) toolbar.findViewById(R.id.main_activity_toolbar_extra_image_view_id);
         this.titleTextView.setText(getString(R.string.expense));
+        ViewCompat.setElevation(toolbar, getResources().getInteger(R.integer.toolbar_elevation));
     }
 
     private void setupRecyclerView() {

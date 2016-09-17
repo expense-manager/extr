@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true">
+
+        <View
+            android:id="@+id/circle_background_view_id"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle_background"/>
+
+        <View
+            android:id="@+id/circle_solid_view_id"
+            android:layout_width="196dp"
+            android:layout_height="196dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle_solid" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

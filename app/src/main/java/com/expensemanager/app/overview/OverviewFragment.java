@@ -2,16 +2,15 @@ package com.expensemanager.app.overview;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -38,32 +37,13 @@ public class OverviewFragment extends Fragment {
 
     public static int SLEEP_LENGTH = 1200;
 
-    private Handler handler = new Handler();
-    private int totalStatus = 0;
-    private int weeklyStatus = 0;
-    private int monthlyStatus = 0;
     private ArrayList<Expense> expenses;
     private OverviewAdapter overviewAdapter;
     private String groupId;
-    private String oldGroupId;
-    private double totalExpense = 0.0;
-    private double weeklyExpense = 0.0;
-    private double weeklyAve = 0.0;
-    private double monthlyExpense = 0.0;
-    private double monthlyAve = 0.0;
-    private double oldWeeklyExpense = 0.0;
-    private double oldMonthlyExpense = 0.0;
 
     @BindView(R.id.overview_fragment_scroll_view_id) ScrollView scrollView;
-    @BindView(R.id.overview_fragment_total_text_view_id) TextView totalTextView;
-    @BindView(R.id.overview_fragment_weekly_total_text_view_id) TextView weeklyTextView;
-    @BindView(R.id.overview_fragment_monthly_total_text_view_id) TextView monthlyTextView;
+    @BindView(R.id.overview_fragment_view_pager_id) ViewPager viewPager;
     @BindView(R.id.overview_fragment_recycler_view_id) RecyclerView recyclerView;
-    @BindView(R.id.weekly_circular_progress_text) TextView weeklyProgressTextView;
-    @BindView(R.id.monthly_circular_progress_text) TextView monthlyProgressTextView;
-    @BindView(R.id.overview_total_progressBar) ProgressBar totalProgressBar;
-    @BindView(R.id.overview_weekly_progressBar) ProgressBar weeklyProgressBar;
-    @BindView(R.id.overview_monthly_progressBar) ProgressBar monthlyProgressBar;
 
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
@@ -88,20 +68,12 @@ public class OverviewFragment extends Fragment {
         overviewAdapter = new OverviewAdapter(getActivity(), expenses);
         setupToolbar();
         setupRecyclerView();
+        setupViewPager(viewPager);
         invalidateViews();
     }
 
     public void invalidateViews() {
         groupId = Helpers.getCurrentGroupId();
-
-        totalExpense = getTotalExpense();
-        weeklyExpense = getWeeklyExpense();
-        weeklyAve = getWeeklyAverage();
-        monthlyExpense = getMonthlyExpense();
-        monthlyAve = getMonthlyAverage();
-
-        weeklyTextView.setText(Helpers.doubleToCurrency(weeklyExpense));
-        monthlyTextView.setText(Helpers.doubleToCurrency(monthlyExpense));
 
         overviewAdapter.clear();
 
@@ -113,166 +85,13 @@ public class OverviewFragment extends Fragment {
 
         overviewAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
         scrollView.fullScroll(ScrollView.FOCUS_UP);
-
-        invalidateProgressBars();
     }
 
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
         TextView titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         titleTextView.setText(getString(R.string.app_name));
-        ViewCompat.setElevation(toolbar, 20);
-    }
-
-    private void invalidateProgressBars() {
-        if (weeklyExpense == 0) {
-            weeklyProgressBar.setProgress(0);
-            weeklyTextView.setText("$0");
-        }
-
-        if (monthlyExpense == 0) {
-            monthlyProgressBar.setProgress(0);
-            monthlyTextView.setText("$0");
-        }
-
-        if (oldWeeklyExpense == weeklyExpense && oldMonthlyExpense == monthlyExpense
-                && groupId != null && groupId.equals(oldGroupId)) {
-            return;
-        }
-
-        totalStatus = 0;
-        weeklyStatus = 0;
-        monthlyStatus = 0;
-
-        int weeklyProgress = 0;
-        int monthlyProgress = 0;
-
-        if (weeklyAve != 0) {
-            weeklyProgress = (int)(weeklyExpense / weeklyAve * 100);
-        }
-
-        if (monthlyAve != 0) {
-            monthlyProgress = (int) (monthlyExpense / monthlyAve * 100);
-        }
-
-        setupTotalProgress(totalExpense);
-        setupWeeklyProgress(weeklyProgress);
-        setupMonthlyProgress(monthlyProgress);
-        oldWeeklyExpense = weeklyExpense;
-        oldGroupId = groupId;
-    }
-
-    private void setupTotalProgress(final double totalProgress) {
-        totalProgressBar.setMax((int)totalProgress);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(SLEEP_LENGTH);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                int step = 1;
-                if (totalProgress >= 100) {
-                    step = (int) (totalProgress/100);
-                }
-
-                final int finalStep = step;
-                while (totalStatus < totalProgress) {
-                    totalStatus += step;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            totalProgressBar.setProgress(totalStatus);
-
-                            if (totalStatus + finalStep >= totalProgress) {
-                                if (totalProgress >1000) {
-                                    String totalString = Helpers.doubleToCurrency(totalProgress);
-                                    int lastDotIndex = totalString.lastIndexOf(".");
-                                    String totalResult;
-                                    if (lastDotIndex != -1) {
-                                        totalResult = totalString.substring(0, lastDotIndex);
-                                    } else {
-                                        totalResult = totalString;
-                                    }
-
-                                    totalTextView.setText(totalResult);
-                                } else {
-                                    totalTextView.setText(Helpers.doubleToCurrency(totalProgress));
-                                }
-                                totalProgressBar.setProgress((int)totalProgress);
-                            } else {
-                                totalTextView.setText("$" + totalStatus);
-                            }
-                        }
-                    });
-                    try {
-                        Thread.sleep(15);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
-
-    private void setupWeeklyProgress(int weeklyProgress) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(SLEEP_LENGTH);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                while (weeklyStatus < weeklyProgress) {
-                    weeklyStatus += 1;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            weeklyProgressBar.setProgress(weeklyStatus);
-                            weeklyProgressTextView.setText(weeklyStatus + "%");
-                        }
-                    });
-                    try {
-                        Thread.sleep(30);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
-
-    private void setupMonthlyProgress(int monthlyProgress) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(SLEEP_LENGTH);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                while (monthlyStatus < monthlyProgress) {
-                    monthlyStatus += 1;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            monthlyProgressBar.setProgress(monthlyStatus);
-                            monthlyProgressTextView.setText(monthlyStatus + "%");
-                        }
-                    });
-                    try {
-                        Thread.sleep(30);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+        ViewCompat.setElevation(toolbar, getResources().getInteger(R.integer.toolbar_elevation));
     }
 
     private void setupRecyclerView() {
@@ -285,6 +104,14 @@ public class OverviewFragment extends Fragment {
         recyclerView.setFocusable(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(overviewAdapter);
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        OverviewFragmentAdapter overviewFragmentAdapter = new OverviewFragmentAdapter(getFragmentManager());
+
+        overviewFragmentAdapter.addFragment(AverageFragment.newInstance(), "Average");
+        overviewFragmentAdapter.addFragment(BudgetFragment.newInstance(), "Monthly");
+        viewPager.setAdapter(overviewFragmentAdapter);
     }
 
     private double getWeeklyExpense() {

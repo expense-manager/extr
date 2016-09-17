@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity {
                     .addToBackStack(OverviewFragment.class.getName())
             .commit();
         } else if (isNotifiction) {
-            setupCurrentFragmentPosition(NOTIFICATION_POSITION);
+            currentPosition = NOTIFICATION_POSITION;
             removeAllBackStackFragment();
             getFragmentManager().beginTransaction()
                     .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
@@ -235,8 +235,15 @@ public class MainActivity extends BaseActivity {
                 fab.setOnClickListener(v -> setupFab());
                 break;
             case OVERVIEW_POSITION:
-                setupCurrentFragmentPosition(OVERVIEW_POSITION);
-                removeAllBackStackFragment();
+                if (currentPosition == OVERVIEW_POSITION) {
+                    if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+                        drawerLayout.closeDrawers();
+                    }
+
+                    break;
+                } else {
+                    currentPosition = position;
+                }
 
                 if (groupId != null) {
                     removeAllBackStackFragment();
@@ -250,17 +257,24 @@ public class MainActivity extends BaseActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
+
                 break;
             case EXPENSE_POSITION:
-                setupCurrentFragmentPosition(EXPENSE_POSITION);
-                removeAllBackStackFragment();
+                if (currentPosition == EXPENSE_POSITION) {
+                    if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+                        drawerLayout.closeDrawers();
+                    }
+
+                    break;
+                } else {
+                    currentPosition = position;
+                }
 
                 if (groupId != null) {
                     removeAllBackStackFragment();
-                    ExpenseFragment expenseFragment = ExpenseFragment.newInstance();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
-                            .replace(R.id.main_activity_frame_layout_id, expenseFragment)
+                            .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
                             .addToBackStack(ExpenseFragment.class.getName())
                             .commit();
                     fab.setVisibility(View.VISIBLE);
@@ -270,8 +284,15 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case REPORT_POSITION:
-                setupCurrentFragmentPosition(REPORT_POSITION);
-                removeAllBackStackFragment();
+                if (currentPosition == REPORT_POSITION) {
+                    if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+                        drawerLayout.closeDrawers();
+                    }
+
+                    break;
+                } else {
+                    currentPosition = position;
+                }
 
                 if (groupId != null) {
                     removeAllBackStackFragment();
@@ -287,8 +308,16 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case GROUP_POSITION:
-                setupCurrentFragmentPosition(GROUP_POSITION);
-                removeAllBackStackFragment();
+                if (currentPosition == GROUP_POSITION) {
+                    if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+                        drawerLayout.closeDrawers();
+                    }
+
+                    break;
+                } else {
+                    currentPosition = position;
+                }
+
                 if (groupId != null) {
                     removeAllBackStackFragment();
                     getFragmentManager().beginTransaction()
@@ -306,7 +335,16 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case NOTIFICATION_POSITION:
-                setupCurrentFragmentPosition(NOTIFICATION_POSITION);
+                if (currentPosition == NOTIFICATION_POSITION) {
+                    if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+                        drawerLayout.closeDrawers();
+                    }
+
+                    break;
+                } else {
+                    currentPosition = position;
+                }
+
                 removeAllBackStackFragment();
 
                 getFragmentManager().beginTransaction()
@@ -318,7 +356,16 @@ public class MainActivity extends BaseActivity {
                 fab.setVisibility(View.INVISIBLE);
                 break;
             case SETTINGS_POSITION:
-                setupCurrentFragmentPosition(SETTINGS_POSITION);
+                if (currentPosition == SETTINGS_POSITION) {
+                    if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+                        drawerLayout.closeDrawers();
+                    }
+
+                    break;
+                } else {
+                    currentPosition = position;
+                }
+
                 removeAllBackStackFragment();
                 getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
@@ -336,18 +383,6 @@ public class MainActivity extends BaseActivity {
                 break;
             default:
                 break;
-        }
-    }
-
-    private void setupCurrentFragmentPosition(int position) {
-        if (currentPosition == position) {
-            if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
-                drawerLayout.closeDrawers();
-            }
-
-            return;
-        } else {
-            currentPosition = position;
         }
     }
 

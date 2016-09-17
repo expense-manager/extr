@@ -141,7 +141,7 @@ public class GroupFragment extends Fragment {
     }
     private void setupToolbar() {
         this.toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
-        ViewCompat.setElevation(toolbar, 20);
+        ViewCompat.setElevation(toolbar, getResources().getInteger(R.integer.toolbar_elevation));
         this.titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         this.titleTextView.setText(getString(R.string.group));
         this.saveTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_right_title_text_view_id);
