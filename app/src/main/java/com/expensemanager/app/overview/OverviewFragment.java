@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -37,12 +38,13 @@ public class OverviewFragment extends Fragment {
 
     public static int SLEEP_LENGTH = 1200;
 
+    private String groupId;
     private ArrayList<Expense> expenses;
     private OverviewAdapter overviewAdapter;
-    private String groupId;
 
     @BindView(R.id.overview_fragment_scroll_view_id) ScrollView scrollView;
     @BindView(R.id.overview_fragment_view_pager_id) ViewPager viewPager;
+    @BindView(R.id.overview_fragment_pager_indicator_container_id) LinearLayout mLinearLayout;
     @BindView(R.id.overview_fragment_recycler_view_id) RecyclerView recyclerView;
 
     public static OverviewFragment newInstance() {
@@ -112,6 +114,11 @@ public class OverviewFragment extends Fragment {
         overviewFragmentAdapter.addFragment(AverageFragment.newInstance(), "Average");
         overviewFragmentAdapter.addFragment(BudgetFragment.newInstance(), "Monthly");
         viewPager.setAdapter(overviewFragmentAdapter);
+
+        CustomPageIndicator viewPagerIndicator = new CustomPageIndicator(getActivity(), mLinearLayout, viewPager, R.drawable.indicator_circle);
+        viewPagerIndicator.setPageCount(overviewFragmentAdapter.getCount());
+        viewPagerIndicator.setSpacingRes(R.dimen.space_medium);
+        viewPagerIndicator.show();
     }
 
     private double getWeeklyExpense() {

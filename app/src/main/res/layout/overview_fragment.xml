@@ -12,18 +12,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/overview_fragment_view_pager_id"
+        <RelativeLayout
+            android:id="@+id/overview_fragment_view_pager_relative_layout_id"
             android:layout_width="match_parent"
-            android:layout_height="360dp">
+            android:layout_height="400dp">
 
-        </android.support.v4.view.ViewPager>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/overview_fragment_view_pager_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/overview_fragment_pager_indicator_container_id"
+                android:layout_marginBottom="@dimen/space_medium">
+
+            </android.support.v4.view.ViewPager>
+
+            <LinearLayout
+                android:id="@+id/overview_fragment_pager_indicator_container_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/space_medium_large"
+
+                android:gravity="center_horizontal" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+
+                android:background="@color/gray_light_alpha_88"/>
+
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/overview_fragment_recycler_view_id"
             android:layout_width="match_parent"
             android:layout_height="540dp"
-            android:layout_below="@+id/overview_fragment_view_pager_id"
+            android:layout_below="@+id/overview_fragment_view_pager_relative_layout_id"
+            android:layout_marginTop="@dimen/space_medium_large"
             android:layout_marginBottom="@dimen/space_medium_large"
 
             android:paddingTop="@dimen/space_really_small"
