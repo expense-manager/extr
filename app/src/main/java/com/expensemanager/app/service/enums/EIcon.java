@@ -1,4 +1,4 @@
-package com.expensemanager.app.service;
+package com.expensemanager.app.service.enums;
 
 /**
  * Created by Zhaolong Zhong on 9/3/16.

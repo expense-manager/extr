@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
@@ -33,6 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent notificationIntent = new Intent(context, NotificationsActivity.class);
+        notificationIntent.putExtra(MainActivity.NOTIFICATION_KEY, true);
 
         String notificationId = intent.getStringExtra(RNotification.ID_KEY);
         RNotification rNotification = RNotification.getNotificationById(notificationId);

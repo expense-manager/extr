@@ -32,7 +32,7 @@ import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.PhotoSource;
 import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.EColor;
+import com.expensemanager.app.service.enums.EColor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

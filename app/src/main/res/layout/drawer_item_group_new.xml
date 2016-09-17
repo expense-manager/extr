@@ -19,7 +19,7 @@
 
         android:gravity="center"
         android:lines="1"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textSize="@dimen/text_medium"
         android:background="@drawable/button_background_gray"/>
 

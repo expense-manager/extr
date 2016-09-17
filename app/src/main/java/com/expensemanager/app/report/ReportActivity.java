@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.BaseActivity;
+import com.expensemanager.app.report.main.ReportFragmentAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

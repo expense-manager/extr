@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/notification_item_default_title_text_view_id"
             android:layout_alignBottom="@+id/notification_item_default_created_at_sign_text_view_id"
+            android:layout_marginLeft="@dimen/space_really_small"
 
             android:background="@color/colorPrimary"/>
 

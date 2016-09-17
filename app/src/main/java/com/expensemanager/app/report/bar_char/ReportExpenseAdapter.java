@@ -1,4 +1,4 @@
-package com.expensemanager.app.report;
+package com.expensemanager.app.report.bar_char;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,6 @@ import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

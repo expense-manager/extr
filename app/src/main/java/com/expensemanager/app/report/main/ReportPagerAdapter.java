@@ -1,8 +1,11 @@
-package com.expensemanager.app.report;
+package com.expensemanager.app.report.main;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.expensemanager.app.report.bar_char.ReportBarChartFragment;
+import com.expensemanager.app.report.pie_char.ReportPieChartFragment;
 
 import java.util.Date;
 import java.util.HashMap;

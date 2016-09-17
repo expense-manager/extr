@@ -1,4 +1,4 @@
-package com.expensemanager.app.report;
+package com.expensemanager.app.report.pie_char;
 
 import android.content.Context;
 import android.graphics.Color;

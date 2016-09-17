@@ -28,7 +28,7 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.User;
-import com.expensemanager.app.service.EColor;
+import com.expensemanager.app.service.enums.EColor;
 import com.expensemanager.app.service.SyncCategory;
 
 import org.json.JSONObject;

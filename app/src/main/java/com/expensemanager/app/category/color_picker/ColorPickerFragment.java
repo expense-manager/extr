@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.service.EColor;
+import com.expensemanager.app.service.enums.EColor;
 
 import java.util.List;
 import java.util.Set;

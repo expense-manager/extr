@@ -1,6 +1,5 @@
-package com.expensemanager.app.report;
+package com.expensemanager.app.report.pie_char;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,9 +12,11 @@ import android.view.ViewGroup;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
-import com.expensemanager.app.models.Group;
+import com.expensemanager.app.report.ReportDetailActivity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,29 +25,31 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
 
-public class ReportBarChartFragment extends Fragment {
+public class ReportPieChartFragment extends Fragment {
     private static final String TAG = ReportDetailActivity.class.getSimpleName();
 
     public static final String START_END_DATE = "startEnd";
     public static final String REQUEST_CODE = "request_code";
 
-    private ReportExpenseAdapter reportExpenseAdapter;
+    private ReportCategoryAdapter reportCategoryAdapter;
     private List<Expense> expenses;
+    private ArrayList<Category> categories;
+    private ArrayList<Double> amounts;
     private Date[] startEnd;
     private int requestCode;
-    Unbinder unbinder;
     private String groupId;
+    Unbinder unbinder;
 
     @BindView(R.id.report_chart_fragment_recycler_view_id) RecyclerView recyclerView;
 
     // Creates a new fragment given an int and title
-    public static ReportBarChartFragment newInstance(Date[] startEnd, int requestCode) {
-        ReportBarChartFragment reportBarChartFragment = new ReportBarChartFragment();
+    public static ReportPieChartFragment newInstance(Date[] startEnd, int requestCode) {
+        ReportPieChartFragment reportPieChartFragment = new ReportPieChartFragment();
         Bundle args = new Bundle();
         args.putInt(REQUEST_CODE, requestCode);
         args.putSerializable(START_END_DATE, startEnd);
-        reportBarChartFragment.setArguments(args);
-        return reportBarChartFragment;
+        reportPieChartFragment.setArguments(args);
+        return reportPieChartFragment;
     }
 
     // 1.onAttach(Activity) called once the fragment is associated with its activity.
@@ -55,8 +58,11 @@ public class ReportBarChartFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-        groupId = sharedPreferences.getString(Group.ID_KEY, null);
+        groupId = Helpers.getCurrentGroupId();
+
+        categories = new ArrayList<>();
+        amounts = new ArrayList<>();
+        reportCategoryAdapter = new ReportCategoryAdapter(getContext(), categories, amounts);
     }
 
     // 3.onCreateView() creates and returns the view hierarchy associated with the fragment.
@@ -66,6 +72,19 @@ public class ReportBarChartFragment extends Fragment {
         View v = inflater.inflate(R.layout.report_chart_fragment, parent, false);
         // bind fragment with ButterKnife
         unbinder = ButterKnife.bind(this, v);
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setupRecyclerView();
+        invalidateViews();
+    }
+
+    public void invalidateViews() {
+        reportCategoryAdapter.clear();
 
         Bundle bundle = getArguments();
 
@@ -73,23 +92,6 @@ public class ReportBarChartFragment extends Fragment {
             startEnd = (Date[]) bundle.getSerializable(START_END_DATE);
             requestCode = bundle.getInt(REQUEST_CODE);
         }
-
-        reportExpenseAdapter = new ReportExpenseAdapter(getContext(), startEnd, requestCode);
-
-        setupRecyclerView();
-
-        invalidateViews();
-
-        return v;
-    }
-
-    private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(reportExpenseAdapter);
-    }
-
-    public void invalidateViews() {
-        reportExpenseAdapter.clear();
 
         if (startEnd != null) {
             Log.d(TAG, "Start: " + startEnd[0].getTime());
@@ -101,10 +103,16 @@ public class ReportBarChartFragment extends Fragment {
             }
             // Query data from date range
             expenses = Expense.getExpensesByRangeAndGroupId(startEnd, groupId);
+            reportCategoryAdapter.setStartEnd(startEnd);
         }
         if (expenses != null) {
-            reportExpenseAdapter.addAll(expenses, requestCode);
+            reportCategoryAdapter.addAll(expenses);
         }
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(reportCategoryAdapter);
     }
 
     @Override
@@ -127,7 +135,7 @@ public class ReportBarChartFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // unbind fragment and ButterKnife
+        // unbind frrament and ButterKnife
         unbinder.unbind();
     }
 }

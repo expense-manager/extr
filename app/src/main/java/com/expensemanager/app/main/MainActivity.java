@@ -1,6 +1,7 @@
 package com.expensemanager.app.main;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,7 +40,8 @@ import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.AlarmReceiver;
 import com.expensemanager.app.notifications.NotificationFragment;
-import com.expensemanager.app.report.ReportMainFragment;
+import com.expensemanager.app.overview.OverviewFragment;
+import com.expensemanager.app.report.main.ReportMainFragment;
 import com.expensemanager.app.service.Constant;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncCategory;
@@ -65,6 +67,15 @@ import io.realm.Realm;
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    public static String NOTIFICATION_KEY = "notificationKey";
+    private static final int OVERVIEW_POSITION = 1;
+    private static final int EXPENSE_POSITION = 2;
+    private static final int REPORT_POSITION = 3;
+    private static final int GROUP_POSITION = 4;
+    private static final int NOTIFICATION_POSITION = 5;
+    private static final int SETTINGS_POSITION = 6;
+    private static final int SIGN_OUT_POSITION = 8;
+
     private ActionBarDrawerToggle drawerToggle;
     private DrawerAdapter drawerAdapter;
     private GroupDrawerAdapter groupDrawerAdapter;
@@ -83,6 +94,7 @@ public class MainActivity extends BaseActivity {
     private BroadcastReceiver broadcastReceiver;
     private boolean isReceiverRegistered;
     private boolean isSignOut = false;
+    private boolean isNotifiction = false;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
@@ -100,6 +112,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
+
+        isNotifiction = getIntent().getBooleanExtra(NOTIFICATION_KEY, false);
 
         loginUserId = Helpers.getLoginUserId();
         groupId = Helpers.getCurrentGroupId();
@@ -124,11 +138,18 @@ public class MainActivity extends BaseActivity {
 
         Fragment fragment = getFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
 
-        if (fragment == null) {
+        if (fragment == null && !isNotifiction) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
                     .addToBackStack(OverviewFragment.class.getName())
             .commit();
+        } else if (isNotifiction) {
+            setupCurrentFragmentPosition(NOTIFICATION_POSITION);
+            removeAllBackStackFragment();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
+                    .addToBackStack(OverviewFragment.class.getName())
+                    .commit();
         }
 
         fab.setOnClickListener(v -> setupFab());
@@ -213,17 +234,14 @@ public class MainActivity extends BaseActivity {
                 fab.setVisibility(View.VISIBLE);
                 fab.setOnClickListener(v -> setupFab());
                 break;
-            case 1:
-                if (currentPosition == position) {
-                    drawerLayout.closeDrawers();
-                    return;
-                } else {
-                    currentPosition = position;
-                }
+            case OVERVIEW_POSITION:
+                setupCurrentFragmentPosition(OVERVIEW_POSITION);
+                removeAllBackStackFragment();
 
                 if (groupId != null) {
+                    removeAllBackStackFragment();
                     getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
                             .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
                             .addToBackStack(OverviewFragment.class.getName())
                             .commit();
@@ -233,18 +251,15 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 2:
-                if (currentPosition == position) {
-                    drawerLayout.closeDrawers();
-                    return;
-                } else {
-                    currentPosition = position;
-                }
+            case EXPENSE_POSITION:
+                setupCurrentFragmentPosition(EXPENSE_POSITION);
+                removeAllBackStackFragment();
 
                 if (groupId != null) {
+                    removeAllBackStackFragment();
                     ExpenseFragment expenseFragment = ExpenseFragment.newInstance();
                     getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
                             .replace(R.id.main_activity_frame_layout_id, expenseFragment)
                             .addToBackStack(ExpenseFragment.class.getName())
                             .commit();
@@ -254,17 +269,14 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 3:
-                if (currentPosition == position) {
-                    drawerLayout.closeDrawers();
-                    return;
-                } else {
-                    currentPosition = position;
-                }
+            case REPORT_POSITION:
+                setupCurrentFragmentPosition(REPORT_POSITION);
+                removeAllBackStackFragment();
 
                 if (groupId != null) {
+                    removeAllBackStackFragment();
                     getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
                             .replace(R.id.main_activity_frame_layout_id, ReportMainFragment.newInstance())
                             .addToBackStack(ReportMainFragment.class.getName())
                             .commit();
@@ -274,36 +286,16 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 4:
-                if (currentPosition == position) {
-                    drawerLayout.closeDrawers();
-                    return;
-                } else {
-                    currentPosition = position;
-                }
-
-                getFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                    .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
-                    .addToBackStack(NotificationFragment.class.getName())
-                    .commit();
-                titleTextView.setText(getString(R.string.notification));
-                fab.setVisibility(View.INVISIBLE);
-                break;
-            case 5:
-                if (currentPosition == position) {
-                    drawerLayout.closeDrawers();
-                    return;
-                } else {
-                    currentPosition = position;
-                }
-
+            case GROUP_POSITION:
+                setupCurrentFragmentPosition(GROUP_POSITION);
+                removeAllBackStackFragment();
                 if (groupId != null) {
+                    removeAllBackStackFragment();
                     getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                        .replace(R.id.main_activity_frame_layout_id, GroupFragment.newInstance())
-                        .addToBackStack(ReportMainFragment.class.getName())
-                        .commit();
+                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
+                            .replace(R.id.main_activity_frame_layout_id, GroupFragment.newInstance())
+                            .addToBackStack(ReportMainFragment.class.getName())
+                            .commit();
                     titleTextView.setText(getString(R.string.group));
                     fab.setVisibility(View.INVISIBLE);
 
@@ -313,23 +305,30 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 6:
-                if (currentPosition == position) {
-                    drawerLayout.closeDrawers();
-                    return;
-                } else {
-                    currentPosition = position;
-                }
+            case NOTIFICATION_POSITION:
+                setupCurrentFragmentPosition(NOTIFICATION_POSITION);
+                removeAllBackStackFragment();
 
                 getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
+                    .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
+                    .addToBackStack(NotificationFragment.class.getName())
+                    .commit();
+                titleTextView.setText(getString(R.string.notification));
+                fab.setVisibility(View.INVISIBLE);
+                break;
+            case SETTINGS_POSITION:
+                setupCurrentFragmentPosition(SETTINGS_POSITION);
+                removeAllBackStackFragment();
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
                         .replace(R.id.main_activity_frame_layout_id, SettingsFragment.newInstance())
                         .addToBackStack(NotificationFragment.class.getName())
                         .commit();
                 titleTextView.setText(getString(R.string.settings));
                 fab.setVisibility(View.INVISIBLE);
                 break;
-            case 8:
+            case SIGN_OUT_POSITION:
                 signOut();
                 break;
             case 9:
@@ -338,6 +337,22 @@ public class MainActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    private void setupCurrentFragmentPosition(int position) {
+        if (currentPosition == position) {
+            if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+                drawerLayout.closeDrawers();
+            }
+
+            return;
+        } else {
+            currentPosition = position;
+        }
+    }
+
+    private void removeAllBackStackFragment() {
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private void setupFab() {
@@ -355,8 +370,8 @@ public class MainActivity extends BaseActivity {
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_home).setTitle(getString(R.string.nav_overview)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_credit_card).setTitle(getString(R.string.nav_expense)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_trending_up).setTitle(getString(R.string.nav_report)));
-        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_bell).setTitle(getString(R.string.nav_notifications)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_account_multiple).setTitle(getString(R.string.nav_group)));
+        drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_bell).setTitle(getString(R.string.nav_notifications)));
         drawerItems.add(new DrawerItem().setIcon(R.drawable.ic_settings).setTitle(getString(R.string.nav_settings)));
 
         drawerSubItems.clear();

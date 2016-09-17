@@ -10,7 +10,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/drawer_icon_image_view_id"
         android:layout_width="@dimen/drawer_item_primary_icon"
-        android:layout_height="@dimen/drawer_item_primary"
+        android:layout_height="@dimen/drawer_item_primary_icon"
         android:layout_marginTop="@dimen/space_small"
         android:layout_marginBottom="@dimen/space_small"
         android:layout_marginRight="8dp"
@@ -48,7 +48,7 @@
         android:maxLines="1"
         android:textDirection="anyRtl"
         android:textSize="@dimen/drawer_item_primary_text"
-        android:textColor="@color/gray_dark"
+        android:textColor="@color/gray_really_dark"
         tools:text="Some drawer text"/>
 
     <ImageView

@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.expensemanager.app.notifications.NotificationsActivity">
 
+    <include layout="@layout/toolbar" />
+
     <TextView
         android:id="@+id/notifications_activity_empty_state_text_view_id"
         android:layout_width="wrap_content"
@@ -19,9 +21,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notifications_activity_recycler_view_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:paddingTop="@dimen/space_really_small"
-        android:paddingBottom="@dimen/space_really_small"/>
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

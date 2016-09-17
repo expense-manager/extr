@@ -1,4 +1,4 @@
-package com.expensemanager.app.report;
+package com.expensemanager.app.report.main;
 
 import android.app.Fragment;
 import android.graphics.Typeface;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.EApplication;
+import com.expensemanager.app.report.ReportFragment;
 import com.expensemanager.app.service.font.Font;
 
 import butterknife.BindView;
