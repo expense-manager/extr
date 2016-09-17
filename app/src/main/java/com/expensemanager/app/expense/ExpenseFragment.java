@@ -257,6 +257,7 @@ public class ExpenseFragment extends Fragment {
         isCategoryFiltered = false;
         isDateFiltered = false;
         isMemberFiltered = false;
+        setupMemberFilter(null);
 
         invalidateViews();
     }
