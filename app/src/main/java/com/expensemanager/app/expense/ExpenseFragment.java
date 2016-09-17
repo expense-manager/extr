@@ -115,7 +115,6 @@ public class ExpenseFragment extends Fragment {
         expenseAdapter.setIsBackgroundPrimary(!isCategoryFiltered);
         recyclerView.setBackgroundColor(ContextCompat.getColor(getActivity(), isCategoryFiltered? R.color.white : R.color.colorPrimaryDark));
 
-
         // Check size of group members
         if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             expenseAdapter.setShowMember(true);
@@ -152,7 +151,6 @@ public class ExpenseFragment extends Fragment {
         this.toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_toolbar_id);
         this.titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         this.extraImageView = (ImageView) toolbar.findViewById(R.id.main_activity_toolbar_extra_image_view_id);
-        this.titleTextView.setText(getString(R.string.expense));
         ViewCompat.setElevation(toolbar, getResources().getInteger(R.integer.toolbar_elevation));
     }
 
@@ -365,15 +363,14 @@ public class ExpenseFragment extends Fragment {
         super.onPause();
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
+
         if (toolbar != null) {
             int background = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
             toolbar.setBackgroundColor(background);
         }
+
         if (extraImageView != null) {
             extraImageView.setVisibility(View.GONE);
-        }
-        if (titleTextView != null) {
-            titleTextView.setText(R.string.expense);
         }
     }
 }

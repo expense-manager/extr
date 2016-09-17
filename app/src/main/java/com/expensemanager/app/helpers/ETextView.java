@@ -30,7 +30,7 @@ public class ETextView extends TextView {
 
     private void initialize() {
         if (!isInEditMode()) {
-            setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
+            setTypeface(EApplication.getInstance().getTypeface(Font.LIGHT));
         }
     }
 }

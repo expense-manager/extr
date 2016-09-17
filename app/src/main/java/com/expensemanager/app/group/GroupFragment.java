@@ -146,7 +146,6 @@ public class GroupFragment extends Fragment {
         this.titleTextView.setText(getString(R.string.group));
         this.saveTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_right_title_text_view_id);
 
-        titleTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
         saveTextView.setOnClickListener(v -> save());
         saveTextView.setTypeface(EApplication.getInstance().getTypeface(Font.REGULAR));
     }

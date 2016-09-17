@@ -277,6 +277,7 @@ public class MainActivity extends BaseActivity {
                             .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
                             .addToBackStack(ExpenseFragment.class.getName())
                             .commit();
+                    titleTextView.setText(getString(R.string.expense));
                     fab.setVisibility(View.VISIBLE);
                     fab.setOnClickListener(v -> setupFab());
                 } else {
@@ -327,9 +328,6 @@ public class MainActivity extends BaseActivity {
                             .commit();
                     titleTextView.setText(getString(R.string.group));
                     fab.setVisibility(View.INVISIBLE);
-
-//                    GroupDetailActivity.newInstance(MainActivity.this, groupId);
-//                    fab.setVisibility(View.INVISIBLE);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
                 }

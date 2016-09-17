@@ -43,7 +43,7 @@
                         tools:src="@drawable/ic_arrow_back_white_24dp"/>
 
                     <!-- Title -->
-                    <com.expensemanager.app.helpers.ETextView
+                    <TextView
                         android:id="@+id/main_activity_toolbar_title_text_view_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                         android:textStyle="bold"
                         tools:text="123"/>
 
-                    <com.expensemanager.app.helpers.ETextView
+                    <TextView
                         android:id="@+id/main_activity_toolbar_right_title_text_view_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
