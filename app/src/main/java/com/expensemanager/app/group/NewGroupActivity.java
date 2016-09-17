@@ -34,8 +34,8 @@ public class NewGroupActivity extends AppCompatActivity {
     private static final String TAG = NewGroupActivity.class.getSimpleName();
 
     private Group group;
-    private String monthlyBudget;
-    private String weeklyBudget;
+    private double monthlyBudget;
+    private double weeklyBudget;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -108,13 +108,8 @@ public class NewGroupActivity extends AppCompatActivity {
         group.setGroupname(groupEditText.getText().toString().toLowerCase());
         group.setAbout(aboutEditText.getText().toString());
 
-        if (!TextUtils.isEmpty(monthlyBudget)) {
-            group.setMonthlyBudget(monthlyBudget);
-        }
-
-        if (!TextUtils.isEmpty(weeklyBudget)) {
-            group.setWeeklyBudget(weeklyBudget);
-        }
+        group.setMonthlyBudget(monthlyBudget);
+        group.setWeeklyBudget(weeklyBudget);
 
         progressBar.setVisibility(View.VISIBLE);
         SyncGroup.create(group);
@@ -133,8 +128,7 @@ public class NewGroupActivity extends AppCompatActivity {
             }
 
             try {
-                double monthlyNumber = Double.parseDouble(monthlyBudgetString);
-                monthlyBudget = String.valueOf(monthlyNumber);
+                monthlyBudget = Double.parseDouble(monthlyBudgetString);
             } catch (NumberFormatException e) {
                 Log.d(TAG, "Incorrect monthly input.");
                 Toast.makeText(this, "Incorrect monthly number.", Toast.LENGTH_SHORT).show();
@@ -149,8 +143,7 @@ public class NewGroupActivity extends AppCompatActivity {
             }
 
             try {
-                double weeklyBudgetNumber = Double.parseDouble(weeklyBudgetString);
-                weeklyBudget = String.valueOf(weeklyBudgetNumber);
+                weeklyBudget = Double.parseDouble(weeklyBudgetString);
             } catch (NumberFormatException e) {
                 Log.d(TAG, "Incorrect weekly budget number.");
                 Toast.makeText(this, "Incorrect weekly budget number.", Toast.LENGTH_SHORT).show();

@@ -6,6 +6,6 @@
     <solid android:color="@color/colorAccent" />
 
     <stroke
-        android:width="2dp"
+        android:width="10dp"
         android:color="@color/white" />
 </shape>

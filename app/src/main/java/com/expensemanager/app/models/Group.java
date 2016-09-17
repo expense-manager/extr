@@ -56,8 +56,8 @@ public class Group implements RealmModel {
     private String userId;
     private Date createdAt;
     private String color;
-    private String weeklyBudget;
-    private String monthlyBudget;
+    private double weeklyBudget;
+    private double monthlyBudget;
 
     public String getId() {
         return id;
@@ -115,19 +115,19 @@ public class Group implements RealmModel {
         this.color = color;
     }
 
-    public String getWeeklyBudget() {
+    public double getWeeklyBudget() {
         return weeklyBudget;
     }
 
-    public void setWeeklyBudget(String weeklyBudget) {
+    public void setWeeklyBudget(double weeklyBudget) {
         this.weeklyBudget = weeklyBudget;
     }
 
-    public String getMonthlyBudget() {
+    public double getMonthlyBudget() {
         return monthlyBudget;
     }
 
-    public void setMonthlyBudget(String monthlyBudget) {
+    public void setMonthlyBudget(double monthlyBudget) {
         this.monthlyBudget = monthlyBudget;
     }
 
@@ -145,8 +145,8 @@ public class Group implements RealmModel {
             this.groupname = jsonObject.getString(GROUPNAME_JSON_KEY);
             this.name = jsonObject.optString(NAME_JSON_KEY, "");
             this.about = jsonObject.optString(ABOUT_JSON_KEY, "");
-            this.weeklyBudget = jsonObject.optString(WEEKLY_BUDGET_JSON_KEY, "");
-            this.monthlyBudget = jsonObject.optString(MONTHLY_BUDGET_JSON_KEY, "");
+            this.weeklyBudget = jsonObject.optDouble(WEEKLY_BUDGET_JSON_KEY, 0);
+            this.monthlyBudget = jsonObject.optDouble(MONTHLY_BUDGET_JSON_KEY, 0);
 
             JSONObject userIdJSON = jsonObject.getJSONObject(USER_ID_JSON_KEY);
             this.userId = userIdJSON.getString(OBJECT_ID_JSON_KEY);

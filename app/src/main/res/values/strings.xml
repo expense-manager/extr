@@ -58,6 +58,9 @@
     <string name="edit_profile">Edit profile</string>
     <string name="sign_out">Sign Out</string>
     <string name="sign_out_string">Sign out</string>
+    <string name="left_to_spend">LEFT TO SPEND</string>
+    <string name="spendable_monthly">SPENDABLE MONTHLY</string>
+    <string name="spendable_weekly">SPENDABLE WEEKLY</string>
     <string name="title_activity_expense_detail">Expense detail</string>
     <string name="title_activity_category_detail">Category detail</string>
     <string name="title_activity_new_expense">New Expense</string>
