@@ -69,6 +69,21 @@
             tools:background="@color/black"
             android:background="#00000000"/>
 
+        <!-- Icon -->
+        <ImageView
+            android:id="@+id/color_item_icon_image_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_alignTop="@+id/color_item_inner_color_image_view_id"
+            android:layout_alignBottom="@+id/color_item_inner_color_image_view_id"
+            android:layout_alignStart="@+id/color_item_inner_color_image_view_id"
+            android:layout_alignEnd="@+id/color_item_inner_color_image_view_id"
+
+            android:background="#00000000"
+            android:tint="@color/white"
+            tools:src="@drawable/ic_security"/>
+
         <!-- Name -->
         <TextView
             android:id="@+id/category_item_name_text_view_id"

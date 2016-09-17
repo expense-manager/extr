@@ -196,6 +196,14 @@
     <string name="category_icon_favorite">Favorite</string>
     <string name="category_icon_flight">Flight</string>
     <string name="category_icon_printshop">Print Shop</string>
+    <string name="category_icon_radio">Radio</string>
+    <string name="category_icon_bowl">Bowl</string>
+    <string name="category_icon_shopping">Shopping</string>
+    <string name="category_icon_apple">Apple</string>
+    <string name="category_icon_cash_used">Cash Used</string>
+    <string name="category_icon_power_plug">Power Plug</string>
+    <string name="category_icon_window_restore">Window Restore</string>
+    <string name="category_icon_security">Security</string>
 
 
     <!-- Event tracking -->

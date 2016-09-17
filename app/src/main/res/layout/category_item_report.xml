@@ -25,6 +25,20 @@
 
             tools:background="@color/black"/>
 
+        <!-- Icon -->
+        <ImageView
+            android:id="@+id/category_item_icon_image_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:layout_alignTop="@+id/category_item_report_color_image_view_id"
+            android:layout_alignBottom="@+id/category_item_report_color_image_view_id"
+            android:layout_alignStart="@+id/category_item_report_color_image_view_id"
+            android:layout_alignEnd="@+id/category_item_report_color_image_view_id"
+
+            android:tint="@color/white"
+            tools:src="@drawable/ic_security"/>
+
         <!-- Name -->
         <TextView
             android:id="@+id/category_item_report_name_text_view_id"

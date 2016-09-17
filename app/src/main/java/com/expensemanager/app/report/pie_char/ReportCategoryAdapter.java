@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
@@ -14,6 +15,7 @@ import com.expensemanager.app.expense.ExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
+import com.expensemanager.app.service.enums.EIcon;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,9 +95,19 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Category category = categories.get(position);
         double amount = amounts.get(position);
+        EIcon eIcon = null;
+        if (category != null) {
+            eIcon = EIcon.instanceFromName(category.getIcon());
+        }
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
         viewHolder.colorImageView.setImageDrawable(colorDrawable);
+        if (eIcon != null) {
+            viewHolder.iconImageView.setImageResource(eIcon.getValueRes());
+            viewHolder.iconImageView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.iconImageView.setVisibility(View.INVISIBLE);
+        }
         viewHolder.nameTextView.setText(category.getName());
         viewHolder.amountTextView.setText(Helpers.doubleToCurrency(amount));
 
@@ -165,6 +177,7 @@ public class ReportCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
         @BindView(R.id.category_item_report_color_image_view_id) CircleImageView colorImageView;
+        @BindView(R.id.category_item_icon_image_view_id) ImageView iconImageView;
         @BindView(R.id.category_item_report_name_text_view_id) TextView nameTextView;
         @BindView(R.id.category_item_report_amount_text_view_id) TextView amountTextView;
 

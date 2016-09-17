@@ -214,9 +214,6 @@ public class ExpenseFragment extends Fragment {
             case R.id.menu_filter:
                 showFilteringPopUpMenu();
                 return true;
-//            case R.id.menu_me:
-//                setupMemberFilter(User.getLoginUser());
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

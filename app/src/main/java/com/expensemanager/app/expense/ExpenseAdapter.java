@@ -17,6 +17,7 @@ import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.service.enums.EIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static final String TAG= ExpenseAdapter.class.getSimpleName();
+
+    public static final String NO_CATEGORY_ID = "No Category";
+    public static final String NO_CATEGORY_COLOR = "#BDBDBD";
 
     private static final int VIEW_TYPE_DEFAULT = 0;
     private ArrayList<Expense> expenses;
@@ -86,8 +90,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         // Reset views
-        viewHolder.categoryColorImageView.setVisibility(View.INVISIBLE);
-        viewHolder.categoryNameTextView.setVisibility(View.INVISIBLE);
+        viewHolder.iconImageView.setVisibility(View.INVISIBLE);
         viewHolder.userFullnameTextView.setVisibility(View.GONE);
         viewHolder.userPhotoImageView.setVisibility(View.GONE);
         viewHolder.dividerView.setVisibility(View.GONE);
@@ -104,8 +107,15 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             viewHolder.categoryColorImageView.setImageDrawable(colorDrawable);
             viewHolder.categoryNameTextView.setText(category.getName());
 
-            viewHolder.categoryColorImageView.setVisibility(View.VISIBLE);
-            viewHolder.categoryNameTextView.setVisibility(View.VISIBLE);
+            EIcon eIcon = EIcon.instanceFromName(category.getIcon());
+            if (eIcon != null) {
+                viewHolder.iconImageView.setImageResource(eIcon.getValueRes());
+                viewHolder.iconImageView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(NO_CATEGORY_COLOR));
+            viewHolder.categoryColorImageView.setImageDrawable(colorDrawable);
+            viewHolder.categoryNameTextView.setText(NO_CATEGORY_ID);
         }
 
         User user = User.getUserById(expense.getUserId());
@@ -149,6 +159,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.expense_item_default_spent_at_text_view_id) TextView spentAtTextView;
         @BindView(R.id.expense_item_default_amount_text_view_id) TextView amountTextView;
         @BindView(R.id.expense_item_default_category_color_image_view_id) CircleImageView categoryColorImageView;
+        @BindView(R.id.expense_item_default_icon_image_view_id) ImageView iconImageView;
         @BindView(R.id.expense_item_default_user_photo_image_view_id) ImageView userPhotoImageView;
         @BindView(R.id.expense_item_default_name_text_view_id) TextView userFullnameTextView;
         @BindView(R.id.expense_item_default_view_id) View dividerView;

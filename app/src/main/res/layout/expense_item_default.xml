@@ -94,6 +94,20 @@
 
                 tools:background="@color/black"/>
 
+            <!-- Icon -->
+            <ImageView
+                android:id="@+id/expense_item_default_icon_image_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:layout_alignTop="@+id/expense_item_default_category_color_image_view_id"
+                android:layout_alignBottom="@+id/expense_item_default_category_color_image_view_id"
+                android:layout_alignStart="@+id/expense_item_default_category_color_image_view_id"
+                android:layout_alignEnd="@+id/expense_item_default_category_color_image_view_id"
+
+                android:tint="@color/white"
+                tools:src="@drawable/ic_security"/>
+
             <!-- Category name -->
             <TextView
                 android:id="@+id/expense_item_default_category_name_text_view_id"

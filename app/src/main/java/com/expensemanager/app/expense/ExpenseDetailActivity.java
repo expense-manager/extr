@@ -70,6 +70,7 @@ import com.expensemanager.app.service.ExpenseBuilder;
 import com.expensemanager.app.service.PermissionsManager;
 import com.expensemanager.app.service.SyncExpense;
 import com.expensemanager.app.service.SyncPhoto;
+import com.expensemanager.app.service.enums.EIcon;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 
 import org.json.JSONObject;
@@ -154,6 +155,7 @@ public class ExpenseDetailActivity extends BaseActivity
     @BindView(R.id.expense_detail_activity_category_hint_text_view_id) TextView categoryHintTextView;
     @BindView(R.id.expense_detail_activity_category_relative_layout_id) RelativeLayout categoryRelativeLayout;
     @BindView(R.id.expense_detail_activity_category_color_image_view_id) CircleImageView categoryColorImageView;
+    @BindView(R.id.expense_detail_activity_icon_image_view_id) ImageView iconImageView;
     @BindView(R.id.expense_detail_activity_category_name_text_view_id) TextView categoryNameTextView;
     @BindView(R.id.expense_detail_activity_category_amount_text_view_id) TextView categoryAmountTextView;
     @BindView(R.id.expense_detail_activity_expense_date_text_view_id) TextView expenseDateTextView;
@@ -470,6 +472,14 @@ public class ExpenseDetailActivity extends BaseActivity
             ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
             categoryColorImageView.setImageDrawable(colorDrawable);
             categoryNameTextView.setText(category.getName());
+
+            EIcon eIcon = EIcon.instanceFromName(category.getIcon());
+            if (eIcon != null) {
+                iconImageView.setImageResource(eIcon.getValueRes());
+                iconImageView.setVisibility(View.VISIBLE);
+            } else {
+                iconImageView.setVisibility(View.INVISIBLE);
+            }
         }
         // Update category
         this.category = category;

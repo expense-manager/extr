@@ -2,6 +2,7 @@ package com.expensemanager.app.expense.filter;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.service.enums.EIcon;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -74,7 +75,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 break;
 
             default:
-                View defaultView = inflater.inflate(R.layout.category_picker_item, parent, false);
+                View defaultView = inflater.inflate(R.layout.category_filter_item, parent, false);
                 viewHolder = new ViewHolderDefault(defaultView);
                 break;
         }
@@ -90,6 +91,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ((ViewHolderDefault)viewHolder).paddingImageView.setImageDrawable(colorDrawable);
         ((ViewHolderDefault)viewHolder).outerImageView.setVisibility(View.INVISIBLE);
         ((ViewHolderDefault)viewHolder).paddingImageView.setVisibility(View.INVISIBLE);
+        ((ViewHolderDefault) viewHolder).iconImageView.setVisibility(View.INVISIBLE);
 
         switch (viewHolder.getItemViewType()) {
             case VIEW_TYPE_DEFAULT:
@@ -113,6 +115,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Category c = categories.get(position);
+        EIcon eIcon = EIcon.instanceFromName(c.getIcon());
 
         viewHolder.frameOuterImageView.setBackgroundColor(Color.parseColor(c.getColor()));
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(c.getColor()));
@@ -124,6 +127,10 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         viewHolder.innerImageView.setImageDrawable(colorDrawable);
+        if (eIcon != null) {
+            viewHolder.iconImageView.setImageResource(eIcon.getValueRes());
+            viewHolder.iconImageView.setVisibility(View.VISIBLE);
+        }
         viewHolder.nameTextView.setText(c.getName());
     }
 
@@ -147,6 +154,7 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.color_item_outer_color_image_view_id) CircleImageView outerImageView;
         @BindView(R.id.color_item_padding_color_image_view_id) CircleImageView paddingImageView;
         @BindView(R.id.color_item_inner_color_image_view_id) CircleImageView innerImageView;
+        @BindView(R.id.color_item_icon_image_view_id) ImageView iconImageView;
         @BindView(R.id.category_item_name_text_view_id) TextView nameTextView;
 
         private View itemView;

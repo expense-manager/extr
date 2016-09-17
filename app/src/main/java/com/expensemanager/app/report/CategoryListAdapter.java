@@ -2,12 +2,14 @@ package com.expensemanager.app.report;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.service.enums.EIcon;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +70,10 @@ public class CategoryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         Category category = categories.get(position);
+        EIcon eIcon = null;
+        if (category != null) {
+            eIcon = EIcon.instanceFromName(category.getIcon());
+        }
 
         switch (viewHolder.getItemViewType()) {
             case VIEW_TYPE_DEFAULT:
@@ -75,9 +81,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if (category == null) {
                     ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(NO_CATEGORY_COLOR));
                     viewHolderDefault.colorImageView.setImageDrawable(colorDrawable);
+                    viewHolderDefault.iconImageView.setVisibility(View.INVISIBLE);
                 } else {
                     ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
                     viewHolderDefault.colorImageView.setImageDrawable(colorDrawable);
+                    if (eIcon != null) {
+                        viewHolderDefault.iconImageView.setImageResource(eIcon.getValueRes());
+                        viewHolderDefault.iconImageView.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolderDefault.iconImageView.setVisibility(View.INVISIBLE);
+                    }
                 }
                 break;
             default:
@@ -102,6 +115,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
         @BindView(R.id.category_report_list_item_color_image_view_id) CircleImageView colorImageView;
+        @BindView(R.id.category_report_list_item_icon_image_view_id) ImageView iconImageView;
 
         private View itemView;
 

@@ -28,7 +28,15 @@ public enum EIcon {
     STORE(R.string.category_icon_store, R.drawable.ic_store_black_24dp),
     PETS(R.string.category_icon_pets, R.drawable.ic_pets_black_24dp),
     LOCAL_PRINTSHOP(R.string.category_icon_printshop, R.drawable.ic_local_printshop_black_24dp),
-    BUSINESS_CENTER(R.string.category_icon_business_center, R.drawable.ic_business_center_black_24dp);
+    BUSINESS_CENTER(R.string.category_icon_business_center, R.drawable.ic_business_center_black_24dp),
+    RADIO(R.string.category_icon_radio, R.drawable.ic_radio),
+    BOWL(R.string.category_icon_bowl, R.drawable.ic_bowl),
+    SHOPPING(R.string.category_icon_shopping, R.drawable.ic_shopping),
+    APPLE(R.string.category_icon_apple, R.drawable.ic_food_apple),
+    CASH_USED(R.string.category_icon_cash_used, R.drawable.ic_cash_usd),
+    POWER_PLUG(R.string.category_icon_power_plug, R.drawable.ic_power_plug),
+    WINDOW_RESTORE(R.string.category_icon_window_restore, R.drawable.ic_window_restore),
+    SECURITY(R.string.category_icon_security, R.drawable.ic_security);
 
     private int nameRes;
     private int valueRes;
@@ -69,7 +77,7 @@ public enum EIcon {
         for (EIcon icon : values()) {
             String iconName = context.getResources().getString(icon.nameRes);
 
-            if (name.equals(iconName)) {
+            if (iconName.equals(name)) {
                 return icon;
             }
         }

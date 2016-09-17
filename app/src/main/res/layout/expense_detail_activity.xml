@@ -149,6 +149,20 @@
                     android:layout_height="@dimen/category_color_width_small"
                     android:layout_marginEnd="@dimen/space_medium"/>
 
+                <!-- Icon -->
+                <ImageView
+                    android:id="@+id/expense_detail_activity_icon_image_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:layout_alignTop="@+id/expense_detail_activity_category_color_image_view_id"
+                    android:layout_alignBottom="@+id/expense_detail_activity_category_color_image_view_id"
+                    android:layout_alignStart="@+id/expense_detail_activity_category_color_image_view_id"
+                    android:layout_alignEnd="@+id/expense_detail_activity_category_color_image_view_id"
+
+                    android:tint="@color/white"
+                    tools:src="@drawable/ic_security"/>
+
                 <!-- Name -->
                 <TextView
                     android:id="@+id/expense_detail_activity_category_name_text_view_id"

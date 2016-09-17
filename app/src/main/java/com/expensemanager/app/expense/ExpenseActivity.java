@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -169,6 +170,8 @@ public class ExpenseActivity extends BaseActivity {
 
     private void invalidateViews() {
         expenseAdapter.clear();
+        expenseAdapter.setIsBackgroundPrimary(!isCategoryFiltered);
+        recyclerView.setBackgroundColor(ContextCompat.getColor(this, isCategoryFiltered? R.color.white : R.color.colorPrimaryDark));
 
         // Check size of group members
         if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
@@ -256,18 +259,55 @@ public class ExpenseActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_user_fragment_id:
-                setupMember();
-                break;
-            case R.id.menu_item_category_fragment_id:
-                setupCategory();
-                break;
-            case R.id.menu_item_date_fragment_id:
-                setupDate();
-                break;
+            case R.id.menu_filter:
+                showFilteringPopUpMenu();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showFilteringPopUpMenu() {
+        PopupMenu popup = new PopupMenu(this, findViewById(R.id.menu_filter));
+        popup.getMenuInflater().inflate(R.menu.filter_expenses, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_item_all:
+                        setupAllFilter();
+                        break;
+                    case R.id.menu_item_user_fragment_id:
+                        setupMember();
+                        return true;
+                    case R.id.menu_item_category_fragment_id:
+                        setupCategory();
+                        return true;
+                    case R.id.menu_item_date_fragment_id:
+                        setupDate();
+                        return true;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    private void setupAllFilter() {
+        if (isCategoryFiltered) {
+            int background = ContextCompat.getColor(this, R.color.colorPrimary);
+            toolbar.setBackgroundColor(background);
         }
 
-        return true;
+        isCategoryFiltered = false;
+        isDateFiltered = false;
+        isMemberFiltered = false;
+        setupMemberFilter(null);
+
+        invalidateViews();
     }
 
     private void setupMember() {
@@ -302,19 +342,25 @@ public class ExpenseActivity extends BaseActivity {
                 (ExpenseActivity.this.member != null && member != null && ExpenseActivity.this.member.getId().equals(member.getId()))) {
                 isMemberFiltered = !isMemberFiltered;
             }
+
             ExpenseActivity.this.member = member;
             User user = member.getUser();
-            if (isMemberFiltered && user != null) {
-                Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
-                extraImageView.setVisibility(View.VISIBLE);
-                titleTextView.setText(user.getFullname());
-            } else {
-                extraImageView.setVisibility(View.GONE);
-                titleTextView.setText(R.string.expense);
-            }
+            setupMemberFilter(user);
+
             invalidateViews();
         }
     };
+
+    private void setupMemberFilter(User user) {
+        if (isMemberFiltered && user != null) {
+            Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
+            extraImageView.setVisibility(View.VISIBLE);
+            titleTextView.setText(user.getFullname());
+        } else {
+            extraImageView.setVisibility(View.GONE);
+            titleTextView.setText(R.string.expense);
+        }
+    }
 
     private DateFilterFragment.DateFilterListener dateFilterListener = new DateFilterFragment.DateFilterListener() {
         @Override

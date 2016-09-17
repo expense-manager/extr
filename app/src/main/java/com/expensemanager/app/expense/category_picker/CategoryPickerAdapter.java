@@ -7,10 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.service.enums.EIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +82,9 @@ public class CategoryPickerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 configureViewHolderDefault(viewHolderDefault, position);
                 break;
             case VIEW_TYPE_NULL:
+                ViewHolderDefault viewHolderNull = (ViewHolderDefault) viewHolder;
+                viewHolderNull.colorImageView.setVisibility(View.INVISIBLE);
+                viewHolderNull.iconImageView.setVisibility(View.INVISIBLE);
                 break;
             default:
                 break;
@@ -87,10 +92,20 @@ public class CategoryPickerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
+        // Reset views
+        viewHolder.iconImageView.setVisibility(View.INVISIBLE);
+
         Category category = categories.get(position);
+        EIcon eIcon = EIcon.instanceFromName(category.getIcon());
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
         viewHolder.colorImageView.setImageDrawable(colorDrawable);
+        viewHolder.colorImageView.setVisibility(View.VISIBLE);
+
+        if (eIcon != null) {
+            viewHolder.iconImageView.setImageResource(eIcon.getValueRes());
+            viewHolder.iconImageView.setVisibility(View.VISIBLE);
+        }
         viewHolder.nameTextView.setText(category.getName());
     }
 
@@ -111,6 +126,7 @@ public class CategoryPickerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
         @BindView(R.id.category_picker_item_color_image_view_id) CircleImageView colorImageView;
+        @BindView(R.id.category_picker_item_icon_image_view_id) ImageView iconImageView;
         @BindView(R.id.category_picker_item_name_text_view_id) TextView nameTextView;
 
         private View itemView;
