@@ -33,7 +33,7 @@
             android:layout_alignBottom="@+id/expense_item_default_user_photo_image_view_id"
 
             android:gravity="center_vertical"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_small"
             tools:text="Name"
             android:visibility="visible"/>
