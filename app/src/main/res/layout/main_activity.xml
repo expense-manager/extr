@@ -24,8 +24,7 @@
                 android:minHeight="?attr/actionBarSize"
                 app:theme="@style/Toolbar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                android:background="?attr/colorPrimary"
-                android:elevation="6dp">
+                android:background="?attr/colorPrimary">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -125,8 +124,7 @@
                 android:id="@+id/main_activity_frame_layout_id"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                android:elevation="6dp"/>
+                android:fitsSystemWindows="true"/>
 
             <!-- New -->
             <android.support.design.widget.FloatingActionButton
@@ -136,9 +134,12 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/fab_margin"
-                android:elevation="12dp"
 
                 android:src="@drawable/ic_add_white_24dp"
+                app:elevation="6dp"
+                app:borderWidth="0dp"
+                app:rippleColor="@color/gray_dark"
+                app:backgroundTint="@color/colorAccent"
                 app:fabSize="normal"/>
 
         </RelativeLayout>

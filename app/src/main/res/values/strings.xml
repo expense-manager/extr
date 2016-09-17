@@ -173,6 +173,28 @@
     <string name="title_activity_new_group">New Group</string>
     <string name="title_activity_invitation_email">InvitationEmailActivity</string>
 
+    <!-- Category icon name -->
+    <string name="category_icon_logo">Logo</string>
+    <string name="category_icon_local_bar">Bar</string>
+    <string name="category_icon_local_cafe">Cafe</string>
+    <string name="category_icon_local_drink">Drink</string>
+    <string name="category_icon_local_gas_station">Gas Station</string>
+    <string name="category_icon_local_grocery">Grocery</string>
+    <string name="category_icon_local_taxi">Taxi</string>
+    <string name="category_icon_directions_bus">Bus</string>
+    <string name="category_icon_restaurant">Restaurant</string>
+    <string name="category_icon_bubble_chart">Bubble Chart</string>
+    <string name="category_icon_fitness_center">Fitness</string>
+    <string name="category_icon_store">Store</string>
+    <string name="category_icon_star">Star</string>
+    <string name="category_icon_pets">Pets</string>
+    <string name="category_icon_music_note">Music</string>
+    <string name="category_icon_business_center">Business Center</string>
+    <string name="category_icon_favorite">Favorite</string>
+    <string name="category_icon_flight">Flight</string>
+    <string name="category_icon_printshop">Print Shop</string>
+
+
     <!-- Event tracking -->
     <string name="event_expense_date_filter_clicked">Expense date filter clicked</string>
 
