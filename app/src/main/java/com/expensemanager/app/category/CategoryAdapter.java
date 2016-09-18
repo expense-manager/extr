@@ -12,10 +12,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.Category;
+import com.expensemanager.app.service.enums.EIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,10 +88,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         Category category = categories.get(position);
+        EIcon eIcon = EIcon.instanceFromName(category.getIcon());
 
         viewHolder.nameTextView.setText(category.getName());
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor(category.getColor()));
         viewHolder.colorImageView.setImageDrawable(colorDrawable);
+        if (eIcon != null) {
+            viewHolder.iconImageView.setImageResource(eIcon.getValueRes());
+        }
+
         viewHolder.itemView.setOnClickListener(v -> {
             CategoryDetailActivity.newInstance(context, categories.get(position).getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
@@ -126,6 +133,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.category_item_default_layout_container) FrameLayout container;
         @BindView(R.id.category_item_default_name_text_view_id) TextView nameTextView;
         @BindView(R.id.category_item_default_color_image_view_id) CircleImageView colorImageView;
+        @BindView(R.id.category_item_default_icon_image_view_id) ImageView iconImageView;
 
         private View itemView;
 
