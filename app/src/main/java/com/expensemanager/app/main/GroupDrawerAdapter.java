@@ -114,6 +114,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
             holder.iconImageView.setImageDrawable(colorDrawable);
             holder.iconCharTextView.setText(group.getName().substring(0, 1).toUpperCase());
 
+            Log.i(TAG, member.getGroup().getName() + " accept status in group adapter: " + member.isAccepted());
             if (!member.isAccepted()) {
                 holder.joinTextView.setVisibility(View.VISIBLE);
                 holder.joinTextView.setOnClickListener(v -> joinGroup(member));
@@ -128,6 +129,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
     }
 
     private void joinGroup(Member member) {
+        Log.i(TAG, member.getGroup().getName());
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         member.setAccepted(true);
@@ -243,13 +245,7 @@ public class GroupDrawerAdapter extends RecyclerView.Adapter<GroupDrawerAdapter.
                 return;
             }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mListener.onItemSelected(view, getAdapterPosition());
-
-                }
-            });
+            itemView.setOnClickListener(v -> mListener.onItemSelected(v, getAdapterPosition()));
         }
 
     }

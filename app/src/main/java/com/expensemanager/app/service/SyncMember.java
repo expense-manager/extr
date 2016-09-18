@@ -171,6 +171,8 @@ public class SyncMember {
         RequestTemplate requestTemplate = RequestTemplateCreator.updateMember(member);
         NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
 
+        final String memberId = member.getId();
+
         Continuation<JSONObject, JSONObject> onUpdateMemberFinished = new Continuation<JSONObject, JSONObject>() {
             @Override
             public JSONObject then(Task<JSONObject> task) throws Exception {
@@ -190,7 +192,6 @@ public class SyncMember {
                 // Example response: {"updatedAt":"2016-08-18T23:03:51.785Z"}
                 Log.d(TAG, "onUpdateMemberFinished Response: \n" + result);
 
-                String memberId = result.getString(Member.OBJECT_ID_JSON_KEY);
                 // Sync new added member.
                 getMemberByMemberId(memberId);
                 return result;

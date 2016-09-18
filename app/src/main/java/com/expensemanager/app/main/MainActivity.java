@@ -129,6 +129,8 @@ public class MainActivity extends BaseActivity {
         members = new ArrayList<>();
         setupDrawerListItems(); // Get drawer menus and sub menus
 
+        groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
+
         drawerToggle = setupDrawerToggle();
         drawerLayout.addDrawerListener(drawerToggle);
         drawRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -163,6 +165,7 @@ public class MainActivity extends BaseActivity {
         };
 
         invalidateViews();
+        setupDrawerList();
 
 //        // Enable storage permission for LeakCanary
 //        if (BuildConfig.DEBUG) {
@@ -172,10 +175,8 @@ public class MainActivity extends BaseActivity {
 
     private void invalidateViews() {
         drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
-        setupDrawerList();
         drawerAdapter.invalidate();
 
-        groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
         setupGroupListItems(groupDrawerAdapter);
 
         if (Helpers.needToSync(syncTimeInMillis)) {
@@ -231,8 +232,6 @@ public class MainActivity extends BaseActivity {
         switch(position) {
             case 0:
                 setupGroupList();
-                fab.setVisibility(View.VISIBLE);
-                fab.setOnClickListener(v -> setupFab());
                 break;
             case OVERVIEW_POSITION:
                 if (currentPosition == OVERVIEW_POSITION) {
@@ -434,7 +433,6 @@ public class MainActivity extends BaseActivity {
             }
             saveGroupId();
         }
-
         groupDrawerAdapter.addAll(newMembers);
     }
 
