@@ -3,8 +3,11 @@ package com.expensemanager.app.helpers;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
+
+import com.expensemanager.app.R;
 
 public class TimePickerFragment extends DialogFragment {
     public static final String HOUR = "hour";
@@ -24,6 +27,12 @@ public class TimePickerFragment extends DialogFragment {
 
     public void setListener(TimePickerDialog.OnTimeSetListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NO_TITLE, R.style.MyTimePickerDialogTheme);
     }
 
     @Override

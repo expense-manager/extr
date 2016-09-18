@@ -3,7 +3,10 @@ package com.expensemanager.app.helpers;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+
+import com.expensemanager.app.R;
 
 import java.util.Calendar;
 
@@ -28,6 +31,12 @@ public class DatePickerFragment extends DialogFragment {
 
     public void setListener(DatePickerDialog.OnDateSetListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NO_TITLE, R.style.MyDatePickerDialogTheme);
     }
 
     @Override

@@ -27,7 +27,5 @@ public class ProfileExpenseActivity extends BaseActivity {
 
         String userId = getIntent().getStringExtra(USER_ID);
         user = User.getUserById(userId);
-
-
     }
 }

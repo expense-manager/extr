@@ -32,7 +32,7 @@
             android:src="@drawable/ic_arrow_left_24dp"/>
 
         <!-- Title -->
-        <com.expensemanager.app.helpers.ETextView
+        <TextView
             android:id="@+id/toolbar_title_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             tools:text="Title"/>
 
         <!-- Edit -->
-        <com.expensemanager.app.helpers.ETextView
+        <TextView
             android:id="@+id/toolbar_edit_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:visibility="invisible"/>
 
         <!-- Save -->
-        <com.expensemanager.app.helpers.ETextView
+        <TextView
             android:id="@+id/toolbar_save_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
             android:visibility="invisible"/>
 
         <!-- Right title -->
-        <com.expensemanager.app.helpers.ETextView
+        <TextView
             android:id="@+id/toolbar_right_title_text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
