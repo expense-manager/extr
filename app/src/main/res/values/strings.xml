@@ -103,11 +103,15 @@
     <string name="no_unread_notification">No unread notification</string>
     <string name="no_unread_notification_message">You do not have any unread notification right now.
     </string>
-    <string name="delete_notification">Delete notification</string>
+    <string name="delete_notification_title">Delete Notification</string>
     <string name="delete_notification_message">Are you sure to delete this notification?</string>
-    <string name="delete_photo">Delete photo</string>
+    <string name="delete_photo_title">Delete photo</string>
     <string name="delete_photo_message">Are you sure to delete this photo?</string>
     <string name="delete_profile_image_message">Are you sure to delete profile image?</string>
+    <string name="delete_expense_title">Delete Expense</string>
+    <string name="delete_category_title">Delete Category</string>
+    <string name="delete_expense_message">Are you sure to delete this expense?</string>
+    <string name="delete_category_message">Are you sure to delete this category?</string>
     <string name="no_notifications">YOU HAVE NO NOTIFICATIONS</string>
     <string name="no_expense_hint">NO EXPENSE DATA AVAILABLE</string>
     <string name="version_hint">Version 1.0.1</string>

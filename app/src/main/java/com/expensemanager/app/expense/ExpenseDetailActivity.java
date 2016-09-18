@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -32,7 +31,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -40,7 +38,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -99,13 +96,9 @@ import io.realm.RealmResults;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public class ExpenseDetailActivity extends BaseActivity
-    implements AppBarLayout.OnOffsetChangedListener {
+public class ExpenseDetailActivity extends BaseActivity {
     private static final String TAG = ExpenseDetailActivity.class.getSimpleName();
 
-    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
-    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
-    private static final int ALPHA_ANIMATIONS_DURATION              = 200;
     public static final String DATE_PICKER = "date_picker";
     public static final String TIME_PICKER = "time_picker";
     private static final String EXPENSE_ID = "EXPENSE_ID";
@@ -129,15 +122,14 @@ public class ExpenseDetailActivity extends BaseActivity
     private String loginUserId;
     private Group group;
     private User createdBy;
+    private boolean isDeleteAction = false;
 
     private ArrayList<ExpensePhoto> expensePhotos;
     private ExpensePhotoAdapter expensePhotoAdapter;
 
     private BottomSheetDialog bottomSheetDialog;
 
-    @BindView(R.id.expense_detail_activity_user_photo_id) ImageView userPhotoImageView;
-    @BindView(R.id.expense_detail_activity_linear_layout_title_id) LinearLayout titleLinearLayout;
-    @BindView(R.id.expense_detail_activity_appbar_id) AppBarLayout appBarLayout;
+    @BindView(R.id.expense_detail_activity_user_photo_image_view_id) ImageView userPhotoImageView;
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_extra_image_view_id) ImageView extraImageView;
@@ -173,9 +165,7 @@ public class ExpenseDetailActivity extends BaseActivity
         setContentView(R.layout.expense_detail_activity);
         ButterKnife.bind(this);
 
-        setupToolbar();
-        appBarLayout.addOnOffsetChangedListener(this);
-        startAlphaAnimation(titleTextView, 0, View.INVISIBLE);
+
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
@@ -190,64 +180,12 @@ public class ExpenseDetailActivity extends BaseActivity
             category = Category.getCategoryById(expense.getCategoryId());
         }
 
-        invalidateViews();
+        setupToolbar();
         setupDateAndTime();
         setupNewPhoto();
+        invalidateViews();
 
         SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
-    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
-
-        handleAlphaOnTitle(percentage);
-        handleToolbarTitleVisibility(percentage);
-    }
-
-    private void handleToolbarTitleVisibility(float percentage) {
-        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
-
-            if(!mIsTheTitleVisible) {
-                startAlphaAnimation(titleTextView, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                mIsTheTitleVisible = true;
-            }
-
-        } else {
-
-            if (mIsTheTitleVisible) {
-                startAlphaAnimation(titleTextView, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                mIsTheTitleVisible = false;
-            }
-        }
-    }
-
-    private void handleAlphaOnTitle(float percentage) {
-        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
-            if(mIsTheTitleContainerVisible) {
-                extraImageView.setVisibility(View.INVISIBLE);
-                startAlphaAnimation(titleLinearLayout, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                mIsTheTitleContainerVisible = false;
-            }
-
-        } else {
-            if (!mIsTheTitleContainerVisible) {
-                extraImageView.setVisibility(View.VISIBLE);
-                startAlphaAnimation(titleLinearLayout, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                mIsTheTitleContainerVisible = true;
-            }
-        }
-    }
-
-    public static void startAlphaAnimation (View v, long duration, int visibility) {
-        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
-            ? new AlphaAnimation(0f, 1f)
-            : new AlphaAnimation(1f, 0f);
-
-        alphaAnimation.setDuration(duration);
-        alphaAnimation.setFillAfter(true);
-        v.startAnimation(alphaAnimation);
     }
 
     private void invalidateViews() {
@@ -257,13 +195,15 @@ public class ExpenseDetailActivity extends BaseActivity
             return;
         }
 
+        photoGridView.setFocusable(false);
+        newPhotoGridView.setFocusable(false);
+
         amountTextView.setText(String.valueOf(expense.getAmount()));
         setupCategory();
         noteTextView.setText(String.valueOf(expense.getNote()));
 
         if (createdBy != null && Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             Helpers.loadProfilePhoto(userPhotoImageView, createdBy.getPhotoUrl());
-            titleTextView.setText(createdBy.getFullname());
             fullNameTextView.setText(createdBy.getFullname());
             emailTextView.setText(createdBy.getEmail());
             userPhotoImageView.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
@@ -371,11 +311,12 @@ public class ExpenseDetailActivity extends BaseActivity
         toolbar.setContentInsetsAbsolute(0,0);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+
         titleTextView.setText(getString(R.string.title_activity_expense_detail));
-     //   titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
         editTextView.setOnClickListener(v -> {
             setEditMode(true);
@@ -416,7 +357,7 @@ public class ExpenseDetailActivity extends BaseActivity
             if (isEditable && expensePhotos != null && expensePhotos.size() > position) {
                 ExpensePhoto expensePhoto = expensePhotos.get(position);
                 new AlertDialog.Builder(this)
-                        .setTitle(R.string.delete_photo)
+                        .setTitle(R.string.delete_photo_title)
                         .setMessage(R.string.delete_photo_message)
                         .setPositiveButton(R.string.delete, (DialogInterface dialog, int which) -> {
                             SyncPhoto.deleteExpensePhoto(expensePhoto.getId(), expensePhoto.getFileName());
@@ -818,7 +759,7 @@ public class ExpenseDetailActivity extends BaseActivity
                 Log.e(TAG, "Error in deleting expense.", task.getError());
             }
 
-            Expense.delete(expense.getId());
+            isDeleteAction = true;
             Log.d(TAG, "Delete expense success.");
             close();
             return null;
@@ -835,8 +776,15 @@ public class ExpenseDetailActivity extends BaseActivity
     }
 
     private void delete() {
-        progressBar.setVisibility(View.VISIBLE);
-        SyncExpense.delete(expense.getId()).continueWith(onDeleteSuccess, Task.UI_THREAD_EXECUTOR);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_expense_title)
+                .setMessage(R.string.delete_expense_message)
+                .setPositiveButton(R.string.delete, (DialogInterface dialog, int which) -> {
+                    progressBar.setVisibility(View.VISIBLE);
+                    SyncExpense.delete(expense.getId()).continueWith(onDeleteSuccess, Task.UI_THREAD_EXECUTOR);
+                })
+                .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
+                .show();
     }
 
     @Override
@@ -846,6 +794,14 @@ public class ExpenseDetailActivity extends BaseActivity
         overridePendingTransition(0, R.anim.right_out);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (isDeleteAction) {
+            Expense.delete(expense.getId());
+        }
+    }
     @Override
     public void onBackPressed() {
         close();

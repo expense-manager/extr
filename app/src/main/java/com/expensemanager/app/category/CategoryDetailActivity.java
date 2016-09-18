@@ -1,12 +1,14 @@
 package com.expensemanager.app.category;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,6 +47,7 @@ public class CategoryDetailActivity extends AppCompatActivity {
     private Set<String> usedColors;
     private String currentColor;
     private String groupId;
+    private boolean isDeleteAction = false;
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -203,7 +206,7 @@ public class CategoryDetailActivity extends AppCompatActivity {
                 Log.e(TAG, "Error in deleting category.", task.getError());
             }
 
-            Category.delete(category.getId());
+            isDeleteAction = true;
             Log.d(TAG, "Delete category success.");
             close();
             return null;
@@ -220,13 +223,29 @@ public class CategoryDetailActivity extends AppCompatActivity {
     }
 
     private void delete() {
-        progressBar.setVisibility(View.VISIBLE);
-        SyncCategory.delete(category.getId()).continueWith(onDeleteSuccess, Task.UI_THREAD_EXECUTOR);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_category_title)
+                .setMessage(R.string.delete_category_message)
+                .setPositiveButton(R.string.delete, (DialogInterface dialog, int which) -> {
+                    progressBar.setVisibility(View.VISIBLE);
+                    SyncCategory.delete(category.getId()).continueWith(onDeleteSuccess, Task.UI_THREAD_EXECUTOR);
+                })
+                .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
+                .show();
     }
 
     private void close() {
         finish();
         overridePendingTransition(0, R.anim.right_out);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (isDeleteAction) {
+            Category.delete(category.getId());
+        }
     }
 
     @Override

@@ -1,10 +1,5 @@
 package com.expensemanager.app.notifications;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.models.RNotification;
-import com.expensemanager.app.report.ReportDetailActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
+import com.expensemanager.app.models.RNotification;
+import com.expensemanager.app.report.ReportDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,7 +125,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // Delete notification
         viewHolder.itemView.setOnLongClickListener(v -> {
             new AlertDialog.Builder(getContext())
-                .setTitle(R.string.delete_notification)
+                .setTitle(R.string.delete_notification_title)
                 .setMessage(R.string.delete_notification_message)
                 .setPositiveButton(R.string.delete, (DialogInterface dialog, int which) -> RNotification.delete(notification.getId()))
                 .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
