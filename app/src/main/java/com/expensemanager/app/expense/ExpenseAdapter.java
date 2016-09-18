@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,6 +122,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         User user = User.getUserById(expense.getUserId());
         if (showMember && user != null) {
             Helpers.loadIconPhoto(viewHolder.userPhotoImageView, user.getPhotoUrl());
+            viewHolder.userPhotoImageView.setOnClickListener(v -> {
+                ProfileExpenseActivity.newInstance(context, user.getId());
+                ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+            });
 
             viewHolder.userFullnameTextView.setText(user.getFullname());
             viewHolder.userFullnameTextView.setVisibility(View.VISIBLE);
@@ -130,7 +135,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         // Set item click listener
-        viewHolder.itemView.setOnClickListener(v -> {
+        viewHolder.cardView.setOnClickListener(v -> {
             ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
@@ -164,6 +169,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.expense_item_default_name_text_view_id) TextView userFullnameTextView;
         @BindView(R.id.expense_item_default_view_id) View dividerView;
         @BindView(R.id.expense_item_default_category_name_text_view_id) TextView categoryNameTextView;
+        @BindView(R.id.expense_item_default_card_view_id) CardView cardView;
 
         private View itemView;
 

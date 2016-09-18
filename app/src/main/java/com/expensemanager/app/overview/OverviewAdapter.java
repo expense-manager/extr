@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.expense.ExpenseDetailActivity;
+import com.expensemanager.app.expense.ProfileExpenseActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Category;
 import com.expensemanager.app.models.Expense;
@@ -120,6 +122,10 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         User user = User.getUserById(expense.getUserId());
         if (showMember && user != null) {
             Helpers.loadIconPhoto(viewHolder.userPhotoImageView, user.getPhotoUrl());
+            viewHolder.userPhotoImageView.setOnClickListener(v -> {
+                ProfileExpenseActivity.newInstance(context, user.getId());
+                ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+            });
 
             viewHolder.userFullnameTextView.setText(user.getFullname());
             viewHolder.userFullnameTextView.setVisibility(View.VISIBLE);
@@ -128,7 +134,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         // Set item click listener
-        viewHolder.itemView.setOnClickListener(v -> {
+        viewHolder.cardView.setOnClickListener(v -> {
             ExpenseDetailActivity.newInstance(context, expenses.get(position).getId());
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
@@ -162,6 +168,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @BindView(R.id.expense_item_default_name_text_view_id) TextView userFullnameTextView;
         @BindView(R.id.expense_item_default_view_id) View dividerView;
         @BindView(R.id.expense_item_default_category_name_text_view_id) TextView categoryNameTextView;
+        @BindView(R.id.expense_item_default_card_view_id) CardView cardView;
 
         private View itemView;
 
