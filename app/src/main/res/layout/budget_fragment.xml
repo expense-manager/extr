@@ -37,6 +37,18 @@
             tools:text="$ 123"/>
 
         <TextView
+            android:id="@+id/circle_month_text_view_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/circle_amount_text_view_id"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/space_medium_large"
+
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_medium_large"
+            tools:text="September"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle_amount_text_view_id"

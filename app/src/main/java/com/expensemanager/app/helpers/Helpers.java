@@ -135,6 +135,15 @@ public class Helpers {
         return sb.toString();
     }
 
+    public static String getShortMonthStringOnlyFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        SimpleDateFormat format = new SimpleDateFormat("MMM", Locale.US);
+
+        return format.format(date);
+    }
+
     public static String getWeekStartEndString(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

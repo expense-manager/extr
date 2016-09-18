@@ -19,6 +19,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -29,7 +30,7 @@ public class BudgetFragment extends Fragment {
     private static final String TAG = BudgetFragment.class.getSimpleName();
 
     private int levelTotal = 10000;
-    private int levelStatus = 10000;
+    private int levelStatus;
     private int level;
     private int steps = 100;
     private int animationTime = 2000;
@@ -46,6 +47,7 @@ public class BudgetFragment extends Fragment {
     @BindView(R.id.circle_amount_text_view_id) TextView circleAmountTextView;
     @BindView(R.id.monthly_amount_text_view_id) TextView monthlyAmountTextView;
     @BindView(R.id.weekly_amount_text_view_id) TextView weeklyAmountTextView;
+    @BindView(R.id.circle_month_text_view_id) TextView circleMonthTextView;
 
     public static Fragment newInstance() {
         return new BudgetFragment();
@@ -68,10 +70,10 @@ public class BudgetFragment extends Fragment {
 
         groupId = Helpers.getCurrentGroupId();
 
-        invalidateView();
+        invalidateViews();
     }
 
-    public void invalidateView() {
+    public void invalidateViews() {
         Group group = Group.getGroupById(groupId);
         if (group != null) {
             budgetMonthly = group.getMonthlyBudget();
@@ -87,6 +89,7 @@ public class BudgetFragment extends Fragment {
         amountLeftWeekly = budgetWeekly - weeklyExpense;
 
         circleAmountTextView.setText(Helpers.doubleToCurrency(amountLeftMonthly));
+        circleMonthTextView.setText(Helpers.getShortMonthStringOnlyFromDate(new Date()));
 
         if (budgetMonthly == 0) {
             level = levelTotal;
@@ -94,6 +97,7 @@ public class BudgetFragment extends Fragment {
             level = (int) (Math.min(monthlyExpense, budgetMonthly) / budgetMonthly * levelTotal);
         }
 
+        levelStatus = levelTotal;
         clipDrawable = (ClipDrawable) budgetView.getBackground();
         clipDrawable.setLevel(levelTotal);
         handler.post(animateRunnable);
@@ -143,5 +147,21 @@ public class BudgetFragment extends Fragment {
         clipDrawable.setLevel(levelStatus);
 
         handler.postDelayed(animateRunnable, stepTime);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Realm realm = Realm.getDefaultInstance();
+        realm.addChangeListener(v -> invalidateViews());
+
+        invalidateViews();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Realm realm = Realm.getDefaultInstance();
+        realm.removeAllChangeListeners();
     }
 }

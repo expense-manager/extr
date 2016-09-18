@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.profile.ProfileActivity;
+import com.expensemanager.app.service.SyncGroup;
 import com.expensemanager.app.service.SyncUser;
 import com.expensemanager.app.service.font.Font;
 import com.expensemanager.app.welcome.WelcomeActivity;
@@ -48,16 +50,21 @@ import static android.content.Context.MODE_PRIVATE;
 public class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
-    public static final String TIME_PICKER = "time_picker";
+    public static final String SETTING_BUDGET = "setting_budget";
     public static final String SET_WEEKLY = "set_weekly";
     public static final String SET_MONTHLY = "set_monthly";
+    public static final int WEEKLY = 0;
+    public static final int MONTHLY = 1;
 
     public static boolean setWeekly;
     public static boolean setMonthly;
 
     private String loginUserId;
     private String groupId;
+    private Group group;
     private boolean isSignOut = false;
+    private double weeklyBudget;
+    private double monthlyBudget;
 
     @BindView(R.id.setting_activity_profile_photo_image_view_id) ImageView photoImageView;
     @BindView(R.id.setting_activity_edit_profile_text_view_id) TextView editProfileTextView;
@@ -65,7 +72,9 @@ public class SettingsFragment extends Fragment {
     @BindView(R.id.setting_activity_category_description_text_view_id) TextView editCategoryTextView;
     @BindView(R.id.setting_activity_budget_label_text_view_id) TextView budgetTextView;
     @BindView(R.id.setting_activity_weekly_budget_relative_layout_id) RelativeLayout weeklyBudgetRelativeLayout;
+    @BindView(R.id.setting_activity_weekly_budget_text_view_id) TextView weeklyBudgetTextView;
     @BindView(R.id.setting_activity_monthly_budget_relative_layout_id) RelativeLayout monthlyBudgetRelativeLayout;
+    @BindView(R.id.setting_activity_monthly_budget_text_view_id) TextView monthlyBudgetTextView;
     @BindView(R.id.setting_activity_weekly_notification_switch_id) Switch weeklyNotificationSwitch;
     @BindView(R.id.setting_activity_monthly_notification_switch_id) Switch monthlyNotificationSwitch;
     @BindView(R.id.setting_activity_signout_text_view_id) TextView signOutTextView;
@@ -91,6 +100,7 @@ public class SettingsFragment extends Fragment {
 
         loginUserId = Helpers.getLoginUserId();
         groupId = Helpers.getCurrentGroupId();
+        group = Group.getGroupById(groupId);
 
         weeklyNotificationSwitch.setOnCheckedChangeListener(
                 (compoundButton, b) -> {
@@ -164,7 +174,50 @@ public class SettingsFragment extends Fragment {
         generalLabelTextView.setTypeface(boldTypeface);
 
         sendFeedbackTextView.setOnClickListener(v -> Instabug.invoke());
+
+        // Budgets
+        Group group = Group.getGroupById(groupId);
+        if (group != null) {
+            weeklyBudget = group.getWeeklyBudget();
+            monthlyBudget = group.getMonthlyBudget();
+        }
+
+        weeklyBudgetTextView.setText(Helpers.doubleToCurrency(weeklyBudget));
+        monthlyBudgetTextView.setText(Helpers.doubleToCurrency(monthlyBudget));
+        weeklyBudgetRelativeLayout.setOnClickListener(v -> setupBudgetDialog(WEEKLY));
+        monthlyBudgetRelativeLayout.setOnClickListener(v -> setupBudgetDialog(MONTHLY));
     }
+
+    private void setupBudgetDialog(int requestCode) {
+        SettingBudgetFragment settingBudgetFragment = SettingBudgetFragment.newInstance();
+        settingBudgetFragment.setListener(settingBudgetListener);
+        settingBudgetFragment.setParams(requestCode, requestCode == WEEKLY ? weeklyBudget : monthlyBudget);
+        settingBudgetFragment.show(((FragmentActivity) getActivity()).getSupportFragmentManager(), SETTING_BUDGET);
+    }
+
+    private SettingBudgetFragment.SettingBudgetListener settingBudgetListener = new SettingBudgetFragment.SettingBudgetListener() {
+        @Override
+        public void onFinishSettingBudgetDialog(int requestCode, double amount) {
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+
+            if (requestCode == WEEKLY) {
+                weeklyBudget = amount;
+                weeklyBudgetTextView.setText(Helpers.doubleToCurrency(amount));
+                group.setWeeklyBudget(amount);
+            } else {
+                monthlyBudget = amount;
+                monthlyBudgetTextView.setText(Helpers.doubleToCurrency(amount));
+                group.setMonthlyBudget(amount);
+            }
+
+            realm.copyToRealmOrUpdate(group);
+            realm.commitTransaction();
+            realm.close();
+
+            SyncGroup.update(group);
+        }
+    };
 
     private void saveSettings() {
         SharedPreferences.Editor sharedPreferencesEditor = getActivity().getSharedPreferences(getString(R.string.shared_preferences_session_key), MODE_PRIVATE).edit();

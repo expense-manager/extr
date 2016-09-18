@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:background="@color/white">
+
+    <!-- Budget setting label -->
+    <TextView
+        android:id="@+id/setting_budget_fragment_label_text_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="@dimen/space_medium_large"
+        android:layout_marginStart="@dimen/space_medium_large"
+        android:layout_marginEnd="@dimen/space_medium_large"
+
+        android:paddingLeft="@dimen/space_really_small"
+        android:paddingRight="@dimen/space_really_small"
+        android:gravity="center_vertical"
+        tools:text="set budget"
+        android:textSize="@dimen/text_small"/>
+
+    <!-- Budget amount -->
+        <EditText
+            android:id="@+id/setting_budget_fragment_amount_edit_text_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/space_medium_large"
+            android:layout_marginRight="@dimen/space_medium_large"
+            android:layout_below="@+id/setting_budget_fragment_label_text_view_id"
+
+            android:gravity="center|start"
+            android:padding="@dimen/space_really_small"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:background="@drawable/background_bottom_line_gray"
+            tools:text="12.11"/>
+
+    <!-- Action -->
+    <LinearLayout
+        android:id="@+id/setting_budget_fragment_action_linear_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/space_large"
+        android:layout_marginBottom="@dimen/space_large"
+        android:layout_marginLeft="@dimen/space_medium_large"
+        android:layout_marginRight="@dimen/space_medium_large"
+        android:layout_below="@+id/setting_budget_fragment_amount_edit_text_id"
+
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <!-- Cancel -->
+        <Button
+            android:id="@+id/setting_budget_fragment_cancel_button_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_background_gray"
+            android:text="@string/cancel"/>
+
+        <!-- Save -->
+        <Button
+            android:id="@+id/setting_budget_fragment_save_button_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/space_small"
+
+            android:layout_weight="1"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:background="@drawable/button_background_gray"
+            android:text="@string/save"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
