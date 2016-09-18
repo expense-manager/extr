@@ -2,7 +2,6 @@ package com.expensemanager.app.service;
 
 import android.util.Log;
 
-import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
 
 import org.json.JSONArray;

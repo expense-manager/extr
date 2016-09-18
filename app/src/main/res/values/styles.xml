@@ -55,7 +55,10 @@
 
     <!-- Date and Time picker dialog header color -->
     <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorPrimary">@color/cyan</item>
+        <item name="android:colorPrimaryDark">@color/cyan_deep</item>
+        <item name="android:colorAccent">@color/cyan</item>
+
         <item name="android:datePickerStyle">@style/DatePickerHeaderStyle</item>
     </style>
 
@@ -64,8 +67,15 @@
     </style>
 
     <style name="MyTimePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorPrimary">@color/cyan</item>
+        <item name="android:colorPrimaryDark">@color/cyan_deep</item>
+        <item name="android:colorAccent">@color/cyan</item>
+
         <item name="android:timePickerStyle">@style/TimePickerHeaderStyle</item>
+    </style>
+
+    <style name="ButtonTheme" parent="android:style/Widget.Button">
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="TimePickerHeaderStyle" parent="@android:style/Widget.Material.Light.TimePicker">
