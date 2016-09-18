@@ -33,7 +33,7 @@ public class BudgetFragment extends Fragment {
     private int levelStatus;
     private int level;
     private int steps = 100;
-    private int animationTime = 2000;
+    private int animationTime = 1000;
     private double budgetMonthly;
     private double amountLeftMonthly;
     private double budgetWeekly;

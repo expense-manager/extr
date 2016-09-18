@@ -190,18 +190,6 @@ public class ExpenseFragment extends Fragment {
     };
 
     @Override
-    public void onPrepareOptionsMenu (Menu menu) {
-        if (Member.getAllAcceptedMembersByGroupId(groupId).size() < 2) {
-            Log.i(TAG, "accepted member count: " + Member.getAllAcceptedMembersByGroupId(groupId).size());
-            menu.getItem(0).setVisible(false);
-            menu.getItem(0).setEnabled(false);
-            // You can also use something like:
-            // menu.findItem(R.id.example_foobar).setEnabled(false);
-        }
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.expense_menu, menu);
         // Do something that differs the Activity's menu here
@@ -223,20 +211,28 @@ public class ExpenseFragment extends Fragment {
         PopupMenu popup = new PopupMenu(getActivity(), getActivity().findViewById(R.id.menu_filter));
         popup.getMenuInflater().inflate(R.menu.filter_expenses, popup.getMenu());
 
+        if (Member.getAllAcceptedMembersByGroupId(groupId).size() < 2) {
+            Log.i(TAG, "accepted member count: " + Member.getAllAcceptedMembersByGroupId(groupId).size());
+            popup.getMenu().getItem(3).setVisible(false);
+            popup.getMenu().getItem(3).setEnabled(false);
+            // You can also use something like:
+            // popup.findItem(R.id.example_foobar).setEnabled(false);
+        }
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_item_all:
                         setupAllFilter();
                         break;
-                    case R.id.menu_item_user_fragment_id:
-                        setupMember();
-                        return true;
                     case R.id.menu_item_category_fragment_id:
                         setupCategory();
                         return true;
                     case R.id.menu_item_date_fragment_id:
                         setupDate();
+                        return true;
+                    case R.id.menu_item_user_fragment_id:
+                        setupMember();
                         return true;
                     default:
                         break;

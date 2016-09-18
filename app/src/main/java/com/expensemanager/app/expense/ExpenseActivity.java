@@ -239,18 +239,6 @@ public class ExpenseActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu (Menu menu) {
-        if (Member.getAllAcceptedMembersByGroupId(groupId).size() < 2) {
-            Log.i(TAG, "accepted member count: " + Member.getAllAcceptedMembersByGroupId(groupId).size());
-            menu.getItem(0).setVisible(false);
-            menu.getItem(0).setEnabled(false);
-            // You can also use something like:
-            // menu.findItem(R.id.example_foobar).setEnabled(false);
-        }
-        return true;
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.expense_menu, menu);
         return true;
@@ -270,6 +258,14 @@ public class ExpenseActivity extends BaseActivity {
     public void showFilteringPopUpMenu() {
         PopupMenu popup = new PopupMenu(this, findViewById(R.id.menu_filter));
         popup.getMenuInflater().inflate(R.menu.filter_expenses, popup.getMenu());
+
+        if (Member.getAllAcceptedMembersByGroupId(groupId).size() < 2) {
+            Log.i(TAG, "accepted member count: " + Member.getAllAcceptedMembersByGroupId(groupId).size());
+            popup.getMenu().getItem(3).setVisible(false);
+            popup.getMenu().getItem(3).setEnabled(false);
+            // You can also use something like:
+            // popup.findItem(R.id.example_foobar).setEnabled(false);
+        }
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
