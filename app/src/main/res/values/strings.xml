@@ -126,6 +126,7 @@
     <string name="monthly_budget">Monthly Budget</string>
     <string name="weekly_budget_optional">(optional) e.g. $800</string>
     <string name="monthly_budget_optional">(optional) e.g. $2600</string>
+    <string name="change_photo">change photo</string>
 
     <!-- Color -->
     <string name="soft_default">Default</string>

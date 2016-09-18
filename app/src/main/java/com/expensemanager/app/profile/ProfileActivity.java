@@ -55,7 +55,6 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 import static com.expensemanager.app.service.Constant.TAKE_PHOTO_CODE;
@@ -85,7 +84,7 @@ public class ProfileActivity extends BaseActivity {
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.toolbar_right_title_text_view_id) TextView editTextView;
     @BindView(R.id.profile_activity_profile_photo_image_view_id) ImageView profilePhotoImageView;
-    @BindView(R.id.profile_activity_profile_camera_image_view_id) CircleImageView cameraImageView;
+    @BindView(R.id.profile_activity_change_photo_text_view_id) TextView changePhotoTextView;
     @BindView(R.id.profile_activity_first_name_edit_text_id) EditText firstNameEditText;
     @BindView(R.id.profile_activity_last_name_edit_text_id) EditText lastNameEditText;
     @BindView(R.id.profile_activity_email_edit_text_id) EditText emailEditText;
@@ -155,13 +154,13 @@ public class ProfileActivity extends BaseActivity {
             editTextView.setOnClickListener(v -> save());
             titleTextView.setText(getString(R.string.cancel));
             titleTextView.setOnClickListener(v -> setEditMode(false));
-            cameraImageView.setVisibility(View.VISIBLE);
-            cameraImageView.setImageDrawable(cameraIconHolder);
+            changePhotoTextView.setVisibility(View.VISIBLE);
         } else {
             editTextView.setText(getString(R.string.edit));
             editTextView.setOnClickListener(v -> setEditMode(true));
             titleTextView.setText(getString(R.string.profile));
             titleTextView.setOnClickListener(v -> close());
+            changePhotoTextView.setVisibility(View.INVISIBLE);
         }
 
         String photoUrl = currentUser.getPhotoUrl();
@@ -179,6 +178,8 @@ public class ProfileActivity extends BaseActivity {
         profilePhotoImageView.setOnClickListener(v -> {
             updateProfileImage();
         });
+
+        changePhotoTextView.setOnClickListener(v -> updateProfileImage());
 
         profilePhotoImageView.setOnLongClickListener(v -> {
             // todo: allow to delete profile image
@@ -503,7 +504,7 @@ public class ProfileActivity extends BaseActivity {
 
         SyncUser.update(profileBuilder).continueWith(onUpdateSuccess, Task.UI_THREAD_EXECUTOR);
         progressBar.setVisibility(View.VISIBLE);
-        cameraImageView.setVisibility(View.GONE);
+        changePhotoTextView.setVisibility(View.GONE);
         isEditable = !isEditable;
         invalidateViews();
         Helpers.closeSoftKeyboard(this);

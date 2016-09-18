@@ -31,11 +31,18 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"/>
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_activity_profile_camera_image_view_id"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:padding="20dp"/>
+                <TextView
+                    android:id="@+id/profile_activity_change_photo_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/profile_activity_profile_photo_image_view_id"
+                    android:layout_marginTop="@dimen/space_medium"
+
+                    android:text="@string/change_photo"
+                    android:textColor="@color/blue"
+                    android:visibility="invisible"/>
+
             </RelativeLayout>
 
             <RelativeLayout

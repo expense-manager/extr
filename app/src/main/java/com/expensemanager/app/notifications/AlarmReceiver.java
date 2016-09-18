@@ -33,7 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent notificationIntent = new Intent(context, NotificationsActivity.class);
+        Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.putExtra(MainActivity.NOTIFICATION_KEY, true);
 
         String notificationId = intent.getStringExtra(RNotification.ID_KEY);

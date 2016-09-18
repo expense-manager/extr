@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity {
     private BroadcastReceiver broadcastReceiver;
     private boolean isReceiverRegistered;
     private boolean isSignOut = false;
-    private boolean isNotifiction = false;
+    private boolean isNotification = false;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
@@ -113,7 +113,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
 
-        isNotifiction = getIntent().getBooleanExtra(NOTIFICATION_KEY, false);
+        isNotification = getIntent().getBooleanExtra(NOTIFICATION_KEY, false);
 
         loginUserId = Helpers.getLoginUserId();
         groupId = Helpers.getCurrentGroupId();
@@ -138,12 +138,12 @@ public class MainActivity extends BaseActivity {
 
         Fragment fragment = getFragmentManager().findFragmentById(R.id.main_activity_frame_layout_id);
 
-        if (fragment == null && !isNotifiction) {
+        if (fragment == null && !isNotification) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
                     .addToBackStack(OverviewFragment.class.getName())
             .commit();
-        } else if (isNotifiction) {
+        } else if (isNotification) {
             currentPosition = NOTIFICATION_POSITION;
             removeAllBackStackFragment();
             getFragmentManager().beginTransaction()
@@ -633,6 +633,10 @@ public class MainActivity extends BaseActivity {
         if (isReceiverRegistered && broadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
             isReceiverRegistered = false;
+        }
+
+        if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         }
     }
 
