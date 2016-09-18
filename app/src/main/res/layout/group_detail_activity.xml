@@ -10,11 +10,12 @@
     android:background="@color/white"
     tools:context="com.expensemanager.app.group.GroupDetailActivity">
 
-    <!--<include layout="@layout/toolbar_light" />-->
+    <include layout="@layout/toolbar_light" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_id"
         android:fitsSystemWindows="true">
 
         <RelativeLayout

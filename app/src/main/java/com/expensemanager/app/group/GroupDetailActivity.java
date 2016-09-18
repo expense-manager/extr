@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 import com.expensemanager.app.R;
 import com.expensemanager.app.group.member.MemberActivity;
 import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.main.BaseActivity;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
@@ -35,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class GroupDetailActivity extends BaseActivity {
+public class GroupDetailActivity extends AppCompatActivity {
     private static final String TAG = GroupDetailActivity.class.getSimpleName();
 
     private static final String GROUP_ID = "group_id";
@@ -68,7 +68,7 @@ public class GroupDetailActivity extends BaseActivity {
         Intent intent = new Intent(context, GroupDetailActivity.class);
         intent.putExtra(GROUP_ID, id);
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        ((Activity)context).overridePendingTransition(R.anim.right_in, R.anim.stay);
     }
 
     @Override
@@ -232,4 +232,9 @@ public class GroupDetailActivity extends BaseActivity {
             return null;
         }
     };
+
+    private void close() {
+        Helpers.closeSoftKeyboard(this);
+        finish();
+    }
 }

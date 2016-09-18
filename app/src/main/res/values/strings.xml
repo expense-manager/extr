@@ -61,15 +61,15 @@
     <string name="left_to_spend">LEFT TO SPEND</string>
     <string name="spendable_monthly">SPENDABLE MONTHLY</string>
     <string name="spendable_weekly">SPENDABLE WEEKLY</string>
-    <string name="title_activity_expense_detail">Expense detail</string>
-    <string name="title_activity_category_detail">Category detail</string>
+    <string name="title_activity_expense_detail">Expense details</string>
+    <string name="title_activity_category_detail">Category details</string>
     <string name="title_activity_new_expense">New Expense</string>
     <string name="title_activity_new_category">New Category</string>
     <string name="category_description">Add new or edit existing category</string>
     <string name="title_activity_welcome">Welcome</string>
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="title_activity_login">Login</string>
-    <string name="title_activity_report_detail">Report detail</string>
+    <string name="title_activity_report_detail">Report details</string>
     <string name="title_activity_overview">OverviewActivity</string>
     <string name="amount">Amount</string>
     <string name="about">About</string>
@@ -134,6 +134,7 @@
     <string name="weekly_budget_optional">(optional) e.g. $800</string>
     <string name="monthly_budget_optional">(optional) e.g. $2600</string>
     <string name="change_photo">change photo</string>
+    <string name="actions">Actions</string>
 
     <!-- Color -->
     <string name="soft_default">Default</string>
@@ -162,6 +163,7 @@
     <string name="post">Post</string>
     <string name="discard">Discard</string>
     <string name="send">Send</string>
+    <string name="leave">Leave</string>
 
     <!-- Navigation -->
     <string name="nav_overview">Overview</string>
@@ -180,7 +182,7 @@
     <string name="update_photo">Update photo</string>
     <string name="title_activity_group">GroupActivity</string>
     <string name="title_activity_member">MemberActivity</string>
-    <string name="title_activity_group_detail">Group detail</string>
+    <string name="title_activity_group_detail">Group details</string>
     <string name="title_activity_new_group">New Group</string>
     <string name="title_activity_invitation_email">InvitationEmailActivity</string>
 

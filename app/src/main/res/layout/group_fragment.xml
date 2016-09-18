@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/expense_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+
+    android:fitsSystemWindows="true"
+    tools:context="com.expensemanager.app.main.MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/group_fragment_about_card_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_medium_small">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/space_medium_large"
+                    android:paddingBottom="@dimen/space_medium_large">
+
+                    <!-- Name -->
+                    <TextView
+                        android:id="@+id/group_fragment_name_edit_text_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="@dimen/space_medium_large"
+                        android:layout_marginRight="@dimen/space_medium_large"
+
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_medium" />
+
+                    <!-- Group -->
+                    <TextView
+                        android:id="@+id/group_fragment_group_edit_text_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/group_fragment_name_edit_text_id"
+                        android:layout_marginLeft="@dimen/space_medium_large"
+                        android:layout_marginRight="@dimen/space_medium_large"
+
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/text_medium_small" />
+
+                    <!-- About label -->
+                    <com.expensemanager.app.helpers.ETextViewBold
+                        android:id="@+id/group_fragment_about_label_text_view_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/group_fragment_group_edit_text_id"
+                        android:layout_marginBottom="@dimen/space_medium_small"
+                        android:layout_marginLeft="@dimen/space_medium_large"
+                        android:layout_marginRight="@dimen/space_medium_large"
+                        android:layout_marginTop="@dimen/space_medium_large"
+
+                        android:paddingLeft="@dimen/space_really_small"
+                        android:paddingRight="@dimen/space_really_small"
+                        android:text="@string/about"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_small" />
+
+                    <!-- About -->
+                    <TextView
+                        android:id="@+id/group_fragment_about_edit_text_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/group_fragment_about_label_text_view_id"
+                        android:layout_marginLeft="@dimen/space_medium_large"
+                        android:layout_marginRight="@dimen/space_medium_large"
+
+                        android:padding="@dimen/space_really_small"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_small" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/group_fragment_about_edit_text_id">
+
+                        <!-- User photo -->
+                        <ImageView
+                            android:id="@+id/group_fragment_created_by_photo_image_view_id"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="@dimen/space_medium_large"
+                            android:layout_marginEnd="@dimen/space_small"
+                            android:layout_centerVertical="true"
+                            android:padding="@dimen/space_small"/>
+
+                        <!-- Created At -->
+                        <com.expensemanager.app.helpers.ETextView
+                            android:id="@+id/group_fragment_created_at_text_view_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/group_fragment_created_by_photo_image_view_id"
+                            android:layout_marginRight="@dimen/space_medium"
+                            android:layout_centerVertical="true"
+
+                            android:padding="@dimen/space_really_small"
+                            android:textColor="@color/gray"
+                            android:textSize="@dimen/text_small" />
+                    </RelativeLayout>
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/group_fragment_detail_card_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_medium_small"
+                android:layout_below="@+id/group_fragment_about_card_view_id">
+
+                <RelativeLayout
+                    android:id="@+id/group_fragment_action_relative_layout_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/space_medium_large"
+                    android:paddingBottom="@dimen/space_medium_large"
+
+                    android:paddingLeft="@dimen/space_medium_large"
+                    android:paddingRight="@dimen/space_medium_large">
+
+                    <!-- About label -->
+                    <com.expensemanager.app.helpers.ETextViewBold
+                        android:id="@+id/group_fragment_action_label_text_view_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_medium_small"
+
+                        android:paddingLeft="@dimen/space_really_small"
+                        android:paddingRight="@dimen/space_really_small"
+                        android:text="@string/actions"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_small" />
+
+                    <RelativeLayout
+                        android:id="@+id/group_fragment_invite_relative_layout_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/group_fragment_action_label_text_view_id">
+
+                        <!-- Invite icon -->
+                        <ImageView
+                            android:id="@+id/group_fragment_invite_icon_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/space_small"
+
+                            android:src="@drawable/ic_person_add_white_24dp"
+                            android:tint="@color/colorPrimary"/>
+
+                        <!-- Invite label -->
+                        <TextView
+                            android:id="@+id/group_fragment_invite_label_text_view_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/group_fragment_invite_icon_image_view_id"
+                            android:layout_marginStart="@dimen/space_medium"
+                            android:layout_centerVertical="true"
+
+                            android:text="@string/invite"
+                            android:textSize="@dimen/text_small" />
+
+                        <!-- Right arrow -->
+                        <ImageView
+                            android:id="@+id/group_fragment_invite_right_arrow_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+
+                            android:src="@drawable/ic_chevron_right" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_toEndOf="@+id/group_fragment_invite_icon_image_view_id"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="@dimen/space_medium"
+
+                            android:background="@color/gray_light_alpha_88" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/group_fragment_member_relative_layout_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/group_fragment_invite_relative_layout_id">
+
+                        <!-- Member icon -->
+                        <ImageView
+                            android:id="@+id/group_fragment_member_icon_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/space_small"
+
+                            android:src="@drawable/ic_group_white_24dp"
+                            android:tint="@color/soft_purple"/>
+
+                        <!-- Member label -->
+                        <TextView
+                            android:id="@+id/group_fragment_member_label_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/group_fragment_member_icon_image_view_id"
+                            android:layout_marginStart="@dimen/space_medium"
+                            android:layout_centerVertical="true"
+
+                            android:text="@string/member"
+                            android:textSize="@dimen/text_small" />
+
+                        <!-- Member number -->
+                        <TextView
+                            android:id="@+id/group_fragment_member_number_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_toStartOf="@+id/group_fragment_member_right_arrow_image_view_id"
+                            android:layout_marginEnd="@dimen/space_really_large"
+                            android:layout_centerVertical="true"
+
+                            android:textSize="@dimen/text_small" />
+
+                        <!-- Right arrow -->
+                        <ImageView
+                            android:id="@+id/group_fragment_member_right_arrow_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+
+                            android:src="@drawable/ic_chevron_right" />
+                        
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_toEndOf="@+id/group_fragment_member_icon_image_view_id"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="@dimen/space_medium"
+
+                            android:background="@color/gray_light_alpha_88" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/group_fragment_edit_relative_layout_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/group_fragment_member_relative_layout_id">
+
+                        <!-- Edit icon -->
+                        <ImageView
+                            android:id="@+id/group_fragment_edit_icon_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/space_small"
+
+                            android:src="@drawable/ic_mode_edit_black_24dp"
+                            android:tint="@color/soft_orange"/>
+
+                        <!-- Edit label -->
+                        <TextView
+                            android:id="@+id/group_fragment_edit_label_text_view_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/group_fragment_edit_icon_image_view_id"
+                            android:layout_marginStart="@dimen/space_medium"
+                            android:layout_centerVertical="true"
+
+                            android:text="@string/edit"
+                            android:textSize="@dimen/text_small" />
+
+                        <!-- Right arrow -->
+                        <ImageView
+                            android:id="@+id/group_fragment_edit_right_arrow_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+
+                            android:src="@drawable/ic_chevron_right" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_toEndOf="@+id/group_fragment_edit_icon_image_view_id"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="@dimen/space_medium"
+
+                            android:background="@color/gray_light_alpha_88" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/group_fragment_leave_relative_layout_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/group_fragment_edit_relative_layout_id">
+
+                        <!-- Leave icon -->
+                        <ImageView
+                            android:id="@+id/group_fragment_leave_icon_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/space_small"
+
+                            android:src="@drawable/ic_exit_to_app_black_24dp"
+                            android:tint="@color/soft_red"/>
+
+                        <!-- Leave label -->
+                        <TextView
+                            android:id="@+id/group_fragment_leave_label_text_view_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/group_fragment_leave_icon_image_view_id"
+                            android:layout_marginStart="@dimen/space_medium"
+                            android:layout_centerVertical="true"
+
+                            android:text="@string/leave"
+                            android:textSize="@dimen/text_small" />
+
+                        <!-- Right arrow -->
+                        <ImageView
+                            android:id="@+id/group_fragment_leave_right_arrow_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+
+                            android:src="@drawable/ic_chevron_right" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_toEndOf="@+id/group_fragment_leave_icon_image_view_id"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="@dimen/space_medium"
+
+                            android:background="@color/gray_light_alpha_88" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/group_fragment_progress_bar_id"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

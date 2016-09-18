@@ -233,6 +233,12 @@ public class Helpers {
         return new Date[]{startDate, endDate};
     }
 
+    public static String getMonthDayYear(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+
+        return simpleDateFormat.format(date);
+    }
+
     public static String encodeURIComponent(String s) {
         String result;
 

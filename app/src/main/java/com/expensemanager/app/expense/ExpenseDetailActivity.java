@@ -165,8 +165,6 @@ public class ExpenseDetailActivity extends BaseActivity {
         setContentView(R.layout.expense_detail_activity);
         ButterKnife.bind(this);
 
-
-
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
         groupId = sharedPreferences.getString(Group.ID_KEY, null);
         loginUserId = sharedPreferences.getString(User.USER_ID, null);
