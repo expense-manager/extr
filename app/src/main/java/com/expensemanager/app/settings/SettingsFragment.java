@@ -189,13 +189,13 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupBudgetDialog(int requestCode) {
-        SettingBudgetFragment settingBudgetFragment = SettingBudgetFragment.newInstance();
+        SettingsBudgetFragment settingBudgetFragment = SettingsBudgetFragment.newInstance();
         settingBudgetFragment.setListener(settingBudgetListener);
         settingBudgetFragment.setParams(requestCode, requestCode == WEEKLY ? weeklyBudget : monthlyBudget);
         settingBudgetFragment.show(((FragmentActivity) getActivity()).getSupportFragmentManager(), SETTING_BUDGET);
     }
 
-    private SettingBudgetFragment.SettingBudgetListener settingBudgetListener = new SettingBudgetFragment.SettingBudgetListener() {
+    private SettingsBudgetFragment.SettingBudgetListener settingBudgetListener = new SettingsBudgetFragment.SettingBudgetListener() {
         @Override
         public void onFinishSettingBudgetDialog(int requestCode, double amount) {
             Realm realm = Realm.getDefaultInstance();

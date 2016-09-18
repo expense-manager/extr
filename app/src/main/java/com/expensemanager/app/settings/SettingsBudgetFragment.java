@@ -1,38 +1,26 @@
 package com.expensemanager.app.settings;
 
-import com.expensemanager.app.R;
-import com.expensemanager.app.helpers.DatePickerFragment;
-import com.expensemanager.app.helpers.Helpers;
-import com.expensemanager.app.helpers.TimePickerFragment;
-
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import com.expensemanager.app.R;
+import com.expensemanager.app.helpers.Helpers;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class SettingBudgetFragment extends DialogFragment {
-    private static final String TAG= SettingBudgetFragment.class.getSimpleName();
+public class SettingsBudgetFragment extends DialogFragment {
+    private static final String TAG= SettingsBudgetFragment.class.getSimpleName();
 
     public static final int WEEKLY = 0;
     public static final int MONTHLY = 1;
@@ -47,10 +35,10 @@ public class SettingBudgetFragment extends DialogFragment {
     @BindView(R.id.setting_budget_fragment_save_button_id) Button saveButton;
     @BindView(R.id.setting_budget_fragment_cancel_button_id) Button cancelButton;
 
-    public SettingBudgetFragment() {}
+    public SettingsBudgetFragment() {}
 
-    public static SettingBudgetFragment newInstance() {
-        return new SettingBudgetFragment();
+    public static SettingsBudgetFragment newInstance() {
+        return new SettingsBudgetFragment();
     }
 
     public void setListener(SettingBudgetListener settingBudgetListener) {
