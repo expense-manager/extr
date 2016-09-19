@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import io.realm.RealmResults;
  * Created by Zhaolong Zhong on 9/16/16.
  */
 
-public class AverageFragment extends Fragment {
+public class AverageFragment extends Fragment implements FragmentLifecycle {
     private static final String TAG = AverageFragment.class.getSimpleName();
 
     public static int SLEEP_LENGTH = 1200;
@@ -296,6 +297,17 @@ public class AverageFragment extends Fragment {
         }
 
         return (double) Math.round(total * 100) / 100;
+    }
+
+    @Override
+    public void onPauseFragment() {
+        Log.d(TAG, "onPauseFragment()");
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.d(TAG, "onResumeFragment()");
+        invalidateProgressBars();
     }
 
     @Override

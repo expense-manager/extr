@@ -41,6 +41,7 @@ public class OverviewMainFragment extends Fragment {
     private String groupId;
     private ArrayList<Expense> expenses;
     private OverviewAdapter overviewAdapter;
+    private OverviewFragmentAdapter overviewFragmentAdapter;
 
     @BindView(R.id.overview_fragment_scroll_view_id) ScrollView scrollView;
     @BindView(R.id.overview_fragment_view_pager_id) ViewPager viewPager;
@@ -108,11 +109,12 @@ public class OverviewMainFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        OverviewFragmentAdapter overviewFragmentAdapter = new OverviewFragmentAdapter(getFragmentManager());
+        overviewFragmentAdapter = new OverviewFragmentAdapter(getFragmentManager());
 
         overviewFragmentAdapter.addFragment(BudgetFragment.newInstance(), "Monthly");
         overviewFragmentAdapter.addFragment(AverageFragment.newInstance(), "Average");
         viewPager.setAdapter(overviewFragmentAdapter);
+        viewPager.setOnPageChangeListener(pageChangeListener);
 
         CustomPageIndicator viewPagerIndicator = new CustomPageIndicator(getActivity(), mLinearLayout,
                 viewPager, R.drawable.indicator_circle_accent);
@@ -120,6 +122,28 @@ public class OverviewMainFragment extends Fragment {
         viewPagerIndicator.setSpacingRes(R.dimen.space_medium);
         viewPagerIndicator.show();
     }
+
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+
+        int currentPosition = 0;
+
+        @Override
+        public void onPageSelected(int newPosition) {
+
+            FragmentLifecycle fragmentToShow = (FragmentLifecycle)overviewFragmentAdapter.getItem(newPosition);
+            fragmentToShow.onResumeFragment();
+
+            FragmentLifecycle fragmentToHide = (FragmentLifecycle)overviewFragmentAdapter.getItem(currentPosition);
+            fragmentToHide.onPauseFragment();
+
+            currentPosition = newPosition;
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) { }
+
+        public void onPageScrollStateChanged(int arg0) { }
+    };
 
     private double getWeeklyExpense() {
         Date currentDate = new Date();

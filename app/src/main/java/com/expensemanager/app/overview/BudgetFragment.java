@@ -33,7 +33,7 @@ import io.realm.RealmResults;
  * Created by Zhaolong Zhong on 9/16/16.
  */
 
-public class BudgetFragment extends Fragment {
+public class BudgetFragment extends Fragment implements FragmentLifecycle {
     private static final String TAG = BudgetFragment.class.getSimpleName();
 
     private int levelTotal = 10000;
@@ -45,6 +45,8 @@ public class BudgetFragment extends Fragment {
     private double amountLeftMonthly;
     private double budgetWeekly;
     private double amountLeftWeekly;
+    private double monthlyExpense;
+    private double weeklyExpense;
     private String groupId;
     private long lastTimeAnimateLevel = 0;
 
@@ -101,7 +103,8 @@ public class BudgetFragment extends Fragment {
         monthlyAmountTextView.setText(Helpers.doubleToCurrency(budgetMonthly));
         weeklyAmountTextView.setText(Helpers.doubleToCurrency(budgetWeekly));
 
-        double monthlyExpense = getMonthlyExpense(), weeklyExpense = getWeeklyExpense();
+        monthlyExpense = getMonthlyExpense();
+        weeklyExpense = getWeeklyExpense();
 
         amountLeftMonthly = budgetMonthly - monthlyExpense;
         amountLeftWeekly = budgetWeekly - weeklyExpense;
@@ -109,6 +112,10 @@ public class BudgetFragment extends Fragment {
         circleAmountTextView.setText(Helpers.doubleToCurrency(amountLeftMonthly));
         circleMonthTextView.setText(Helpers.getShortMonthStringOnlyFromDate(new Date()));
 
+        invalidateProgressBars();
+    }
+
+    private void invalidateProgressBars() {
         if (budgetMonthly == 0) {
             level = levelTotal;
         } else {
@@ -193,6 +200,18 @@ public class BudgetFragment extends Fragment {
     }
 
     @Override
+    public void onPauseFragment() {
+        Log.d(TAG, "onPauseFragment()");
+        handler.removeCallbacks(animateRunnable);
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.d(TAG, "onResumeFragment()");
+        invalidateProgressBars();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
@@ -202,6 +221,8 @@ public class BudgetFragment extends Fragment {
         });
 
         invalidateViews();
+
+        Log.d(TAG, "zhaox onResume: ");
     }
 
     @Override
@@ -209,5 +230,7 @@ public class BudgetFragment extends Fragment {
         super.onPause();
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
+
+        Log.d(TAG, "zhaox onPause: ");
     }
 }
