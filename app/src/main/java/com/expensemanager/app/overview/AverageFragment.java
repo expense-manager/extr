@@ -30,7 +30,7 @@ import io.realm.RealmResults;
 public class AverageFragment extends Fragment implements FragmentLifecycle {
     private static final String TAG = AverageFragment.class.getSimpleName();
 
-    public static int SLEEP_LENGTH = 1200;
+    public static int SLEEP_LENGTH = 600;
 
     private Handler handler = new Handler();
     private int totalStatus = 0;

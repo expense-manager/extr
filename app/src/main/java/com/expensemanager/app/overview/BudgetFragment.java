@@ -49,6 +49,7 @@ public class BudgetFragment extends Fragment implements FragmentLifecycle {
     private double weeklyExpense;
     private String groupId;
     private long lastTimeAnimateLevel = 0;
+    private boolean isFirstAnimation = true;
 
     private ClipDrawable clipDrawable;
     private Handler handler = new Handler();
@@ -116,6 +117,7 @@ public class BudgetFragment extends Fragment implements FragmentLifecycle {
     }
 
     private void invalidateProgressBars() {
+
         if (budgetMonthly == 0) {
             level = levelTotal;
         } else {
@@ -127,9 +129,16 @@ public class BudgetFragment extends Fragment implements FragmentLifecycle {
         clipDrawable.setLevel(levelTotal);
         long currentTime = System.currentTimeMillis();
 
-        if (currentTime - lastTimeAnimateLevel > 3000) {
-            handler.post(animateRunnable);
+        Log.d(TAG, "level: " + level + ", level status: " + levelStatus + ", level total: "
+                + levelTotal + "lastTime:" + lastTimeAnimateLevel + "currentTime:" + currentTime);
+        if (currentTime - lastTimeAnimateLevel > 3000 && level != levelTotal) {
+            Log.d(TAG, "start animation.");
+            isFirstAnimation = false;
             lastTimeAnimateLevel = currentTime;
+            handler.removeCallbacks(animateRunnable);
+            handler.postDelayed(animateRunnable, 500);
+        } else {
+            Log.d(TAG, "last animation less than 3 seconds, cancel.");
         }
     }
 
@@ -149,6 +158,7 @@ public class BudgetFragment extends Fragment implements FragmentLifecycle {
                 SyncMember.getMembersByGroupId(groupId);
             }
 
+            invalidateViews();
             return null;
         }
     };
@@ -208,7 +218,9 @@ public class BudgetFragment extends Fragment implements FragmentLifecycle {
     @Override
     public void onResumeFragment() {
         Log.d(TAG, "onResumeFragment()");
-        invalidateProgressBars();
+        if (!isFirstAnimation) {
+            invalidateProgressBars();
+        }
     }
 
     @Override
