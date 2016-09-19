@@ -70,7 +70,6 @@ public class GroupActivity extends AppCompatActivity {
         setupToolbar();
         setupRecyclerView();
         setupSwipeToRefresh();
-        invalidateViews();
 
         fab.setOnClickListener(v -> {
             NewGroupActivity.newInstance(this);

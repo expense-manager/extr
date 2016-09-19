@@ -181,7 +181,6 @@ public class ExpenseDetailActivity extends BaseActivity {
         setupToolbar();
         setupDateAndTime();
         setupNewPhoto();
-        invalidateViews();
 
         SyncExpense.getExpensePhotoByExpenseId(expenseId, true).continueWith(onGetExpensePhotoSuccess, Task.UI_THREAD_EXECUTOR);
     }

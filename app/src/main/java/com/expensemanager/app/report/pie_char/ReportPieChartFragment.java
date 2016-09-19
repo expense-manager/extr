@@ -80,7 +80,6 @@ public class ReportPieChartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setupRecyclerView();
-        invalidateViews();
     }
 
     public void invalidateViews() {

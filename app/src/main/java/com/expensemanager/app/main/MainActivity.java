@@ -130,6 +130,7 @@ public class MainActivity extends BaseActivity {
         members = new ArrayList<>();
         setupDrawerListItems(); // Get drawer menus and sub menus
 
+        drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
         groupDrawerAdapter = new GroupDrawerAdapter(this, members, currentUser);
 
         drawerToggle = setupDrawerToggle();
@@ -165,7 +166,6 @@ public class MainActivity extends BaseActivity {
             }
         };
 
-        invalidateViews();
         setupDrawerList();
 
         checkIfNeedToSyncGroup();
@@ -177,7 +177,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void invalidateViews() {
-        drawerAdapter = new DrawerAdapter(this, drawerItems, drawerSubItems, currentUser);
         drawerAdapter.invalidate();
 
         setupGroupListItems(groupDrawerAdapter);

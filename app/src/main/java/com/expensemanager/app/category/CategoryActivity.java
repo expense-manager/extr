@@ -68,8 +68,6 @@ public class CategoryActivity extends BaseActivity {
         setupRecyclerView();
         setupSwipeToRefresh();
 
-        invalidateViews();
-
         fab.setOnClickListener(v -> {
             NewCategoryActivity.newInstance(this);
             overridePendingTransition(R.anim.right_in, R.anim.stay);

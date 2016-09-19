@@ -86,7 +86,6 @@ public class InviteActivity extends BaseActivity {
         setupToolbar();
         setupRecyclerView();
         setupSwipeToRefresh();
-        invalidateViews();
     }
 
     private void invalidateViews() {

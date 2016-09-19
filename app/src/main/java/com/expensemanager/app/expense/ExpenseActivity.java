@@ -149,8 +149,6 @@ public class ExpenseActivity extends BaseActivity {
         if (isCategoryFiltered && category != null) {
             ExpenseActivity.this.toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
         }
-
-        invalidateViews();
     }
 
     private Continuation<Void, Void> onGetExpenseFinished = new Continuation<Void, Void>() {

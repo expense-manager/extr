@@ -79,8 +79,6 @@ public class ReportBarChartFragment extends Fragment {
 
         setupRecyclerView();
 
-        invalidateViews();
-
         return v;
     }
 

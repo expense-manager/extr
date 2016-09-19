@@ -67,7 +67,6 @@ public class CategoryFragment extends Fragment {
 
         setupRecyclerView();
         setupSwipeToRefresh();
-        invalidateViews();
 
         setupWindowAnimations();
     }
