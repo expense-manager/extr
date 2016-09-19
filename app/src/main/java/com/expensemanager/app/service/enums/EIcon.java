@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import com.expensemanager.app.R;
 import com.expensemanager.app.main.EApplication;
 
+import java.util.ArrayList;
+
 public enum EIcon {
     DRINK(R.string.category_icon_local_drink, R.drawable.ic_local_drink_black_24dp),
     LOCAL_BAR(R.string.category_icon_local_bar, R.drawable.ic_local_bar_black_24dp),
@@ -83,6 +85,22 @@ public enum EIcon {
         }
 
         return null;
+    }
+
+    /**
+     * Return all icons name
+     * @return
+     */
+    public static ArrayList<String> getAllIcons() {
+        ArrayList<String> icons = new ArrayList<>();
+        Context context = EApplication.getInstance();
+
+        for (EIcon icon : values()) {
+            String iconName = context.getResources().getString(icon.nameRes);
+            icons.add(iconName);
+        }
+
+        return icons;
     }
 }
 

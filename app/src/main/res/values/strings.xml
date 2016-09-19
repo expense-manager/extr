@@ -28,6 +28,8 @@
     <string name="next">Next</string>
 
     <string name="select_color">Select color</string>
+    <string name="select_icon">Select icon</string>
+    <string name="preview">Preview</string>
     <string name="category">Category</string>
     <string name="user">User</string>
     <string name="date">Date</string>

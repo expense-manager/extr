@@ -49,40 +49,131 @@
                 android:textSize="@dimen/text_medium_small"
                 android:background="@drawable/background_bottom_line_gray"/>
 
-            <!-- Color notice-->
-            <TextView
-                android:id="@+id/new_category_activity_color_text_view_id"
+            <LinearLayout
+                android:id="@+id/new_category_activity_select_linear_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_large"
+                android:layout_below="@+id/new_category_activity_name_edit_text_id">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <!-- Color hint -->
+                    <TextView
+                        android:id="@+id/new_category_activity_color_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/space_medium"
+
+                        android:text="@string/select_color"
+                        android:textSize="@dimen/text_small"/>
+
+                    <!-- Color -->
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/new_category_activity_color_image_view_id"
+                        android:layout_width="@dimen/category_color_width"
+                        android:layout_height="@dimen/category_color_width"
+                        android:layout_below="@+id/new_category_activity_color_text_view_id"
+                        android:layout_centerHorizontal="true"
+
+                        tools:background="@color/black"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/new_category_activity_icon_relative_layout_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <!-- Select icon hint -->
+                    <TextView
+                        android:id="@+id/new_category_activity_icon_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/space_medium"
+
+                        android:text="@string/select_icon"
+                        android:textSize="@dimen/text_small"/>
+
+                    <RelativeLayout
+                        android:layout_width="@dimen/category_color_width"
+                        android:layout_height="@dimen/category_color_width"
+                        android:layout_below="@+id/new_category_activity_icon_text_view_id"
+                        android:layout_centerHorizontal="true"
+
+                        android:background="@drawable/background_circle_border_gray">
+
+                        <!-- Icon -->
+                        <ImageView
+                            android:id="@+id/new_category_activity_icon_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+
+                            android:tint="@color/gray"
+                            tools:background="@color/black"/>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/new_category_activity_preview_relative_layout_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/new_category_activity_name_edit_text_id"
-                android:layout_marginLeft="@dimen/space_medium_large"
-                android:layout_marginRight="@dimen/space_medium_large"
-                android:layout_marginTop="@dimen/space_medium_large"
-                android:layout_marginBottom="@dimen/space_medium"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/new_category_activity_select_linear_layout_id"
+                android:layout_marginTop="@dimen/space_medium">
 
-                android:text="@string/select_color"
-                android:textSize="@dimen/text_small"/>
+                <!-- Preview hint -->
+                <TextView
+                    android:id="@+id/new_category_activity_preview_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/space_medium"
 
-            <!-- Color -->
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/new_category_activity_color_image_view_id"
-                android:layout_width="@dimen/category_color_width"
-                android:layout_height="@dimen/category_color_width"
-                android:layout_marginLeft="@dimen/space_medium_large"
-                android:layout_below="@+id/new_category_activity_color_text_view_id"
+                    android:text="@string/preview"
+                    android:textSize="@dimen/text_small"/>
 
-                tools:background="@color/black"/>
+                <RelativeLayout
+                    android:layout_width="@dimen/category_color_width"
+                    android:layout_height="@dimen/category_color_width"
+                    android:layout_below="@+id/new_category_activity_preview_text_view_id"
+                    android:layout_centerHorizontal="true">
+
+                    <!-- Color -->
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/new_category_activity_preview_color_image_view_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        tools:background="@color/black"/>
+
+                    <ImageView
+                        android:id="@+id/new_category_activity_preview_icon_image_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+
+                        android:tint="@color/white"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
 
         </RelativeLayout>
     </ScrollView>
 
-    <ProgressBar
-        android:id="@+id/new_category_activity_progress_bar_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-
-        android:visibility="gone"
-        style="?android:attr/progressBarStyleLarge"/>
+    <include layout="@layout/progress_bar" />
 
 </RelativeLayout>

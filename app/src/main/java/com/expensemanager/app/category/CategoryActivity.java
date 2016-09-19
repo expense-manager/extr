@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -37,6 +38,7 @@ public class CategoryActivity extends BaseActivity {
     private String groupId;
     private long syncTimeInMillis;
     private String syncTimeKey;
+    private Handler handler = new Handler();
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
@@ -75,8 +77,8 @@ public class CategoryActivity extends BaseActivity {
     }
 
     private void invalidateViews() {
-        categoryAdapter.clear();
-        categoryAdapter.addAll(Category.getAllCategoriesByGroupId(groupId));
+        handler.removeCallbacks(animateRunnable);
+        handler.postDelayed(animateRunnable, 300);
 
         if (Helpers.needToSync(syncTimeInMillis)) {
             SyncCategory.getAllCategoriesByGroupId(groupId);
@@ -84,6 +86,14 @@ public class CategoryActivity extends BaseActivity {
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
     }
+
+    private Runnable animateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            categoryAdapter.clear();
+            categoryAdapter.addAll(Category.getAllCategoriesByGroupId(groupId));
+        }
+    };
 
     private void setupToolbar() {
         toolbar.setContentInsetsAbsolute(0,0);
@@ -142,5 +152,9 @@ public class CategoryActivity extends BaseActivity {
         super.onPause();
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
+
+        if (animateRunnable != null) {
+            handler.removeCallbacks(animateRunnable);
+        }
     }
 }

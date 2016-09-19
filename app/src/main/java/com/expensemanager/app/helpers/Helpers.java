@@ -33,6 +33,7 @@ import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.PhotoSource;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.service.enums.EColor;
+import com.expensemanager.app.service.enums.EIcon;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -352,6 +353,19 @@ public class Helpers {
         return newUsedColors;
     }
 
+    // Get used icon set
+    public static Set<String> getUsedIconSet(String groupId) {
+        Set<String> newUsedIcons = new HashSet<>();
+
+        for (Category c : Category.getAllCategoriesByGroupId(groupId)) {
+            if (c != null) {
+                newUsedIcons.add(c.getIcon());
+            }
+        }
+
+        return newUsedIcons;
+    }
+
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
 
@@ -579,6 +593,18 @@ public class Helpers {
             color = colors.get(pos);
         }
         return color;
+    }
+
+    public static String getRandomIcon(Set<String> usedIcons) {
+        List<String> icons = EIcon.getAllIcons();
+        Random ran = new Random();
+        int pos = ran.nextInt(icons.size());
+        String icon = icons.get(pos);
+        while (usedIcons != null && usedIcons.contains(icon)) {
+            pos = ran.nextInt(icons.size());
+            icon = icons.get(pos);
+        }
+        return icon;
     }
 
     public static void loadIconPhoto(ImageView view, String url) {
