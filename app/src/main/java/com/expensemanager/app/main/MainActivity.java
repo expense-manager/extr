@@ -40,7 +40,7 @@ import com.expensemanager.app.models.Member;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.AlarmReceiver;
 import com.expensemanager.app.notifications.NotificationFragment;
-import com.expensemanager.app.overview.OverviewFragment;
+import com.expensemanager.app.overview.OverviewMainFragment;
 import com.expensemanager.app.report.main.ReportMainFragment;
 import com.expensemanager.app.service.Constant;
 import com.expensemanager.app.service.PermissionsManager;
@@ -142,15 +142,15 @@ public class MainActivity extends BaseActivity {
 
         if (fragment == null && !isNotification) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
-                    .addToBackStack(OverviewFragment.class.getName())
+                    .replace(R.id.main_activity_frame_layout_id, OverviewMainFragment.newInstance())
+                    .addToBackStack(OverviewMainFragment.class.getName())
             .commit();
         } else if (isNotification) {
             currentPosition = NOTIFICATION_POSITION;
             removeAllBackStackFragment();
             getFragmentManager().beginTransaction()
                     .replace(R.id.main_activity_frame_layout_id, NotificationFragment.newInstance())
-                    .addToBackStack(OverviewFragment.class.getName())
+                    .addToBackStack(OverviewMainFragment.class.getName())
                     .commit();
         }
 
@@ -248,8 +248,8 @@ public class MainActivity extends BaseActivity {
                     removeAllBackStackFragment();
                     getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
-                            .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
-                            .addToBackStack(OverviewFragment.class.getName())
+                            .replace(R.id.main_activity_frame_layout_id, OverviewMainFragment.newInstance())
+                            .addToBackStack(OverviewMainFragment.class.getName())
                             .commit();
                     fab.setVisibility(View.VISIBLE);
                     fab.setOnClickListener(va -> setupFab());
@@ -496,12 +496,12 @@ public class MainActivity extends BaseActivity {
         currentPosition = 1;
 
         if (groupId != null) {
-            OverviewFragment.SLEEP_LENGTH = 300;
+            OverviewMainFragment.SLEEP_LENGTH = 300;
 
             getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
-                .replace(R.id.main_activity_frame_layout_id, OverviewFragment.newInstance())
-                .addToBackStack(OverviewFragment.class.getName())
+                .replace(R.id.main_activity_frame_layout_id, OverviewMainFragment.newInstance())
+                .addToBackStack(OverviewMainFragment.class.getName())
                 .commit();
             fab.setOnClickListener(v -> setupFab());
         } else {

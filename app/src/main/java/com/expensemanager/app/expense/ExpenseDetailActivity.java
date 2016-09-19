@@ -129,13 +129,15 @@ public class ExpenseDetailActivity extends BaseActivity {
 
     private BottomSheetDialog bottomSheetDialog;
 
-    @BindView(R.id.expense_detail_activity_user_photo_image_view_id) ImageView userPhotoImageView;
+
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_extra_image_view_id) ImageView extraImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
     @BindView(R.id.toolbar_edit_text_view_id) TextView editTextView;
     @BindView(R.id.toolbar_save_text_view_id) TextView saveTextView;
+    @BindView(R.id.expense_detail_activity_user_info_relative_layout_id) RelativeLayout userInfoRelativeLayout;
+    @BindView(R.id.expense_detail_activity_user_photo_image_view_id) ImageView userPhotoImageView;
     @BindView(R.id.expense_detail_activity_fullname_text_view_id) TextView fullNameTextView;
     @BindView(R.id.expense_detail_activity_email_text_view_id) TextView emailTextView;
     @BindView(R.id.expense_detail_activity_amount_text_view_id) EditText amountTextView;
@@ -201,10 +203,14 @@ public class ExpenseDetailActivity extends BaseActivity {
         noteTextView.setText(String.valueOf(expense.getNote()));
 
         if (createdBy != null && Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
+            userInfoRelativeLayout.setVisibility(View.VISIBLE);
+
             Helpers.loadProfilePhoto(userPhotoImageView, createdBy.getPhotoUrl());
             fullNameTextView.setText(createdBy.getFullname());
             emailTextView.setText(createdBy.getEmail());
             userPhotoImageView.setOnClickListener(v -> ProfileActivity.newInstance(this, createdBy.getId()));
+        } else {
+            userInfoRelativeLayout.setVisibility(View.GONE);
         }
 
         deleteButton.setOnClickListener(v -> delete());

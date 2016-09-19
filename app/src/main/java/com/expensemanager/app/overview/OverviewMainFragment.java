@@ -33,8 +33,8 @@ import io.realm.RealmResults;
  * Created by Zhaolong Zhong on 8/27/16.
  */
 
-public class OverviewFragment extends Fragment {
-    private static final String TAG = OverviewFragment.class.getSimpleName();
+public class OverviewMainFragment extends Fragment {
+    private static final String TAG = OverviewMainFragment.class.getSimpleName();
 
     public static int SLEEP_LENGTH = 1200;
 
@@ -47,8 +47,8 @@ public class OverviewFragment extends Fragment {
     @BindView(R.id.overview_fragment_pager_indicator_container_id) LinearLayout mLinearLayout;
     @BindView(R.id.overview_fragment_recycler_view_id) RecyclerView recyclerView;
 
-    public static OverviewFragment newInstance() {
-        return new OverviewFragment();
+    public static OverviewMainFragment newInstance() {
+        return new OverviewMainFragment();
     }
 
     @Override
@@ -111,8 +111,8 @@ public class OverviewFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         OverviewFragmentAdapter overviewFragmentAdapter = new OverviewFragmentAdapter(getFragmentManager());
 
-        overviewFragmentAdapter.addFragment(AverageFragment.newInstance(), "Average");
         overviewFragmentAdapter.addFragment(BudgetFragment.newInstance(), "Monthly");
+        overviewFragmentAdapter.addFragment(AverageFragment.newInstance(), "Average");
         viewPager.setAdapter(overviewFragmentAdapter);
 
         CustomPageIndicator viewPagerIndicator = new CustomPageIndicator(getActivity(), mLinearLayout, viewPager, R.drawable.indicator_circle);
