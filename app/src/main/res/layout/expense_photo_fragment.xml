@@ -7,6 +7,30 @@
         android:id="@+id/expense_photo_fragment_view_pager_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="30dp"/>
+        android:layout_margin="@dimen/space_medium_small"/>
+
+    <LinearLayout
+        android:id="@+id/expense_photo_fragment_pager_indicator_container_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/space_medium_large"
+
+        android:gravity="center_horizontal" />
+
+    <!-- Close icon -->
+    <ImageView
+        android:id="@+id/expense_photo_fragment_close_image_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+
+        android:paddingLeft="10dp"
+        android:paddingTop="@dimen/space_medium_large"
+        android:src="@drawable/ic_window_close"
+        android:tint="@color/colorAccent"
+        android:background="@android:color/transparent"/>
 
 </RelativeLayout>

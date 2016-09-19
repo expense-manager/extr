@@ -126,9 +126,7 @@ public class ExpenseDetailActivity extends BaseActivity {
 
     private ArrayList<ExpensePhoto> expensePhotos;
     private ExpensePhotoAdapter expensePhotoAdapter;
-
     private BottomSheetDialog bottomSheetDialog;
-
 
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;

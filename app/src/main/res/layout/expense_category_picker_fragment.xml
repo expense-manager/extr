@@ -26,7 +26,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="@dimen/space_medium_large"
         android:src="@drawable/ic_window_close"
-        android:tint="@color/colorPrimary"
+        android:tint="@color/colorAccent"
         android:background="@android:color/transparent"/>
 
 </RelativeLayout>

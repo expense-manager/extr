@@ -7,9 +7,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.models.ExpensePhoto;
+import com.expensemanager.app.overview.CustomPageIndicator;
 
 import java.util.ArrayList;
 
@@ -30,6 +33,8 @@ public class ExpensePhotoFragment extends DialogFragment {
     private ExpensePhotoPagerAdapter expensePhotoPagerAdapter;
 
     @BindView(R.id.expense_photo_fragment_view_pager_id) ViewPager viewPager;
+    @BindView(R.id.expense_photo_fragment_pager_indicator_container_id) LinearLayout mLinearLayout;
+    @BindView(R.id.expense_photo_fragment_close_image_view_id) ImageView closeImageView;
 
     public ExpensePhotoFragment() {}
 
@@ -72,6 +77,13 @@ public class ExpensePhotoFragment extends DialogFragment {
         viewPager.setOffscreenPageLimit(2);
         viewPager.setClipChildren(false);
         viewPager.setPageMarginDrawable(null);
+
+        CustomPageIndicator viewPagerIndicator = new CustomPageIndicator(getActivity(), mLinearLayout, viewPager, R.drawable.indicator_circle_accent);
+        viewPagerIndicator.setPageCount(expensePhotoPagerAdapter.getCount());
+        viewPagerIndicator.setSpacingRes(R.dimen.space_medium);
+        viewPagerIndicator.show();
+
+        closeImageView.setOnClickListener(v -> dismiss());
     }
 
     @Override
