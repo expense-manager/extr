@@ -70,4 +70,7 @@
     <dimen name="drawer_account_header_dropdown">30dp</dimen>
     <dimen name="drawer_account_header_dropdown_padding">5dp</dimen>
     <dimen name="drawer_account_header_dropdown_margin_bottom">14dp</dimen>
+
+    <dimen name="overview_recycler_view_height_group">540dp</dimen>
+    <dimen name="overview_recycler_view_height_personal">310dp</dimen>
 </resources>

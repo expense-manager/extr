@@ -42,6 +42,7 @@ public class OverviewMainFragment extends Fragment {
     private ArrayList<Expense> expenses;
     private OverviewAdapter overviewAdapter;
     private OverviewFragmentAdapter overviewFragmentAdapter;
+    private boolean isPersonal = false;
 
     @BindView(R.id.overview_fragment_scroll_view_id) ScrollView scrollView;
     @BindView(R.id.overview_fragment_view_pager_id) ViewPager viewPager;
@@ -70,7 +71,7 @@ public class OverviewMainFragment extends Fragment {
         expenses = new ArrayList<>();
         overviewAdapter = new OverviewAdapter(getActivity(), expenses);
         setupToolbar();
-        setupRecyclerView();
+
         setupViewPager(viewPager);
     }
 
@@ -81,11 +82,14 @@ public class OverviewMainFragment extends Fragment {
 
         if (Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
             overviewAdapter.setShowMember(true);
+            isPersonal = false;
         } else {
             overviewAdapter.setShowMember(false);
+            isPersonal = true;
         }
 
         overviewAdapter.addAll(Expense.getAllExpensesByGroupId(groupId));
+        setupRecyclerView();
         scrollView.fullScroll(ScrollView.FOCUS_UP);
     }
 
@@ -106,6 +110,11 @@ public class OverviewMainFragment extends Fragment {
         recyclerView.setFocusable(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(overviewAdapter);
+
+        ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
+        params.height = (int)getResources().getDimension(isPersonal?
+                R.dimen.overview_recycler_view_height_personal : R.dimen.overview_recycler_view_height_group);
+        recyclerView.setLayoutParams(params);
     }
 
     private void setupViewPager(ViewPager viewPager) {
