@@ -1,5 +1,6 @@
 package com.expensemanager.app.service;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.expensemanager.app.models.Group;
@@ -78,8 +79,11 @@ public class SyncGroup {
                 }
 
                 JSONObject result = task.getResult();
-                if (result == null) {
-                    throw new Exception("Empty response.");
+                String error = result.optString("error", "");
+
+                if (!TextUtils.isEmpty(error)) {
+                    Log.e(TAG, "Group Error: " + result.toString());
+                    return null;
                 }
 
                 Log.d(TAG, "Group: \n" + result);

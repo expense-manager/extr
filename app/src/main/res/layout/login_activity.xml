@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="120dp"
 
-        android:background="@color/white"
+        android:background="@color/colorPrimaryDark"
         tools:context="com.expensemanager.app.welcome.LoginActivity">
 
         <!-- Email -->
@@ -57,10 +57,10 @@
             android:layout_margin="@dimen/space_medium"
 
             android:text="@string/login"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@drawable/button_text_color"
             android:textSize="@dimen/text_medium_small"
             android:textAllCaps="false"
-            android:background="@drawable/button_background"/>
+            android:background="@drawable/button_background_white"/>
 
         <!-- Forget login details -->
         <RelativeLayout

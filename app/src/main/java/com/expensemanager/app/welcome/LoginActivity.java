@@ -108,6 +108,7 @@ public class LoginActivity extends BaseActivity {
     private void invalidateViews() {
         loginButton.setEnabled(false);
         loginButton.setOnClickListener(this::login);
+        setupButton();
 
         emailEditText.addTextChangedListener(emailTextWatcher);
         passwordEditText.addTextChangedListener(passwordTextWatcher);

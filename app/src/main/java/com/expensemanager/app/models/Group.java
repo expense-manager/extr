@@ -132,11 +132,13 @@ public class Group implements RealmModel {
     }
 
     public void print() {
-        Log.d(TAG, ("group id:" + this.id + "\n"
+        Log.d(TAG, ("group object: group id:" + this.id + "\n"
                 + "groupname:" + this.groupname + "\n"
                 + "name: " + this.name + "\n"
-                + "about: " + this.about + "\n")
-                + "userId: " + this.userId + "\n");
+                + "about: " + this.about + "\n"
+                + "weeklyBudget: " + this.weeklyBudget + "\n"
+                + "monthlyBudget: " + this.monthlyBudget + "\n"
+                + "userId: " + this.userId + "\n"));
     }
 
     public void mapFromJSON(JSONObject jsonObject) {

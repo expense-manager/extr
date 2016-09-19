@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -167,6 +168,8 @@ public class MainActivity extends BaseActivity {
         invalidateViews();
         setupDrawerList();
 
+        checkIfNeedToSyncGroup();
+
 //        // Enable storage permission for LeakCanary
 //        if (BuildConfig.DEBUG) {
 //            checkExternalStoragePermission();
@@ -184,6 +187,8 @@ public class MainActivity extends BaseActivity {
             syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
             Helpers.saveSyncTime(this, syncTimeKey, syncTimeInMillis);
         }
+
+        checkIfNeedToSyncGroup();
     }
 
     private void setupToolbar() {
@@ -473,16 +478,7 @@ public class MainActivity extends BaseActivity {
                     drawerLayout.closeDrawers();
                     saveGroupId();
 
-                    // Check to sync new selected group
-                    SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
-                    syncTimeKey = Helpers.getSyncTimeKey(MainActivity.TAG, groupId);
-                    syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
-                    if (Helpers.needToSync(syncTimeInMillis)) {
-                        SyncGroup.getGroupById(groupId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
-                        syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
-                        Helpers.saveSyncTime(MainActivity.this, syncTimeKey, syncTimeInMillis);
-                    }
-
+                    checkIfNeedToSyncGroup();
                     invalidateFragment();
                 } else if (position == members.size() + 2) {
                     NewGroupActivity.newInstance(MainActivity.this);
@@ -490,6 +486,25 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void checkIfNeedToSyncGroup() {
+        Log.d(TAG, "checkIfNeedToSyncGroup groupId:" + groupId);
+        if (TextUtils.isEmpty(groupId)) {
+            Log.e(TAG, "Error: groupId is null.");
+            return;
+        }
+
+        Log.d(TAG, "checkIfNeedToSyncGroup start.");
+        // Check to sync new selected group
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preferences_session_key), 0);
+        syncTimeKey = Helpers.getSyncTimeKey(MainActivity.TAG, groupId);
+        syncTimeInMillis = sharedPreferences.getLong(syncTimeKey, 0);
+        if (Helpers.needToSync(syncTimeInMillis)) {
+            SyncGroup.getGroupById(groupId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
+            syncTimeInMillis = Calendar.getInstance().getTimeInMillis();
+            Helpers.saveSyncTime(MainActivity.this, syncTimeKey, syncTimeInMillis);
+        }
     }
 
     private void invalidateFragment() {

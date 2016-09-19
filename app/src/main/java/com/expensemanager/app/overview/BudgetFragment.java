@@ -5,6 +5,7 @@ import android.graphics.drawable.ClipDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,15 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.Expense;
 import com.expensemanager.app.models.Group;
+import com.expensemanager.app.service.SyncCategory;
+import com.expensemanager.app.service.SyncExpense;
+import com.expensemanager.app.service.SyncGroup;
+import com.expensemanager.app.service.SyncMember;
 
 import java.util.Date;
 
+import bolts.Continuation;
+import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -39,6 +46,7 @@ public class BudgetFragment extends Fragment {
     private double budgetWeekly;
     private double amountLeftWeekly;
     private String groupId;
+    private long lastTimeAnimateLevel = 0;
 
     private ClipDrawable clipDrawable;
     private Handler handler = new Handler();
@@ -74,10 +82,22 @@ public class BudgetFragment extends Fragment {
     }
 
     public void invalidateViews() {
+        Log.d(TAG, "invalidateViews");
+        if (groupId == null) {
+            groupId = Helpers.getCurrentGroupId();
+        }
+
         Group group = Group.getGroupById(groupId);
+
         if (group != null) {
             budgetMonthly = group.getMonthlyBudget();
             budgetWeekly = group.getWeeklyBudget();
+        } else {
+            if (groupId != null) {
+                SyncGroup.getGroupById(groupId).continueWith(onGetGroupsFinished, Task.UI_THREAD_EXECUTOR);
+            } else {
+                Log.e(TAG, "groupId is null");
+            }
         }
 
         monthlyAmountTextView.setText(Helpers.doubleToCurrency(budgetMonthly));
@@ -100,8 +120,33 @@ public class BudgetFragment extends Fragment {
         levelStatus = levelTotal;
         clipDrawable = (ClipDrawable) budgetView.getBackground();
         clipDrawable.setLevel(levelTotal);
-        handler.post(animateRunnable);
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - lastTimeAnimateLevel > 3000) {
+            handler.post(animateRunnable);
+            lastTimeAnimateLevel = currentTime;
+        }
     }
+
+    private Continuation<Void, Void> onGetGroupsFinished = new Continuation<Void, Void>() {
+        @Override
+        public Void then(Task<Void> task) throws Exception {
+            if (task.isFaulted()) {
+                Log.e(TAG, "Error:", task.getError());
+            }
+
+            if (groupId != null) {
+                // Sync all categories of current group
+                SyncCategory.getAllCategoriesByGroupId(groupId);
+                // Sync all expenses of current group
+                SyncExpense.getAllExpensesByGroupId(groupId);
+                // Sync all members of current group
+                SyncMember.getMembersByGroupId(groupId);
+            }
+
+            return null;
+        }
+    };
 
     private double getWeeklyExpense() {
         Date currentDate = new Date();
@@ -153,7 +198,10 @@ public class BudgetFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
-        realm.addChangeListener(v -> invalidateViews());
+        realm.addChangeListener(v -> {
+            Log.d(TAG, "realmChanged");
+            invalidateViews();
+        });
 
         invalidateViews();
     }

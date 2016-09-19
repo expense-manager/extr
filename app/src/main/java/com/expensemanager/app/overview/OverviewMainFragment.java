@@ -115,7 +115,8 @@ public class OverviewMainFragment extends Fragment {
         overviewFragmentAdapter.addFragment(AverageFragment.newInstance(), "Average");
         viewPager.setAdapter(overviewFragmentAdapter);
 
-        CustomPageIndicator viewPagerIndicator = new CustomPageIndicator(getActivity(), mLinearLayout, viewPager, R.drawable.indicator_circle);
+        CustomPageIndicator viewPagerIndicator = new CustomPageIndicator(getActivity(), mLinearLayout,
+                viewPager, R.drawable.indicator_circle_accent);
         viewPagerIndicator.setPageCount(overviewFragmentAdapter.getCount());
         viewPagerIndicator.setSpacingRes(R.dimen.space_medium);
         viewPagerIndicator.show();
