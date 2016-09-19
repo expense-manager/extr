@@ -20,6 +20,7 @@ import com.expensemanager.app.R;
 import com.expensemanager.app.models.RNotification;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,15 +63,17 @@ public class NotificationFragment extends Fragment {
         notifications = new ArrayList<>();
         notificationAdapter = new NotificationAdapter(getActivity(), notifications);
         setupRecyclerView();
-
-        invalidateViews();
     }
 
     private void invalidateViews() {
         noNotificationTextView.setVisibility(View.VISIBLE);
 
         notificationAdapter.clear();
-        notificationAdapter.addAll(RNotification.getAllNotifications());
+        List<RNotification> newNotifications = RNotification.getAllNotifications();
+        if (newNotifications.size() > 0) {
+            noNotificationTextView.setVisibility(View.INVISIBLE);
+            notificationAdapter.addAll(newNotifications);
+        }
     }
 
     private void setupRecyclerView() {

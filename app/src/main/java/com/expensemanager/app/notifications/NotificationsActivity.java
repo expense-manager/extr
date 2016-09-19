@@ -54,7 +54,6 @@ public class NotificationsActivity extends BaseActivity {
 
         setupToolbar();
         setupRecyclerView();
-        invalidateViews();
     }
 
     private void invalidateViews() {

@@ -140,7 +140,6 @@ public class ProfileActivity extends BaseActivity {
 
         setupToolbar();
         setupSwipeToRefresh();
-        invalidateViews();
         setupEditableViews(isEditable);
     }
 

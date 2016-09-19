@@ -71,8 +71,6 @@ public class MemberActivity extends AppCompatActivity {
         setupToolbar();
         setupRecyclerView();
         setupSwipeToRefresh();
-
-        invalidateViews();
     }
 
     private void invalidateViews() {

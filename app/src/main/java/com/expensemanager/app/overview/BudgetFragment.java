@@ -69,8 +69,6 @@ public class BudgetFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         groupId = Helpers.getCurrentGroupId();
-
-        invalidateViews();
     }
 
     public void invalidateViews() {

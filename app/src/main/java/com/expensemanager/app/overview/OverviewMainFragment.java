@@ -71,7 +71,6 @@ public class OverviewMainFragment extends Fragment {
         setupToolbar();
         setupRecyclerView();
         setupViewPager(viewPager);
-        invalidateViews();
     }
 
     public void invalidateViews() {
