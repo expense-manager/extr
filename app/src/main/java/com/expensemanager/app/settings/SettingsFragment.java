@@ -146,13 +146,13 @@ public class SettingsFragment extends Fragment {
     public static void setWeeklyNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 5);
-        RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.weekly_report), activity.getString(R.string.weekly_report_message), groupId, false, RNotification.WEEKLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(activity, groupId, false, RNotification.WEEKLY, calendar.getTime());
     }
 
     public static void setMonthlyNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 5);
-        RNotification.setupOrUpdateNotifications(activity, activity.getString(R.string.monthly_report), activity.getString(R.string.monthly_report_message), groupId, false, RNotification.MONTHLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(activity, groupId, false, RNotification.MONTHLY, calendar.getTime());
     }
 
     private void setupViews() {

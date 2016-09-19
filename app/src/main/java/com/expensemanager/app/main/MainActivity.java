@@ -513,7 +513,7 @@ public class MainActivity extends BaseActivity {
             OverviewMainFragment.SLEEP_LENGTH = 300;
 
             getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.right_in, R.animator.left_out, R.animator.left_in, R.animator.right_out)
+                .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
                 .replace(R.id.main_activity_frame_layout_id, OverviewMainFragment.newInstance())
                 .addToBackStack(OverviewMainFragment.class.getName())
                 .commit();

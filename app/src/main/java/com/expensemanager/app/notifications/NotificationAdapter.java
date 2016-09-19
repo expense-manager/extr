@@ -86,11 +86,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void configureViewHolderDefault(ViewHolderDefault viewHolder, int position) {
         RNotification notification = notifications.get(position);
+        int notRead = ContextCompat.getColor(context, notification.getType() == RNotification.WEEKLY? R.color.colorPrimary : R.color.colorAccent);
 
+        viewHolder.leftBarTextView.setBackgroundColor(notRead);
         viewHolder.titleTextView.setText(notification.getTitle());
         viewHolder.createdAtTextView.setText(Helpers.formatCreateAt(notification.getCreatedAt()));
         viewHolder.messageTextView.setText(notification.getMessage());
-        int notRead = ContextCompat.getColor(context, R.color.colorPrimary);
+
         ColorDrawable colorDrawable = new ColorDrawable(notRead);
         viewHolder.checkImageView.setImageDrawable(colorDrawable);
 
@@ -190,6 +192,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public static class ViewHolderDefault extends RecyclerView.ViewHolder {
+        @BindView(R.id.notification_item_default_left_decoration_text_view_id) TextView leftBarTextView;
         @BindView(R.id.notification_item_default_title_text_view_id) TextView titleTextView;
         @BindView(R.id.notification_item_default_created_at_text_view_id) TextView createdAtTextView;
         @BindView(R.id.notification_item_default_check_image_view_id) CircleImageView checkImageView;

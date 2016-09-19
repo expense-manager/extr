@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.expensemanager.app.R;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -184,18 +186,19 @@ public class RNotification implements RealmModel {
 
     /**
      * @param activity activity that sets the notification
-     * @param title notification title
-     * @param message notification message
      * @param isRemote if notification is remote from server
      * @param type notification type: WEEKLY or MONTHLY
      * @param createdAt date to notify
      */
-    public static void setupOrUpdateNotifications(Activity activity, String title, String message, String groupId, boolean isRemote, int type, Date createdAt) {
-        if (title == null || message == null || createdAt == null) {
+    public static void setupOrUpdateNotifications(Activity activity, String groupId, boolean isRemote, int type, Date createdAt) {
+        if (createdAt == null) {
             return;
         } else if (type != WEEKLY && type != MONTHLY) {
             return;
         }
+
+        String title = activity.getString(type == WEEKLY ? R.string.weekly_report : R.string.monthly_report);
+        String message = activity.getString(type == WEEKLY ? R.string.weekly_report_message : R.string.monthly_report_message);;
 
         // Create notification object
         boolean isNew = false;

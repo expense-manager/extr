@@ -83,6 +83,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 ProfileActivity.newInstance(context, null);
             });
         } else if (type == TYPE_MENU) {
+            holder.badgeTextView.setVisibility(View.GONE);
             String menuTitle = drawerMenuList.get(position - 1).getTitle();
             holder.titleTextView.setText(menuTitle);
             holder.iconImageView.setImageResource(drawerMenuList.get(position - 1).getIcon());
