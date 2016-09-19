@@ -340,14 +340,14 @@ public class ExpenseActivity extends BaseActivity {
             }
 
             ExpenseActivity.this.member = member;
-            User user = member.getUser();
-            setupMemberFilter(user);
+            setupMemberFilter(member);
 
             invalidateViews();
         }
     };
 
-    private void setupMemberFilter(User user) {
+    private void setupMemberFilter(Member member) {
+        User user = member != null ? member.getUser() : null;
         if (isMemberFiltered && user != null) {
             Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
             extraImageView.setVisibility(View.VISIBLE);
@@ -377,22 +377,32 @@ public class ExpenseActivity extends BaseActivity {
                 isCategoryFiltered = !isCategoryFiltered;
             }
             ExpenseActivity.this.category = category;
-            if (!isCategoryFiltered || category == null) {
-                int background = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
-                ExpenseActivity.this.toolbar.setBackgroundColor(background);
-            } else {
-                ExpenseActivity.this.toolbar
-                    .setBackgroundColor(Color.parseColor(category.getColor()));
-            }
+
+            setupCategoryFilter(category);
+
             invalidateViews();
         }
     };
+
+    private void setupCategoryFilter(Category category) {
+        if (toolbar != null) {
+            if (!isCategoryFiltered || category == null) {
+                int background = ContextCompat.getColor(this, R.color.colorPrimary);
+                toolbar.setBackgroundColor(background);
+            } else {
+                toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
+            }
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
+
+        setupMemberFilter(member);
+        setupCategoryFilter(category);
 
         invalidateViews();
     }

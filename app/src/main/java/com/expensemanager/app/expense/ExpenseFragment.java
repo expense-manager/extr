@@ -106,8 +106,6 @@ public class ExpenseFragment extends Fragment {
         setupToolbar();
         setupRecyclerView();
         setupSwipeToRefresh();
-
-        invalidateViews();
     }
 
     public void invalidateViews() {
@@ -152,6 +150,10 @@ public class ExpenseFragment extends Fragment {
         this.titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_toolbar_title_text_view_id);
         this.extraImageView = (ImageView) toolbar.findViewById(R.id.main_activity_toolbar_extra_image_view_id);
         ViewCompat.setElevation(toolbar, getResources().getInteger(R.integer.toolbar_elevation));
+    }
+
+    private void updateToolbar() {
+
     }
 
     private void setupRecyclerView() {
@@ -255,6 +257,7 @@ public class ExpenseFragment extends Fragment {
         isMemberFiltered = false;
         setupMemberFilter(null);
 
+        updateToolbar();
         invalidateViews();
     }
 
@@ -292,14 +295,14 @@ public class ExpenseFragment extends Fragment {
             }
 
             ExpenseFragment.this.member = member;
-            User user = member.getUser();
-            setupMemberFilter(user);
+            setupMemberFilter(member);
 
             invalidateViews();
         }
     };
 
-    private void setupMemberFilter(User user) {
+    private void setupMemberFilter(Member member) {
+        User user = member != null ? member.getUser() : null;
         if (isMemberFiltered && user != null) {
             Helpers.loadIconPhoto(extraImageView, user.getPhotoUrl());
             extraImageView.setVisibility(View.VISIBLE);
@@ -329,24 +332,32 @@ public class ExpenseFragment extends Fragment {
                 isCategoryFiltered = !isCategoryFiltered;
             }
             ExpenseFragment.this.category = category;
-            if (toolbar != null) {
-                if (!isCategoryFiltered || category == null) {
-                    int background = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
-                    toolbar.setBackgroundColor(background);
-                } else {
-                    toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
-                }
-            }
+
+            setupCategoryFilter(category);
 
             invalidateViews();
         }
     };
+
+    private void setupCategoryFilter(Category category) {
+        if (toolbar != null) {
+            if (!isCategoryFiltered || category == null) {
+                int background = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
+                toolbar.setBackgroundColor(background);
+            } else {
+                toolbar.setBackgroundColor(Color.parseColor(category.getColor()));
+            }
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
         realm.addChangeListener(v -> invalidateViews());
+
+        setupMemberFilter(member);
+        setupCategoryFilter(category);
 
         invalidateViews();
     }
@@ -356,6 +367,11 @@ public class ExpenseFragment extends Fragment {
         super.onPause();
         Realm realm = Realm.getDefaultInstance();
         realm.removeAllChangeListeners();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
 
         if (toolbar != null) {
             int background = ContextCompat.getColor(getActivity(), R.color.colorPrimary);

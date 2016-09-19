@@ -9,6 +9,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:alertDialogTheme">@style/MyAlertDialogTheme</item>
         <item name="alertDialogTheme">@style/MyAlertDialogTheme</item>
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+        <item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
     </style>
 
     <style name="MyAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
