@@ -32,10 +32,12 @@ Extr is an group based expense tracking and analysis android app that helps a pe
 
 ##Screenshots
 
-![Image](/screenshots/screenshots_1.png)
-![Image](/screenshots/screenshots_2.png)
-![Image](/screenshots/screenshots_3.png)
-![Image](/screenshots/screenshots_4.png)
+![Image](/screenshots/v2/screenshots_1.png)
+![Image](/screenshots/v2/screenshots_2.png)
+![Image](/screenshots/v2/screenshots_3.png)
+![Image](/screenshots/v2/screenshots_4.png)
+![Image](/screenshots/v2/screenshots_5.png)
+![Image](/screenshots/v2/screenshots_6.png)
 
 # Analytics, Feedback, Bug Report, Push Notification
 
