@@ -73,9 +73,10 @@ Extr is an group based expense tracking and analysis android app that helps a pe
 - [LeakCanary](https://github.com/square/leakcanary) - A memory leak detection library for Android and Java.
 - [Mixpanel](http://mixpanel.com/android-analytics/)- An Android library for Mixpanel Analytics
 - [Instabug](https://instabug.com/) - Instabug is providing in-app feedback and bug reporting to mobile apps.
+- [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) - A powerful Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, dragging and animations.
 
 ## Backend
-Extr's backend is powered by Parse Server on Heroku‎. Extr is using Parse Server Rest API.
+Extr's backend is powered by Parse Server on Heroku‎. Extr is only using Parse Server Rest API.
 
 
 ## License
