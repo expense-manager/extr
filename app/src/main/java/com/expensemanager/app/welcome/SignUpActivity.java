@@ -347,11 +347,11 @@ public class SignUpActivity extends BaseActivity {
                 return false;
             }
 
-            if (firstName == null || firstName.length() < 3) {
+            if (firstName == null || firstName.length() < 2) {
                 return false;
             }
 
-            if (lastName == null || lastName.length() < 3) {
+            if (lastName == null || lastName.length() < 2) {
                 return false;
             }
         }
