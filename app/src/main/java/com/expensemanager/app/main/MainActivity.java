@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity {
 //        }
     }
 
-    private void invalidateViews() {
+    public void invalidateViews() {
         drawerAdapter.invalidate();
 
         setupGroupListItems(groupDrawerAdapter);
@@ -625,7 +625,7 @@ public class MainActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
-        realm.addChangeListener(v -> invalidateViews());
+        realm.addChangeListener(v -> MainActivity.this.invalidateViews());
 
         invalidateViews();
 

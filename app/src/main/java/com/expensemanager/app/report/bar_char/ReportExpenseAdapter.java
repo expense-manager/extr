@@ -175,7 +175,10 @@ public class ReportExpenseAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         for (Expense expense : expenses) {
             int day = Helpers.getDayOfWeek(expense.getExpenseDate());
-            amounts[day - 1] += expense.getAmount();
+            // Will not take future expense into account
+            if (day <= amounts.length) {
+                amounts[day - 1] += expense.getAmount();
+            }
         }
     }
 

@@ -84,7 +84,7 @@ public class NetworkRequest {
 
                         for (Map.Entry entry : paramsMap.entrySet()) {
                             String entryValue = entry.getValue().toString();
-                            if(entryValue.charAt(0) == '{') {
+                            if(!entryValue.isEmpty() && entryValue.charAt(0) == '{') {
                                 jsonBuilder.append("\"");
                                 jsonBuilder.append(entry.getKey());
                                 jsonBuilder.append("\":");

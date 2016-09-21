@@ -101,7 +101,7 @@ public class GroupFragment extends Fragment {
         aboutEditText.setText(group.getAbout());
 
         createdBy = User.getUserById(group.getUserId());
-        if (createdBy != null && Member.getAllAcceptedMembersByGroupId(groupId).size() > 1) {
+        if (createdBy != null) {
             Helpers.loadIconPhoto(createdByPhotoImageView, createdBy.getPhotoUrl());
             createdByPhotoImageView.setOnClickListener(v -> ProfileActivity.newInstance(getActivity(), createdBy.getId()));
             createdAtTextView.setText("" + createdBy.getFullname() + " created this group on " + Helpers.getMonthDayYear(group.getCreatedAt()));

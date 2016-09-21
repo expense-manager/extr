@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.main.MainActivity;
 import com.expensemanager.app.models.RNotification;
 
 import java.util.ArrayList;
@@ -130,7 +131,11 @@ public class NotificationFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Realm realm = Realm.getDefaultInstance();
-        realm.addChangeListener(v -> invalidateViews());
+        realm.addChangeListener(v -> {
+            NotificationFragment.this.invalidateViews();
+            // Refresh drawer notification badge number
+            ((MainActivity)getActivity()).invalidateViews();
+        });
 
         invalidateViews();
     }

@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,6 +133,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 .setPositiveButton(R.string.delete, (DialogInterface dialog, int which) -> RNotification.delete(notification.getId()))
                 .setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> dialog.dismiss())
                 .show();
+
             return true;
         });
     }
