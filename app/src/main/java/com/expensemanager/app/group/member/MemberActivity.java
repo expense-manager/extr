@@ -44,7 +44,6 @@ public class MemberActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_id) Toolbar toolbar;
     @BindView(R.id.toolbar_back_image_view_id) ImageView backImageView;
     @BindView(R.id.toolbar_title_text_view_id) TextView titleTextView;
-    @BindView(R.id.toolbar_right_title_text_view_id) TextView inviteTextView;
     @BindView(R.id.member_activity_recycler_view_id) RecyclerView recyclerView;
     @BindView(R.id.swipeContainer_id) SwipeRefreshLayout swipeContainer;
 
@@ -95,12 +94,9 @@ public class MemberActivity extends AppCompatActivity {
         }
 
         titleTextView.setText(getString(R.string.member));
-        inviteTextView.setText(getString(R.string.invite));
-        inviteTextView.setVisibility(View.VISIBLE);
 
         titleTextView.setOnClickListener(v -> finish());
         backImageView.setOnClickListener(v -> finish());
-        inviteTextView.setOnClickListener(v -> InviteActivity.newInstance(this));
     }
 
     private void setupRecyclerView() {

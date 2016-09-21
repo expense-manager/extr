@@ -108,6 +108,7 @@ public class GroupFragment extends Fragment {
         }
 
         memberNumberTextView.setText(String.valueOf(Member.getAllMembersByGroupId(groupId).size()));
+        inviteRelativeLayout.setVisibility(group.getUserId().equals(loginUserId)? View.VISIBLE : View.GONE);
         editRelativeLayout.setVisibility(group.getUserId().equals(loginUserId)? View.VISIBLE : View.GONE);
     }
 
