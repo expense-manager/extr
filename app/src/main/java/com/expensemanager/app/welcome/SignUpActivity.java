@@ -267,19 +267,18 @@ public class SignUpActivity extends BaseActivity {
     };
 
     private void setMismatchSign() {
-        if (confirmPassword == null || confirmPassword.length() == 0) {
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
             mismatchImageView.setVisibility(View.INVISIBLE);
             return;
         }
 
-        if (confirmPassword.length() <= password.length() && password.indexOf(confirmPassword) != 0 || confirmPassword.length() > password.length()) {
-            mismatchImageView.setVisibility(View.VISIBLE);
-            mismatchImageView.setImageResource(R.drawable.ic_alert_circle_outline);
-            return;
-        } else if (confirmPassword.equals(password)) {
-            mismatchImageView.setVisibility(View.VISIBLE);
+        if (password != null && confirmPassword.equals(password)) {
             mismatchImageView.setImageResource(R.drawable.ic_check);
+        } else {
+            mismatchImageView.setImageResource(R.drawable.ic_alert_circle_outline);
         }
+
+        mismatchImageView.setVisibility(View.VISIBLE);
     }
 
     private TextWatcher firstNameTextWatcher = new TextWatcher() {
