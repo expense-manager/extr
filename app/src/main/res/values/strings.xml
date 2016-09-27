@@ -82,6 +82,7 @@
     <string name="sent">Sent</string>
     <string name="search">Search</string>
     <string name="search_hint">Search fullname, email or phone...</string>
+    <string name="username_used">Username is already used</string>
     <string name="accepted">Accepted</string>
     <string name="accept">Accept</string>
     <string name="invite_new">New invitation</string>

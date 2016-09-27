@@ -122,8 +122,12 @@ public class SignUpActivity extends BaseActivity {
         }
 
         if (stepOneRelativeLayout.getVisibility() == View.VISIBLE) {
-            setStepTwo();
             // todo: a better way to handle this is to do a network request to check if username exists or not
+            if (emailOrPhone.contains("@")) {
+                SyncUser.getAllUsersByUserEmail(emailOrPhone).continueWith(onQueryUserFinished, Task.UI_THREAD_EXECUTOR);
+            } else {
+                SyncUser.getAllUsersByUserPhoneNumber(emailOrPhone).continueWith(onQueryUserFinished, Task.UI_THREAD_EXECUTOR);
+            }
         } else {
             progressBar.setVisibility(View.VISIBLE);
             if (TextUtils.isEmpty(phone)) {
@@ -133,6 +137,35 @@ public class SignUpActivity extends BaseActivity {
             }
         }
     }
+
+    private Continuation<JSONObject, Void> onQueryUserFinished = new Continuation<JSONObject, Void>() {
+        @Override
+        public Void then(Task<JSONObject> task) throws Exception {
+            if (task.isFaulted()) {
+                Exception exception = task.getError();
+                Log.e(TAG, "Error in downloading all users.", exception);
+                throw  exception;
+            }
+
+            JSONObject result = task.getResult();
+            if (result == null) {
+                throw new Exception("Empty response.");
+            }
+
+            Log.d(TAG, "Sign up check Users: " + result);
+
+            // Check if username already used
+            if (result.getJSONArray("results").length() != 0) {
+                errorMessageTextView.setText(getString(R.string.username_used));
+                errorMessageRelativeLayout.setVisibility(View.VISIBLE);
+            } else {
+                setStepTwo();
+                errorMessageRelativeLayout.setVisibility(View.INVISIBLE);
+            }
+
+            return null;
+        }
+    };
 
     private void setStepTwo() {
         Helpers.closeSoftKeyboard(this);
