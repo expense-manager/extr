@@ -123,13 +123,13 @@ public class SettingsActivity extends BaseActivity {
     public static void setWeeklyNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 5);
-        RNotification.setupOrUpdateNotifications(activity, groupId, false, RNotification.WEEKLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(groupId, false, RNotification.WEEKLY, calendar);
     }
 
     public static void setMonthlyNotification(Activity activity, String groupId) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 5);
-        RNotification.setupOrUpdateNotifications(activity, groupId, false, RNotification.MONTHLY, calendar.getTime());
+        RNotification.setupOrUpdateNotifications(groupId, false, RNotification.MONTHLY, calendar);
     }
 
     private void setupViews() {

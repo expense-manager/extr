@@ -1,5 +1,6 @@
 package com.expensemanager.app.main;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -38,6 +39,7 @@ import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.Member;
+import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
 import com.expensemanager.app.notifications.AlarmReceiver;
 import com.expensemanager.app.notifications.NotificationFragment;
@@ -434,8 +436,12 @@ public class MainActivity extends BaseActivity {
             int index = getFirstAcceptedGroup(newMembers, 0, newMembers.size() - 1);
             if (index != -1) {
                 groupId = newMembers.get(index).getGroupId();
+                saveGroupId();
             }
-            saveGroupId();
+        }
+        if (groupId != null) {
+            // Load notification settings
+            SettingsFragment.loadSetting();
         }
         groupDrawerAdapter.addAll(newMembers);
     }
@@ -476,6 +482,8 @@ public class MainActivity extends BaseActivity {
                     groupId = member.getGroupId();
                     drawerLayout.closeDrawers();
                     saveGroupId();
+                    // Load notification for selected group
+                    SettingsFragment.loadSetting();
 
                     checkIfNeedToSyncGroup();
                     invalidateFragment();

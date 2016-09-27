@@ -1,19 +1,21 @@
 package com.expensemanager.app.models;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.expensemanager.app.R;
+import com.expensemanager.app.main.EApplication;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -141,6 +143,21 @@ public class RNotification implements RealmModel {
         return getAllUnReadNotifications().size();
     }
 
+    public static int getUnReadValidNotificationCount() {
+        RealmResults<RNotification> notifications = getAllUnReadNotifications();
+        int count = notifications.size();
+
+        Date currentDate = new Date();
+
+        for (RNotification notification : notifications) {
+            if (notification.getCreatedAt().compareTo(currentDate) > 0) {
+                count--;
+            }
+        }
+
+        return count;
+    }
+
     /**
      * @param id notification id
      * @return RNotification object if exist, otherwise return null.
@@ -171,6 +188,22 @@ public class RNotification implements RealmModel {
     }
 
     /**
+     * @param type notification type
+     * @param createdAt date to notify
+     * @return RNotification object if exist, otherwise return null.
+     */
+    public static @Nullable RNotification getNotificationByTypeAndDate(int type, Date createdAt) {
+        Realm realm = Realm.getDefaultInstance();
+        RNotification notification = realm.where(RNotification.class)
+            .equalTo(TYPE_KEY, type)
+            .equalTo(CREATED_AT_KEY, createdAt)
+            .findFirst();
+        realm.close();
+
+        return notification;
+    }
+
+    /**
      * @param id notification id
      */
     public static void delete(String id) {
@@ -185,39 +218,63 @@ public class RNotification implements RealmModel {
     }
 
     /**
-     * @param activity activity that sets the notification
+     * @param groupId group id
+     * @param type notification type
+     * @param calendar notification time
+     */
+    public static void delete(String groupId, int type, Calendar calendar) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<RNotification> notifications = realm.where(RNotification.class)
+            .equalTo(GROUP_KEY, groupId)
+            .equalTo(TYPE_KEY, type)
+            .equalTo(CREATED_AT_KEY, calendar.getTime())
+            .findAll();
+        if (notifications.size() > 0) {
+            notifications.deleteFromRealm(0);
+        }
+        realm.commitTransaction();
+        realm.close();
+    }
+
+    /**
+     * @param groupId group id
      * @param isRemote if notification is remote from server
      * @param type notification type: WEEKLY or MONTHLY
-     * @param createdAt date to notify
+     * @param createAt date to notify
      */
-    public static void setupOrUpdateNotifications(Activity activity, String groupId, boolean isRemote, int type, Date createdAt) {
-        if (createdAt == null) {
+    public static void setupOrUpdateNotifications(String groupId, boolean isRemote, int type, Calendar createAt) {
+        if (createAt == null) {
             return;
         } else if (type != WEEKLY && type != MONTHLY) {
             return;
         }
 
-        String title = activity.getString(type == WEEKLY ? R.string.weekly_report : R.string.monthly_report);
-        String message = activity.getString(type == WEEKLY ? R.string.weekly_report_message : R.string.monthly_report_message);;
+        Context context = EApplication.getInstance();
+        String title = context.getString(type == WEEKLY ? R.string.weekly_report : R.string.monthly_report);
+        String message = context.getString(type == WEEKLY ? R.string.weekly_report_message : R.string.monthly_report_message);;
 
         // Create notification object
-        boolean isNew = false;
-        RNotification notification = getNotificationByTypeAndDateAndGroupId(type, createdAt, groupId);
+        RNotification notification = getNotificationByTypeAndDate(type, createAt.getTime());
 
-        // Save to realm
+        // Notification already set
+        if (notification != null) {
+            Log.i("SettingsFragment", "Notification already set");
+            return;
+        }
+
+        Log.i("SettingsFragment", "Set new Notification");
+        // Create new to realm
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        if (notification == null) {
-            isNew = true;
-            // Create new notification if not exist
-            notification = new RNotification();
-            String uuid = UUID.randomUUID().toString();
-            notification.setId(uuid);
-            notification.setType(type);
-            notification.setGroupId(groupId);
-            notification.setCreatedAt(createdAt);
-        }
+        // Create new notification if not exist
+        notification = new RNotification();
+        String uuid = UUID.randomUUID().toString();
+        notification.setId(uuid);
+        notification.setType(type);
+        notification.setGroupId(groupId);
+        notification.setCreatedAt(createAt.getTime());
 
         notification.setTitle(title);
         notification.setMessage(message);
@@ -227,20 +284,15 @@ public class RNotification implements RealmModel {
         realm.commitTransaction();
         realm.close();
 
-        //if (isNew) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(createdAt);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
+        notificationIntent.addCategory("android.intent.category.DEFAULT");
+        notificationIntent.putExtra(ID_KEY, notification.getId());
 
-            Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
-            notificationIntent.addCategory("android.intent.category.DEFAULT");
-            notificationIntent.putExtra(ID_KEY, notification.getId());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, groupId.hashCode() + type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, groupId.hashCode() + type, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        //}
+        alarmManager.set(AlarmManager.RTC_WAKEUP, createAt.getTimeInMillis(), pendingIntent);
     }
 }
 

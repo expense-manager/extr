@@ -145,7 +145,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     }
 
     public void invalidate() {
-        notificationCount = RNotification.getUnReadNotificationCount();
+        notificationCount = RNotification.getUnReadValidNotificationCount();
         notifyDataSetChanged();
     }
 

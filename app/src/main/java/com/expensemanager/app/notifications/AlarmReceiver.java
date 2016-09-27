@@ -46,7 +46,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String title = rNotification.getTitle();
         String message = rNotification.getMessage();
-        String groupId = rNotification.getGroupId();
+        int type = rNotification.getType();
+     //   String groupId = rNotification.getGroupId();
+        String groupId = Helpers.getCurrentGroupId();
         Group group = Group.getGroupById(groupId);
         Date lastWeek = Helpers.getLastWeekOfYear(rNotification.getCreatedAt());
         Date[] startEnd = null;
@@ -62,12 +64,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         // Delete notification from database if amount is zero
-        if (amount == 0) {
+        if (amount == 0 || group == null) {
             RNotification.delete(rNotification.getId());
             return;
         }
 
-        message += " in " + group.getName() + " is $" + new DecimalFormat("##").format(amount);
+        if (type == RNotification.WEEKLY || type == RNotification.MONTHLY) {
+            message += " in " + group.getName() + " is $" + new DecimalFormat("##").format(amount);
+        }
 
         // Save to realm
         Realm realm = Realm.getDefaultInstance();
