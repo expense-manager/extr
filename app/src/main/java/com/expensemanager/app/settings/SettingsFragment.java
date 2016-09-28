@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.expensemanager.app.R;
 import com.expensemanager.app.category.CategoryActivity;
+import com.expensemanager.app.help.HelpActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
@@ -93,6 +94,7 @@ public class SettingsFragment extends Fragment {
     @BindView(R.id.setting_activity_notification_label_text_view_id) TextView notificationLabelTextView;
     @BindView(R.id.setting_activity_general_label_text_view_id) TextView generalLabelTextView;
     @BindView(R.id.setting_activity_weekly_send_feedback_text_view_id) TextView sendFeedbackTextView;
+    @BindView(R.id.setting_activity_help_center_text_view_id) TextView helpCenterTextView;
 
     public static Fragment newInstance() {
         return new SettingsFragment();
@@ -254,6 +256,7 @@ public class SettingsFragment extends Fragment {
         generalLabelTextView.setTypeface(boldTypeface);
 
         sendFeedbackTextView.setOnClickListener(v -> Instabug.invoke());
+        helpCenterTextView.setOnClickListener(v -> HelpActivity.newInstance(getActivity()));
 
         // Budgets
         Group group = Group.getGroupById(groupId);

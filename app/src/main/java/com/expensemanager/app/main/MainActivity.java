@@ -34,6 +34,7 @@ import com.expensemanager.app.expense.ExpenseFragment;
 import com.expensemanager.app.expense.NewExpenseActivity;
 import com.expensemanager.app.group.GroupFragment;
 import com.expensemanager.app.group.NewGroupActivity;
+import com.expensemanager.app.help.HelpActivity;
 import com.expensemanager.app.helpers.Helpers;
 import com.expensemanager.app.models.DrawerItem;
 import com.expensemanager.app.models.DrawerSubItem;
@@ -71,6 +72,7 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static String NOTIFICATION_KEY = "notificationKey";
+    public static final String IS_FIRST_TIME = "is_first_time";
     private static final int OVERVIEW_POSITION = 1;
     private static final int EXPENSE_POSITION = 2;
     private static final int REPORT_POSITION = 3;
@@ -98,6 +100,7 @@ public class MainActivity extends BaseActivity {
     private boolean isReceiverRegistered;
     private boolean isSignOut = false;
     private boolean isNotification = false;
+    private boolean isFirstTime;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_toolbar_id) Toolbar toolbar;
@@ -117,6 +120,12 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         isNotification = getIntent().getBooleanExtra(NOTIFICATION_KEY, false);
+        isFirstTime = getIntent().getBooleanExtra(IS_FIRST_TIME, false);
+
+        // Show help guide for first time login after sign up
+        if (isFirstTime) {
+            HelpActivity.newInstance(this);
+        }
 
         loginUserId = Helpers.getLoginUserId();
         groupId = Helpers.getCurrentGroupId();

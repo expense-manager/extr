@@ -138,6 +138,8 @@
             android:label="@string/title_activity_password"
             android:theme="@style/AppTheme">
         </activity>
+        <activity android:name=".help.HelpActivity">
+        </activity>
     </application>
 
 </manifest>

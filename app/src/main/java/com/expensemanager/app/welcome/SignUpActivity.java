@@ -35,6 +35,8 @@ import butterknife.OnClick;
 public class SignUpActivity extends BaseActivity {
     private static final String TAG = SignUpActivity.class.getSimpleName();
 
+    public static final String IS_FIRST_TIME = "is_first_time";
+
     private String emailOrPhone;
     private String password;
     private String confirmPassword;
@@ -235,6 +237,7 @@ public class SignUpActivity extends BaseActivity {
                 errorMessageRelativeLayout.setVisibility(View.VISIBLE);
             } else {
                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                intent.putExtra(IS_FIRST_TIME, true);
                 // Make sure main activity at the top on stack, no other activity in the backstack.
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
