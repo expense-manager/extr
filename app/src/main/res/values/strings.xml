@@ -13,6 +13,8 @@
     <string name="welcome_sub_title">An easy and fast way to manage your expense</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="sign_up">Sign up</string>
     <string name="login">Login</string>
@@ -58,6 +60,7 @@
     <string name="settings">Settings</string>
     <string name="edit_account">Edit Account</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="change_password">Change password</string>
     <string name="sign_out">Sign Out</string>
     <string name="sign_out_string">Sign out</string>
     <string name="left_to_spend">LEFT TO SPEND</string>
@@ -82,7 +85,12 @@
     <string name="sent">Sent</string>
     <string name="search">Search</string>
     <string name="search_hint">Search fullname, email or phone...</string>
-    <string name="username_used">Username is already used</string>
+    <string name="username_used">Username is already used.</string>
+    <string name="invalid_password">Invalid password.</string>
+    <string name="current_password_incorrect">Current password is incorrect.</string>
+    <string name="input_cannot_be_empty">Input cannot be empty.</string>
+    <string name="input_too_short">Inputs cannot be less than six characters.</string>
+    <string name="password_mismatch">Password mismatch.</string>
     <string name="accepted">Accepted</string>
     <string name="accept">Accept</string>
     <string name="invite_new">New invitation</string>
@@ -223,4 +231,5 @@
     <string name="event_expense_date_filter_clicked">Expense date filter clicked</string>
 
     <string name="facebook_app_id">305552616470274</string>
+    <string name="title_activity_password">PasswordActivity</string>
 </resources>

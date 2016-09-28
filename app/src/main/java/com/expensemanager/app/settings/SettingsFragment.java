@@ -27,6 +27,7 @@ import com.expensemanager.app.main.EApplication;
 import com.expensemanager.app.models.Group;
 import com.expensemanager.app.models.RNotification;
 import com.expensemanager.app.models.User;
+import com.expensemanager.app.profile.PasswordActivity;
 import com.expensemanager.app.profile.ProfileActivity;
 import com.expensemanager.app.service.SyncGroup;
 import com.expensemanager.app.service.SyncUser;
@@ -77,6 +78,7 @@ public class SettingsFragment extends Fragment {
 
     @BindView(R.id.setting_activity_profile_photo_image_view_id) ImageView photoImageView;
     @BindView(R.id.setting_activity_edit_profile_text_view_id) TextView editProfileTextView;
+    @BindView(R.id.setting_activity_change_password_text_view_id) TextView changePasswordTextView;
     @BindView(R.id.setting_activity_category_label_text_view_id) TextView categoryLabelTextView;
     @BindView(R.id.setting_activity_category_description_text_view_id) TextView editCategoryTextView;
     @BindView(R.id.setting_activity_budget_label_text_view_id) TextView budgetTextView;
@@ -238,6 +240,7 @@ public class SettingsFragment extends Fragment {
             Helpers.loadProfilePhoto(photoImageView, user.getPhotoUrl());
         }
         editProfileTextView.setOnClickListener(v -> ProfileActivity.newInstance(getActivity(), null, true));
+        changePasswordTextView.setOnClickListener(v -> PasswordActivity.newInstance(getActivity()));
 
         editCategoryTextView.setOnClickListener(v -> CategoryActivity.newInstance(getActivity()));
         weeklyNotificationSwitch.setChecked(SettingsFragment.setWeekly);

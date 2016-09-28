@@ -26,6 +26,14 @@ import io.realm.Realm;
 public class SyncUser {
     private static final String TAG = SyncUser.class.getSimpleName();
 
+    public static Task<JSONObject> updatePassword(String userId, String password) {
+        TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
+        RequestTemplate requestTemplate = RequestTemplateCreator.updatePassword(userId, password);
+        NetworkRequest networkRequest = new NetworkRequest(requestTemplate, taskCompletionSource);
+
+        return networkRequest.send();
+    }
+
     public static Task<JSONObject> login(String username, String password) {
         TaskCompletionSource<JSONObject> taskCompletionSource = new TaskCompletionSource<>();
         RequestTemplate requestTemplate = RequestTemplateCreator.login(username, password);

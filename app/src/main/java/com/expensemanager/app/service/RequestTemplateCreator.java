@@ -36,6 +36,15 @@ public class RequestTemplateCreator {
     public static final String CONTENT = "CONTENT";
     public static final String WHERE = "where";
 
+    public static RequestTemplate updatePassword(String userId, String password) {
+        String url = BASE_URL + "users/" + userId;
+        Map<String, String> params = new HashMap<>();
+
+        params.put(User.PASSWORD_JSON_KEY, password);
+
+        return new RequestTemplate(PUT, url, params);
+    }
+
     public static RequestTemplate login(String username, String password) {
         String url = BASE_URL + "login";
         Map<String, String> params = new HashMap<>();
