@@ -141,6 +141,7 @@ public class ProfileActivity extends BaseActivity {
         setupToolbar();
         setupSwipeToRefresh();
         setupEditableViews(isEditable);
+
     }
 
     private void invalidateViews() {
@@ -170,8 +171,8 @@ public class ProfileActivity extends BaseActivity {
 
         if (photoList.size() > 0) {
             Helpers.loadProfilePhoto(profilePhotoImageView, Arrays.toString(photoList.get(0)));
-        } else if (photoUrl != null && photoUrl.length() > 0) {
-            Helpers.loadProfilePhoto(profilePhotoImageView, currentUser.getPhotoUrl(), cameraIconHolder);
+        } else {
+            Helpers.loadProfilePhoto(profilePhotoImageView, currentUser.getPhotoUrl());
         }
 
         profilePhotoImageView.setOnClickListener(v -> {
