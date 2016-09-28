@@ -107,7 +107,7 @@
     <string name="monthly_report_message">Your total expense for last month</string>
     <string name="delete_profile_image">Delete Profile Image</string>
     <string name="make_groups">Make Groups</string>
-    <string name="group_introduction">Switch to group list and make a new group</string>
+    <string name="group_introduction">Pull out side bar, switch to group list and make a new group</string>
     <string name="define_categories">Define Categories</string>
     <string name="category_introduction">Go to setting page and setup categories</string>
     <string name="add_expenses">Add Expenses</string>

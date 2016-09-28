@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -607,9 +608,19 @@ public class Helpers {
         return icon;
     }
 
+    public static boolean hasGroup() {
+        String groupId = Helpers.getCurrentGroupId();
+        if (groupId == null) {
+            Toast.makeText(EApplication.getInstance(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     public static void loadIconPhoto(ImageView view, String url) {
         Glide.with(view.getContext())
             .load(url)
+            .placeholder(R.drawable.default_profile_image)
             .fitCenter()
             .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 100, 0))
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -619,6 +630,7 @@ public class Helpers {
     public static void loadProfilePhoto(ImageView view, String url) {
         Glide.with(view.getContext())
             .load(url)
+            .placeholder(R.drawable.default_profile_image)
             .fitCenter()
             .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 200, 0))
             .diskCacheStrategy(DiskCacheStrategy.ALL)

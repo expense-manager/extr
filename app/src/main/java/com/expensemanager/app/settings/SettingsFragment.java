@@ -244,7 +244,7 @@ public class SettingsFragment extends Fragment {
         editProfileTextView.setOnClickListener(v -> ProfileActivity.newInstance(getActivity(), null, true));
         changePasswordTextView.setOnClickListener(v -> PasswordActivity.newInstance(getActivity()));
 
-        editCategoryTextView.setOnClickListener(v -> CategoryActivity.newInstance(getActivity()));
+        editCategoryTextView.setOnClickListener(v -> {if (Helpers.hasGroup()) {CategoryActivity.newInstance(getActivity());}});
         weeklyNotificationSwitch.setChecked(SettingsFragment.setWeekly);
         monthlyNotificationSwitch.setChecked(SettingsFragment.setMonthly);
 
@@ -267,8 +267,8 @@ public class SettingsFragment extends Fragment {
 
         weeklyBudgetTextView.setText(Helpers.doubleToCurrency(weeklyBudget));
         monthlyBudgetTextView.setText(Helpers.doubleToCurrency(monthlyBudget));
-        weeklyBudgetRelativeLayout.setOnClickListener(v -> setupBudgetDialog(WEEKLY));
-        monthlyBudgetRelativeLayout.setOnClickListener(v -> setupBudgetDialog(MONTHLY));
+        weeklyBudgetRelativeLayout.setOnClickListener(v -> {if (Helpers.hasGroup()) {setupBudgetDialog(WEEKLY);}});
+        monthlyBudgetRelativeLayout.setOnClickListener(v -> {if (Helpers.hasGroup()) {setupBudgetDialog(MONTHLY);}});
     }
 
     private void setupBudgetDialog(int requestCode) {

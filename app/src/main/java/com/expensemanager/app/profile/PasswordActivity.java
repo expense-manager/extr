@@ -68,8 +68,6 @@ public class PasswordActivity extends BaseActivity {
         Drawable cameraIconHolder = new BitmapDrawable(getResources(), Helpers.getCameraIconBitmap(this));
         Helpers.loadProfilePhoto(profilePhotoImageView, loginUser.getPhotoUrl(), cameraIconHolder);
 
-
-
         setupToolbar();
     }
 

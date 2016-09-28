@@ -259,21 +259,21 @@ public class MainActivity extends BaseActivity {
                     currentPosition = position;
                 }
 
-                if (groupId != null) {
-                    removeAllBackStackFragment();
-                    getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
-                            .replace(R.id.main_activity_frame_layout_id, OverviewMainFragment.newInstance())
-                            .addToBackStack(OverviewMainFragment.class.getName())
-                            .commit();
-                    fab.setVisibility(View.VISIBLE);
-                    fab.setOnClickListener(va -> setupFab());
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
+                removeAllBackStackFragment();
+                getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
+                    .replace(R.id.main_activity_frame_layout_id, OverviewMainFragment.newInstance())
+                    .addToBackStack(OverviewMainFragment.class.getName())
+                    .commit();
+                fab.setVisibility(View.VISIBLE);
+                fab.setOnClickListener(va -> setupFab());
 
                 break;
             case EXPENSE_POSITION:
+                if (!Helpers.hasGroup()) {
+                    break;
+                }
+
                 if (currentPosition == EXPENSE_POSITION) {
                     if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
                         drawerLayout.closeDrawers();
@@ -284,21 +284,21 @@ public class MainActivity extends BaseActivity {
                     currentPosition = position;
                 }
 
-                if (groupId != null) {
-                    removeAllBackStackFragment();
-                    getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
-                            .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
-                            .addToBackStack(ExpenseFragment.class.getName())
-                            .commit();
-                    titleTextView.setText(getString(R.string.expense));
-                    fab.setVisibility(View.VISIBLE);
-                    fab.setOnClickListener(v -> setupFab());
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
+                removeAllBackStackFragment();
+                getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
+                    .replace(R.id.main_activity_frame_layout_id, ExpenseFragment.newInstance())
+                    .addToBackStack(ExpenseFragment.class.getName())
+                    .commit();
+                titleTextView.setText(getString(R.string.expense));
+                fab.setVisibility(View.VISIBLE);
+                fab.setOnClickListener(v -> setupFab());
                 break;
             case REPORT_POSITION:
+                if (!Helpers.hasGroup()) {
+                    break;
+                }
+
                 if (currentPosition == REPORT_POSITION) {
                     if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
                         drawerLayout.closeDrawers();
@@ -309,20 +309,20 @@ public class MainActivity extends BaseActivity {
                     currentPosition = position;
                 }
 
-                if (groupId != null) {
-                    removeAllBackStackFragment();
-                    getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
-                            .replace(R.id.main_activity_frame_layout_id, ReportMainFragment.newInstance())
-                            .addToBackStack(ReportMainFragment.class.getName())
-                            .commit();
-                    titleTextView.setText(getString(R.string.report));
-                    fab.setVisibility(View.INVISIBLE);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
+                removeAllBackStackFragment();
+                getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
+                    .replace(R.id.main_activity_frame_layout_id, ReportMainFragment.newInstance())
+                    .addToBackStack(ReportMainFragment.class.getName())
+                    .commit();
+                titleTextView.setText(getString(R.string.report));
+                fab.setVisibility(View.INVISIBLE);
                 break;
             case GROUP_POSITION:
+                if (!Helpers.hasGroup()) {
+                    break;
+                }
+
                 if (currentPosition == GROUP_POSITION) {
                     if (drawerLayout.isDrawerOpen(drawRecyclerView)) {
                         drawerLayout.closeDrawers();
@@ -333,18 +333,14 @@ public class MainActivity extends BaseActivity {
                     currentPosition = position;
                 }
 
-                if (groupId != null) {
-                    removeAllBackStackFragment();
-                    getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
-                            .replace(R.id.main_activity_frame_layout_id, GroupFragment.newInstance())
-                            .addToBackStack(ReportMainFragment.class.getName())
-                            .commit();
-                    titleTextView.setText(getString(R.string.group));
-                    fab.setVisibility(View.INVISIBLE);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
-                }
+                removeAllBackStackFragment();
+                getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.right_in, R.animator.left_out, 0, R.animator.left_out)
+                    .replace(R.id.main_activity_frame_layout_id, GroupFragment.newInstance())
+                    .addToBackStack(ReportMainFragment.class.getName())
+                    .commit();
+                titleTextView.setText(getString(R.string.group));
+                fab.setVisibility(View.INVISIBLE);
                 break;
             case NOTIFICATION_POSITION:
                 if (currentPosition == NOTIFICATION_POSITION) {
@@ -403,8 +399,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupFab() {
-        if (groupId == null) {
-            Toast.makeText(getApplicationContext(), R.string.select_group_hint, Toast.LENGTH_SHORT).show();
+        if (!Helpers.hasGroup()) {
             return;
         }
 
