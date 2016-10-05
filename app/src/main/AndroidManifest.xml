@@ -25,7 +25,8 @@
 
         <activity
             android:name=".welcome.SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -35,56 +36,71 @@
         <activity
             android:name=".main.MainActivity"
             android:theme="@style/AppTheme.OverlapSystemBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".expense.ExpenseActivity"
-            android:theme="@style/AppTheme.OverlapSystemBar"/>
+            android:theme="@style/AppTheme.OverlapSystemBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".expense.NewExpenseActivity"
-            android:theme="@style/BaseThemeDetail"/>
+            android:theme="@style/BaseThemeDetail"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".report.ReportDetailActivity"
             android:label="@string/title_activity_report_detail"
-            android:theme="@style/BaseThemeDetail"/>
+            android:theme="@style/BaseThemeDetail"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".report.ReportActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".category.CategoryActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".expense.ExpenseDetailActivity"
-            android:theme="@style/BaseThemeDetail"/>
+            android:theme="@style/BaseThemeDetail"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".category.CategoryDetailActivity"
             android:label="@string/title_activity_category_detail"
-            android:theme="@style/BaseThemeDetail"/>
+            android:theme="@style/BaseThemeDetail"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".category.NewCategoryActivity"
             android:label="@string/title_activity_new_category"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".notifications.NotificationsActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".welcome.WelcomeActivity"
             android:label="@string/title_activity_welcome"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".welcome.SignUpActivity"
             android:label="@string/title_activity_sign_up"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".welcome.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".settings.SettingsActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".profile.ProfileActivity"
-            android:theme="@style/BaseTheme">
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -98,22 +114,27 @@
         </activity>
         <activity
             android:name=".group.GroupActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".group.GroupDetailActivity"
             android:label="@string/title_activity_group_detail"
-            android:theme="@style/BaseThemeDetail"/>
+            android:theme="@style/BaseThemeDetail"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".group.NewGroupActivity"
             android:label="@string/title_activity_new_group"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".group.member.MemberActivity"
             android:label="@string/title_activity_member"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".group.member.InviteActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
 
         <receiver android:name=".notifications.AlarmReceiver">
             <intent-filter>
@@ -129,17 +150,20 @@
 
         <activity
             android:name=".group.member.InvitationEmailActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".expense.ProfileExpenseActivity"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".profile.PasswordActivity"
             android:label="@string/title_activity_password"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".help.HelpActivity">
-        </activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".help.HelpActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -107,7 +107,7 @@ public class GroupFragment extends Fragment {
             createdAtTextView.setText("" + createdBy.getFullname() + " created this group on " + Helpers.getMonthDayYear(group.getCreatedAt()));
         }
 
-        memberNumberTextView.setText(String.valueOf(Member.getAllMembersByGroupId(groupId).size()));
+        memberNumberTextView.setText(String.valueOf(Member.getAllAcceptedMembersByGroupId(groupId).size()));
         inviteRelativeLayout.setVisibility(group.getUserId().equals(loginUserId)? View.VISIBLE : View.GONE);
         editRelativeLayout.setVisibility(group.getUserId().equals(loginUserId)? View.VISIBLE : View.GONE);
     }

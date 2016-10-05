@@ -418,7 +418,7 @@ public class MainActivity extends BaseActivity {
 
         drawerSubItems.clear();
         drawerSubItems.add(new DrawerSubItem().setTitle(getString(R.string.sign_out)));
-        drawerSubItems.add(new DrawerSubItem().setTitle(getString(R.string.nav_about)));
+    //    drawerSubItems.add(new DrawerSubItem().setTitle(getString(R.string.nav_about)));
     }
 
     private void setupGroupListItems(GroupDrawerAdapter groupDrawerAdapter) {
